@@ -1,0 +1,7 @@
+# Packages that aid running the site.
+apache2-mpm-prefork
+libapache2-mod-php5
+php5
+php5-mysql
+mysql-client
+mysql-server

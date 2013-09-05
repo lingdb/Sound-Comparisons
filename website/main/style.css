@@ -1,0 +1,106 @@
+/*
+ This file will be replaced by css/main.css gradually.
+*/
+div.wordTranslation {
+  width:    80px;
+  display:  none;}/*{display:inline-block;} if shown*/
+/*JS related*/
+a.regionLink, a.familyLink {font-weight: bold; color: black;}
+/*Wordlistfilter*/
+div#sortbyOption {border: 1px solid black; padding-top: 0.15em; padding-bottom: 0.15em; white-space: nowrap;}
+div#sortbyOption > div {display: inline;}
+div#sortbyOption > img {margin-left: 0.25em;}
+div#sortbyOption > img.icon {margin-top: 0.25em;}
+#wordlistfilter td {border: none; width: 50%;}
+td#searchFilterTitle {white-space: nowrap;}
+td#Powersearch {text-align: right; white-space: nowrap;}
+td#IPALinkContainer {text-align: right; padding-right: 1em;}
+td#SpellingTitle, td#PhoneticTitle, td#ChooseSpLang, td#ChoosePhLang, td#FilterAddAll {padding-left: 0.5em;}
+td#ChooseSpLang img, td#ChoosePhLang img {margin-left: 0.3em;}
+ul#spellingLanguageList {display: none; width: 10em; right:7em;}
+ul#phoneticLanguageList {display: none; right: 0.25em; width: 10em;}
+ul#spellingLanguageList, ul#phoneticLanguageList {
+  z-index:          5;
+  margin-top:       -0.5em;
+  position:         fixed;
+  background-color: #F2F6CA;
+  border:           1px solid black;
+  padding-top:      0.25em;
+  padding-bottom:   0.25em;
+  overflow-y:       auto;
+  max-height:       50%;
+  padding-left:     20px;
+}
+img.closeFilterList {position: absolute; right: 1mm; top: 1mm;}
+td#ChooseSpLang:hover li:hover, td#ChoosePhLang:hover li:hover {list-style-image: url(img/triangle_right.png);}
+#ChooseSpLang .userChoice {color: #4380C1;}
+#ChoosePhLang .userChoice {color: blue;}
+input#SpellingFilter {width: 90%;}
+input#PhoneticFilter {
+  width:        70%;
+  font-family:  "Calibri", "Arial Unicode MS", "Cambria", "Doulos SIL", "Gentium", "TITUS Cyberbit Basic", sans-serif;}
+div#FilterFoundMultiWords {display:inline; margin-left:0.3em; margin-right: 0.3em;}
+input#FilterAddMultiWords {}
+#toggleMeaningGroups, #toggleLanguageGroups {border: 1px solid black; white-space: nowrap;}
+#toggleLanguageGroups {padding-left: 0.25em; padding-top: 0.4em; height: 1.4em;}
+#toggleMeaningGroups img.icon {margin-top: 0.25em; margin-left: 0.25em;}
+/*Audio*/
+td.transcription {text-align: center;}
+div.audio {white-space: nowrap; display: inline-block;}
+div.transcription { /*The color of phonetics that can be played with hover*/
+  color:         #00F;
+  display:       inline-block;
+  padding-left:  0.1em;
+  padding-right: 0.1em;
+  font-family:   "Calibri", "Arial Unicode MS", "Cambria", "Doulos SIL", "Gentium", "TITUS Cyberbit Basic", sans-serif;}
+div.altSpelling { /*The color of altSpellings, usually inside some table above the phonetics*/
+  font-style:   italic;
+  font-family:  "Calibri", "Arial Unicode MS", "Cambria", "Doulos SIL", "Gentium", "TITUS Cyberbit Basic", sans-serif;}
+div.transcription:hover {color: #F00;} /*Makes phonetics/soundfiles red on hover*/
+div.fileMissing, div.fileMissing:hover {color: #666;} /*Phonetics where the soundfiles are missing are grey*/
+div.playing {color: #F00;} /*Phonetics where the sound is currently playing are red*/
+/*Superscript styles:*/
+.superscript, .superscriptStandalone {
+  color:        #666;
+  display:      inline-block;
+  font-variant: small-caps;
+  margin-left:  0.25em;
+}
+.superscript {
+  vertical-align: top;
+  font-size:      x-small;
+}
+div.superscriptStandalone { font-size: small; }
+/* saveLocation used for load.js */
+div#saveLocation {display: none;}
+/*Drag&Drop*/
+.tableLink.word {margin-right: 0.5em;}
+.ui-draggable {}
+.ui-draggable-dragging {
+  border:         1px solid black;
+  border-spacing: 0px;
+  padding:        0px;}
+.word-col-draggable {display: inline;}
+.region-row-draggable {}
+.region-row-align {
+  top:      45%;
+  position: relative;}
+.language-row-draggable {}
+td.tableClearRow {height: 0.5em; padding: 0px; border-top: 2px solid black; border-bottom: 2px solid black;}
+td.tableClearCol {width: 0.5em; padding: 0px; border-left: 2px solid black; border-right: 2px solid black;}
+/*Google maps*/
+#map_menu_toggle {margin-left: 0.25em;}
+#map_zoom_options {margin-left: 1em;}
+#map_play_directions {margin-left: 1em; padding-top: 0.5em;}
+div.mapAudio {
+  border:         1px solid black;
+  border-radius:  5px;
+  position:       absolute;
+  padding-bottom: 0.0675em;
+  white-space:    nowrap;
+}
+div.mapAudio .transcription {
+  display:       inline;
+  padding-left:  0.25em;
+  padding-right: 0.25em;
+}

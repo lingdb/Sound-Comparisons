@@ -1,0 +1,11 @@
+c4b6ea1336db0a3389e479f386f80509  langmap.png                    CC-BY http://findicons.com/icon/117370/map?id=426655#
+7cead373f403a60c9ebb5ab466ed2193  sort-icon.png                  Research!?
+2ce7e2af0f84e89fd0fff49a6698cb27  transpose.png                  Selfmade
+c485aaec85f3f9ef1132f5b8cd6df27f  transpose.svg                  Selfmade
+2516339970d710819585f90773aebe0a  glyphicons-halflings.png       From Bootstrap, modified with gimp
+9bbc6e9602998a385c2ea13df56470fd  glyphicons-halflings-white.png From Bootstrap
+c23daa885f8ce77d3bbc74d2642c78ec  glyphicons-halflings.xcf       Byproduct of modifications to original with gimp
+85fcc42930acff4b333e0b3715c008fa  maps.png                       CC-BY http://findicons.com/icon/163930/map
+87216620dd4d3097b65637431c8d4e1d  people.png                     Freeware Non-commercial http://findicons.com/icon/15313/users_2?width=24
+4e0f8d8f778472422ea8867e94f676ad  info.png                       Freeware Non-commercial http://findicons.com/icon/48510/get_info
+339e248a244529d735b53818fc2e12ad  hover.png                      Screenshot from Windows taken by Paul

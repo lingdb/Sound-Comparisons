@@ -1,0 +1,3 @@
+This file carries notes about how the download of bootstrap was customized:
+@iconSpritePath      '../../img/glyphicons-halflings.png'
+@iconWhiteSpritePath '../../img/glyphicons-halflings-white.png'

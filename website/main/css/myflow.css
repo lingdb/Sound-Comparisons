@@ -1,0 +1,20 @@
+/* Scaffolding margin adjustment */
+.myflow.row-fluid [class*="span"] {margin-left: 0.5%;}
+.myflow.row-fluid [class*="span"]:first-child {margin-left: 0.25%;}
+
+.myflow.row-fluid .span11 { width: 91.16666666666667%;  }
+.myflow.row-fluid .span10 { width: 82.83333333333334%;  }
+.myflow.row-fluid .span9  { width: 74.5%;               }
+.myflow.row-fluid .span8  { width: 66.16666666666667%;  }
+.myflow.row-fluid .span7  { width: 57.833333333333336%; }
+.myflow.row-fluid .span6  { width: 49.5%;               }
+.myflow.row-fluid .span5  { width: 41.16666666666667%;  }
+.myflow.row-fluid .span4  { width: 32.833333333333336%; }
+.myflow.row-fluid .span3  { width: 24.5%;               }
+.myflow.row-fluid .span2  { width: 16.166666666666668%; }
+.myflow.row-fluid .span1  { width: 7.833333333333334%;  }
+
+.mycontent.myflow.row-fluid [class*="span"]:first-child {margin-left: 0px;}
+.mycontent.myflow.row-fluid [class*="span"]:last-child {margin-right: 0px;}
+
+.mycontent.myflow.row-fluid .span8 { width: 66.6%; /* was 66.66666666666667 */ }

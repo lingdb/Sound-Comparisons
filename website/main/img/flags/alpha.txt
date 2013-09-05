@@ -1,0 +1,2 @@
+To add an alpha channel to an image with a given density use:
+convert <input> -alpha set -channel a -evaluate set 50% +channel <output>

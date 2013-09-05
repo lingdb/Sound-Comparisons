@@ -1,0 +1,98 @@
+2013-08-14:
+ - Filter out IsOrthographyHasNoTranscriptions in MultiMenues.
+ - Check if multitables in Andean are build correctly
+ - Remove wrongly placed x icons in multiview in top right edge of browser window
+ - SpellingLanguages should not be on the Map or in the Phonetic Filter
+   - And not on the map.
+ - Build the 'Who are we' page.
+ - Adjust height offset of click/hover option button
+ - Contributors: Have small avatars with names as hover text linking to their paragraphs on the who are we page in longterm
+ - ALT Timeswap
+
+2013-08-01:
+ - From Polina:
+   - In Slavic study: no entries in Leftmenu have Hovertext / Hovertext is always identical to text
+     - An example would be 'Russian: St. Pete'
+     - The cause appears to be, that the fields RegionGpMemberLgNameShortInThisSubFamilyWebsit, RegionGpMemberLgNameLongInThisSubFamilyWebsite
+       are empty
+     - Notified Paul of these empty entries
+ - Introduce seperate cells for items that have different variants with subscript
+   - in 1w,1l and probably even lw and wl views
+ - Add a special site for Contributors
+ - Later on:
+   - Use Chromium Developer Tools -> Audit to streamline .css
+     - Leverage this to get rid of style.css, because we've got main.css now
+   - Refine database/Language.php:getDescription
+     - Also think about the way it's included in the Tabulator.php:languageHeadline
+   - Need script for landing with /<Study> or /<Translation> like fonetika.org/Andean or fonetika.org/es (spanish translation)
+   - Think about building a script that finds all unused SoundFiles and all supposed SoundFiles that don't exist
+
+2013-07-22:
+ - Spread the use of new db functions from DBTable to other files in database/
+   - Split Language.php into parts to make it easier to maintain and ready it for lexemes and contributors
+ - Migrate translations before deploying an update
+   - Remember that I introduced some new static translations
+     These will have to be readded after executing the import script.
+
+2013-07-18:
+ - Wordslist to be prettier and use lexemes
+ - Shift the playbutton to the left, and add contributor information to the right for 1l view.
+ - Note that genscript.php must also be aware of .wav files,
+   which means that it'll become more generic soon.
+ - Fix tables under Consonants Other in ipaKeyboard.
+   - Almost done
+
+2013-07-11:
+ - Change the way that Words/Phonetics are displayed on the page depending on lexemes
+   - Build projections to handle the database, build views to display it's parts
+
+From myself:
+ - Viewing Andean in Germanic translation poses the problem that no words can be displayed o.O
+ - I think I lost the German Translations for Words
+   -> Also: The alternative translations that come with words for the given spelling language in a study
+
+From Polina:
+ - Add save buttons directly next to dt inputs
+   -> This will need some more rewriting
+   -> Maybe extend search to achieve this?
+ - Translation via search
+  -> Description, Match, Original, Translation
+ - Languages, RegionLangues have duplicate entries… -.-
+
+From myself:
+ - Current mysql functions are deprecated, I should migrate to new ones, it appears.
+   Found on http://php.net/manual/en/function.mysql-fetch-row.php
+   - I'd like some 'projections' to deal with herpaDerp
+ - IsHtml field can be removed from v4.Page_StaticTranslation
+   - This will need adjustment in different places
+ - Maybe it would be nice to rewrite some .js for translation with backbone,
+   but it's not necessary right now.
+
+in IPA Keyboard: Consonants-Main (Plumonic) with grid in the table
+
+More space to the sides of the singleLanguageTable
+
+Center +- for LanguageSets and MeaningSets horizontally
+
+Using 'My Selection' in mapView removes all languages from the map
+  where it should switch to the last selection
+
+Füge spezielle Fehlerseiten hinzu.
+
+The Language Set collapse/expand box doesn't behave correctly.
+ - It deletes selected languages somehow, and I don't know where/how o.O
+ - Maybe it does so in Init functions of the PageView…
+
+Storing of mySelection in Mapview and in TopMenu between views
+ - this will need a good solution
+ - Keep word between wordview and mapview
+
+Produce a soundfile generation script,
+  that will help building the missing soundfiles.
+
+-- Long term notes:
+ - Think about splitting off all queries into the database dir, so that it's easier to grasp them all.
+   - Introduce a general dbaccess class that handles all issues not handled by any of the other classes.
+     This will also come in handy once another db with a different layout is included.
+ - Comment / Document more.
+ - Think about a smaller/faster/better vm client os than XUbuntu

@@ -1,0 +1,15 @@
+#AuthName "Restricted Area" 
+#AuthType Basic 
+#AuthUserFile /var/www/shk/main/.htpasswd
+#AuthGroupFile /dev/null 
+#require valid-user
+
+RewriteEngine on
+Options +FollowSymlinks
+
+RewriteBase /shk/main/
+
+RewriteRule ^go/([^/]+)/([^/]*) ?search1=$1&search2=$2 [R,NC]
+RewriteRule ^go/([^/]*)         ?iso=$1                [R,NC]
+
+#RewriteRule ^index\.php(\?.*)   $1  [R,NC]
