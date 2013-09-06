@@ -248,7 +248,7 @@ class Transcription extends DBTable{
     //Color:
     $color = $this->language->getColor();
     //Languagelink:
-    $languageLink = $v->gpv()->setLanguageView()->setLanguage($this->language)->setWords()->link();
+    $languageLink = $v->gpv()->setView('LanguageView')->setLanguage($this->language)->setWords()->link();
     $languageLink = preg_replace("/\"/",'\\"',$languageLink);
     $languageLink = preg_replace("/'/","\\'",$languageLink);
     //Complete JSON:

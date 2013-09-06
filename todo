@@ -1,3 +1,12 @@
+2013-09-06:
+ - Add who are we page into the main part of the site
+ - Build the .js for hiding the side menues,
+   so that it remembers if the menues where hidden
+   and keeps them so,
+   if we're not switching from/to the who are we view.
+   - Side menues should always be hidden initially in
+     who are we view, but not so when switching from it.
+
 2013-08-14:
  - Filter out IsOrthographyHasNoTranscriptions in MultiMenues.
  - Check if multitables in Andean are build correctly

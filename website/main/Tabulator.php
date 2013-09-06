@@ -38,7 +38,7 @@ class Tabulator{
     $content = '<h1 class="color-word">'.$word->getTranslation($v, true, false).'</h1>';
     //Links:
     $links = '';
-    if(!$v->gpv()->isMapView()){
+    if(!$v->gpv()->isView('MapView')){
       $wordHeadlinePlayAll = $t->st('wordHeadline_playAll');
       $links = $word->getMapsLink($t)
              . "<i class='icon-eject rotate90' id='wordHeadline_playAll' title='$wordHeadlinePlayAll'></i>";
@@ -89,7 +89,7 @@ class Tabulator{
             $cellCount = $maxLangCount;
             $rContent .= "</tr><tr>";
           }
-          $href = $v->gpv()->setLanguageView()->setLanguage($l)->link();
+          $href = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
           $sn   = $l->getShortName();
           $ln   = $l->getLongName(false);
           $link = "<a class='tableLink color-language' $href title='$ln\n$ttip'>$sn</a><br />";
@@ -210,7 +210,7 @@ class Tabulator{
       $entry  = "<td class='transcription'>";
       $tr     = new TranscriptionFromWordLang($w, $language);
       if(!$tr->exists()) continue;
-      $href   = $v->gpv()->setSingleView()->setLanguages(array())->setWord($w)->link();
+      $href   = $v->gpv()->setView('WordView')->setLanguages(array())->setWord($w)->link();
       $trans  = $w->getTranslation($v, true, false);
       $entry .= "<a class='tableLink color-word' $href title='$ttip'>$trans</a><br />";
       if($spelling = $tr->getAltSpelling($v))

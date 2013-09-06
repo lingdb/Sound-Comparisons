@@ -49,7 +49,7 @@ if($study = $v->getStudy()){
       if(!count($regions)) continue;
       //Checkboxes:
       $checkbox = '';
-      if($v->gpv()->isSelection()|| $v->gpv()->isMapView()){
+      if($v->gpv()->isSelection()|| $v->gpv()->isView('MapView')){
         $languages = $f->getLanguages();
         $has  = $v->glm()->hasLanguages($languages);
         $icon = 'icon-chkbox-custom';

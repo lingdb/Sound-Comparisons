@@ -13,15 +13,18 @@ RewriteBase /shk/main/
 RewriteRule ^go/([^/]+)/([^/]*) ?search1=$1&search2=$2 [R,NC]
 RewriteRule ^go/([^/]*)         ?iso=$1                [R,NC]
 
-# From http://stackoverflow.com/questions/8371634/hide-php-extension-htaccess
-# to hide .php extension
-# Unless directory, remove trailing slash
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^/]+)/$ $1 [R=301,L]
+# I've got to write my own rules here,
+# I believe, because these are bringing in some trouble,
+# that propagates trough the lower levels of the tree (no wonder)
+### From http://stackoverflow.com/questions/8371634/hide-php-extension-htaccess
+### to hide .php extension
+### Unless directory, remove trailing slash
+##RewriteCond %{REQUEST_FILENAME} !-d
+##RewriteRule ^([^/]+)/$ $1 [R=301,L]
 
-# Redirect external .php requests to extensionless url
-RewriteCond %{THE_REQUEST} ^(.+)\.php([#?][^\ ]*)?\ HTTP/
-RewriteRule ^(.+)\.php$ $1 [R=301,L]
+### Redirect external .php requests to extensionless url
+##RewriteCond %{THE_REQUEST} ^(.+)\.php([#?][^\ ]*)?\ HTTP/
+##RewriteRule ^(.+)\.php$ $1 [R=301,L]
 
-# Resolve .php file for extensionless php urls
-RewriteRule ^([^/.]+)$ $1.php [L]
+### Resolve .php file for extensionless php urls
+##RewriteRule ^([^/.]+)$ $1.php [L]

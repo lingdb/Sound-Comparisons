@@ -69,6 +69,7 @@ class Word extends DBEntry{
     otherwise they will be imploded with ', '.
   */
   public function getTranslation($v, $useSpLang = false, $break = true){
+    if(!$v) $v = $this->getValueManager();
     if($useSpLang) // The case to use the SpellingLanguage.
       $l = $v->gwo()->getSpLang();
     if(!isset($l)) // The case to use the ReferenceLanguage given by the Translator.
@@ -281,7 +282,7 @@ class Word extends DBEntry{
   public function getMapsLink($t){
     $tooltip = $t->st("tooltip_words_link_mapview");
     $v = $this->getValueManager();
-    $href = $v->gpv()->setMapView()->setWord($this)->link();
+    $href = $v->gpv()->setView('MapView')->setWord($this)->link();
     return "<a $href><img class='favicon' src='img/maps.png' title='$tooltip' /></a>";
   }
   /***/

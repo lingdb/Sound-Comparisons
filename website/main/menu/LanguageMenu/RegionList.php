@@ -13,11 +13,11 @@ function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl =
   foreach($regions as $r){
     $hasRegion = $v->hasRegion($r);
     //The regions title:
-    $isMultiView = ($v->gpv()->isSelection() || $v->gpv()->isMapView());
-    $isMapView   = $v->gpv()->isMapView();
+    $isMultiView = ($v->gpv()->isSelection() || $v->gpv()->isView('MapView'));
+    $isMapView   = $v->gpv()->isView('MapView');
     $rName       = $r->getShortName();
     $rTtip       = $r->getName();
-    $languages   = $r->getLanguages($v->gpv()->isLanguageView());
+    $languages   = $r->getLanguages($v->gpv()->isView('LanguageView'));
     if(count($languages) === 0)
       continue;
     $checkbox = '';
@@ -81,7 +81,7 @@ function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl =
             $regionList .= "<li><a class='color-language' title='$ttip' $href>"
                          . "<i class='$checked'></i>$flag$sn</a></li>";
           }else{ // ¬Has && ¬Multi
-            $goL = $v->gpv()->setLanguageView()->setLanguage($l)->link();
+            $goL = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
             $regionList .= "<li><a class='color-language' title='$ln' $goL>$flag$sn</a></li>";
           }
         }

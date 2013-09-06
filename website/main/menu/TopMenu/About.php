@@ -1,8 +1,10 @@
 <?php
-$t     = $valueManager->getTranslator();
+$v     = $valueManager;
+$t     = $v->getTranslator();
 $about = array(
   'title'         => $t->st('topmenu_about')
-, 'who_href'      => $t->st('topmenu_about_whoarewe_href')
+//, 'who_href'      => $t->st('topmenu_about_whoarewe_href') // FIXME remove entry from st!
+, 'who_href'      => $v->gpv()->setView('WhoAreWeView')->link()
 , 'further_href'  => $t->st('topmenu_about_furtherinfo_href')
 , 'research_href' => $t->st('topmenu_about_research_href')
 , 'contact_href'  => $t->st('topmenu_about_contact_href')
@@ -21,7 +23,7 @@ $about = array(
       <img src="img/info.png">
     </a>
     <ul class="dropdown-menu">
-      <li><a href="<? echo $about['who_href'];      ?>"><? echo $about['who'];      ?></a></li>
+      <li><a <? echo $about['who_href']; ?>><? echo $about['who']; ?></a></li>
       <li><a href="<? echo $about['further_href'];  ?>"><? echo $about['further'];  ?></a></li>
       <li><a href="<? echo $about['research_href']; ?>"><? echo $about['research']; ?></a></li>
       <li><a href="<? echo $about['contact_href'];  ?>"><? echo $about['contact'];  ?></a></li>

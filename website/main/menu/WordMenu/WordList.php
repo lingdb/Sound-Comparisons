@@ -23,11 +23,11 @@ function WordMenuBuildWordList($words, $v, $t){
       $href = $hasWord ? $v->delWord($w)->link()
                        : $v->addWord($w)->link();
     }else if(!$hasWord){
-      if($v->gpv()->isMapView()){
+      if($v->gpv()->isView('MapView')){
         $href = $v->setWord($w)->link();
         $ttip = $t->st('menu_words_tooltip_choose_map');
       }else{
-        $href = $v->gpv()->setSingleView()->setWord($w)->link();
+        $href = $v->gpv()->setView('WordView')->setWord($w)->link();
         $ttip = $t->st('menu_words_tooltip_choose_single');
       }
     }

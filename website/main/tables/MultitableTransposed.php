@@ -46,7 +46,7 @@ function tables_multiwordTableTransposed($v){
       $lttip = $t->st('tabulator_multi_tooltip_removeLanguage');
       $ttip  = $t->st('tabulator_multi_langonly');
       $ptip  = $t->st('tabulator_multi_playlang');
-      $href  = $v->gpv()->setLanguageView()->setWords()->setLanguage($l)->link();
+      $href  = $v->gpv()->setView('LanguageView')->setWords()->setLanguage($l)->link();
       $sn    = $l->getShortName();
       $ln    = $l->getLongName(false);
       echo "<th class='languageCell removeParent'>"
@@ -122,7 +122,7 @@ function tables_multiwordTableTransposed($v){
     if($w){
       $mhref = $v->delWord($w)->setUserCleaned()->link();
       $mttip = $t->st('tabulator_multi_tooltip_removeWord');
-      $href  = $v->gpv()->setSingleView()->setLanguages()->setWord($w)->link();
+      $href  = $v->gpv()->setView('WordView')->setLanguages()->setWord($w)->link();
       $ttip  = $t->st('tabulator_multi_wordonly');
       $ptip  = $t->st('tabulator_multi_playword');
       $trans = $w->getTranslation($v, true, false);

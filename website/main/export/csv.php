@@ -82,7 +82,7 @@ $v = $valueManager;
 $filename = 'undefined_export';
 $headline = array();
 $rows = array();
-if($v->gpv()->isSingleView()||$v->gpv()->isMapView()){
+if($v->gpv()->isView('WordView')||$v->gpv()->isView('MapView')){
   $word = current($v->getWords());
   $filename = "Wordexport_".$word->getKey();
   $headline = array_merge(array("FamilyName","RegionName","RegionId")
@@ -101,7 +101,7 @@ if($v->gpv()->isSingleView()||$v->gpv()->isMapView()){
       }
     }
   }
-}else if($v->gpv()->isLanguageView()){
+}else if($v->gpv()->isView('LanguageView')){
   $language = current($v->getLanguages());
   $filename = "Languagexport_".$language->getShortName(false);
   $headline = array_merge(wordHeadline(), transcriptionHeadline());

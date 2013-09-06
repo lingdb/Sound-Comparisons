@@ -1,17 +1,7 @@
-#AuthName "Restricted Area" 
-#AuthType Basic 
-#AuthUserFile /var/www/shk/main/.htpasswd
-#AuthGroupFile /dev/null 
-#require valid-user
-
 RewriteEngine on
 Options +FollowSymlinks -MultiViews
 
 RewriteBase /shk/main/export
-
-# Rules to aid searching
-RewriteRule ^go/([^/]+)/([^/]*) ?search1=$1&search2=$2 [R,NC]
-RewriteRule ^go/([^/]*)         ?iso=$1                [R,NC]
 
 # From http://stackoverflow.com/questions/8371634/hide-php-extension-htaccess
 # to hide .php extension

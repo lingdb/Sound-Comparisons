@@ -9,22 +9,22 @@ if(!isset($valueManager)){
 }
 $v = $valueManager;
 //Building the content:
-$s = $valueManager->gpv()->isMapView() ? ' style="bottom:2em;"' : '';
+$s = $valueManager->gpv()->isView('MapView') ? ' style="bottom:2em;"' : '';
 echo "<div id='contentArea'$s class='span8'>";
 $tabulator = new Tabulator($v);
-if($v->gpv()->isSingleView()){
+if($v->gpv()->isView('WordView')){
   if($words = $v->getWords()){
     $tabulator->tabluateWord(current($words));
   }else{
     die("Got no single word to display. (PageView)");
   }
-}else if($v->gpv()->isLanguageView()){
+}else if($v->gpv()->isView('LanguageView')){
   if($ls = $v->getLanguages()){
       $tabulator->languageTable(current($ls));
   }else{
     die("Got no single language to display. (PageView)");
   }
-}else if($v->gpv()->isMapView()){
+}else if($v->gpv()->isView('MapView')){
   $t        = $v->getTranslator();
   $headline = $tabulator->wordHeadline(current($v->getWords()));
   $headline = "<table id='map_headline' class='table'>$headline</table>"; //FIXME this is kind of dirty
@@ -63,7 +63,9 @@ if($v->gpv()->isSingleView()){
   $mapsData = $tabulator->mapsData();
   echo "$headline<div id='map_menu'>$mapsMenu</div><div id='map_canvas'></div><div id='map_data'>$mapsData</div>";
 }else if($v->gpv()->isSelection()){
-  $tabulator->multiwordTable($v->gpv()->isMultiTransposed());
+  $tabulator->multiwordTable($v->gpv()->isView('MultiTransposed'));
+}else if($v->gpv()->isView('WhoAreWeView')){
+  include 'about/contributors.php';
 }
 echo "</div>";
 ?>
