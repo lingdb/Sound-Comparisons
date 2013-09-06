@@ -46,6 +46,6 @@
   </body>
 </html><?php
   $endTime = microtime(true);
-//echo "<!-- Page generated in ".round(($endTime - $startTime), 4)."s -->";
-//echo "<!-- ".$valueManager->show(false)." -->";
+  echo "<!-- Page generated in ".round(($endTime - $startTime), 4)."s -->";
+  echo "<!-- ".$valueManager->show(false)." -->";
 ?>

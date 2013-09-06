@@ -7,7 +7,7 @@
 RewriteEngine on
 Options +FollowSymlinks -MultiViews
 
-RewriteBase /shk/main/
+RewriteBase /shk/main/export
 
 # Rules to aid searching
 RewriteRule ^go/([^/]+)/([^/]*) ?search1=$1&search2=$2 [R,NC]

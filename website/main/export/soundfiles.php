@@ -57,7 +57,8 @@ foreach($languages as $language){
     //2.1.: Adding the SoundFiles from the Transcriptions to the .zip
     //We only add .mp3 because of smaller filesize, and compression not finishing otherwise.
     foreach($t->getSoundFiles(array('.mp3')) as $sf){
-      $zip->addFile($sf, preg_replace('/\.\./', '', $sf));
+      foreach($sf as $f)
+        $zip->addFile($f, preg_replace('/\.\./', '', $f));
     }
   }
 }
