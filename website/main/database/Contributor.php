@@ -53,6 +53,17 @@
       return $this->getValueManager()->getTranslator()->st($key);
     }
     /***/
+    public function getAvatar(){
+      $prefix = 'img/contributors/';
+      $inits  = $this->getInitials();
+      foreach(array('.jpg','.png','.gif') as $ext){
+        $file = $prefix.$inits.$ext;
+        if(file_exists($file))
+          return $file;
+      }
+      return $prefix.'dummy.gif';
+    }
+    /***/
     protected static function mkContributor($v, $id, $column, $year = null, $pages = null){
       $c = new ContributorFromId($v, $id);
       $c->column = $column;
@@ -82,14 +93,23 @@
       return $ret;
     }
     /***/
-    public static function contributors($v){
+    private static function contributors($v, $q){
       $dbConnection = $v->getConnection();
-      $q = "SELECT ContributorIx FROM Contributors ORDER BY SortIxForAboutPage ASC";
       $set = mysql_query($q, $dbConnection);
       $ret = array();
       while($r = mysql_fetch_row($set))
         array_push($ret, new ContributorFromId($v, $r[0]));
       return $ret;
+    }
+    /***/
+    public static function mainContributors($v){
+      $q = 'SELECT ContributorIx FROM Contributors WHERE SortIxForAboutPage != 0 ORDER BY SortIxForAboutPage ASC';
+      return Contributor::contributors($v, $q);
+    }
+    /***/
+    public static function citeContributors($v){
+      $q = 'SELECT ContributorIx FROM Contributors WHERE SortIxForAboutPage = 0 ORDER BY Surnames ASC';
+      return Contributor::contributors($v, $q);
     }
   }
   /***/

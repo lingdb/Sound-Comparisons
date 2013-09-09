@@ -36,11 +36,11 @@
   <script src="js/logging.js"></script>
   <script src="js/scroll.js"></script>
   <script src="js/singleLanguageView.js"></script>
-  <script src="js/hidelink.js"></script>
   <script src="js/ipakeyboard.js"></script>
   <script src="js/models/StudyWatcher.js"></script>
   <script src="js/models/ViewWatcher.js"></script>
   <script src="js/models/SoundPlayOption.js"></script>
+  <script src="js/views/HideLinks.js"></script>
   <script src="js/views/SoundPlayOptionView.js"></script>
   <script src="js/App.js"></script>
   <script src="js/main.js"></script>

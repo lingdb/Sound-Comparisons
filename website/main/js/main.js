@@ -5,7 +5,6 @@ $(document).ready(function () {
 //initAudio();
   initPlaySequence();
   singleLanguageView();
-  hidelink();
   wordlistfilter();
   initMaps();
 //initLoad();

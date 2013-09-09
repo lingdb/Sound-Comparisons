@@ -6,6 +6,8 @@ $(function(){
   , viewWatcher:     new ViewWatcher()
   , views: {}
   };
+  window.App.views.hideLinks = new HideLinks({
+    el: null, model: window.App.viewWatcher});
   window.App.views.soundPlayOptionView = new SoundPlayOptionView({
     el:    $('#topmenuSoundOptions')
   , model: window.App.soundPlayOption

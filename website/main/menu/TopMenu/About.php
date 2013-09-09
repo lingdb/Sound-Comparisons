@@ -3,7 +3,6 @@ $v     = $valueManager;
 $t     = $v->getTranslator();
 $about = array(
   'title'         => $t->st('topmenu_about')
-//, 'who_href'      => $t->st('topmenu_about_whoarewe_href') // FIXME remove entry from st!
 , 'who_href'      => $v->gpv()->setView('WhoAreWeView')->link()
 , 'further_href'  => $t->st('topmenu_about_furtherinfo_href')
 , 'research_href' => $t->st('topmenu_about_research_href')

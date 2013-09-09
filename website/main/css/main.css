@@ -3,6 +3,8 @@ body {font-family: "Arial Narrow", "Lucida Sans", "Lucida Sans Unicode", "Lucida
 a {color: #777777;}
 a:hover > div {text-decoration: underline;}
 a.nounderline {text-decoration: none;}
+a.anchor {display: none;}
+*:hover > a.anchor {display: inline;}
 .selected{font-weight: bold;}
 .color-family, .color-meaninggroup,
 .color-region {color: #000000; font-weight: bold;}
@@ -300,3 +302,5 @@ dd.languageList {
 }
 #ipaButtonTone {margin-right: 20px;}
 #ipaClose {position: absolute; right: 5px;}
+/* Contributors page: */
+img.avatar {width: 140px;}

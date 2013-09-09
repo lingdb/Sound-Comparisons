@@ -15,10 +15,10 @@
     ?><div class="container-fluid"><?php
         $hideleft  = ' title="'.$valueManager->getTranslator()->st('hidelink_left').'"';
         $hideright = ' title="'.$valueManager->getTranslator()->st('hidelink_right').'"';
-      ?><a class="hidelink btn" data-target="#leftMenu"<?php echo $hideleft;?>>
+      ?><a class="hidelink btn" data-name="hidelink_left" data-target="#leftMenu"<?php echo $hideleft;?>>
         <i class="icon-chevron-left"></i>
       </a>
-      <a class="hidelink btn" style="right: 5px;" data-target="#rightMenu"<?php echo $hideright;?>>
+      <a class="hidelink btn" style="right: 5px;" data-name="hidelink_right" data-target="#rightMenu"<?php echo $hideright;?>>
         <i class="icon-chevron-right"></i>
       </a>
       <div class="mycontent myflow row-fluid"><?php

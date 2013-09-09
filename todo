@@ -1,11 +1,16 @@
 2013-09-06:
- - Add who are we page into the main part of the site
- - Build the .js for hiding the side menues,
-   so that it remembers if the menues where hidden
-   and keeps them so,
-   if we're not switching from/to the who are we view.
-   - Side menues should always be hidden initially in
-     who are we view, but not so when switching from it.
+ - Rewrite .htaccess file(s)
+ - On ordering the labels in MapView:
+   - Progress trough the labels from north to south,
+     because text is shorter in that direction.
+   - Place the first label in the top right corner.
+   - For all the following labels:
+     - If they overlap with the preceding one:
+       - Put them to the down left
+       - Put them to the down right
+       - Put them to the down left
+       - Until they no longer overlap,
+         or all positions where tried.
 
 2013-08-14:
  - Filter out IsOrthographyHasNoTranscriptions in MultiMenues.
