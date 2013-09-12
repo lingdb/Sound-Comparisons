@@ -2,15 +2,6 @@
   <title><?php
     echo $valueManager->getTranslator()->getPageTitle($valueManager->getStudy());
   ?></title>
-  <?php
-    // Google maps
-    if($valueManager->gpv()->isView('MapView')){
-      echo '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />'
-         . '<script type="text/javascript" '
-         . 'src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry"></script>'
-         . '<script type="text/javascript" src="js/maps/WordOverlay.js"></script>';
-    }
-  ?>
   <meta charset="utf-8">
   <link href="css/extern/bootstrap.css" rel="stylesheet">
   <link href="css/myflow.css" rel="stylesheet">
@@ -27,11 +18,22 @@
   <script src="js/extern/jquery.scrollTo-1.4.2-min.js"></script>
   <script src="js/extern/jquery.mousewheel.min.js"></script>
   <script src="js/extern/jquery.json-2.3.min.js"></script>
+  <?php
+    // Google maps
+    if($valueManager->gpv()->isView('MapView')){
+      echo '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />'
+         . '<script type="text/javascript" '
+         . 'src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry"></script>'
+         . '<script src="js/models/WordOverlay.js"></script>'
+         . '<script src="js/models/Map.js"></script>'
+         . '<script src="js/views/WordOverlayView.js"></script>'
+         . '<script src="js/views/MapView.js"></script>';
+    }
+  ?>
   <!--     -->
   <script src="js/AudioLogic.js"></script>
   <script src="js/PlaySequence.js"></script>
   <script src="js/wordlistfilter.js"></script>
-  <script src="js/maps.js"></script>
   <script src="js/load.js"></script>
   <script src="js/logging.js"></script>
   <script src="js/scroll.js"></script>

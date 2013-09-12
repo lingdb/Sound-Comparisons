@@ -6,7 +6,6 @@ $(document).ready(function () {
   initPlaySequence();
   singleLanguageView();
   wordlistfilter();
-  initMaps();
 //initLoad();
   initLogging();
   initScroll();

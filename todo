@@ -11,6 +11,8 @@
        - Put them to the down left
        - Until they no longer overlap,
          or all positions where tried.
+ - It appears in mapview, that if 'my selection' equals 'all languages',
+   the buttons to change between them are pretty useless.
 
 2013-08-14:
  - Filter out IsOrthographyHasNoTranscriptions in MultiMenues.
