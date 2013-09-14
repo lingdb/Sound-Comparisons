@@ -10,11 +10,11 @@
       header('LOCATION: index.php');
     break;
     case 'login':
-      $user = strip_tags(stripslashes(mysql_real_escape_string($_POST['username'])));
+      $user = strip_tags(stripslashes($dbConnection->escape_string($_POST['username'])));
       $pass = md5($_POST['password']);
       $query = 'SELECT UserId FROM Edit_Users WHERE Login = \''.$user.'\' AND Hash = \''.$pass.'\'';
-      $set = mysql_query($query, $dbConnection);
-      if($row = mysql_fetch_assoc($set)){
+      $set = $dbConnection->query($query);
+      if($row = $set->fetch_assoc()){
         $_SESSION['UserId'] = $row['UserId'];
         session_mkValid($user, $pass);
         header('LOCATION: index.php');
@@ -38,7 +38,7 @@
           die("New password doesn't match confirmation.");
         $uid = session_getUid();
         $q = "UPDATE Edit_Users SET Hash = '$newP' WHERE UserId = $uid";
-        mysql_query($q, $dbConnection);
+        $dbConnection->query($q);
         session_destroy();
         header('LOCATION: index.php');
       }else die('Invalid session!');

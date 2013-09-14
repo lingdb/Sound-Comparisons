@@ -36,12 +36,12 @@
         $q = "SELECT $origCol "
            . "FROM LanguageStatusTypes "
            . "WHERE LanguageStatusType = $payload";
-        $original = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $original = $this->dbConnection->quey($q)->fetch_row();
         $q = "SELECT $c FROM "
            . "Page_DynamicTranslation_LanguageStatusTypes "
            . "WHERE TranslationId = $tId "
            . "AND LanguageStatusType = $payload";
-        $translation = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $translation = $this->dbConnection->query($q)->fetch_row();
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
@@ -57,14 +57,15 @@
       return $ret;
     }
     public function updateColumn($c, $tId, $payload, $update){
-      $payload = mysql_real_escape_string($payload);
-      $update  = mysql_real_escape_string($update);
+      $db      = $this->dbConnection;
+      $payload = $db->escape_string($payload);
+      $update  = $db->escape_string($update);
       $q = "SELECT Trans_Status, Trans_Description, Trans_StatusTooltip "
          . "FROM Page_DynamicTranslation_LanguageStatusTypes "
          . "WHERE TranslationId = $tId "
          . "AND LanguageStatusType = $payload";
-      $rst = mysql_query($q, $this->dbConnection);
-      if($r = mysql_fetch_array($rst)){
+      $rst = $db->query($q);
+      if($r = $rst->fetch_array()){
         $rst = $r;
       }else $rst = array('Trans_Status'        => ''
                        , 'Trans_Description'   => ''
@@ -81,7 +82,8 @@
       . "(TranslationId, LanguageStatusType, Trans_Status, Trans_Description, Trans_StatusTooltip) "
       . "VALUES ($tId, $payload, '$a', '$b', '$c')"
       );
-      foreach($qs as $q) mysql_query($q, $this->dbConnection);
+      foreach($qs as $q)
+        $db->query($q);
     }
   }
 ?>

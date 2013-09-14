@@ -4,8 +4,8 @@
     $descriptions = getDescriptions(array('dt_meaningGroups_trans'), DB_CONNECTION);
     $values = array();
     $q = "SELECT MeaningGroupIx, Name FROM MeaningGroups LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = mysql_query($q, DB_CONNECTION);
-    while($r = mysql_fetch_row($set)){
+    $set = DB_CONNECTION->query($q);
+    while($r = $set->fetch_row()){
       $key = $r[0];
       //The basic entry:
       $entry = array(
@@ -19,7 +19,7 @@
       $translation = array();
       $q = "SELECT Trans FROM Page_DynamicTranslation_MeaningGroups "
          . "WHERE TranslationId = $tid AND MeaningGroupIx = $key";
-      if($r = mysql_fetch_row(mysql_query($q, DB_CONNECTION))){
+      if($r = DB_CONNECTION->query($q)->fetch_row()){
         $translation = array('Name' => $r[0]);
       }
       array_push($entry, $translation, $descriptions);
@@ -33,10 +33,10 @@
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_MeaningGroups "
        . "WHERE TranslationId = $tid AND MeaningGroupIx = $key";
-    mysql_query($q);
+    DB_CONNECTION->query($q);
     $translation = $translation['Name'];
     $q = "INSERT INTO Page_DynamicTranslation_MeaningGroups(TranslationId, MeaningGroupIx, Trans) "
        . "VALUES ($tid, $key, '$translation')";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
   }
 ?>

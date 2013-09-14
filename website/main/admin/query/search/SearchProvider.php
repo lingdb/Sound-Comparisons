@@ -40,7 +40,7 @@
     /***/
     public function fetchRows($set){
       $rows = array();
-      while($r = mysql_fetch_row($set))
+      while($r = $set->fetch_row())
         array_push($rows, $r);
       return $rows;
     }
@@ -48,7 +48,7 @@
     public function runQueries($qs){
       $rows = array();
       foreach($qs as $q){
-        $set  = mysql_query($q, $this->dbConnection);
+        $set  = $this->dbConnection->query($q);
         $rs   = $this->fetchRows($set);
         $rows = array_merge($rows, $rs);
       }
@@ -59,15 +59,14 @@
       $q = "SELECT Description "
          . "FROM Page_StaticDescription "
          . "WHERE Req = '$req'";
-      $rst = mysql_query($q, $this->dbConnection);
-      if($r = mysql_fetch_row($rst))
+      $rst = $this->dbConnection->query($q);
+      if($r = $rst->fetch_row())
         return array('Req' => $req, 'Description' => $r[0]);
       return array('Req' => $req, 'Description' => 'Description not found in database.');
     }
     /***/
     public function querySingleRow($q){
-      $rst = mysql_query($q, $this->dbConnection);
-      return mysql_fetch_row($rst);
+      return $this->dbConnection->query($q)->fetch_row();
     }
   }
 ?>

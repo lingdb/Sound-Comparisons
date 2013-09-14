@@ -11,8 +11,8 @@
        . "WHERE RegionGpMemberLgNameShortInThisSubFamilyWebsite != '' "
        . "AND RegionGpMemberLgNameLongInThisSubFamilyWebsite != '' "
        . "LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = mysql_query($q, DB_CONNECTION);
-    while($r = mysql_fetch_row($set)){
+    $set = DB_CONNECTION->query($q);
+    while($r = $set->fetch_row()){
       $entry = array(
         $tid              //'TranslationId'
       , 'RegionLanguages' //'TableSuffix'
@@ -28,7 +28,7 @@
          . "FROM Page_DynamicTranslation_RegionLanguages "
          . "WHERE TranslationId = $tid AND Study = '$study' "
          . "AND LanguageIx = ".$r[0];
-      if($t = mysql_fetch_row(mysql_query($q, DB_CONNECTION))){
+      if($t = DB_CONNECTION->query($q)->fetch_row()){
         $translation = array(
           'RegionGpMemberLgNameShortInThisSubFamilyWebsite' => $t[0]
         , 'RegionGpMemberLgNameLongInThisSubFamilyWebsite'  => $t[1]
@@ -45,13 +45,13 @@
     $q = "DELETE FROM Page_DynamicTranslation_RegionLanguages "
        . "WHERE TranslationId = $tid AND Study = '$study' "
        . "AND LanguageIx = $key";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
     $a = $translation['RegionGpMemberLgNameShortInThisSubFamilyWebsite'];
     $b = $translation['RegionGpMemberLgNameLongInThisSubFamilyWebsite'];
     $q = "INSERT INTO Page_DynamicTranslation_RegionLanguages(TranslationId, Study, LanguageIx, "
        . "Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite, "
        . "Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite) "
        . "VALUES ($tid, '$study', $key, '$a', '$b')";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
   }
 ?>

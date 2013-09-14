@@ -7,8 +7,8 @@ require_once 'common.php';
 if(!session_mayEdit($dbConnection))
   die('Sorry, I cannot show you more here.');
 $q = "SELECT UserId, Login, AccessTranslate, AccessEdit FROM Edit_Users";
-$set = mysql_query($q, $dbConnection);
-while($r = mysql_fetch_row($set)){
+$set = $dbConnection->query($q);
+while($r = $set->fetch_row()){
   $UserId          = $r[0];
   $Login           = $r[1];
   $AccessTranslate = $r[2];

@@ -11,8 +11,8 @@
     */
     case 'fetchLanguageFamilySelection':
       $q = 'SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx), StudyIx, FamilyIx, SubFamilyIx, Name FROM Studies';
-      $set = mysql_query($q, $dbConnection);
-      while($r = mysql_fetch_row($set)){
+      $set = $dbConnection->query($q);
+      while($r = $set->fetch_row()){
         $id   = $r[0];
         $six  = $r[1];
         $fix  = $r[2];
@@ -30,21 +30,21 @@
     */
     case 'createLanguageFamily':
       //Fetching expected parameters:
-      $studyix      = mysql_real_escape_string($_GET['studyix']);
-      $familyix     = mysql_real_escape_string($_GET['familyix']);
-      $subfamilyix  = mysql_real_escape_string($_GET['familyix']);
-      $name         = mysql_real_escape_string($_GET['name']);
+      $studyix      = $dbConnection->escape_string($_GET['studyix']);
+      $familyix     = $dbConnection->escape_string($_GET['familyix']);
+      $subfamilyix  = $dbConnection->escape_string($_GET['familyix']);
+      $name         = $dbConnection->escape_string($_GET['name']);
       /*
         Depending tables have to be created first,
         because the procedure 'createTablesAndRecreateViews' aborts
         if the study already exists, to avoid recreating the views without need.
       */
-      mysql_query("CALL createTablesAndRecreateViews('$name')", $dbConnection);
+      $dbConnection->query("CALL createTablesAndRecreateViews('$name')");
       //Inserting the new Study:
       $q = "INSERT INTO Studies(StudyIx, FamilyIx, SubFamilyIx, Name) "
          . "VALUES ($studyix, $familyix, $subfamilyix, '$name')";
-      mysql_query($q, $dbConnection);
-      if(mysql_affected_rows($dbConnection) != 1)
+      $dbConnection->query($q);
+      if($dbConnection->affected_rows != 1)
         die('FAIL');
       //Done:
       echo "<option data-dbid='$studyix$familyix$subfamilyix' data-studyix='$studyix'"

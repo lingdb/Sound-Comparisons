@@ -24,12 +24,12 @@
         $q = "SELECT FamilyNm "
            . "FROM Families "
            . "WHERE CONCAT(StudyIx, FamilyIx) = $payload";
-        $original = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $original = $this->dbConnection->query($q)->fetch_row();
         $q = "SELECT Trans "
            . "FROM Page_DynamicTranslation_Families "
            . "WHERE TranslationId = $tId "
            . "AND CONCAT(StudyIx, FamilyIx) = $payload";
-        $translation = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $translation = $this->dbConnection->query($q)->fetch_row();
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
@@ -45,8 +45,9 @@
       return $ret;
     }
     public function update($tId, $payload, $update){
-      $payload = mysql_real_escape_string($payload);
-      $update  = mysql_real_escape_string($update);
+      $db      = $this->dbConnection;
+      $payload = $db->escape_string($payload);
+      $update  = $db->escape_string($update);
       $qs = array(
         "DELETE FROM Page_DynamicTranslation_Families "
       . "WHERE CONCAT(StudyIx, FamilyIx) = $payload AND TranslationId = $tId"
@@ -55,7 +56,7 @@
       . "WHERE CONCAT(StudyIx, FamilyIx) = $payload"
       );
       foreach($qs as $q)
-        mysql_query($q, $this->dbConnection);
+        $db->query($q);
     }
   }
 ?>

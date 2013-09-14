@@ -8,8 +8,8 @@
     $values = array();
     $q = "SELECT LanguageIx, ShortName, SpellingRfcLangName, SpecificLanguageVarietyName "
        . "FROM Languages_$study LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = mysql_query($q, DB_CONNECTION);
-    while($r = mysql_fetch_row($set)){
+    $set = DB_CONNECTION->query($q);
+    while($r = $set->fetch_row()){
       $lid = $r[0];
       //The basic entry:
       $entry = array(
@@ -31,7 +31,7 @@
          . "Trans_SpecificLanguageVarietyName "
          . "FROM Page_DynamicTranslation_Languages "
          . "WHERE TranslationId = $tid AND LanguageIx = $lid AND Study = '$study'";
-      if($t = mysql_fetch_row(mysql_query($q, DB_CONNECTION))){
+      if($t = DB_CONNECTION->query($q)->fetch_row()){
         $translation = array(
           'ShortName'                                      => $t[0]
         , 'SpellingRfcLangName'                            => $t[1]
@@ -49,7 +49,7 @@
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_Languages "
        . "WHERE TranslationId = $tid AND Study = '$study' AND LanguageIx = $key";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
     $a = $translation['ShortName'];
     $b = $translation['SpellingRfcLangName'];
     $c = $translation['SpecificLanguageVarietyName'];
@@ -57,6 +57,6 @@
        . "TranslationId, Study, Trans_ShortName, Trans_SpellingRfcLangName, "
        . "Trans_SpecificLanguageVarietyName, LanguageIx) "
        . "VALUES ($tid, '$study', '$a', '$b', '$c', $key)";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
   }
 ?>

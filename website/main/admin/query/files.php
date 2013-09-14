@@ -17,7 +17,7 @@
     foreach($csv as $line){
       //Escaping all fields:
       foreach($line as $k => $f){
-        $line[$k] = mysql_real_escape_string($f);
+        $line[$k] = $dbConnection->escape_string($f);
       }
       //Enclosing lines:
       foreach($stringFields as $field){
@@ -219,6 +219,6 @@
      . 'SET AUTOCOMMIT=1;';
 //echo $q;
 //file_put_contents("/tmp/fimport.debug", $q);
-  mysqli_multi_query($config->getIConnection(), $q);
+  $config->getConnection()->multi_query($q);
   echo "Done :)";
 ?>

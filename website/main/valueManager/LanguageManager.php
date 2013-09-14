@@ -112,14 +112,14 @@ abstract class LanguageManager extends SubManager{
          . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
            . "SELECT CONCAT(StudyIx, REPLACE(FamilyIx, 0, '%')) FROM Studies WHERE Name = '$studyId'"
          . ") AND LanguageIx = ANY (SELECT LanguageIx FROM Languages_$studyId)";
-      $set = mysql_query($q, $v->getConnection());
-      while($r = mysql_fetch_row($set))
+      $set = $v->getConnection()->query($q);
+      while($r = $set->fetch_row())
         array_push($languages, new LanguageFromId($v, $r[0]));
       //No default languages found, defaulting to all:
       if(count($languages) == 0){
         $q = "SELECT LanguageIx FROM Languages_$studyId LIMIT 5";
-        $set = mysql_query($q, $v->getConnection());
-        while($r = mysql_fetch_row($set))
+        $set = $v->getConnection()->query($q);
+        while($r = $set->fetch_row())
           array_push($languages, new LanguageFromId($v, $r[0]));
       }
     }else{
@@ -127,14 +127,14 @@ abstract class LanguageManager extends SubManager{
       $q = "SELECT D.LanguageIx FROM Default_Languages AS D "
          . "JOIN Studies AS S USING (StudyIx, FamilyIx) "
          . "WHERE S.Name = '$studyId'";
-      $set = mysql_query($q, $v->getConnection());
-      if($r = mysql_fetch_row($set))
+      $set = $v->getConnection()->query($q);
+      if($r = $set->fetch_row())
         array_push($languages, new LanguageFromId($v, $r[0]));
       //Fallback on first Language from Study:
       if(count($languages) == 0){
         $q = "SELECT LanguageIx FROM Languages_$studyId "
            . "ORDER BY LanguageIx ASC LIMIT 1";
-        if($r = mysql_fetch_row(mysql_query($q, $v->getConnection())))
+        if($r = $v->getConnection()->query($q)->fetch_row())
           array_push($languages, new LanguageFromId($v, $r[0]));
       }
     }

@@ -64,7 +64,7 @@ HideLinks = Backbone.View.extend({
     if(view === 'whoAreWe'){
       _.each(this.links, function(l, name){
         var key = this.storageKey(name);
-        if(localStorage[key] === 'false')
+        if(!localStorage[key])
           l.trigger('click');
       }, this);
     }

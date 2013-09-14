@@ -82,7 +82,7 @@
           . ", ContributorCitationAuthor2, Citation2Year, Citation2Pages"
           . " FROM Languages WHERE LanguageIx = $id";
       $ret = array();
-      $r = mysql_fetch_row(mysql_query($q, $dbConnection));
+      $r = $dbConnection->query($q)->fetch_row();
       if($i = $r[0]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorSpokenBy'));
       if($i = $r[1]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorRecordedBy1'));
       if($i = $r[2]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorRecordedBy2'));
@@ -95,9 +95,9 @@
     /***/
     private static function contributors($v, $q){
       $dbConnection = $v->getConnection();
-      $set = mysql_query($q, $dbConnection);
+      $set = $dbConnection->query($q);
       $ret = array();
-      while($r = mysql_fetch_row($set))
+      while($r = $set->fetch_row())
         array_push($ret, new ContributorFromId($v, $r[0]));
       return $ret;
     }

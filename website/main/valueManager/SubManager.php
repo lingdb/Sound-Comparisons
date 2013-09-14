@@ -45,7 +45,8 @@ abstract class SubManager{
     @return String decoded
   */
   protected function decodeUrl($x){
-    return preg_replace('/#44/', ',', mysql_real_escape_string(rawurldecode($x)));
+    $db = $this->getConnection();
+    return preg_replace('/#44/', ',', $db->escape_string(rawurldecode($x)));
   }
   /**
     The name used to identify the instance in the ValueManager

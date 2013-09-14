@@ -82,9 +82,10 @@ class InitWordOrderManager extends WordOrderManager{
   */
   public function __construct($v){
     $this->setValueManager($v);
+    $db = $this->getConnection();
     //Get parameters:
     if(isset($_GET['wo_order'])){
-      $l = mysql_real_escape_string($_GET['wo_order']);
+      $l = $db->escape_string($_GET['wo_order']);
       if($l == 'logical'){
         $this->isLogical = true;
       }else if($l == 'alphabetical'){
@@ -92,11 +93,11 @@ class InitWordOrderManager extends WordOrderManager{
       }
     }
     if(isset($_GET['wo_spLang'])){
-      $key = mysql_real_escape_string($_GET['wo_spLang']);
+      $key = $db->escape_string($_GET['wo_spLang']);
       $this->spLang = new LanguageFromKey($v, $key);
     }
     if(isset($_GET['wo_phLang'])){
-      $key = mysql_real_escape_string($_GET['wo_phLang']);
+      $key = $db->escape_string($_GET['wo_phLang']);
       $this->phLang = new LanguageFromKey($v, $key);
     }
     //Spelling/Phonetic Languages:
@@ -115,7 +116,7 @@ class InitWordOrderManager extends WordOrderManager{
              . "WHERE IsOrthographyHasNoTranscriptions = 0 "
              . "OR IsOrthographyHasNoTranscriptions IS NULL "
              . "LIMIT 1";
-        $r   = mysql_fetch_row(mysql_query($q, $v->getConnection()));
+        $r   = $v->getConnection()->query($q)->fetch_row();
         $this->phLang = new LanguageFromId($v, $r[0]);
       }
     }

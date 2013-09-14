@@ -10,17 +10,17 @@
       $q = "SELECT Req, Trans "
          . "FROM Page_StaticTranslation "
          . "WHERE Trans LIKE '%$searchText%'";
-      $set = mysql_query($q, $this->dbConnection);
-      while($r = mysql_fetch_row($set)){
+      $set = $this->dbConnection->query($q);
+      while($r = $set->fetch_row()){
         $payload = $r[0];
         $match   = $r[1];
         $description = $this->getDescription($payload);
         $q = "SELECT Trans FROM Page_StaticTranslation "
            . "WHERE TranslationId = 1 AND Req = '$payload'";
-        $original = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $original = $this->dbConnection->query($q)->fetch_row();
         $q = "SELECT Trans FROM Page_StaticTranslation "
            . "WHERE TranslationId = $tId AND Req = '$payload'";
-        $translation = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $translation = $this->dbConnection->query($q)->fetch_row();
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
@@ -36,12 +36,13 @@
       return $ret;
     }
     public function update($tId, $payload, $update){
-      $payload = mysql_real_escape_string($payload);
-      $update  = mysql_real_escape_string($update);
+      $db      = $this->dbConnection;
+      $payload = $db->escape_string($payload);
+      $update  = $db->escape_string($update);
       $q = "DELETE FROM Page_StaticTranslation WHERE Req = '$payload' AND TranslationId = $tId";
-      mysql_query($q, $this->dbConnection);
+      $db->query($q);
       $q = "INSERT INTO Page_StaticTranslation(TranslationId, Req, Trans) VALUES ($tId, '$payload', '$update')";
-      mysql_query($q, $this->dbConnection);
+      $db->query($q);
     }
   }
 ?>

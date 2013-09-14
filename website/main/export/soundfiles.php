@@ -20,13 +20,13 @@ $path = $config->getDownloadPath();
 //0.: Deleting files older than one hour
 $q = "SELECT FileName FROM Export_Soundfiles WHERE "
    . "Creation <= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 HOUR)";
-$set = mysql_query($q, $dbConnection);
-while($r = mysql_fetch_row($set)){
+$set = $dbConnection->query($q);
+while($r = $set->fetch_row()){
   $fName = $r[0];
   $target = "$path/$fName";
   if(is_readable($target)){
     if(unlink($target)){
-      mysql_query("DELETE FROM Export_Soundfiles WHERE FileName = '$fName'", $dbConnection);
+      $dbConnection->query("DELETE FROM Export_Soundfiles WHERE FileName = '$fName'");
     }
   }
 }
@@ -36,8 +36,8 @@ do{
   $rand  = substr(str_shuffle('0123456789ABCDEF'), 0, 5);
   $fName = "export-$time-$rand.zip";
   $q = "INSERT INTO Export_Soundfiles(FileName) VALUES ('$fName')";
-  mysql_query($q, $dbConnection);
-  if(mysql_errno($dbConnection))
+  $dbConnection->query($q);
+  if($dbConnection->errno)
     $fName = '';
 }while($fName === '');
 $zip    = new ZipArchive();

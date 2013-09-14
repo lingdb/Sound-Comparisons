@@ -33,7 +33,7 @@ class InitUserCleanedManager extends UserCleanedManager{
   public function __construct($v){
     $this->setValueManager($v);
     if(isset($_GET['userCleaned'])){
-      $uc = mysql_real_escape_string($_GET['userCleaned']);
+      $uc = $this->getConnection()->escape_string($_GET['userCleaned']);
       $this->userCleaned = ($uc == 1);
     }
   }

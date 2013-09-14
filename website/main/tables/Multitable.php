@@ -50,7 +50,7 @@ function tables_multiwordTable($v){
       $ptip  = $t->st('tabulator_multi_playword');
       $trans = $w->getTranslation($v, true, false);
       $maps  = $w->getMapsLink($t);
-      echo "<th class='removeParent'>"
+      echo "<th>"
          . "<a $dhref title='$dttip' class='remove'><i class='icon-remove-custom'></i></a>"
          . "<a class='tableLink color-word' $href title='$ttip'>$trans</a>"
          . "</th>";
@@ -135,7 +135,7 @@ function tables_multiwordTable($v){
       $href  = $v->gpv()->setView('LanguageView')->setWords()->setLanguage($l)->link();
       $sn    = $l->getShortName();
       $ln    = $l->getLongName(false);
-      echo "<td class='languageCell removeParent'>"
+      echo "<td class='languageCell'>"
          . "<a class='tableLink color-language' $href title='$ln\n$ttip'>$sn</a>"
          . "<a $lhref title='$lttip' class='remove'><i class='icon-remove-custom'></i></a>"
          . "</td><td>"

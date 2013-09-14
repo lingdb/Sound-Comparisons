@@ -49,7 +49,7 @@ function tables_multiwordTableTransposed($v){
       $href  = $v->gpv()->setView('LanguageView')->setWords()->setLanguage($l)->link();
       $sn    = $l->getShortName();
       $ln    = $l->getLongName(false);
-      echo "<th class='languageCell removeParent'>"
+      echo "<th class='languageCell'>"
          . "<a $lhref title='$lttip' class='remove'><i class='icon-remove-custom'></i></a>"
          . "<a class='tableLink color-language' $href title='$ln\n$ttip'>$sn</a><br />"
          . "</th>";
@@ -127,7 +127,7 @@ function tables_multiwordTableTransposed($v){
       $ptip  = $t->st('tabulator_multi_playword');
       $trans = $w->getTranslation($v, true, false);
       $maps  = $w->getMapsLink($t);
-      echo "<td class='removeParent'><a class='tableLink color-word' $href title='$ttip'>$trans</a>"
+      echo "<td><a class='tableLink color-word' $href title='$ttip'>$trans</a>"
          . "<a $mhref title='$mttip' class='remove'><i class='icon-remove-custom'></i></a>"
          . "</td><td class='icons'>$maps"
          . "<i class='icon-eject rotate90 multitablePlayWe' title='$ptip'></i>"

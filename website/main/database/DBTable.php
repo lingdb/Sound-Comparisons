@@ -7,16 +7,16 @@ abstract class DBTable{
     Fetches a single row from a query.
   */
   protected function fetchRow($q){
-    $set = mysql_query($q, $this->dbConnection);
-    if($r = mysql_fetch_row($set))
+    $set = $this->dbConnection->query($q);
+    if($r = $set->fetch_row())
       return $r;
     return null;
   }
   /***/
   protected function fetchRows($q){
     $rows = array();
-    $set  = mysql_query($q, $this->dbConnection);
-    while($r = mysql_fetch_row($set))
+    $set  = $this->dbConnection->query($q);
+    while($r = $set->fetch_row())
       array_push($rows, $r);
     return $rows;
   }

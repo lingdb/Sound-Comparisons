@@ -29,9 +29,9 @@ class Study extends DBEntry{
   public function getRegions(){
     $id = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) FROM Regions_$id";
-    $set = mysql_query($q, $this->dbConnection);
+    $set = $this->dbConnection->query($q);
     $ret = array();
-    while($r = mysql_fetch_row($set))
+    while($r = $set->fetch_row())
       array_push($ret, new RegionFromId($this->getValueManager(), $r[0]));
     return $ret;
   }
@@ -42,9 +42,9 @@ class Study extends DBEntry{
   public function getSpellingLanguages(){
     $id = $this->id;
     $q = "SELECT LanguageIx FROM Languages_$id WHERE IsSpellingRfcLang = 1";
-    $set = mysql_query($q, $this->dbConnection);
+    $set = $this->dbConnection->query($q);
     $ret = array();
-    while($r = mysql_fetch_row($set)){
+    while($r = $set->fetch_row()){
       array_push($ret, new LanguageFromId($this->v, $r[0]));
     }
     return $ret;
@@ -57,9 +57,9 @@ class Study extends DBEntry{
   public function getLanguages($allowNoTranscriptions = false){
     $id = $this->id;
     $q  = "SELECT LanguageIx FROM RegionLanguages_$id";
-    $set = mysql_query($q, $this->dbConnection);
+    $set = $this->dbConnection->query($q);
     $ret = array();
-    while($r = mysql_fetch_row($set)){
+    while($r = $set->fetch_row()){
       $l = new LanguageFromId($this->v, $r[0]);
       if($l->hasTranscriptions() || $allowNoTranscriptions)
         array_push($ret, $l);
@@ -77,9 +77,9 @@ class Study extends DBEntry{
        . "WHERE CONCAT(StudyIx, FamilyIx) "
        . "LIKE (SELECT CONCAT(REPLACE(CONCAT(StudyIx, FamilyIx),0,''),'%') "
        . "FROM Studies WHERE Name = '$id')";
-    $set = mysql_query($q, $this->dbConnection);
+    $set = $this->dbConnection->query($q);
     $ret = array();
-    while($r = mysql_fetch_row($set)){
+    while($r = $set->fetch_row()){
       array_push($ret, new MeaningGroupFromId($this->getValueManager(), $r[0]));
     }
     return $ret;
@@ -107,16 +107,25 @@ class Study extends DBEntry{
         }
       }else{
         $tid = $v->gtm()->getTarget();
+        /**
+          We select all the translated words,
+          but make sure to fill them up with the distinct
+          untranslated ones.
+          This way if only some words have been translated,
+          or none at all, we still get to see them.
+        */
         $q = "SELECT DISTINCT CONCAT(IxElicitation, IxMorphologicalInstance) "
            . "FROM Page_DynamicTranslation_Words "
            . "WHERE TranslationId = $tid "
            . "AND Study = '$id' "
-           . "ORDER BY Trans_FullRfcModernLg01";
+           . "UNION DISTINCT "
+           . "SELECT DISTINCT CONCAT(IxElicitation, IxMorphologicalInstance) "
+           . "FROM Words_$id";
       }
     }
-    $words = mysql_query($q, $this->dbConnection);
+    $words = $this->dbConnection->query($q);
     $ret = array();
-    while($r = mysql_fetch_row($words))
+    while($r = $words->fetch_row())
       array_push($ret, new WordFromId($this->v, $r[0]));
     return $ret;
   }
@@ -124,7 +133,7 @@ class Study extends DBEntry{
   public function getColorByFamily(){
     $id = $this->id;
     $q  = "SELECT ColorByFamily FROM Studies WHERE Name = '$id'";
-    $r  = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+    $r  = $this->dbConnection->query($q)->fetch_row();
     return ($r[0] == 1);
   }
   /***/
@@ -134,9 +143,9 @@ class Study extends DBEntry{
           . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
           . "SELECT CONCAT(StudyIx, REPLACE(FamilyIx, 0, ''), '%') "
           . "FROM Studies WHERE Name = '$id')";
-    $set  = mysql_query($q, $this->dbConnection);
+    $set  = $this->dbConnection->query($q);
     $fams = array();
-    while($r = mysql_fetch_row($set)){
+    while($r = $set->fetch_row()){
       array_push($fams, new FamilyFromId($this->v, $r[0]));
     }
     return $fams;
@@ -157,7 +166,7 @@ class Study extends DBEntry{
     $q = "SELECT DefaultTopLeftLat, DefaultTopLeftLon, "
        . "DefaultBottomRightLat, DefaultBottomRightLon "
        . "FROM Studies WHERE Name = '$key'";
-    if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_row()){
       $valid = true;
       foreach($r as $v)
         if($v === null || $v === 0){
@@ -183,7 +192,7 @@ class StudyFromKey extends Study{
     $this->setup($v);
     $this->key = $key;
     $q = "SELECT COUNT(*) FROM Studies WHERE Name='$key'";
-    $r = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+    $r = $this->dbConnection->query($q)->fetch_row();
     if($r[0] >= 1){
       $this->id = $key; // id == key
     }

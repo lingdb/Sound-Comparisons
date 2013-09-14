@@ -149,18 +149,20 @@ class Tabulator{
            . "<div class='color-language inline'> $trans</div></a>";
     //Contributors:
     $contributors = '';
+    $_v = $v->gpv()->setView('whoAreWe');
     foreach($language->getContributors() as $c){
       $cdesc = $c->getColumnDescription();
       $year  = $c->year;
       $pages = $c->pages;
       $name  = $c->getName();
-      $info  = '';
+      $link  = $_v->link('', 'href', '#'.$c->getInitials());
       if($year && $pages){
         $info = "($year : $pages)";
-      }else if($year || $pages)
+      }else if($year || $pages){
         $info = "($year$pages)";
+      } else $info = '';
       $contributors .= "<tr><th class='text-left'>$cdesc:</th><td>"
-                     . "<a href='#' class='pull-right'>$name$info</a>"
+                     . "<a $link class='pull-right'>$name$info</a>"
                      . "</td></tr>";
     }
     $ttip = $t->st('tooltip_contributor_list');

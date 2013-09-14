@@ -8,7 +8,7 @@
       $description = $this->getDescription('dt_words_fullRfcModernLg01');
       //We need all Studies to build the search queries:
       $q = 'SELECT Name FROM Studies';
-      $studies = mysql_query($q, $this->dbConnection);
+      $studies = $this->dbConnection->query($q);
       $studies = $this->fetchRows($studies);
       //Search queries:
       $qs = array(
@@ -58,10 +58,11 @@
       return $ret;
     }
     public function update($tId, $payload, $update){
+      $db      = $this->dbConnection;
       $payload = explode(',', $payload);
-      $study   = mysql_real_escape_string($payload[0]);
-      $wId     = mysql_real_escape_string($payload[1]);
-      $update  = mysql_real_escape_string($update);
+      $study   = $db->escape_string($payload[0]);
+      $wId     = $db->escape_string($payload[1]);
+      $update  = $db->escape_string($update);
       $q = "SELECT IxElicitation, IxMorphologicalInstance "
          . "FROM Words_$study "
          . "WHERE CONCAT(IxElicitation, "
@@ -82,7 +83,7 @@
       . "VALUES ($tId, '$study', $ixe, $ixm, '$update')"
       );
       foreach($qs as $q)
-        mysql_query($q, $this->dbConnection);
+        $db->query($q);
     }
   }
 ?>

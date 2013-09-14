@@ -12,8 +12,8 @@
     if(!isset($_SESSION['Secret']) || !isset($_SESSION['UserId']))
       return false;
     $query = 'SELECT Login, Hash FROM Edit_Users WHERE UserId = '
-      .mysql_real_escape_string($_SESSION['UserId']);
-    if($row = mysql_fetch_assoc(mysql_query($query, $dbConnection)))
+      .$dbConnection->escape_string($_SESSION['UserId']);
+    if($row = $dbConnection->query($query)->fetch_assoc())
       return ($_SESSION['Secret'] == md5(''.$row['Login'].$row['Hash']));
     return false;
   }
@@ -35,8 +35,8 @@
     if(!isset($_SESSION['UserId']))
       return false;
     $query = 'SELECT AccessTranslate FROM Edit_Users WHERE UserId = '
-      .mysql_real_escape_string($_SESSION['UserId']);
-    if($r = mysql_fetch_assoc(mysql_query($query, $dbConnection)))
+      .$dbConnection->escape_string($_SESSION['UserId']);
+    if($r = $dbConnection->query($query)->fetch_assoc())
       return ($r['AccessTranslate'] == '1');
     return false;
   }
@@ -49,8 +49,8 @@
     if(!isset($_SESSION['UserId']))
       return false;
     $query = 'SELECT AccessEdit FROM Edit_Users WHERE UserId = '
-      .mysql_real_escape_string($_SESSION['UserId']);
-    if($r = mysql_fetch_assoc(mysql_query($query, $dbConnection)))
+      .$dbConnection->escape_string($_SESSION['UserId']);
+    if($r = $dbConnection->query($query)->fetch_assoc())
       return ($r['AccessEdit'] == '1');
     return false;
   }
@@ -61,6 +61,6 @@
   function session_getUid(){
     if(!isset($_SESSION['UserId']))
       die('UserId is not set in validate.php:session_getUid()');
-    return mysql_real_escape_string($_SESSION['UserId']);
+    return $dbConnection->escape_string($_SESSION['UserId']);
   }
 ?>

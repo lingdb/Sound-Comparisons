@@ -51,8 +51,8 @@
   /* Action handling: */
   switch($_GET['action']){
     case 'search':
-      $translationId = mysql_real_escape_string($_GET['TranslationId']);
-      $searchText    = mysql_real_escape_string($_GET['SearchText']);
+      $translationId = $dbConnection->escape_string($_GET['TranslationId']);
+      $searchText    = $dbConnection->escape_string($_GET['SearchText']);
       $matches = array();
       foreach($providers as $p){
         $ms = $p->search($translationId, $searchText);
@@ -61,7 +61,7 @@
       echo json_encode($matches);
     break;
     case 'update':
-      $translationId = mysql_real_escape_string($_GET['TranslationId']);
+      $translationId = $dbConnection->escape_string($_GET['TranslationId']);
       $payload = $_GET['Payload'];
       $update = $_GET['Update'];
       $searchProvider = $_GET['SearchProvider'];

@@ -18,7 +18,7 @@
       }
       //We need all Studies to build the search queries:
       $q = 'SELECT Name FROM Studies';
-      $studies = mysql_query($q, $this->dbConnection);
+      $studies = $this->dbConnection->query($q);
       $studies = $this->fetchRows($studies);
       //Search queries:
       $qs = array(
@@ -64,18 +64,19 @@
       return $ret;
     }
     public function updateColumn($c, $tId, $payload, $update){
+      $db      = $this->dbConnection;
       $payload = explode(',', $payload);
-      $study   = mysql_real_escape_string($payload[0]);
-      $lIx     = mysql_real_escape_string($payload[1]);
-      $update  = mysql_real_escape_string($update);
+      $study   = $db->escape_string($payload[0]);
+      $lIx     = $db->escape_string($payload[1]);
+      $update  = $db->escape_string($update);
       $q = "SELECT Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite, "
          . "Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite "
          . "FROM Page_DynamicTranslation_RegionLanguages "
          . "WHERE TranslationId = $tId "
          . "AND Study = '$study' "
          . "AND LanguageIx = $lIx";
-      $rst = mysql_query($q, $this->dbConnection);
-      if($r = mysql_fetch_array($rst)){
+      $rst = $db->query($q);
+      if($r = $rst->fetch_array()){
         $rst = $r;
       }else $rst = array(
         'Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite' => ''
@@ -95,7 +96,8 @@
       . "Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite) "
       . "VALUES ($tId, '$study', $lIx, '$a', '$b')"
       );
-      foreach($qs as $q) mysql_query($q, $this->dbConnection);
+      foreach($qs as $q)
+        $db->query($q);
     }
   }
 ?>

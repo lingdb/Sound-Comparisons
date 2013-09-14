@@ -78,8 +78,8 @@
                 <option class="default" selected="selected" value="null">none</option><?php
                   $query = 'SELECT ShortName, LanguageIx FROM Languages '
                          . 'WHERE LanguageIx = ANY (SELECT RfcLanguage FROM RfcLanguages)';
-                  $set = mysql_query($query, $dbConnection);
-                  while($r = mysql_fetch_row($set)){
+                  $set = $dbConnection->query($query);
+                  while($r = $set->fetch_row()){
                     $id = $r[1];
                     $shortName = $r[0];
                     echo "<option value='$id'>$shortName</option>";

@@ -213,8 +213,7 @@ dd.languageList {
   border-bottom: 1px solid #dddddd;
   padding: 0px;
 }
-.removeParent {position: relative;}
-.remove {position: absolute; top: 0px; right: 0px;}
+.remove {float:right;}
 .languageHeadlineParent {width: 100%}
 #languageHeadline, #languageDescription {text-align: center;}
 #languageHeadline h3 {border: 0px; display: inline;}
@@ -303,4 +302,6 @@ dd.languageList {
 #ipaButtonTone {margin-right: 20px;}
 #ipaClose {position: absolute; right: 5px;}
 /* Contributors page: */
-img.avatar {width: 140px;}
+.contributor:target {
+  border-color: #B94A48;
+}

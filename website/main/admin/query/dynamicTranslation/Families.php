@@ -5,8 +5,8 @@
     $values = array();
     $q = "SELECT CONCAT(StudyIx, FamilyIx), FamilyNm FROM Families "
        . "LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = mysql_query($q, DB_CONNECTION);
-    while($r = mysql_fetch_row($set)){
+    $set = DB_CONNECTION->query($q);
+    while($r = $set->fetch_row()){
       $key = $r[0];
       $r = $r[1];
       $entry = array(
@@ -18,7 +18,7 @@
       $translation = array();
       $q = "SELECT Trans FROM Page_DynamicTranslation_Families "
          . "WHERE CONCAT(StudyIx, FamilyIx) = $key AND TranslationId = $tid";
-      if($t = mysql_fetch_row(mysql_query($q, DB_CONNECTION))){
+      if($t = DB_CONNECTION->query($q)->fetch_row()){
         $translation = array('Name' => $t[0]);
       }
       array_push($entry, $translation, $descriptions);
@@ -31,11 +31,11 @@
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_Families "
        . "WHERE CONCAT(StudyIx, FamilyIx) = $key AND TranslationId = $tid";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
     $trans = $translation['Name'];
     $q = "INSERT INTO Page_DynamicTranslation_Families(TranslationId, StudyIx, FamilyIx, Trans) "
        . "SELECT $tid, StudyIx, FamilyIx, '$trans' FROM Families "
        . "WHERE CONCAT(StudyIx, FamilyIx) = $key";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
   }
 ?>

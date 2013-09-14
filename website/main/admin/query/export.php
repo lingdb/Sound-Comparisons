@@ -9,7 +9,7 @@
   session_validate($dbConnection) or die('403 Forbidden');
   session_mayTranslate($dbConnection) or die('403 Forbidden');
   /* The helpful esc function */
-  function esc($s){return "'".mysql_real_escape_string($s)."'";}
+  function esc($s){return "'".$dbConnection->escape_string($s)."'";}
   /* Setting the right headers for a download: */
   $filename = 'translations_'.date('Y-m-d h:i', time()).'.sql';
   header("Pragma: public");
@@ -34,8 +34,8 @@
     public function run(){
       $mkT = $this->mkTuple;
       $ts  = array();
-      $set = mysql_query($this->select, $this->dbConnection);
-      while($r = mysql_fetch_row($set))
+      $set = $this->dbConnection->query($this->select);
+      while($r = $set->fetch_row())
         array_push($ts, $mkT($r));
       if(count($ts) === 0) return '';
       $bIn = $this->buildInsert;

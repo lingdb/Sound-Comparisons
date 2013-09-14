@@ -2,7 +2,7 @@
   /***/
   function fetchTranslations_Words($tid, $study, $offset){
     $q = "SELECT SecondRfcLg FROM Studies WHERE Name = '$study'";
-    $r = mysql_fetch_row(mysql_query($q, DB_CONNECTION));
+    $r = DB_CONNECTION->query($q)->fetch_row();
     $rfcLg = ($r[0] === '') ? null : $r[0];
     $descriptions = getDescriptions(array('dt_words_fullRfcModernLg01'), DB_CONNECTION);
     $values = array();
@@ -11,8 +11,8 @@
        . "FROM Words_$study LIMIT "
        . PAGE_ITEM_LIMIT
        . " OFFSET $offset";
-    $set = mysql_query($q, DB_CONNECTION);
-    while($r = mysql_fetch_row($set)){
+    $set = DB_CONNECTION->query($q);
+    while($r = $set->fetch_row()){
       if($r[3] !== $r[2] && $r[3] !== ''){
         $rfcForm = ($rfcLg === null) ? array() : array('rfc' => $rfcLg, 'form' => $r[3]);
       }else $rfcForm = array();
@@ -31,7 +31,7 @@
          . "AND Study='$study' "
          . "AND IxElicitation = ".$r[0]." "
          . "AND IxMorphologicalInstance = ".$r[1];
-      if($t = mysql_fetch_row(mysql_query($q, DB_CONNECTION))){
+      if($t = DB_CONNECTION->query($q)->fetch_row()){
         $translation = array('FullRfcModernLg01' => $t[0]);
       }
       array_push($entry, $translation, $descriptions);
@@ -48,12 +48,12 @@
          . "AND Study = '$study' "
          . "AND IxElicitation = $ixe "
          . "AND IxMorphologicalInstance = $ixm";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
     $a = $translation['FullRfcModernLg01'];
     $q = "INSERT INTO Page_DynamicTranslation_Words(TranslationId, "
        . "Study, IxElicitation, IxMorphologicalInstance, "
        . "Trans_FullRfcModernLg01) "
        . "VALUES ($tid, '$study', $ixe, $ixm, '$a')";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
   }
 ?>

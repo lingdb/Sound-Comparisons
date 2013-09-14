@@ -21,8 +21,8 @@
     */
     case 'getPageTranslations':
       $arr = array(); // The JSON Array
-      $set = mysql_query('SELECT * FROM Page_Translations ORDER BY TranslationName', $dbConnection);
-      while($row = mysql_fetch_assoc($set))
+      $set = $dbConnection->query('SELECT * FROM Page_Translations ORDER BY TranslationName');
+      while($row = $set->fetch_assoc())
         array_push($arr, $row);
       echo json_encode($arr);
     break;
@@ -35,16 +35,16 @@
       @returns TranslationId
     */
     case 'createPageTranslation':
-      $translationName  = mysql_real_escape_string($_GET['TranslationName']);
-      $browserMatch     = mysql_real_escape_string($_GET['BrowserMatch']);
-      $imagePath        = sanitizeImagePath(mysql_real_escape_string($_GET['ImagePath']));
-      $rfcLanguage      = mysql_real_escape_string($_GET['RfcLanguage']);
-      $active           = mysql_real_escape_string($_GET['Active']);
+      $translationName = $dbConnection->escape_string($_GET['TranslationName']);
+      $browserMatch    = $dbConnection->escape_string($_GET['BrowserMatch']);
+      $imagePath       = sanitizeImagePath($dbConnection->escape_string($_GET['ImagePath']));
+      $rfcLanguage     = $dbConnection->escape_string($_GET['RfcLanguage']);
+      $active          = $dbConnection->escape_string($_GET['Active']);
       $query = "INSERT INTO Page_Translations"
         ."(TranslationName, BrowserMatch, ImagePath, RfcLanguage, Active)"
         ." VALUES ('$translationName', '$browserMatch', '$imagePath', $rfcLanguage, $active)";
-      mysql_query($query, $dbConnection);
-      echo mysql_insert_id($dbConnection);
+      $dbConnection->query($query);
+      echo $dbConnection->insert_id();
     break;
     /**
       @param TranslationId
@@ -55,12 +55,12 @@
       @param Active
     */
     case 'updatePageTranslation':
-      $translationId   = mysql_real_escape_string($_GET['TranslationId']);
-      $translationName = mysql_real_escape_string($_GET['TranslationName']);
-      $browserMatch    = mysql_real_escape_string($_GET['BrowserMatch']);
-      $imagePath       = sanitizeImagePath(mysql_real_escape_string($_GET['ImagePath']));
-      $rfcLanguage     = mysql_real_escape_string($_GET['RfcLanguage']);
-      $active          = mysql_real_escape_string($_GET['Active']);
+      $translationId   = $dbConnection->escape_string($_GET['TranslationId']);
+      $translationName = $dbConnection->escape_string($_GET['TranslationName']);
+      $browserMatch    = $dbConnection->escape_string($_GET['BrowserMatch']);
+      $imagePath       = sanitizeImagePath($dbConnection->escape_string($_GET['ImagePath']));
+      $rfcLanguage     = $dbConnection->escape_string($_GET['RfcLanguage']);
+      $active          = $dbConnection->escape_string($_GET['Active']);
       $query = "UPDATE Page_Translations SET"
         ." TranslationName = '$translationName'"
         .", BrowserMatch = '$browserMatch'"
@@ -68,35 +68,35 @@
         .", RfcLanguage = $rfcLanguage"
         .", Active = $active"
         ." WHERE TranslationId = $translationId";
-      mysql_query($query, $dbConnection);
+      $dbConnection->query($query);
     break;
     /**
       @param Req
       @param Description
     */
     case 'updateTranslationDescription':
-      $req  = mysql_real_escape_string($_GET['Req']);
-      $desc = mysql_real_escape_string($_GET['Description']);
+      $req  = $dbConnection->escape_string($_GET['Req']);
+      $desc = $dbConnection->escape_string($_GET['Description']);
       if(!session_mayEdit($dbConnection)) return;
       $q = "UPDATE Page_StaticDescription "
          . "SET Description = '$desc' WHERE Req = '$req'";
-      mysql_query($q, $dbConnection);
+      $dbConnection->query($q);
     break;
     /**
       @param TranslationId
       @returns 'OK'|'FAIL'
     */
     case 'deletePageTranslation':
-      $translationId = mysql_real_escape_string($_GET['TranslationId']);
+      $translationId = $dbConnection->escape_string($_GET['TranslationId']);
       //Prevent deletion on default language:
       if($translationId == '1')
         die('FAIL');
       //Delete static translations:
       $query = "DELETE FROM Page_StaticTranslation WHERE TranslationId = $translationId";
-      mysql_query($query, $dbConnection);
+      $dbConnection->query($query);
       //Delete entry itself:
       $query = "DELETE FROM Page_Translations WHERE TranslationId = $translationId";
-      mysql_query($query, $dbConnection);
+      $dbConnection->query($query);
       echo 'OK';
     break;
     /**
@@ -105,12 +105,12 @@
       @return JSON Array of DB-entries
     */
     case 'fetchStaticTranslations':
-      $source = mysql_real_escape_string($_GET['source']);
-      $target = mysql_real_escape_string($_GET['target']);
+      $source = $dbConnection->escape_string($_GET['source']);
+      $target = $dbConnection->escape_string($_GET['target']);
       $arr = array();
       $query = "SELECT * FROM Page_StaticTranslation WHERE TranslationId = $source ORDER BY Req";
-      $sourceSet = mysql_query($query, $dbConnection);
-      while($sRow = mysql_fetch_assoc($sourceSet)){
+      $sourceSet = $dbConnection->query($query);
+      while($sRow = $sourceSet->fetch_assoc()){
         $entry = array(
           'TranslationId' => $target
         , 'Req'           => $sRow['Req']
@@ -120,12 +120,12 @@
         );
         $q = "SELECT Trans FROM Page_StaticTranslation WHERE Req = '".$sRow['Req']."' "
            . "AND TranslationId = $target";
-        if($t = mysql_fetch_assoc(mysql_query($q, $dbConnection))){
+        if($t = $dbConnection->query($q)->fetch_assoc())){
           $entry['Trans'] = $t['Trans'];
         }
         $entry['Desc'] = '';
         $q = "SELECT Description FROM Page_StaticDescription WHERE Req = '".$sRow['Req']."'";
-        if($d = mysql_fetch_assoc(mysql_query($q, $dbConnection)))
+        if($d = $dbConnection->query($q)->fetch_assoc())
           $entry['Desc'] = $d['Description'];
         array_push($arr, $entry);
       }
@@ -139,16 +139,16 @@
       @return 'OK'
     */
     case 'putStaticTranslation':
-      $translationId  = mysql_real_escape_string($_GET['TranslationId']);
-      $req            = mysql_real_escape_string($_GET['Req']);
-      $trans          = mysql_real_escape_string(str_replace('"','\'',$_GET['Trans']));
-      $isHtml         = mysql_real_escape_string($_GET['IsHtml']);
+      $translationId  = $dbConnection->escape_string($_GET['TranslationId']);
+      $req            = $dbConnection->escape_string($_GET['Req']);
+      $trans          = $dbConnection->escape_string(str_replace('"','\'',$_GET['Trans']));
+      $isHtml         = $dbConnection->escape_string($_GET['IsHtml']);
       //Delete old value:
       $query = "DELETE FROM Page_StaticTranslation WHERE TranslationId = $translationId AND Req = '$req'";
-      mysql_query($query, $dbConnection);
+      $dbConnection->query($query);
       //Put new value:
       $query = "INSERT INTO Page_StaticTranslation VALUES ($translationId, '$req', '$trans', $isHtml)";
-      mysql_query($query, $dbConnection);
+      $dbConnection->query($query);
       echo 'OK';
     break;
   }

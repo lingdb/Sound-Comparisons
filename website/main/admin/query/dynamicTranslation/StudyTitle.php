@@ -4,8 +4,8 @@
     $descriptions = getDescriptions(array('dt_studyTitle_trans'), DB_CONNECTION);
     $values = array();
     $q = "SELECT DISTINCT Name FROM Studies LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = mysql_query($q, DB_CONNECTION);
-    while($r = mysql_fetch_row($set)){
+    $set = DB_CONNECTION->query($q);
+    while($r = $set->fetch_row()){
       $r = $r[0];
       $entry = array(
         $tid                  //'TranslationId'
@@ -16,7 +16,7 @@
       $translation = array();
       $q = "SELECT Trans FROM Page_DynamicTranslation_StudyTitle "
          . "WHERE TranslationId = $tid AND StudyName = '$r'";
-      if($t = mysql_fetch_row(mysql_query($q, DB_CONNECTION))){
+      if($t = DB_CONNECTION->query($q)->fetch_row()){
         $translation = array('Title' => $t[0]);
       }
       array_push($entry, $translation, $descriptions);
@@ -29,10 +29,10 @@
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_StudyTitle "
        . "WHERE TranslationId = $tid AND StudyName = '$key'";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
     $trans = $translation['Title'];
     $q = "INSERT INTO Page_DynamicTranslation_StudyTitle(TranslationId, Trans, StudyName) "
        . "VALUES ($tid,'$trans','$key')";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
   }
 ?>

@@ -12,9 +12,9 @@ WordOverlay = Backbone.Model.extend({
   , view:      null      // Set by a view on construction
   }
 , initialize: function(){
-    this.initId();
     var d = {
-      position: new google.maps.LatLng(
+      id: _.uniqueId('WordOverlay_')
+    , position: new google.maps.LatLng(
         this.get('lat')
       , this.get('lon')
       )
@@ -42,11 +42,6 @@ WordOverlay = Backbone.Model.extend({
                  + audio;
     }, this);
     this.set(d);
-  }
-, initId: function(){
-    this.set({
-      id: WordOverlay.prototype.idCounter++
-    });
   }
 , validate: function(attrs, options){
     if(attrs.color){
@@ -150,4 +145,3 @@ WordOverlay = Backbone.Model.extend({
     this.set({edge: _.head(edges)})
   }
 });
-WordOverlay.prototype.idCounter = 0;

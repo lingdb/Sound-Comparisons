@@ -15,7 +15,7 @@ class Word extends DBEntry{
     $id = $this->id;
     $q = "SELECT $field FROM Words_$sid "
        . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-    $row = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+    $row = $this->dbConnection->query($q)->fetch_row();
     return $row[0];
   }
   /**
@@ -82,11 +82,11 @@ class Word extends DBEntry{
       $q = "SELECT SpellingAltv1, SpellingAltv2 FROM Transcriptions_$sid "
          . "WHERE LanguageIx = $lId "
          . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-      $set = mysql_query($q, $this->dbConnection);
+      $set = $this->dbConnection->query($q);
       $translations = array(); // Where translations are put in.
       // There might be multiple Transcriptions for a pair of (Word,Language),
       // therefore we iterate the resultset.
-      while($r = mysql_fetch_row($set)){
+      while($r = $set->fetch_row()){
         //Examining the Pair:
         $str = $r[0];
         if($str === '')
@@ -140,7 +140,7 @@ class Word extends DBEntry{
                . "WHERE T.LanguageIx = $rfcId "
                . "AND CONCAT(W.IxElicitation, W.IxMorphologicalInstance) = $id "
                . "LIMIT 1";
-        $trans = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $trans = $this->dbConnection->query($q)->fetch_row();
         $trans = $trans[0];
         $query = "SELECT CONCAT(W.IxElicitation, W.IxMorphologicalInstance) "
                . "FROM Words_$sId AS W JOIN Transcriptions_$sId AS T USING (IxElicitation, IxMorphologicalInstance) "
@@ -154,7 +154,7 @@ class Word extends DBEntry{
                . "FROM Page_DynamicTranslation_Words "
                . "WHERE TranslationId = $tid "
                . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-        $trans = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+        $trans = $this->dbConnection->query($q)->fetch_row();
         $trans = $trans[0];
         $query = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
                . "FROM Page_DynamicTranslation_Words "
@@ -168,7 +168,7 @@ class Word extends DBEntry{
       }
     }
     //Trying to fetch the Word:
-    if($w = mysql_fetch_row(mysql_query($query, $this->dbConnection))){
+    if($w = $this->dbConnection->query($query)->fetch_row()){
       return new WordFromId($this->v, $w[0]);
     }
     //No Word found, so this is the loop around case:
@@ -210,7 +210,7 @@ class Word extends DBEntry{
                .") ORDER BY Trans_FullRfcModernLg01 $order LIMIT 1";
       }
     }
-    if($w = mysql_fetch_row(mysql_query($query, $this->dbConnection)))
+    if($w = $this->dbConnection->query($query)->fetch_row())
       return new WordFromId($this->v, $w[0]);
     //This should no more occur:
     return null;
@@ -248,9 +248,9 @@ class Word extends DBEntry{
     . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = $id"
     );
     foreach($queries as $q){
-      $set = mysql_query($q, $this->dbConnection);
+      $set = $this->dbConnection->query($q);
       $mgs = array();
-      while($r = mysql_fetch_row($set))
+      while($r = $set->fetch_row())
         array_push($mgs, new MeaningGroupFromId($v, $r[0]));
       if(count($mgs) > 0)
         return $mgs;
@@ -317,7 +317,7 @@ class WordFromKey extends Word{
       $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$sid "
        . "WHERE (FullRfcModernLg01 LIKE '$key' OR FullRfcProtoLg01 LIKE '$key')";
     }else die('main/database/Word.php:WordFromKey has no $studyId given!');
-    if($word = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($word = $this->dbConnection->query($q)->fetch_row()){
       $this->id = $word[0];
       $this->sid = $sid;
     }else die("Could not find word: $key");
@@ -339,7 +339,7 @@ class WordFromId extends Word{
       $sid = $study->getId();
     }else die('Could not find $sid in main/database/Word.php:WordFromId:__construct() with id:\t'.$id);
     $query = "SELECT FullRfcModernLg01 FROM Words_$sid WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-    if($word = mysql_fetch_assoc(mysql_query($query, $this->dbConnection))){
+    if($word = $this->dbConnection->query($query)->fetch_assoc()){
       $this->key = $word['FullRfcModernLg01'];
       $this->sid = $sid;
     }else die("Invalid WordId: '$id' with query: $query");
@@ -360,7 +360,7 @@ class WordFromStudy extends Word{
     $sid = $study->getId();
     $q = "SELECT CONCAT(W.IxElicitation, W.IxMorphologicalInstance), W.FullRfcModernLg01 "
        . "FROM Words_$sid ORDER BY IxElicitation ASC LIMIT 1";
-    if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_row()){
       $this->id  = $r[0];
       $this->key = $r[1];
       $this->sid = $sid;

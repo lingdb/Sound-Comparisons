@@ -31,9 +31,9 @@ class MeaningGroup extends DBEntry{
        . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = ANY("
          . "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$sid"
        . ") ORDER BY MeaningGroupMemberIx, IxElicitation ASC";
-    $set = mysql_query($q, $this->dbConnection);
+    $set = $this->dbConnection->query($q);
     $ret = array();
-    while($r = mysql_fetch_row($set)){
+    while($r = $set->fetch_row()){
       array_push($ret, new WordFromId($this->v, $r[0]));
     }
     return $ret;
@@ -49,7 +49,7 @@ class MeaningGroupFromId extends MeaningGroup{
     $this->setup($v);
     $this->id = $id;
     $q = "SELECT Name FROM MeaningGroups WHERE MeaningGroupIx = $id";
-    if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_row()){
       $this->key = $r[0];
     }else die("No name for MeaningGroup: $id.");
   }
@@ -64,7 +64,7 @@ class MeaningGroupFromKey extends MeaningGroup{
     $this->setup($v);
     $this->key = $key;
     $q = "SELECT MeaningGroupIx FROM MeaningGroups WHERE Name = '$key'";
-    if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_row()){
       $this->id = $r[0];
     }else die("No Id for MeaningGroup with name: $key.");
   }

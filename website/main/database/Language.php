@@ -87,7 +87,7 @@ class Language extends DBEntry{
        . "WHERE RegionGpMemberLgNameLongInThisSubFamilyWebsite IS NOT NULL "
        . "AND RegionGpMemberLgNameLongInThisSubFamilyWebsite != '' "
        . "AND LanguageIx = $id";
-    if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_row()){
       $lname = $r[0];
       if($superscript)
         $lname = $this->getSuperscript($lname);
@@ -222,9 +222,9 @@ class Language extends DBEntry{
     $id = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIX, SubFamilyIx, RegionGpIx) "
        . "FROM RegionLanguages_$sid WHERE LanguageIx = $id";
-    $set = mysql_query($q, $this->dbConnection);
+    $set = $this->dbConnection->query($q);
     $ret = array();
-    while($row = mysql_fetch_row($set))
+    while($row = $set->fetch_row())
       array_push($ret, new RegionFromId($this->v, $row[0]));
     return $ret;
   }
@@ -301,7 +301,7 @@ class Language extends DBEntry{
       $flag = $r[0];
       $q = "SELECT Tooltip FROM FlagTooltip WHERE Flag = '$flag'";
       $tooltip = '';
-      if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection)))
+      if($r = $this->dbConnection->query($q)->fetch_row())
         $tooltip = $r[0];
       if($html)
         return "<img src='img/flags/$flag.png' title='$tooltip' />";
@@ -424,7 +424,7 @@ class Language extends DBEntry{
        . ", ExternalWeblink "
        . "FROM Languages_$sid "
        . "WHERE LanguageIx = $id";
-    if($r = mysql_fetch_assoc(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_assoc()){
       //Description lines:
       $description = $r['Tooltip'];
       if($description != '')
@@ -504,12 +504,12 @@ class Language extends DBEntry{
     $q = "SELECT LanguageIx FROM RegionLanguages_$sId WHERE "
        . "(RegionGpIx, RegionMemberLgIx) $comp (SELECT RegionGpIx, RegionMemberLgIx FROM RegionLanguages_$sId WHERE LanguageIx = $lId) "
        . "ORDER BY RegionGpIx $order, RegionMemberLgIx $order LIMIT 1";
-    if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_row()){
       return new LanguageFromId($v, $r[0]);
     }
     //The wrap around case:
     $q = "SELECT LanguageIx FROM RegionLanguages_$sId ORDER BY RegionGpIx $order, RegionMemberLgIx $order LIMIT 1";
-    $r = mysql_fetch_row(mysql_query($q, $this->dbConnection));
+    $r = $this->dbConnection->query($q)->fetch_row();
     return new LanguageFromId($v, $r[0]);
   }
   /**
@@ -602,7 +602,7 @@ class LanguageFromStudy extends Language{
     $sid = $study->getId();
     //Fetching LanguageIx
     $q = "SELECT LanguageIx FROM Languages_$sid ORDER BY LanguageIx ASC LIMIT 1";
-    if($r = mysql_fetch_row(mysql_query($q, $this->dbConnection))){
+    if($r = $this->dbConnection->query($q)->fetch_row()){
       $this->id = $r[0];
     }else die("Could not find language for studyId: $sid.");
     $this->findKey();

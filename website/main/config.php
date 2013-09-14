@@ -10,32 +10,19 @@ class Config {
   private $db     = "v4";
   /* Accessable values: */
   private $dbConnection  = null;
-  private $dbiConnection = null;
   private $flags_enabled = false;
   private $soundPath     = "../sound";
   private $downloadPath  = "export/download";
-  /* Functions to connect to the db: */
-  private function connectMysql(){
-    $this->dbConnection = mysql_connect($this->server, $this->user, $this->passwd) or die(mysql_error());
-    if(!mysql_select_db($this->db, $this->dbConnection)){
-      die("Could not select db '$this->db'!" . mysql_error());
-    }
-    $q = mysql_query('SET names \'utf8\'', $this->dbConnection);
-  }
+  /* Function to connect to the db: */
   private function connectMysqlI(){
-    $this->dbiConnection = new mysqli($this->server, $this->user, $this->passwd, $this->db); // Used in files.php
-    mysqli_set_charset($this->dbiConnection, 'utf8');
+    $this->dbConnection = new mysqli($this->server, $this->user, $this->passwd, $this->db); // Used in files.php
+    $this->dbConnection->set_charset('utf8');
   }
   /* Getter functions to fetch config values: */
   public function getConnection(){
     if(is_null($this->dbConnection))
-      $this->connectMysql();
-    return $this->dbConnection;
-  }
-  public function getIConnection(){
-    if(is_null($this->dbiConnection))
       $this->connectMysqlI();
-    return $this->dbiConnection;
+    return $this->dbConnection;
   }
   public function getFlags(){
     return $this->flags_enabled;

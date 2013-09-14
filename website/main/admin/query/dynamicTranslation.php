@@ -86,21 +86,21 @@
         $q = "SELECT COUNT(*) FROM Words_$study";
       break;
     }
-    $c = mysql_fetch_row(mysql_query($q, DB_CONNECTION));
+    $c = DB_CONNECTION->query($q)->fetch_row();
     return $c[0];
   }
   //Function to fetch $study where dummies are allowed:
   function getStudy(){
     if(!isset($_GET['Study']))
       return 'dummyStudy';
-    return mysql_real_escape_string($_GET['Study']);
+    return $dbConnection->escape_string($_GET['Study']);
   }
   //Function to fetch descriptions from Page_StaticDescription table:
   function getDescriptions($names, $dbConnection){
     $ret = array();
     foreach($names as $n){
       $q = "SELECT Description FROM Page_StaticDescription WHERE Req = '$n'";
-      $r = mysql_fetch_row(mysql_query($q, $dbConnection));
+      $r = $dbConnection->query($q)->fetch_row();
       $ret[$n] = $r[0];
     }
     return $ret;
@@ -113,8 +113,8 @@
     case 'fetchStudies':
       $data = array();
       $q    = "SELECT DISTINCT Name FROM Studies";
-      $set  = mysql_query($q, DB_CONNECTION);
-      while($r = mysql_fetch_row($set)){
+      $set  = DB_CONNECTION->query($q);
+      while($r = $set->fetch_row()){
         array_push($data, $r[0]);
       }
       echo json_encode($data);
@@ -142,7 +142,7 @@
     */
     case 'fetchOffsets':
       $study   = getStudy();
-      $suffix  = mysql_real_escape_string($_GET['Suffix']);
+      $suffix  = $dbConnection->escape_string($_GET['Suffix']);
       $count   = getSuffixCount($suffix, $study);
       $offsets = array();
       for($offset = 0; $offset < $count; $offset += PAGE_ITEM_LIMIT){
@@ -159,9 +159,9 @@
     */
     case 'fetchTranslations':
       $study   = getStudy();
-      $suffix  = mysql_real_escape_string($_GET['Suffix']);
-      $tid     = mysql_real_escape_string($_GET['TranslationId']);
-      $offset  = mysql_real_escape_string($_GET['Offset']);
+      $suffix  = $dbConnection->escape_string($_GET['Suffix']);
+      $tid     = $dbConnection->escape_string($_GET['TranslationId']);
+      $offset  = $dbConnection->escape_string($_GET['Offset']);
       $handler = "fetchTranslations_$suffix";
       $values  = $handler($tid, $study, $offset);
       echo mkJSON($values);
@@ -174,12 +174,12 @@
     */
     case 'storeTranslation':
       $handler     = "saveTranslation_".$_GET['TableSuffix'];
-      $tid         = mysql_real_escape_string($_GET['TranslationId']);
-      $study       = mysql_real_escape_string($_GET['Study']);
+      $tid         = $dbConnection->escape_string($_GET['TranslationId']);
+      $study       = $dbConnection->escape_string($_GET['Study']);
       $key         = explode(',', $_GET['Key']);
       $translation = $_GET['Translation'];
-      $key         = array_map("mysql_real_escape_string", $key);
-      $translation = array_map("mysql_real_escape_string", $translation);
+      $key         = array_map("$dbConnection->escape_string", $key);
+      $translation = array_map("$dbConnection->escape_string", $translation);
       $handler($tid, $study, $key, $translation);
     break;
   }

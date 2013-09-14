@@ -150,17 +150,18 @@ abstract class ValueManager{
   /**
     @param [$target=''] String target url to which parameters will be added
     @param [$attr='href'] String attribute that will contain the link
+    @param [$anchor=''] String anchor to be appended to the link (Should start with '#'!)
     @return $link String
     Builds a href attribute for links.
   */
-  public function link($target = '', $attr = 'href'){
+  public function link($target = '', $attr = 'href', $anchor = ''){
     $linkArray = $this->toArray();
     $getStr = '';
     foreach($linkArray as $n => $v)
       $getStr = $getStr.'&'.$n.'='.$v;
     if(count($getStr)>0)
       $getStr = '?'.substr($getStr,1);
-    return "$attr='".$target.$getStr."'";
+    return $attr.'="'.$target.$getStr.$anchor.'"';
   }
   
   /**

@@ -10,8 +10,8 @@
   require_once '../config.php';
   $dbConnection = $config->getConnection();
   $reqs = array();
-  $set  = mysql_query('SELECT Req FROM Page_StaticDescription', $dbConnection);
-  while($r = mysql_fetch_row($set))
+  $set  = $dbConnection->query('SELECT Req FROM Page_StaticDescription');
+  while($r = $set->fetch_row())
     array_push($reqs, $r[0]);
   exec('find .. -type f -regex .*php', $files);
   $contents = '';

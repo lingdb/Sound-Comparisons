@@ -7,8 +7,8 @@
                                    , DB_CONNECTION);
     $values = array();
     $q = "SELECT LanguageStatusType, Status, Description, StatusTooltip FROM LanguageStatusTypes WHERE Description != '' LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = mysql_query($q, DB_CONNECTION);
-    while($r = mysql_fetch_row($set)){
+    $set = DB_CONNECTION->query($q);
+    while($r = $set->fetch_row()){
       $lst = $r[0];
       //The basic entry:
       $entry = array(
@@ -27,7 +27,7 @@
       $q = "SELECT Trans_Status, Trans_Description, Trans_StatusTooltip "
          . "FROM Page_DynamicTranslation_LanguageStatusTypes "
          . "WHERE TranslationId = $tid AND LanguageStatusType = $lst";
-      if($t = mysql_fetch_row(mysql_query($q, DB_CONNECTION))){
+      if($t = DB_CONNECTION->query($q)->fetch_row()){
         $translation = array(
           'Status'        => $t[0]
         , 'Description'   => $t[1]
@@ -44,13 +44,13 @@
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_LanguageStatusTypes "
        . "WHERE TranslationId = $tid AND LanguageStatusType = $key";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
     $a = $translation['Status'];
     $b = $translation['Description'];
     $c = $translation['StatusTooltip'];
     $q = "INSERT INTO Page_DynamicTranslation_LanguageStatusTypes(TranslationId, LanguageStatusType, "
        . "Trans_Status, Trans_Description, Trans_StatusTooltip) "
        . "VALUES ($tid,$key,'$a','$b','$c')";
-    mysql_query($q, DB_CONNECTION);
+    DB_CONNECTION->query($q);
   }
 ?>
