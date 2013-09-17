@@ -25,7 +25,6 @@
   session_mayTranslate($dbConnection) or die('403 Forbidden');
   /* Constants */
   define('PAGE_ITEM_LIMIT', 30);
-  define('DB_CONNECTION', $dbConnection);
   /**
     Encodes the input as a json array of objects.
     See the source for a mapping of subarrays to object fields.
@@ -54,7 +53,7 @@
     @param  $study  - String
     @return $count  - Integer
   */
-  function getSuffixCount($suffix, $study){
+  function getSuffixCount($dbConnection, $suffix, $study){
     $q = 'SELECT 0';
     switch($suffix){
       case 'Families':
@@ -86,11 +85,11 @@
         $q = "SELECT COUNT(*) FROM Words_$study";
       break;
     }
-    $c = DB_CONNECTION->query($q)->fetch_row();
+    $c = $dbConnection->query($q)->fetch_row();
     return $c[0];
   }
   //Function to fetch $study where dummies are allowed:
-  function getStudy(){
+  function getStudy($dbConnection){
     if(!isset($_GET['Study']))
       return 'dummyStudy';
     return $dbConnection->escape_string($_GET['Study']);
@@ -113,7 +112,7 @@
     case 'fetchStudies':
       $data = array();
       $q    = "SELECT DISTINCT Name FROM Studies";
-      $set  = DB_CONNECTION->query($q);
+      $set  = $dbConnection->query($q);
       while($r = $set->fetch_row()){
         array_push($data, $r[0]);
       }
@@ -141,9 +140,9 @@
       @param Suffix String - The Table which is translated.
     */
     case 'fetchOffsets':
-      $study   = getStudy();
+      $study   = getStudy($dbConnection);
       $suffix  = $dbConnection->escape_string($_GET['Suffix']);
-      $count   = getSuffixCount($suffix, $study);
+      $count   = getSuffixCount($dbConnection, $suffix, $study);
       $offsets = array();
       for($offset = 0; $offset < $count; $offset += PAGE_ITEM_LIMIT){
         array_push($offsets, $offset);
@@ -158,12 +157,12 @@
       @param Offset        Integer - Offset to use for fetching items.
     */
     case 'fetchTranslations':
-      $study   = getStudy();
+      $study   = getStudy($dbConnection);
       $suffix  = $dbConnection->escape_string($_GET['Suffix']);
       $tid     = $dbConnection->escape_string($_GET['TranslationId']);
       $offset  = $dbConnection->escape_string($_GET['Offset']);
       $handler = "fetchTranslations_$suffix";
-      $values  = $handler($tid, $study, $offset);
+      $values  = $handler($dbConnection, $tid, $study, $offset);
       echo mkJSON($values);
     break;
     /*
@@ -178,9 +177,10 @@
       $study       = $dbConnection->escape_string($_GET['Study']);
       $key         = explode(',', $_GET['Key']);
       $translation = $_GET['Translation'];
-      $key         = array_map("$dbConnection->escape_string", $key);
-      $translation = array_map("$dbConnection->escape_string", $translation);
-      $handler($tid, $study, $key, $translation);
+      $escape      = function($x) use ($dbConnection){return $dbConnection->escape_string($x);};
+      $key         = array_map($escape, $key);
+      $translation = array_map($escape, $translation);
+      $handler($dbConnection, $tid, $study, $key, $translation);
     break;
   }
 ?>

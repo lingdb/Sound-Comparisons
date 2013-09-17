@@ -120,7 +120,7 @@
         );
         $q = "SELECT Trans FROM Page_StaticTranslation WHERE Req = '".$sRow['Req']."' "
            . "AND TranslationId = $target";
-        if($t = $dbConnection->query($q)->fetch_assoc())){
+        if($t = $dbConnection->query($q)->fetch_assoc()){
           $entry['Trans'] = $t['Trans'];
         }
         $entry['Desc'] = '';

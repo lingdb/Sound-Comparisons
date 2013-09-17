@@ -46,8 +46,8 @@
     }
     public function update($tId, $payload, $update){
       $db      = $this->dbConnection;
-      $payload = $->escape_string($payload);
-      $update  = $->escape_string($update);
+      $payload = $db->escape_string($payload);
+      $update  = $db->escape_string($update);
       $qs = array(
         "DELETE FROM Page_DynamicTranslation_StudyTitle "
       . "WHERE TranslationId = $tId "

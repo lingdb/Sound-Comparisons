@@ -36,7 +36,7 @@
         $q = "SELECT $origCol "
            . "FROM LanguageStatusTypes "
            . "WHERE LanguageStatusType = $payload";
-        $original = $this->dbConnection->quey($q)->fetch_row();
+        $original = $this->dbConnection->query($q)->fetch_row();
         $q = "SELECT $c FROM "
            . "Page_DynamicTranslation_LanguageStatusTypes "
            . "WHERE TranslationId = $tId "

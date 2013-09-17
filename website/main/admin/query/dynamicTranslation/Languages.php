@@ -1,14 +1,14 @@
 <?php
   /***/
-  function fetchTranslations_Languages($tid, $study, $offset){
+  function fetchTranslations_Languages($dbConnection, $tid, $study, $offset){
     $descriptions = getDescriptions(array('dt_languages_shortName'
                                          ,'dt_languages_spellingRfcLangName'
                                          ,'dt_languages_specificLanguageVarietyName')
-                                   , DB_CONNECTION);
+                                   , $dbConnection);
     $values = array();
     $q = "SELECT LanguageIx, ShortName, SpellingRfcLangName, SpecificLanguageVarietyName "
        . "FROM Languages_$study LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = DB_CONNECTION->query($q);
+    $set = $dbConnection->query($q);
     while($r = $set->fetch_row()){
       $lid = $r[0];
       //The basic entry:
@@ -31,7 +31,7 @@
          . "Trans_SpecificLanguageVarietyName "
          . "FROM Page_DynamicTranslation_Languages "
          . "WHERE TranslationId = $tid AND LanguageIx = $lid AND Study = '$study'";
-      if($t = DB_CONNECTION->query($q)->fetch_row()){
+      if($t = $dbConnection->query($q)->fetch_row()){
         $translation = array(
           'ShortName'                                      => $t[0]
         , 'SpellingRfcLangName'                            => $t[1]
@@ -45,11 +45,11 @@
     return $values;
   }
   /***/
-  function saveTranslation_Languages($tid, $study, $key, $translation){
+  function saveTranslation_Languages($dbConnection, $tid, $study, $key, $translation){
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_Languages "
        . "WHERE TranslationId = $tid AND Study = '$study' AND LanguageIx = $key";
-    DB_CONNECTION->query($q);
+    $dbConnection->query($q);
     $a = $translation['ShortName'];
     $b = $translation['SpellingRfcLangName'];
     $c = $translation['SpecificLanguageVarietyName'];
@@ -57,6 +57,6 @@
        . "TranslationId, Study, Trans_ShortName, Trans_SpellingRfcLangName, "
        . "Trans_SpecificLanguageVarietyName, LanguageIx) "
        . "VALUES ($tid, '$study', '$a', '$b', '$c', $key)";
-    DB_CONNECTION->query($q);
+    $dbConnection->query($q);
   }
 ?>

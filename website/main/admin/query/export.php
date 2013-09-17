@@ -9,7 +9,9 @@
   session_validate($dbConnection) or die('403 Forbidden');
   session_mayTranslate($dbConnection) or die('403 Forbidden');
   /* The helpful esc function */
-  function esc($s){return "'".$dbConnection->escape_string($s)."'";}
+  $esc = function($s) use ($dbConnection){
+    return "'".$dbConnection->escape_string($s)."'";
+  };
   /* Setting the right headers for a download: */
   $filename = 'translations_'.date('Y-m-d h:i', time()).'.sql';
   header("Pragma: public");
@@ -46,11 +48,11 @@
   $tables = array(
     new Table(
       'SELECT TranslationId, TranslationName, BrowserMatch, ImagePath, Active, RfcLanguage FROM Page_Translations'
-    , function($r){
+    , function($r) use ($esc){
         $tid = $r[0];
-        $tn  = esc($r[1]);
-        $bm  = esc($r[2]);
-        $ip  = esc($r[3]);
+        $tn  = $esc($r[1]);
+        $bm  = $esc($r[2]);
+        $ip  = $esc($r[3]);
         $a   = $r[4];
         $rl  = is_null($r[5]) ? 'NULL' : $r[5];
         return "($tid,$tn,$bm,$ip,$a,$rl)";
@@ -59,57 +61,57 @@
     )
   , new Table(
       'SELECT Req, Description FROM Page_StaticDescription'
-    , function($r){return '('.esc($r[0]).','.esc($r[1]).')';}
+    , function($r) use ($esc){return '('.$esc($r[0]).','.$esc($r[1]).')';}
     , function($s){return "INSERT IGNORE INTO Page_StaticDescription VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Req, Trans, IsHtml FROM Page_StaticTranslation'
-    , function($r){return '('.$r[0].','.esc($r[1]).','.esc($r[2]).','.$r[3].')';}
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).','.$r[3].')';}
     , function($s){return "INSERT IGNORE INTO Page_StaticTranslation VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, StudyIx, FamilyIx, Trans FROM Page_DynamicTranslation_Families'
-    , function($r){return '('.$r[0].','.$r[1].','.$r[2].','.esc($r[3]).')';}
+    , function($r) use ($esc){return '('.$r[0].','.$r[1].','.$r[2].','.$esc($r[3]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Families VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, LanguageStatusType, Trans_Status, Trans_Description, Trans_StatusTooltip FROM Page_DynamicTranslation_LanguageStatusTypes'
-    , function($r){return '('.$r[0].','.$r[1].','.esc($r[2]).','.esc($r[3]).','.esc($r[4]).')';}
+    , function($r) use ($esc){return '('.$r[0].','.$r[1].','.$esc($r[2]).','.$esc($r[3]).','.$esc($r[4]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_LanguageStatusTypes VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Study, Trans_ShortName, Trans_SpellingRfcLangName, Trans_SpecificLanguageVarietyName, LanguageIx FROM Page_DynamicTranslation_Languages'
-    , function($r){return '('.$r[0].','.esc($r[1]).','.esc($r[2]).','.esc($r[3]).','.esc($r[4]).','.$r[5].')';}
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).','.$esc($r[3]).','.$esc($r[4]).','.$r[5].')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Languages VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Trans, MeaningGroupIx FROM Page_DynamicTranslation_MeaningGroups'
-    , function($r){return '('.$r[0].','.esc($r[1]).','.$r[2].')';}
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_MeaningGroups VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Study, LanguageIx, Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite, Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite FROM Page_DynamicTranslation_RegionLanguages'
-    , function($r){return '('.$r[0].','.esc($r[1]).','.$r[2].','.esc($r[3]).','.esc($r[4]).')';}
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].','.$esc($r[3]).','.$esc($r[4]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_RegionLanguages VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Study, RegionIdentifier, Trans_RegionGpNameShort, Trans_RegionGpNameLong FROM Page_DynamicTranslation_Regions'
-    , function($r){return '('.$r[0].','.esc($r[1]).','.$r[2].','.esc($r[3]).','.esc($r[4]).')';}
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].','.$esc($r[3]).','.$esc($r[4]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Regions VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Study, Trans FROM Page_DynamicTranslation_Studies'
-    , function($r){return '('.$r[0].','.esc($r[1]).','.esc($r[2]).')';}
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Studies VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Trans, StudyName FROM Page_DynamicTranslation_StudyTitle'
-    , function($r){return '('.$r[0].','.esc($r[1]).','.esc($r[2]).')';}
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_StudyTitle VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, IxElicitation, Study, IxMorphologicalInstance, Trans_FullRfcModernLg01 FROM Page_DynamicTranslation_Words'
-    , function($r){return '('.$r[0].','.$r[1].','.esc($r[2]).','.$r[3].','.esc($r[4]).')';}
+    , function($r) use ($esc){return '('.$r[0].','.$r[1].','.$esc($r[2]).','.$r[3].','.$esc($r[4]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Words VALUES $s;\n";}
     )
   );

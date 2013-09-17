@@ -1,11 +1,11 @@
 <?php
   /***/
-  function fetchTranslations_Families($tid, $study, $offset){
+  function fetchTranslations_Families($dbConnection, $tid, $study, $offset){
     $descriptions = getDescriptions(array('dt_families_trans'), DB_CONNECTION);
     $values = array();
     $q = "SELECT CONCAT(StudyIx, FamilyIx), FamilyNm FROM Families "
        . "LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = DB_CONNECTION->query($q);
+    $set = $dbConnection->query($q);
     while($r = $set->fetch_row()){
       $key = $r[0];
       $r = $r[1];
@@ -18,7 +18,7 @@
       $translation = array();
       $q = "SELECT Trans FROM Page_DynamicTranslation_Families "
          . "WHERE CONCAT(StudyIx, FamilyIx) = $key AND TranslationId = $tid";
-      if($t = DB_CONNECTION->query($q)->fetch_row()){
+      if($t = $dbConnection->query($q)->fetch_row()){
         $translation = array('Name' => $t[0]);
       }
       array_push($entry, $translation, $descriptions);
@@ -27,15 +27,15 @@
     return $values;
   }
   /***/
-  function saveTranslation_Families($tid, $study, $key, $translation){
+  function saveTranslation_Families($dbConnection, $tid, $study, $key, $translation){
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_Families "
        . "WHERE CONCAT(StudyIx, FamilyIx) = $key AND TranslationId = $tid";
-    DB_CONNECTION->query($q);
+    $dbConnection->query($q);
     $trans = $translation['Name'];
     $q = "INSERT INTO Page_DynamicTranslation_Families(TranslationId, StudyIx, FamilyIx, Trans) "
        . "SELECT $tid, StudyIx, FamilyIx, '$trans' FROM Families "
        . "WHERE CONCAT(StudyIx, FamilyIx) = $key";
-    DB_CONNECTION->query($q);
+    $dbConnection->query($q);
   }
 ?>

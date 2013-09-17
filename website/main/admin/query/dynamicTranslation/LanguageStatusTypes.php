@@ -1,13 +1,13 @@
 <?php
   /***/
-  function fetchTranslations_LanguageStatusTypes($tid, $study, $offset){
+  function fetchTranslations_LanguageStatusTypes($dbConnection, $tid, $study, $offset){
     $descriptions = getDescriptions(array('dt_languageStatusTypes_status'
                                          ,'dt_languageStatusTypes_description'
                                          ,'dt_languageStatusTypes_statusTooltip')
-                                   , DB_CONNECTION);
+                                   , $dbConnection);
     $values = array();
     $q = "SELECT LanguageStatusType, Status, Description, StatusTooltip FROM LanguageStatusTypes WHERE Description != '' LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $set = DB_CONNECTION->query($q);
+    $set = $dbConnection->query($q);
     while($r = $set->fetch_row()){
       $lst = $r[0];
       //The basic entry:
@@ -27,7 +27,7 @@
       $q = "SELECT Trans_Status, Trans_Description, Trans_StatusTooltip "
          . "FROM Page_DynamicTranslation_LanguageStatusTypes "
          . "WHERE TranslationId = $tid AND LanguageStatusType = $lst";
-      if($t = DB_CONNECTION->query($q)->fetch_row()){
+      if($t = $dbConnection->query($q)->fetch_row()){
         $translation = array(
           'Status'        => $t[0]
         , 'Description'   => $t[1]
@@ -40,17 +40,17 @@
     return $values;
   }
   /***/
-  function saveTranslation_LanguageStatusTypes($tid, $study, $key, $translation){
+  function saveTranslation_LanguageStatusTypes($dbConnection, $tid, $study, $key, $translation){
     $key = $key[0];
     $q = "DELETE FROM Page_DynamicTranslation_LanguageStatusTypes "
        . "WHERE TranslationId = $tid AND LanguageStatusType = $key";
-    DB_CONNECTION->query($q);
+    $dbConnection->query($q);
     $a = $translation['Status'];
     $b = $translation['Description'];
     $c = $translation['StatusTooltip'];
     $q = "INSERT INTO Page_DynamicTranslation_LanguageStatusTypes(TranslationId, LanguageStatusType, "
        . "Trans_Status, Trans_Description, Trans_StatusTooltip) "
        . "VALUES ($tid,$key,'$a','$b','$c')";
-    DB_CONNECTION->query($q);
+    $dbConnection->query($q);
   }
 ?>
