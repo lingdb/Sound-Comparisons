@@ -14,33 +14,15 @@ MapView = Backbone.View.extend({
     , this.model.get('mapOptions')
     );
     this.render();
-    //The play buttons:
+    //SoundControlView:
+    this.soundControlView = new SoundControlView({
+      el: this.map, model: this});
+    //Window resize
     var view = this;
-    $('#map_play_directions > i').each(function(i, e){
-      var target    = $(e);
-      var direction = target.attr('data-direction');
-      var pSeq      = new PlaySequence(target);
-      var _showPlay = pSeq.showPlay;
-      pSeq.showPlay = function(){
-        this.clear();
-        _showPlay.call(this);
-      };
-      var _showPause = pSeq.showPause;
-      pSeq.showPause = function(){
-        view.fillPSeq(direction, this);
-        //Stop another one running:
-        $('#map_play_directions > i').each(function(){
-          if($(this).hasClass('icon-pause'))
-            $(this).trigger('click');
-        });
-        //Show this one:
-        _showPause.call(this);
-      };
-    });
+    $(window).resize(function(){view.adjustCanvasSize();});
   }
 , render: function(){
-    //The canvas needs more size:
-    $('#map_canvas').css('height', window.innerHeight * .75 + 'px');
+    this.adjustCanvasSize();
     //Delayed centerRegion:
     var t   = this
       , tid = window.setTimeout(function(){
@@ -55,6 +37,12 @@ MapView = Backbone.View.extend({
       }
     , this
     );
+  }
+, adjustCanvasSize: function(){
+    var canvas = $('#map_canvas')
+      , offset = canvas.offset();
+    canvas.css('height', window.innerHeight - offset.top - 1 + 'px');
+    google.maps.event.trigger(this.map, "resize");
   }
 , centerDefault: function(){
     this.map.fitBounds(this.model.get('defaultBounds'));

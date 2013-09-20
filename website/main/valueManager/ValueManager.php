@@ -161,6 +161,8 @@ abstract class ValueManager{
       $getStr = $getStr.'&'.$n.'='.$v;
     if(count($getStr)>0)
       $getStr = '?'.substr($getStr,1);
+    if(isset($_GET['ValueManagerLinks']))
+      return $attr.'="'.$target.$getStr.$anchor.'&ValueManagerLinks"';
     return $attr.'="'.$target.$getStr.$anchor.'"';
   }
   

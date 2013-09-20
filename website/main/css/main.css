@@ -159,6 +159,7 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   padding-top: 2px;
 }
 /*Style in leftMenu:*/
+#leftMenu {padding-top: 0px;}
 #leftMenu > h3 {text-align: center;}
 .familyList, .regionList, .languageList {list-style: none;}
 .familyList > dt:first-child {margin-top: 0px;}
@@ -171,6 +172,7 @@ dd.languageList {
   padding: 0px 0px 0px 7px;
 }
 /*Style in rightMenu:*/
+#rightMenu {padding-top: 0px;}
 #rightMenu > h3 {text-align: center;}
 .meaninggroupList, .wordList {list-style: none; margin: 0px;}
 .meaninggroupList .wordList {margin-left: 7px;}
@@ -204,8 +206,8 @@ dd.languageList {
 #contentArea {overflow: hidden;}
 #contentArea > table {margin-left: auto; margin-right: auto;}
 #tableHeader > a, #tableHeader > h1 {display: inline;}
-#prevLink {margin-right: 1em;}
-#nextLink {margin-left: 1em;}
+#prevLink {padding-left:  25px;}
+#nextLink {padding-right: 25px;}
 .table .spaceRow {
   height:      1em;
   line-height: 1em;
@@ -213,6 +215,7 @@ dd.languageList {
   border-bottom: 1px solid #dddddd;
   padding: 0px;
 }
+#wordHeadline_playAll {position: relative; top: 20px;}
 .remove {float:right;}
 .languageHeadlineParent {width: 100%}
 #languageHeadline, #languageDescription {text-align: center;}
@@ -223,6 +226,10 @@ dd.languageList {
   margin-bottom: 5px;
 }
 #language_playAll {vertical-align: middle;}
+#contributorGroup .dropdown-menu{
+  min-width: 300px;
+  max-width: 600px;
+}
 #tableHeader > * {display: inline-block;}
 .table th, .table td {
   text-align: center;
@@ -243,7 +250,22 @@ dd.languageList {
   -moz-border-radius:    5px;
   border-radius:         5px;
 }
-#map_data {display: none;}
+#map_data, #map_play_directions {display: none;}
+#SoundControlView {
+  margin-top: 18px;
+  background-color: #ffffff;
+  height: 50px;
+  width: 50px;
+  -webkit-border-radius: 25px;
+  -moz-border-radius:    25px;
+  border-radius:         25px;
+  border: 1px solid #666;
+}
+#SoundControlView > i {position: absolute;}
+#SoundControlView > i[data-direction="ns"] {top:  0px; left: 14px;}
+#SoundControlView > i[data-direction="sn"] {top: 34px; left: 13px;}
+#SoundControlView > i[data-direction="we"] {top: 16px; left: -3px;}
+#SoundControlView > i[data-direction="ew"] {top: 17px; left: 30px;}
 #multitable .languageCell>.multitablePlayWe {float: left;}
 #multitabletrans .icons, #multitable .icons {white-space: nowrap;}
 /*IPA Keyboard*/

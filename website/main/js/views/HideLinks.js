@@ -42,6 +42,9 @@ HideLinks = Backbone.View.extend({
       this.deltaSpan(this.content, -delta);
     }
     this.saveState(t, !target.is(':visible'));
+    //Telling the MapView to adjust:
+    if(window.App.views.mapView)
+      window.App.views.mapView.adjustCanvasSize();
   }
 , saveState: function(t, hidden){
     var key = this.storageKey(t.data('name'));

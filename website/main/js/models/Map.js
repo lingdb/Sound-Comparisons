@@ -76,6 +76,7 @@ Map = Backbone.Model.extend({
     this.set({notAddedWos: c});
     if(c === 0)
       this.placeWordOverlays();
+    this.get('defaultBounds').extend(wo.get('position'));
   }
 , placeWordOverlays: function(){
     /**

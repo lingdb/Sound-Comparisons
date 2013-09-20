@@ -27,7 +27,6 @@ if($v->gpv()->isView('WordView')){
 }else if($v->gpv()->isView('MapView')){
   $t        = $v->getTranslator();
   $headline = $tabulator->wordHeadline(current($v->getWords()));
-  $headline = "<table id='map_headline' class='table'>$headline</table>"; //FIXME this is kind of dirty
   $viewAll  = $v->setLanguages($v->getStudy()->getLanguages())->link();
   $viewLast = $v->setLanguages()->link();
   $allSelected  = '';
@@ -53,15 +52,18 @@ if($v->gpv()->isView('WordView')){
             . "<div id='map_zoom_options'>"
             . "<a id='map_menu_zoomCenter'>$mapsMenuCenterMap</a> | "
             . "<a class='selected' id='map_menu_zoomCoreRegion'>$mapsMenuCoreRegion</a>"
-            . "</div>"
-            . "<div id='map_play_directions'>"
-            . "<i data-direction='ns' title='$mapsMenuPlayNs' class='icon-eject rotate180'></i>"
-            . "<i data-direction='sn' title='$mapsMenuPlaySn' class='icon-eject'></i>"
-            . "<i data-direction='we' title='$mapsMenuPlayWe' class='icon-eject rotate90'></i>"
-            . "<i data-direction='ew' title='$mapsMenuPlayEw' class='icon-eject rotate270'></i>"
             . "</div>";
   $mapsData = $tabulator->mapsData();
-  echo "$headline<div id='map_menu'>$mapsMenu</div><div id='map_canvas'></div><div id='map_data'>$mapsData</div>";
+  echo $headline
+     . "<div id='map_menu'>$mapsMenu</div>"
+     . "<div id='map_canvas'></div>"
+     . "<div id='map_data'>$mapsData</div>"
+     . "<div id='map_play_directions'>"
+       . "<i data-direction='ns' title='$mapsMenuPlayNs' class='icon-eject rotate180'></i>"
+       . "<i data-direction='sn' title='$mapsMenuPlaySn' class='icon-eject'></i>"
+       . "<i data-direction='we' title='$mapsMenuPlayWe' class='icon-eject rotate90'></i>"
+       . "<i data-direction='ew' title='$mapsMenuPlayEw' class='icon-eject rotate270'></i>"
+     . "</div>";
 }else if($v->gpv()->isSelection()){
   $tabulator->multiwordTable($v->gpv()->isView('MultiTransposed'));
 }else if($v->gpv()->isView('WhoAreWeView')){

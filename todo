@@ -1,23 +1,15 @@
+2013-09-19:
+ - Try out memoization for constructors in main/database
+   - Memoization didn't bring any big differences when using it on Transcriptions
+     via a static method to be called instead of the TranscriptionFromWordLang constructor.
+   - I need a way to profile things first.
+ - Break up Tabulator.php into template like parts that can easily be included
+ - Learn about Zotero
+ - Let map remember location when switching words
+
 2013-09-13:
- - Adjust map height depending on screen via .js
-   - At the moment the map height is set statically,
-     I believe, and we're wasing space when the page is zoomed or thelike.
  - Move 'view by' with tabs in topmenu to the middle.
- - For side menus, remove padding to the top,
-   so that the headlines are closer to the top and
-   more or less on the same height as the hideLinks.
- - Make sure HideLinks don't overlap with text when collapsing
- - When collapsing right hidelink, it causes a horizontal scrollbar to appear
-   in the browser. Seen in MapView this behaviour suggests,
-   that some elements like to take up more space than they should
- - Rearrange Sound buttons:
-   - In 1W view let it hover over the left top edge
-     of the table, and put the map icon like a superscript behind the headline
-   - In MapView build something like the controlpanel into the map so that
-     we have the play buttons there like nice controls.
- - When words have indices _1 and _2, their respective sounds lack the _1 one, but have _2 displayed.
- - Remove unnecessary spacing between map an headline, aswell as between headline and table in 1W view.
- - Distribute todays work as an update.
+   - This is no easy task (thinking of smaller screens and the hell of horizontal alignment)
 
 2013-09-12:
  - Placement of WordOverlay.js in MapView
@@ -30,7 +22,6 @@
 
 2013-09-06:
  - Rewrite .htaccess file(s)
-   - I need to hide the architecture…
 
 2013-08-01:
  - Introduce seperate cells for items that have different variants with subscript
@@ -43,13 +34,8 @@
    - Need script for landing with /<Study> or /<Translation> like fonetika.org/Andean or fonetika.org/es (spanish translation)
    - Think about building a script that finds all unused SoundFiles and all supposed SoundFiles that don't exist
 
-2013-07-22:
- - Spread the use of new db functions from DBTable to other files in database/
-   - Split Language.php into parts to make it easier to maintain and ready it for lexemes and contributors
-
 2013-07-18:
  - Wordslist to be prettier and use lexemes
- - Shift the playbutton to the left, and add contributor information to the right for 1l view.
  - Note that genscript.php must also be aware of .wav files,
    which means that it'll become more generic soon.
  - Fix tables under Consonants Other in ipaKeyboard.
@@ -57,23 +43,17 @@
 
 2013-07-11:
  - Change the way that Words/Phonetics are displayed on the page depending on lexemes
-   - Build projections to handle the database, build views to display it's parts
 
 From Polina:
  - Add save buttons directly next to dt inputs
    -> This will need some more rewriting
    -> Maybe extend search to achieve this?
- - Languages, RegionLangues have duplicate entries… -.-
 
 From myself:
- - Current mysql functions are deprecated, I should migrate to new ones, it appears.
-   Found on http://php.net/manual/en/function.mysql-fetch-row.php
  - IsHtml field can be removed from v4.Page_StaticTranslation
    - This will need adjustment in different places
 
 in IPA Keyboard: Consonants-Main (Plumonic) with grid in the table
-
-More space to the sides of the singleLanguageTable
 
 Center +- for LanguageSets and MeaningSets horizontally
 
@@ -90,12 +70,12 @@ Storing of mySelection in Mapview and in TopMenu between views
  - this will need a good solution
  - Keep word between wordview and mapview
 
-Produce a soundfile generation script,
-  that will help building the missing soundfiles.
-
 -- Long term notes:
  - Think about splitting off all queries into the database dir, so that it's easier to grasp them all.
    - Introduce a general dbaccess class that handles all issues not handled by any of the other classes.
      This will also come in handy once another db with a different layout is included.
  - Comment / Document more.
  - Think about a smaller/faster/better vm client os than XUbuntu
+   - This way Paul (Maybe also Scott?) would have a nicer time working with it
+   - This could already use github to pull stuff from
+   - I should base this on debian testing/stable

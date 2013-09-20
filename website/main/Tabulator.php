@@ -35,22 +35,17 @@ class Tabulator{
              . "$next →<div class='color-word inline'> $trans</div></a>";
     }
     //Content:
-    $content = '<h1 class="color-word">'.$word->getTranslation($v, true, false).'</h1>';
-    //Links:
-    $links = '';
-    if(!$v->gpv()->isView('MapView')){
-      $wordHeadlinePlayAll = $t->st('wordHeadline_playAll');
-      $links = $word->getMapsLink($t)
-             . "<i class='icon-eject rotate90' id='wordHeadline_playAll' title='$wordHeadlinePlayAll'></i>";
-    }
+    $mapsLink = $v->gpv()->isView('MapView') ? '' : $word->getMapsLink($t);
+    $content = '<h1 class="color-word">'
+             . $word->getTranslation($v, true, false)
+             . $mapsLink
+             . '</h1>';
     //Composition
-    return "<thead><tr><th colspan='8' class='row-fluid'>"
+    return "<div class='row-fluid'>"
          . "<div class='span3'>$prev</div>"
          . "<div class='span6 centertext' id='tableHeader'>$content</div>"
          . "<div class='span3'>$next</div>"
-         . "</th></tr><tr><th colspan='8'>"
-         . $links
-         . "</tr></th></thead>";
+         . "</div>";
   }
   /***/
   public function tabluateWord($word){
@@ -65,8 +60,10 @@ class Tabulator{
         $maxLangCount = ($c > 6) ? 6 : $c;
     }
     //Building the table:
-    echo "<table id='singleWordTable' class='table table-bordered table-striped'>";
-    echo $this->wordHeadline($word);
+    $wordHeadlinePlayAll = $t->st('wordHeadline_playAll');
+    $table = $this->wordHeadline($word)
+           . '<table id="singleWordTable" class="table table-bordered table-striped"><tbody>'
+           . "<i class='icon-eject rotate90' id='wordHeadline_playAll' title='$wordHeadlinePlayAll'></i>";
     $colorFamily = $v->getStudy()->getColorByFamily();
     foreach($v->getStudy()->getFamilies() as $fIx => $f){
       $row = ($fIx !== 0) ? '<tr><td class="spaceRow" colspan="6"></td></tr><tr>' : '<tr>';
@@ -108,9 +105,10 @@ class Tabulator{
       $fName = $f->getName();
       $color = $colorFamily ? ' style="background-color: #'.$f->getColor().';"' : '';
       if($rSpanSum > 0)
-        echo "$row<th rowSpan='$rSpanSum'$color>$fName</th>$rContent";
+        $table .= "$row<th rowSpan='$rSpanSum'$color>$fName</th>$rContent";
     }
-    echo "</table>";
+    $table .= '</tbody></table>';
+    echo $table;
   }
   /**
     @param transposed [Bool = false] - will cause the table to display transposed.
@@ -172,7 +170,7 @@ class Tabulator{
                     . '<img src="img/people.png">'
                     . '<span class="caret"></span>'
                     . '</button>'
-                    . '<table class="dropdown-menu table-hover table-condensed" style="min-width: 300px;">'
+                    . '<table class="dropdown-menu table-hover table-condensed">'
                     . $contributors
                     . '</table></div>';
     //Composition:

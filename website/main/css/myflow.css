@@ -18,3 +18,5 @@
 .mycontent.myflow.row-fluid [class*="span"]:last-child {margin-right: 0px;}
 
 .mycontent.myflow.row-fluid .span8 { width: 66.6%; /* was 66.66666666666667 */ }
+
+.myflow.row-fluid .span12 { margin-left: 0px; }

@@ -27,6 +27,7 @@
          . '<script src="js/models/WordOverlay.js"></script>'
          . '<script src="js/models/Map.js"></script>'
          . '<script src="js/views/WordOverlayView.js"></script>'
+         . '<script src="js/views/SoundControlView.js"></script>'
          . '<script src="js/views/MapView.js"></script>';
     }
   ?>
