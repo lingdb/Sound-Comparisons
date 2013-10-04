@@ -2,7 +2,7 @@
   chdir('..');
   require_once 'common.php';
   /* Checking for edit rights: */
-  if(!session_mayEdit($dbConnection))
+  if(!session_mayEdit())
     die('You are not allowed to access this feature.');
   /* Ensuring an action is given: */
   if(!isset($_GET['action']))

@@ -79,7 +79,7 @@ class InitPageViewManager extends PageViewManager{
     //Making sure WordManager and LanguageManager are initialized:
     $v->gwm(); $v->glm();
     if(isset($_GET['pageView'])){
-      $this->init($this->getConnection()->escape_string($_GET['pageView']));
+      $this->init(Config::getConnection()->escape_string($_GET['pageView']));
     }else{
       $this->init('mapView');
     }

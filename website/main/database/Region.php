@@ -26,7 +26,7 @@ class Region extends DBEntry {
     $sid = $this->getValueManager()->getStudy()->getId();
     $id  = $this->id;
     $q   = "SELECT RegionGpNameShort FROM Regions_$sid WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    $r   = $this->dbConnection->query($q)->fetch_row();
+    $r   = Config::getConnection()->query($q)->fetch_row();
     return $r[0];
   }
   /**
@@ -41,7 +41,7 @@ class Region extends DBEntry {
     $sid = $this->getValueManager()->getStudy()->getId();
     $id  = $this->id;
     $q   = "SELECT RegionGpNameLong FROM Regions_$sid WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    $r   = $this->dbConnection->query($q)->fetch_row();
+    $r   = Config::getConnection()->query($q)->fetch_row();
     return $r[0];
   }
   /**
@@ -52,7 +52,7 @@ class Region extends DBEntry {
     $id  = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIx) FROM Regions_$sid "
        . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    $r = $this->dbConnection->query($q)->fetch_row();
+    $r = Config::getConnection()->query($q)->fetch_row();
     return new FamilyFromId($this->v, $r[0]);
   }
   /***/
@@ -72,7 +72,7 @@ class Region extends DBEntry {
     $q = "SELECT LanguageIx FROM RegionLanguages_$sid "
        . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id "
        . "ORDER BY RegionMemberLgIx";
-    $set = $this->dbConnection->query($q);
+    $set = Config::getConnection()->query($q);
     $ret = array();
     while($r = $set->fetch_row()){
       $l = new LanguageFromId($this->v, $r[0]);
@@ -89,7 +89,7 @@ class Region extends DBEntry {
     $id  = $this->id;
     $q = "SELECT COUNT(LanguageIx) FROM RegionLanguages_$sid "
        . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    if($r = $this->dbConnection->query($q)->fetch_row())
+    if($r = Config::getConnection()->query($q)->fetch_row())
       return $r[0];
     return 0;
   }
@@ -118,7 +118,7 @@ class Region extends DBEntry {
     $id = $this->id;
     $q = "SELECT RegionGpTypeIx FROM Regions_$sid "
        . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    if($r = $this->dbConnection->query($q)->fetch_row())
+    if($r = Config::getConnection()->query($q)->fetch_row())
       return $r[0];
     return REGIONTYPE_NORMAL;
   }
@@ -138,7 +138,7 @@ class RegionFromKey extends Region{
        . "FROM Regions "
        . "WHERE RegionGpNameLong LIKE '$key' "
        . "OR RegionGpNameShort LIKE '$key'";
-    if($r = $this->dbConnection->query($q)->fetch_row())
+    if($r = Config::getConnection()->query($q)->fetch_row())
       $this->id = $r[0];
     else die('Invalid RegionKey: ' . $key);
   }
@@ -156,7 +156,7 @@ class RegionFromId extends Region{
     $this->id = $id;
     $q = "SELECT RegionGpNameLong FROM Regions "
        . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    if($r = $this->dbConnection->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       $this->key = $r[0];
     }else die('Invalid RegionId: ' . $id);
   }

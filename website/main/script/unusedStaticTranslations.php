@@ -8,7 +8,7 @@
     from the database.
   */
   require_once '../config.php';
-  $dbConnection = $config->getConnection();
+  $dbConnection = Config::getConnection();
   $reqs = array();
   $set  = $dbConnection->query('SELECT Req FROM Page_StaticDescription');
   while($r = $set->fetch_row())

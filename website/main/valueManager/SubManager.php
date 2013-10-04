@@ -24,12 +24,6 @@ abstract class SubManager{
     return $c;
   }
   /**
-    @return $dbConnection
-  */
-  protected function getConnection(){
-    return $this->v->getConnection();
-  }
-  /**
     Helper function for toArray.
     A distinct problem is that these Strings can also contain ',' which causes problems when using implode.
     Therefore I use '#44' to replace ','.
@@ -45,7 +39,7 @@ abstract class SubManager{
     @return String decoded
   */
   protected function decodeUrl($x){
-    $db = $this->getConnection();
+    $db = Config::getConnection();
     return preg_replace('/#44/', ',', $db->escape_string(rawurldecode($x)));
   }
   /**
@@ -67,5 +61,4 @@ abstract class SubManager{
     return $this->getValueManager();
   }
 }
-
 ?>

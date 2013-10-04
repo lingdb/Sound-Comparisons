@@ -1,8 +1,16 @@
+2013-10-04:
+ - In Multitable:
+   - Words in their cells to the left, maybe
+   - Cross to the top right
+   - No line breaks between languages and their superscripts
+ - Playbacks that don't have a pronounciation seem to block the playqueue in mapvie in mapvieww
+ - Use colors for RegionGroups just like for Families in the Andean Study, when viewing MultiTables
+ - github.com/clld
+   - We'd like to use their format, but we don't wanna loose our special presentation features.
+   - This is to be kept in mind as an interesting thing.
+ - In MultitableTransposed, counting for languages is off by one when no words are shown
+
 2013-09-19:
- - Try out memoization for constructors in main/database
-   - Memoization didn't bring any big differences when using it on Transcriptions
-     via a static method to be called instead of the TranscriptionFromWordLang constructor.
-   - I need a way to profile things first.
  - Break up Tabulator.php into template like parts that can easily be included
  - Learn about Zotero
  - Let map remember location when switching words

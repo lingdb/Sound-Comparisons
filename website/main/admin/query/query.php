@@ -2,8 +2,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate($dbConnection) or die('403 Forbidden');
-  session_mayEdit($dbConnection)  or die('403 Forbidden');
+  session_validate() or die('403 Forbidden');
+  session_mayEdit()  or die('403 Forbidden');
   //Actions:
   switch($_GET['action']){
     /**

@@ -29,7 +29,7 @@ class Study extends DBEntry{
   public function getRegions(){
     $id = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) FROM Regions_$id";
-    $set = $this->dbConnection->query($q);
+    $set = Config::getConnection()->query($q);
     $ret = array();
     while($r = $set->fetch_row())
       array_push($ret, new RegionFromId($this->getValueManager(), $r[0]));
@@ -42,7 +42,7 @@ class Study extends DBEntry{
   public function getSpellingLanguages(){
     $id = $this->id;
     $q = "SELECT LanguageIx FROM Languages_$id WHERE IsSpellingRfcLang = 1";
-    $set = $this->dbConnection->query($q);
+    $set = Config::getConnection()->query($q);
     $ret = array();
     while($r = $set->fetch_row()){
       array_push($ret, new LanguageFromId($this->v, $r[0]));
@@ -57,13 +57,26 @@ class Study extends DBEntry{
   public function getLanguages($allowNoTranscriptions = false){
     $id = $this->id;
     $q  = "SELECT LanguageIx FROM RegionLanguages_$id";
-    $set = $this->dbConnection->query($q);
+    $set = Config::getConnection()->query($q);
     $ret = array();
     while($r = $set->fetch_row()){
       $l = new LanguageFromId($this->v, $r[0]);
       if($l->hasTranscriptions() || $allowNoTranscriptions)
         array_push($ret, $l);
     }
+    return $ret;
+  }
+  /***/
+  public function getMapExcludeLanguages(){
+    $id = $this->id;
+    $q  = "SELECT LanguageIx FROM Default_Languages_Exclude_Map "
+        . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
+          . "SELECT CONCAT(StudyIx, REPLACE(FamilyIx, 0, '%')) FROM Studies WHERE Name = '$id'"
+        . ") AND LanguageIx = ANY (SELECT LanguageIx FROM Languages_$id)";
+    $set = Config::getConnection()->query($q);
+    $ret = array();
+    while($r = $set->fetch_row())
+      array_push($ret, new LanguageFromId($this->v, $r[0]));
     return $ret;
   }
   /**
@@ -77,7 +90,7 @@ class Study extends DBEntry{
        . "WHERE CONCAT(StudyIx, FamilyIx) "
        . "LIKE (SELECT CONCAT(REPLACE(CONCAT(StudyIx, FamilyIx),0,''),'%') "
        . "FROM Studies WHERE Name = '$id')";
-    $set = $this->dbConnection->query($q);
+    $set = Config::getConnection()->query($q);
     $ret = array();
     while($r = $set->fetch_row()){
       array_push($ret, new MeaningGroupFromId($this->getValueManager(), $r[0]));
@@ -123,7 +136,7 @@ class Study extends DBEntry{
            . "FROM Words_$id";
       }
     }
-    $words = $this->dbConnection->query($q);
+    $words = Config::getConnection()->query($q);
     $ret = array();
     while($r = $words->fetch_row())
       array_push($ret, new WordFromId($this->v, $r[0]));
@@ -133,7 +146,7 @@ class Study extends DBEntry{
   public function getColorByFamily(){
     $id = $this->id;
     $q  = "SELECT ColorByFamily FROM Studies WHERE Name = '$id'";
-    $r  = $this->dbConnection->query($q)->fetch_row();
+    $r  = Config::getConnection()->query($q)->fetch_row();
     return ($r[0] == 1);
   }
   /***/
@@ -143,7 +156,7 @@ class Study extends DBEntry{
           . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
           . "SELECT CONCAT(StudyIx, REPLACE(FamilyIx, 0, ''), '%') "
           . "FROM Studies WHERE Name = '$id')";
-    $set  = $this->dbConnection->query($q);
+    $set  = Config::getConnection()->query($q);
     $fams = array();
     while($r = $set->fetch_row()){
       array_push($fams, new FamilyFromId($this->v, $r[0]));
@@ -166,7 +179,7 @@ class Study extends DBEntry{
     $q = "SELECT DefaultTopLeftLat, DefaultTopLeftLon, "
        . "DefaultBottomRightLat, DefaultBottomRightLon "
        . "FROM Studies WHERE Name = '$key'";
-    if($r = $this->dbConnection->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       $valid = true;
       foreach($r as $v)
         if($v === null || $v === 0){
@@ -192,7 +205,7 @@ class StudyFromKey extends Study{
     $this->setup($v);
     $this->key = $key;
     $q = "SELECT COUNT(*) FROM Studies WHERE Name='$key'";
-    $r = $this->dbConnection->query($q)->fetch_row();
+    $r = Config::getConnection()->query($q)->fetch_row();
     if($r[0] >= 1){
       $this->id = $key; // id == key
     }

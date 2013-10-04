@@ -73,7 +73,7 @@
     }
     /***/
     public static function forLanguage($language){
-      $dbConnection = $language->getConnection();
+      $dbConnection = Config::getConnection();
       $v  = $language->getValueManager();
       $id = $language->getId();
       $q  = "SELECT ContributorSpokenBy, ContributorRecordedBy1, ContributorRecordedBy2"
@@ -94,8 +94,7 @@
     }
     /***/
     private static function contributors($v, $q){
-      $dbConnection = $v->getConnection();
-      $set = $dbConnection->query($q);
+      $set = Config::getConnection()->query($q);
       $ret = array();
       while($r = $set->fetch_row())
         array_push($ret, new ContributorFromId($v, $r[0]));

@@ -133,8 +133,8 @@ function wordlistfilter(){
     chk(input);
   }
   $('#PhoneticFilter').keyup(phoneticFilter);
-  //The magical add-all-button:
-  $('#FilterAddMultiWords').click(function(){
+  //The function that leads the way:
+  var pathfinder = function(keep){
     var newWords = '';
     $('ul.wordList li:visible').each(function(){
       if($(this).parent().hasClass('selected'))
@@ -142,15 +142,24 @@ function wordlistfilter(){
       newWords += $('.color-word', this).attr('data-canonicalname') + ',';
     });
     newWords = 'words=' + newWords;
-    //Now the words have to be injected into the window.location:
+    /*
+      Now the words have to be injected into the window.location:
+      And if keep !== true, they'll overwrite the current words.
+    */
     var url = $('div#saveLocation').attr('href');
-    if(url.search('words=') > 0) // We add words if we already have some.
-      url = url.replace('words=', newWords);
-    else // We add the whole variable if no words are selected.
+    if(url.search('words=') > 0){
+      if(keep === true)
+        url = url.replace('words=', newWords);
+      else
+        url = url.replace(/words=[^&]*/, newWords.substring(0, newWords.length - 1));
+    }else // We add the whole variable if no words are selected.
       url += '&' + newWords.substring(0, newWords.length - 1);
     //Changing to the new page:
     window.location = url;
-  });
+  };
+  //Binding the buttons:
+  $('#FilterAddMultiWords').click(function(){ pathfinder(true); });
+  $('#FilterRefreshMultiWords').click(function(){ pathfinder(false); });
   //Triggering filters initial:
   if($('#SpellingFilter').val() != '')
     spellingFilter();

@@ -14,8 +14,8 @@ if(!isset($valueManager)){
   chdir('..');
   require_once 'config.php';
   require_once 'valueManager/RedirectingValueManager.php';
-  $dbConnection = $config->getConnection();
-  $valueManager = new RedirectingValueManager($dbConnection, $config);
+  $dbConnection = Config::getConnection();
+  $valueManager = RedirectingValueManager::getInstance();
 }
 //I like shorter names:
 $v = $valueManager;
@@ -36,7 +36,7 @@ if($study = $v->getStudy()){
   $e = "<a $expandHref title='$expandTitle'><i class='icon-plus'></i></a>";
   $languagemenu .= "<h6>$languageSets$e$c</h6>";
   //The content:
-  $showFlags = $config->getFlags();
+  $showFlags = Config::$flags_enabled;
   if($study->getColorByFamily()){
     $languagemenu .= '<dl class="familyList">';
     foreach($study->getFamilies() as $f){

@@ -12,16 +12,6 @@ require_once 'WordManager.php';
 require_once 'WordOrderManager.php';
 
 abstract class ValueManager{
-  protected $config;
-  protected $dbConnection;
-  /** @return $config */
-  public function getConfig(){
-    return $this->config;
-  }
-  /** @return $dbConnection */
-  public function getConnection(){
-    return $this->dbConnection;
-  }
   /** String -> SubManager */
   protected $managers = array();
   /**

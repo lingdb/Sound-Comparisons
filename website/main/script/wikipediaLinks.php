@@ -4,7 +4,7 @@
     Links are searched for every ISO code and every Translation in the db.
   */
   require_once '../config.php';
-  $dbConnection = $config->getConnection();
+  $dbConnection = Config::getConnection();
   /*
     We need the ISOCodes from all studies,
     so we first need all studies:

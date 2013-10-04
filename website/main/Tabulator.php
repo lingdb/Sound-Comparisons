@@ -4,12 +4,10 @@ require_once 'tables/MultitableTransposed.php';
 /***/
 class Tabulator{
   private $valueManager = null;
-  private $dbConnection = null;
-  private $pageView = null;
+  private $pageView     = null;
   /***/
   public function __construct($valueManager){
     $this->valueManager = $valueManager;
-    $this->dbConnection = $valueManager->getConnection();
     $this->pageView = $valueManager->gpv();
   }
   /***/

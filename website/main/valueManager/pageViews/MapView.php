@@ -19,7 +19,8 @@
       if(count($v->getLanguages()) == 0){ //Find default languages
         //Paul noted the mapView shall default to all languages:
         $languages = $v->getStudy()->getLanguages();
-        $v->unsafeSetLanguages($languages);
+        $excludes  = $v->getStudy()->getMapExcludeLanguages();
+        $v->unsafeSetLanguages(DBEntry::difference($languages, $excludes));
       }
     }
 

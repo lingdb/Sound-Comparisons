@@ -16,6 +16,7 @@
       . "CONCAT(IxElicitation, IxMorphologicalInstance) "
       . "FROM Page_DynamicTranslation_Words "
       . "WHERE TranslationId = $tId "
+      . "AND Study = ANY(SELECT Name FROM Studies) "
       . "AND Trans_FullRfcModernLg01 LIKE '%$searchText%'"
       );
       foreach($studies as $s){

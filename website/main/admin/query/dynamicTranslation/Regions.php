@@ -5,7 +5,7 @@
     $values = array();
     $q = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx), RegionGpNameShort, RegionGpNameLong "
        . "FROM Regions_$study LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";
-    $dbConnection->query($q);
+    $set = $dbConnection->query($q);
     while($r = $set->fetch_row()){
       $entry = array(
         $tid      //'TranslationId'

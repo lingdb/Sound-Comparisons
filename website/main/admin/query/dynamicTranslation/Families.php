@@ -1,7 +1,7 @@
 <?php
   /***/
   function fetchTranslations_Families($dbConnection, $tid, $study, $offset){
-    $descriptions = getDescriptions(array('dt_families_trans'), DB_CONNECTION);
+    $descriptions = getDescriptions(array('dt_families_trans'), $dbConnection);
     $values = array();
     $q = "SELECT CONCAT(StudyIx, FamilyIx), FamilyNm FROM Families "
        . "LIMIT ".PAGE_ITEM_LIMIT." OFFSET $offset";

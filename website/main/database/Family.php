@@ -12,7 +12,7 @@ class Family extends DBEntry{
   public function getAbbr(){
     $id   = $this->id;
     $q    = "SELECT FamilyAbbrAllFileNames FROM Families WHERE CONCAT(StudyIx, FamilyIx) = $id";
-    $set  = $this->dbConnection->query($q);
+    $set  = Config::getConnection()->query($q);
     if($r = $set->fetch_row())
       return $r[0];
     return '';
@@ -21,7 +21,7 @@ class Family extends DBEntry{
   public function getColor(){
     $id   = $this->id;
     $q    = "SELECT FamilyColorOnWebsite FROM Families WHERE CONCAT(StudyIx, FamilyIx) = $id";
-    $set  = $this->dbConnection->query($q);
+    $set  = Config::getConnection()->query($q);
     if($r = $set->fetch_row())
       return $r[0];
     die('No color for Family:\t'.$this->getName());
@@ -32,7 +32,7 @@ class Family extends DBEntry{
     $sKey = $this->v->getStudy()->getKey();
     $q    = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) FROM Regions_$sKey "
           . "WHERE CONCAT(StudyIx, FamilyIx) = $id";
-    $set  = $this->dbConnection->query($q);
+    $set  = Config::getConnection()->query($q);
     $regs = array();
     while($r = $set->fetch_row()){
       array_push($regs, new RegionFromId($this->v, $r[0]));
@@ -58,7 +58,7 @@ class FamilyFromId extends Family{
     $this->setup($v);
     $this->id  = $id;
     $q    = "SELECT FamilyNm FROM Families WHERE CONCAT(StudyIx, FamilyIx) = $id";
-    $set  = $this->dbConnection->query($q);
+    $set  = Config::getConnection()->query($q);
     if($r = $set->fetch_row()){
       $this->key = $r[0];
     }else die("Invalid FamilyId: $id");
@@ -71,7 +71,7 @@ class FamilyFromKey extends Family{
     $this->setup($v);
     $this->key = $key;
     $q = "SELECT CONCAT(StudyIx, FamilyIx) FROM Families WHERE FamilyNm = '$key'";
-    if($r = $this->dbConnection->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       $this->id = $r[0];
     }else die("Invalid FamilyNm: $key");
   }

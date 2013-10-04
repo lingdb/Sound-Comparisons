@@ -21,8 +21,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate($dbConnection) or die('403 Forbidden');
-  session_mayTranslate($dbConnection) or die('403 Forbidden');
+  session_validate()     or die('403 Forbidden');
+  session_mayTranslate() or die('403 Forbidden');
   /* Constants */
   define('PAGE_ITEM_LIMIT', 30);
   /**
@@ -99,7 +99,7 @@
     $ret = array();
     foreach($names as $n){
       $q = "SELECT Description FROM Page_StaticDescription WHERE Req = '$n'";
-      $r = $dbConnection->query($q)->fetch_row();
+      $r = Config::getConnection()->query($q)->fetch_row();
       $ret[$n] = $r[0];
     }
     return $ret;

@@ -82,7 +82,7 @@ class InitWordOrderManager extends WordOrderManager{
   */
   public function __construct($v){
     $this->setValueManager($v);
-    $db = $this->getConnection();
+    $db = Config::getConnection();
     //Get parameters:
     if(isset($_GET['wo_order'])){
       $l = $db->escape_string($_GET['wo_order']);
@@ -116,7 +116,7 @@ class InitWordOrderManager extends WordOrderManager{
              . "WHERE IsOrthographyHasNoTranscriptions = 0 "
              . "OR IsOrthographyHasNoTranscriptions IS NULL "
              . "LIMIT 1";
-        $r   = $v->getConnection()->query($q)->fetch_row();
+        $r   = Config::getConnection()->query($q)->fetch_row();
         $this->phLang = new LanguageFromId($v, $r[0]);
       }
     }

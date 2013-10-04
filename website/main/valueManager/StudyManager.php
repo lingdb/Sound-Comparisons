@@ -12,7 +12,7 @@ abstract class StudyManager extends SubManager{
   */
   public function getStudies(){
     $studies = array();
-    $set = $this->gvm()->getConnection()->query('SELECT DISTINCT Name FROM Studies');
+    $set = Config::getConnection()->query('SELECT DISTINCT Name FROM Studies');
     while($r = $set->fetch_row()){
       array_push($studies, new StudyFromKey($this->gvm(), $r[0]));
     }
@@ -51,7 +51,7 @@ class InitStudyManager extends StudyManager{
     if(!isset($_GET['study'])){
       $this->study = new StudyFromKey($this->gvm(), "Germanic");
     }else{
-      $s = $this->getConnection()->escape_string($_GET['study']);
+      $s = Config::getConnection()->escape_string($_GET['study']);
       $this->study = new StudyFromKey($this->gvm(), $s);
     }
   }

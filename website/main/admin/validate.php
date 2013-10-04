@@ -8,7 +8,8 @@
     @param $dbConnection mysql-resource
     @return valid Bool
   */
-  function session_validate($dbConnection){
+  function session_validate(){
+    $dbConnection = Config::getConnection();
     if(!isset($_SESSION['Secret']) || !isset($_SESSION['UserId']))
       return false;
     $query = 'SELECT Login, Hash FROM Edit_Users WHERE UserId = '
@@ -31,7 +32,8 @@
     @param $dbConnection mysql-resource
     @returns may Bool
   */
-  function session_mayTranslate($dbConnection){
+  function session_mayTranslate(){
+    $dbConnection = Config::getConnection();
     if(!isset($_SESSION['UserId']))
       return false;
     $query = 'SELECT AccessTranslate FROM Edit_Users WHERE UserId = '
@@ -45,7 +47,8 @@
     @param $dbConnection mysql-resource
     @returns may Bool
   */
-  function session_mayEdit($dbConnection){
+  function session_mayEdit(){
+    $dbConnection = Config::getConnection();
     if(!isset($_SESSION['UserId']))
       return false;
     $query = 'SELECT AccessEdit FROM Edit_Users WHERE UserId = '
@@ -61,6 +64,6 @@
   function session_getUid(){
     if(!isset($_SESSION['UserId']))
       die('UserId is not set in validate.php:session_getUid()');
-    return $dbConnection->escape_string($_SESSION['UserId']);
+    return Config::getConnection()->escape_string($_SESSION['UserId']);
   }
 ?>

@@ -4,8 +4,8 @@ if(!isset($valueManager)){
   chdir('..');
   require_once 'config.php';
   require_once 'valueManager/RedirectingValueManager.php';
-  $dbConnection = $config->getConnection();
-  $valueManager = new RedirectingValueManager($dbConnection, $config);
+  $dbConnection = Config::getConnection();
+  $valueManager = RedirectingValueManager::getInstance();
 }
 /**
   @param $filename String - generated downlaod will be named $filename.csv

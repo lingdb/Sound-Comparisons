@@ -9,17 +9,14 @@ require_once 'DBTable.php';
   thereby to the database.
 */
 abstract class DBEntry extends DBTable{
-  protected $key;           // Identifier for other cases
-  protected $id;            // Identifier to be used with the db
-  protected $dbConnection;  // $this->v->getConnection()
-  protected $v;             // ValueManager
+  protected $key; // Identifier for other cases
+  protected $id;  // Identifier to be used with the db
+  protected $v;   // ValueManager
   /**
     @param $v ValueManager
-    Sets up the DBEntry by giving it a ValueManager and a dbConnection.
   */
   protected function setup($v){
     $this->v = $v;
-    $this->dbConnection = $v->getConnection();
   }
   /**
     @return $key
@@ -34,15 +31,6 @@ abstract class DBEntry extends DBTable{
   */
   public function getId(){
     return $this->id;
-  }
-  /**
-    @return $dbConnection mysqlResource
-    Returns the dbConnection that comes with a DBEntry.
-    This is helpful so that each DBEntry can perform
-    actions involving the database.
-  */
-  public function getConnection(){
-    return $this->dbConnection;
   }
   /**
     @return $v ValueManager

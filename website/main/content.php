@@ -4,8 +4,8 @@ require_once 'Tabulator.php';
 if(!isset($valueManager)){
   require_once 'config.php';
   require_once 'valueManager/RedirectingValueManager.php';
-  $dbConnection = $config->getConnection();
-  $valueManager = new RedirectingValueManager($dbConnection, $config);
+  $dbConnection = Config::getConnection();
+  $valueManager = RedirectingValueManager::getInstance();
 }
 $v = $valueManager;
 //Building the content:

@@ -120,7 +120,7 @@ abstract class WordManager extends SubManager{
          . "FROM Default_Multiple_Words WHERE CONCAT(StudyIx, FamilyIx) "
          . "LIKE (SELECT CONCAT(StudyIx,REPLACE(FamilyIx, 0, ''),'%') "
            . "FROM Studies WHERE Name = '$studyId')";
-      $set = $v->getConnection()->query($q);
+      $set = Config::getConnection()->query($q);
       while($r = $set->fetch_row())
         array_push($words, new WordFromId($v, $r[0]));
       //No default words found, defaulting to 1-5:
@@ -128,7 +128,7 @@ abstract class WordManager extends SubManager{
         $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
            . "FROM Words_$studyId "
            . "ORDER BY IxElicitation LIMIT 5";
-        $set = $v->getConnection()->query($q);
+        $set = Config::getConnection()->query($q);
         while($r = $set->fetch_row())
           array_push($words, new WordFromId($v, $r[0]));
       }
@@ -137,13 +137,13 @@ abstract class WordManager extends SubManager{
          . "FROM Default_Words WHERE CONCAT(StudyIx, FamilyIx) "
          . "LIKE (SELECT CONCAT(StudyIx,REPLACE(FamilyIx, 0, ''),'%') "
            . "FROM Studies WHERE Name = '$studyId')";
-      $set = $v->getConnection()->query($q);
+      $set = Config::getConnection()->query($q);
       if($w = $set->fetch_row())
         array_push($words, new WordFromId($v, $w[0]));
       if(count($words) == 0){
         $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
            . "FROM Words_$studyId LIMIT 1";
-        if($w = $v->getConnection()->query($q)->fetch_row())
+        if($w = Config::getConnection()->query($q)->fetch_row())
           array_push($words, new WordFromId($v, $w[0]));
       }
     }

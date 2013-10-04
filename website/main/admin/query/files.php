@@ -2,8 +2,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate($dbConnection) or die('403 Forbidden');
-  session_mayEdit($dbConnection)  or die('403 Forbidden');
+  session_validate() or die('403 Forbidden');
+  session_mayEdit()  or die('403 Forbidden');
   /*
     Function to make tuples to insert into the db from parsed csv data
     $csv : String[][] - an array of lines which are in turn arrays of string.
@@ -13,6 +13,7 @@
     @return: String of complete tuples.
   */
   function mkTuples($csv, $stringFields, $deleteFields = null){
+    $dbConnection = Config::getConnection();
     $tuples = array(); // Tuples will be pushed in here.
     foreach($csv as $line){
       //Escaping all fields:
@@ -81,19 +82,28 @@
         array_push($queries, 'DELETE FROM Contributors', $q);
       break;
       case (preg_match('/^DefaultSingleLanguage\.txt$/', $fname, $matches) ? true : false):
-        $q = 'INSERT INTO Default_Languages(StudyIx, FamilyIx, LanguageIx) VALUES ' . mkTuples($csv, array());
+        $q = 'INSERT INTO Default_Languages(StudyIx, FamilyIx, LanguageIx) VALUES '
+           . mkTuples($csv, array());
         array_push($queries, 'DELETE FROM Default_Languages', $q);
       break;
+      case (preg_match('/^DefaultLanguagesToExcludeFromMap\.txt$/', $fname, $matches) ? true : false):
+        $q = 'INSERT INTO Default_Languages_Exclude_Map(StudyIx, FamilyIx, LanguageIx) VALUES '
+           . mkTuples($csv, array());
+        array_push($queries, 'DELETE FROM Default_Languages_Exclude_Map', $q);
+      break;
       case (preg_match('/^DefaultSingleWord\.txt$/', $fname, $matches) ? true : false):
-        $q = 'INSERT INTO Default_Words(StudyIx, FamilyIx, IxElicitation) VALUES ' . mkTuples($csv, array());
+        $q = 'INSERT INTO Default_Words(StudyIx, FamilyIx, IxElicitation) VALUES '
+           . mkTuples($csv, array());
         array_push($queries, 'DELETE FROM Default_Words', $q, 'UPDATE Default_Words SET IxMorphologicalInstance = 0');
       break;
       case (preg_match('/^DefaultTableMultipleLanguages\.txt$/', $fname, $matches) ? true : false):
-        $q = 'INSERT INTO Default_Multiple_Languages(StudyIx, FamilyIx, LanguageIx) VALUES ' . mkTuples($csv, array());
+        $q = 'INSERT INTO Default_Multiple_Languages(StudyIx, FamilyIx, LanguageIx) VALUES '
+           . mkTuples($csv, array());
         array_push($queries, 'DELETE FROM Default_Multiple_Languages', $q);
       break;
       case (preg_match('/^DefaultTableMultipleWords\.txt$/', $fname, $matches) ? true : false):
-        $q = 'INSERT INTO Default_Multiple_Words(StudyIx, FamilyIx, IxElicitation) VALUES ' . mkTuples($csv, array());
+        $q = 'INSERT INTO Default_Multiple_Words(StudyIx, FamilyIx, IxElicitation) VALUES '
+           . mkTuples($csv, array());
         array_push($queries, 'DELETE FROM Default_Multiple_Words', $q, 'UPDATE Default_Multiple_Words SET IxMorphologicalInstance = 0');
       break;
       case (preg_match('/^Flags\.txt$/', $fname, $matches) ? true : false):
@@ -219,6 +229,6 @@
      . 'SET AUTOCOMMIT=1;';
 //echo $q;
 //file_put_contents("/tmp/fimport.debug", $q);
-  $config->getConnection()->multi_query($q);
+  Config::getConnection()->multi_query($q);
   echo "Done :)";
 ?>

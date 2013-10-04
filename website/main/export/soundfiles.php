@@ -12,11 +12,11 @@ if(!isset($valueManager)){
   chdir('..');
   require_once 'config.php';
   require_once 'valueManager/RedirectingValueManager.php';
-  $dbConnection = $config->getConnection();
-  $valueManager = new RedirectingValueManager($dbConnection, $config);
+  $dbConnection = Config::getConnection();
+  $valueManager = RedirectingValueManager::getInstance();
 }
 $v = $valueManager;
-$path = $config->getDownloadPath();
+$path = Config::$downloadPath;
 //0.: Deleting files older than one hour
 $q = "SELECT FileName FROM Export_Soundfiles WHERE "
    . "Creation <= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 HOUR)";

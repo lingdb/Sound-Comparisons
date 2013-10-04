@@ -18,7 +18,7 @@ abstract class TranslationManager extends SubManager{
   */
   public function getBrowserMatch(){
     $q = "SELECT BrowserMatch FROM Page_Translations WHERE TranslationId = ".$this->getTarget();
-    if($r = $this->getConnection()->query($q)->fetch_row())
+    if($r = Config::getConnection()->query($q)->fetch_row())
       return $r[0];
     return null;
   }
@@ -43,7 +43,7 @@ abstract class TranslationManager extends SubManager{
     //Typical static translation:
     $query = "SELECT Trans FROM Page_StaticTranslation "
            . "WHERE TranslationId = $tid AND Req='$req'";
-    $set = $this->getConnection()->query($query);
+    $set = Config::getConnection()->query($query);
     if($r = $set->fetch_assoc()){
       return preg_replace('/\<br\>/', "\n", $r['Trans']);
     }
@@ -82,7 +82,7 @@ abstract class TranslationManager extends SubManager{
         $tid = $this->translationId;
       $q = "SELECT Trans FROM Page_DynamicTranslation_StudyTitle "
          . "WHERE StudyName = '$key' AND TranslationId = $tid";
-      if($r = $this->getConnection()->query($q)->fetch_row()){
+      if($r = Config::getConnection()->query($q)->fetch_row()){
         $p = $this->st('website_title_prefix');
         $r = $r[0];
         $s = $this->st('website_title_suffix');
@@ -106,7 +106,7 @@ abstract class TranslationManager extends SubManager{
     $q   = "SELECT Trans_FullRfcModernLg01 FROM Page_DynamicTranslation_Words "
          . "WHERE TranslationId = $t AND Study = '$sid' "
          . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-    if($r = $this->getConnection()->query($q)->fetch_row())
+    if($r = Config::getConnection()->query($q)->fetch_row())
       return $r[0];
     return null;
   }
@@ -130,14 +130,14 @@ abstract class TranslationManager extends SubManager{
          . "WHERE TranslationId = $t "
          . "AND Study = '$sid' "
          . "AND LanguageIx = $id";
-    if($r = $this->getConnection()->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       $ret['RegionGpMemberLgNameShortInThisSubFamilyWebsite'] = $r[0];
       $ret['RegionGpMemberLgNameLongInThisSubFamilyWebsite']  = $r[1];
     }
     $q   = "SELECT Trans_ShortName, Trans_SpellingRfcLangName, Trans_SpecificLanguageVarietyName "
          . "FROM Page_DynamicTranslation_Languages "
          . "WHERE TranslationId = $t AND LanguageIx = $id AND Study = '$sid'";
-    if($r = $this->getConnection()->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       $ret['ShortName']                   = $r[0];
       $ret['SpellingRfcLangName']         = $r[1];
       $ret['SpecificLanguageVarietyName'] = $r[2];
@@ -161,7 +161,7 @@ abstract class TranslationManager extends SubManager{
         . "AND LanguageStatusType = "
         . "(SELECT LanguageStatusType FROM Languages_$sk "
         . "WHERE LanguageIx = $id)";
-    if($r = $this->getConnection()->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       return $r;
     }
     return null;
@@ -175,7 +175,7 @@ abstract class TranslationManager extends SubManager{
     $t  = $this->translationId;
     $q  = "SELECT Trans FROM Page_DynamicTranslation_MeaningGroups "
         . "WHERE TranslationId = $t AND MeaningGroupIx = $id";
-    if($r = $this->getConnection()->query($q)->fetch_row())
+    if($r = Config::getConnection()->query($q)->fetch_row())
       return $r[0];
     return null;
   }
@@ -189,7 +189,7 @@ abstract class TranslationManager extends SubManager{
     $sid = $this->gvm()->getStudy()->getKey();
     $q   = "SELECT Trans_RegionGpNameShort, Trans_RegionGpNameLong FROM Page_DynamicTranslation_Regions WHERE "
          . "TranslationId = $t AND Study = '$sid' AND RegionIdentifier = '$id'";
-    if($r = $this->getConnection()->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       return $r;
     }
     return null;
@@ -202,7 +202,7 @@ abstract class TranslationManager extends SubManager{
     $id = $study->getKey();
     $t  = $this->translationId;
     $q  = "SELECT Trans FROM Page_DynamicTranslation_Studies WHERE TranslationId = $t AND Study = '$id'";
-    if($r = $this->getConnection()->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       return $r[0];
     }
     return null;
@@ -216,7 +216,7 @@ abstract class TranslationManager extends SubManager{
     $t  = $this->translationId;
     $q  = "SELECT Trans FROM Page_DynamicTranslation_Families "
         . "WHERE CONCAT(StudyIx, FamilyIx) = $id AND TranslationId = $t";
-    if($r = $this->getConnection()->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       return $r[0];
     }
     return null;
@@ -231,7 +231,7 @@ abstract class TranslationManager extends SubManager{
     $q = "SELECT RfcLanguage FROM Page_Translations "
        . "WHERE TranslationId = $tid "
        . "AND RfcLanguage = ANY (SELECT LanguageIx FROM Languages_$sid)";
-    if($r = $this->getConnection()->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       return new LanguageFromId($this->gvm(), $r[0]);
     }
     return null;
@@ -241,7 +241,7 @@ abstract class TranslationManager extends SubManager{
   */
   public function showFlag(){
     $query = 'SELECT ImagePath FROM Page_Translations WHERE TranslationId = '.$this->translationId;
-    if($r = $this->getConnection()->query($query)->fetch_assoc())
+    if($r = Config::getConnection()->query($query)->fetch_assoc())
       return "<img class='flag' src='".$r['ImagePath']."' />";
     return '';
   }
@@ -256,7 +256,7 @@ abstract class TranslationManager extends SubManager{
       if($r = $this->getRfcLanguage())
         return $r->getSpellingName();
     $query = 'SELECT TranslationName FROM Page_Translations WHERE TranslationId = '.$this->translationId;
-    if($r = $this->getConnection()->query($query)->fetch_assoc())
+    if($r = Config::getConnection()->query($query)->fetch_assoc())
       return $r['TranslationName'];
     return '';
   }
@@ -267,7 +267,7 @@ abstract class TranslationManager extends SubManager{
   public function getOthers(){
     $tid = $this->translationId;
     $query = "SELECT TranslationId FROM Page_Translations WHERE Active = 1 AND TranslationId != $tid ORDER BY TranslationName";
-    $set = $this->getConnection()->query($query);
+    $set = Config::getConnection()->query($query);
     $others = array();
     while($r = $set->fetch_row()){
       $t = clone $this;
@@ -314,7 +314,7 @@ class InitTranslationManager extends TranslationManager{
   */
   public function __construct($v){
     $this->setValueManager($v);
-    $db = $this->getConnection();
+    $db = Config::getConnection();
     //Phase 1:
     if(isset($_GET['translator'])){
       $this->translationId = $db->escape_string($_GET['translator']);

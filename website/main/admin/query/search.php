@@ -26,8 +26,8 @@
   require_once 'search/WordsSearchProvider.php';
   chdir('..');
   require_once 'common.php';
-  session_validate($dbConnection)     or die('403 Forbidden');
-  session_mayTranslate($dbConnection) or die('403 Forbidden');
+  session_validate()     or die('403 Forbidden');
+  session_mayTranslate() or die('403 Forbidden');
   /* Providers: */
   $providers = array();
   foreach(array(

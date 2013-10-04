@@ -2,12 +2,13 @@
 require_once 'ValueManager.php';
 
 class RedirectingValueManager extends ValueManager{
-  /**
-    @param $dbConnection
-  */
-  public function __construct($dbConnection, $config){
-    $this->dbConnection = $dbConnection;
-    $this->config       = $config;
+  /***/
+  private static $instance = null;
+  public static final function getInstance(){
+    if(self::$instance === null){
+      self::$instance = new RedirectingValueManager();
+    }
+    return self::$instance;
   }
   /*-- Shortcut functions below --*/
   public function gfm(){

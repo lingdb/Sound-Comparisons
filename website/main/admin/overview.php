@@ -13,7 +13,7 @@
     <button type="submit" class="btn">Update</button>
   </fieldset>
 </form>
-<?php if(session_mayEdit($dbConnection)){ ?>
+<?php if(session_mayEdit()){ ?>
   <form id="#addUser" class="form-horizontal">
     <legend>Add user:</legend>
     <div class="control-group">

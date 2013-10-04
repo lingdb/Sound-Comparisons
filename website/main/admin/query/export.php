@@ -6,8 +6,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate($dbConnection) or die('403 Forbidden');
-  session_mayTranslate($dbConnection) or die('403 Forbidden');
+  session_validate() or die('403 Forbidden');
+  session_mayTranslate() or die('403 Forbidden');
   /* The helpful esc function */
   $esc = function($s) use ($dbConnection){
     return "'".$dbConnection->escape_string($s)."'";
@@ -110,9 +110,13 @@
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_StudyTitle VALUES $s;\n";}
     )
   , new Table(
-      'SELECT TranslationId, IxElicitation, Study, IxMorphologicalInstance, Trans_FullRfcModernLg01 FROM Page_DynamicTranslation_Words'
-    , function($r) use ($esc){return '('.$r[0].','.$r[1].','.$esc($r[2]).','.$r[3].','.$esc($r[4]).')';}
+      'SELECT TranslationId, Study, IxElicitation, IxMorphologicalInstance, Trans_FullRfcModernLg01 '
+      . 'FROM Page_DynamicTranslation_Words'
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].','.$r[3].','.$esc($r[4]).')';}
     , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Words VALUES $s;\n";}
+    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Words("
+                        . "TranslationId, Study, IxElicitation, IxMorphologicalInstance, Trans_FullRfcModernLg01) "
+                        . "VALUES $s;\n";}
     )
   );
   /* The dumping of tables */

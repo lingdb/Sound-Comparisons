@@ -6,8 +6,8 @@
   require_once 'config.php';
   require_once 'valueManager/RedirectingValueManager.php';
   /* Startup: */
-  $dbConnection = $config->getConnection();
-  $valueManager = new RedirectingValueManager($dbConnection, $config);
+  $dbConnection = Config::getConnection();
+  $valueManager = RedirectingValuemanager::getInstance();
 ?><!DOCTYPE HTML><html><?php
     require 'head.php';
   ?><body><?php

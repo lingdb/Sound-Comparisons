@@ -7,7 +7,7 @@ abstract class DBTable{
     Fetches a single row from a query.
   */
   protected function fetchRow($q){
-    $set = $this->dbConnection->query($q);
+    $set = Config::getConnection()->query($q);
     if($r = $set->fetch_row())
       return $r;
     return null;
@@ -15,7 +15,7 @@ abstract class DBTable{
   /***/
   protected function fetchRows($q){
     $rows = array();
-    $set  = $this->dbConnection->query($q);
+    $set  = Config::getConnection()->query($q);
     while($r = $set->fetch_row())
       array_push($rows, $r);
     return $rows;

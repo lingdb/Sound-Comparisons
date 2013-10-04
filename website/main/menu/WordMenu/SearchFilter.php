@@ -10,7 +10,7 @@ $study        = $v->getStudy();
 $sfby         = $t->st('menu_words_filter_head');
 $spelling     = $t->st('menu_words_filterspelling');
 $phonetics    = $t->st('menu_words_filterphonetics');
-$sp           = $v->getConfig()->getSoundPath();
+$sp           = Config::$soundPath;
 $phonetics   .= " <div class='audio'>"
               . "[<div class='transcription'>fəˈnɛtɪks</div>]"
               . "<audio autobuffer='' preload='auto'>"
@@ -56,17 +56,20 @@ foreach($study->getLanguages() as $pl){
 $phList .= '</select>';
 //The addAll/clearAll buttons:
 if($v->gpv()->isSelection()){
-  $addAll = $t->st('menu_words_filterAddMultiWords');
-  $addAll = "<input type='button' id='FilterAddMultiWords' value='$addAll'/>";
-  $cAll   = $t->st('menu_words_filterClearAllWords');
-  $href   = $v->setWords()->link('','data-href');
-  $cAll   = "<input type='button' id='FilterClearAll' value='$cAll' $href>";
-}else{ $addAll = ''; $cAll = ''; }
-$buttons = "<tr>"
-         . "<td id='FilterAddAll' colspan='2'>"
+  $fTitle    = $t->st('menu_words_filterTitleMultiWords').':';
+  $fAddAll   = $t->st('menu_words_filterAddMultiWords');
+  $fRefresh  = $t->st('menu_words_filterRefreshMultiWords');
+  $fClearAll = $t->st('menu_words_filterClearAllWords');
+  $fAddAll   = '<i class="icon-plus" id="FilterAddMultiWords" title="'.$fAddAll.'"></i>';
+  $fRefresh  = '<i class="icon-repeat" id="FilterRefreshMultiWords" title="'.$fRefresh.'"></i>';
+  $fClearAll = '<i class="icon-remove" title="'.$fClearAll.'" '.$v->setWords()->link('','data-href').'></i>';
+}else{ $fTitle = $fAddAll = $fRefresh = $fClearAll = ''; }
+$buttons = '<tr id="FilterAddAll">'
+         . '<td>'
          . $t->st('menu_words_filterFoundWords')
-         . ":<code id='FilterFoundMultiWords'>x</code>$addAll$cAll</td>"
-         . "</tr>";
+         . ':<code id="FilterFoundMultiWords">x</code></td>'
+         . "<td>$fTitle$fAddAll$fRefresh$fClearAll</td>"
+         . '</tr>';
 //Composing:
 return "<table id='wordlistfilter' class='table-bordered table-striped'>"
      . "<tr><td id='searchFilterTitle' class='userOption'><i class='icon-search'></i>$sfby:</td>"

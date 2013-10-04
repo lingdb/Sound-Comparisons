@@ -7,10 +7,9 @@ require_once 'DBTable.php';
   encapsules all these pairs.
 */
 class Transcription extends DBTable{
-  protected $word         = null; // The Word the Transcription belongs to
-  protected $language     = null; // The Language the Transcription belongs to
-  protected $dbConnection = null; // A connection to query the database
-  protected $sid          = null; // The id of the Study the Transcription belongs in
+  protected $word      = null; // The Word the Transcription belongs to
+  protected $language  = null; // The Language the Transcription belongs to
+  protected $sid       = null; // The id of the Study the Transcription belongs in
   /***/
   protected function buildSelectQuery($fs){
     $wid  = $this->word->getId();
@@ -29,7 +28,7 @@ class Transcription extends DBTable{
     and the Word aswell as a static bit comming from the Config class.
   */
   public function getSoundFilePath($v){
-    $soundPath = $this->word->getValueManager()->getConfig()->getSoundPath();
+    $soundPath = Config::$soundPath;
     $langPath  = $this->language->getPath();
     $wordPath  = $this->word->getPath();
     return "$soundPath/$langPath/$langPath$wordPath";
@@ -281,10 +280,9 @@ class TranscriptionFromWordLang extends Transcription{
       die('Invalid Word in TranscriptionFromWordLang');
     if(!isset($language))
       die('Invalid Language in TranscriptionFromWordLang');
-    $this->word         = $word;
-    $this->language     = $language;
-    $this->sid          = $language->getStudy()->getId();
-    $this->dbConnection = $word->getConnection();
+    $this->word     = $word;
+    $this->language = $language;
+    $this->sid      = $language->getStudy()->getId();
   }
 }
 ?>

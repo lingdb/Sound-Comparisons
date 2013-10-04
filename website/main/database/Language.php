@@ -87,7 +87,7 @@ class Language extends DBEntry{
        . "WHERE RegionGpMemberLgNameLongInThisSubFamilyWebsite IS NOT NULL "
        . "AND RegionGpMemberLgNameLongInThisSubFamilyWebsite != '' "
        . "AND LanguageIx = $id";
-    if($r = $this->dbConnection->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       $lname = $r[0];
       if($superscript)
         $lname = $this->getSuperscript($lname);
@@ -222,7 +222,7 @@ class Language extends DBEntry{
     $id = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIX, SubFamilyIx, RegionGpIx) "
        . "FROM RegionLanguages_$sid WHERE LanguageIx = $id";
-    $set = $this->dbConnection->query($q);
+    $set = Config::getConnection()->query($q);
     $ret = array();
     while($row = $set->fetch_row())
       array_push($ret, new RegionFromId($this->v, $row[0]));
@@ -301,7 +301,7 @@ class Language extends DBEntry{
       $flag = $r[0];
       $q = "SELECT Tooltip FROM FlagTooltip WHERE Flag = '$flag'";
       $tooltip = '';
-      if($r = $this->dbConnection->query($q)->fetch_row())
+      if($r = Config::getConnection()->query($q)->fetch_row())
         $tooltip = $r[0];
       if($html)
         return "<img src='img/flags/$flag.png' title='$tooltip' />";
@@ -424,7 +424,7 @@ class Language extends DBEntry{
        . ", ExternalWeblink "
        . "FROM Languages_$sid "
        . "WHERE LanguageIx = $id";
-    if($r = $this->dbConnection->query($q)->fetch_assoc()){
+    if($r = Config::getConnection()->query($q)->fetch_assoc()){
       //Description lines:
       $description = $r['Tooltip'];
       if($description != '')
@@ -504,12 +504,12 @@ class Language extends DBEntry{
     $q = "SELECT LanguageIx FROM RegionLanguages_$sId WHERE "
        . "(RegionGpIx, RegionMemberLgIx) $comp (SELECT RegionGpIx, RegionMemberLgIx FROM RegionLanguages_$sId WHERE LanguageIx = $lId) "
        . "ORDER BY RegionGpIx $order, RegionMemberLgIx $order LIMIT 1";
-    if($r = $this->dbConnection->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       return new LanguageFromId($v, $r[0]);
     }
     //The wrap around case:
     $q = "SELECT LanguageIx FROM RegionLanguages_$sId ORDER BY RegionGpIx $order, RegionMemberLgIx $order LIMIT 1";
-    $r = $this->dbConnection->query($q)->fetch_row();
+    $r = Config::getConnection()->query($q)->fetch_row();
     return new LanguageFromId($v, $r[0]);
   }
   /**
@@ -553,6 +553,45 @@ class Language extends DBEntry{
     $r = $this->fetchFields('IsOrthographyHasNoTranscriptions');
     if($r[0] == '1') return false;
     return true;
+  }
+  /**
+    @param Language[] languages
+    @return {regions: RegionId -> Region, buckets: RegionId -> Language[]}
+    Note that the languages in the buckets are enumerated,
+    which is helpful to answer the question at which place a language is
+    in relation to the ones in all other buckets.
+  */
+  public static function mkRegionBuckets($languages){
+    $regions = array(); // RegionId -> Region
+    $buckets = array(); // RegionId -> Language[]
+    //Sorting into buckets:
+    foreach($languages as $l){
+      $r = $l->getRegion();
+      if($r === null){
+        error_log('database/Language.php:mkregionBuckets'
+        . ' - cannot find Region for LanguageIx:'.$l->getId());
+        continue;
+      }
+      $rId  = $r->getId();
+      if(!array_key_exists($rId, $regions)){
+        $regions[$rId] = $r;
+        $buckets[$rId] = array($l);
+      }else{
+        array_push($buckets[$rId], $l);
+      }
+    }
+    //Enumerating languages in buckets:
+    $i = 0;
+    foreach($buckets as $rId => $bucket){
+      $newBucket = array();
+      foreach($bucket as $l){
+        $newBucket[$i] = $l;
+        $i++;
+      }
+      $buckets[$rId] = $newBucket;
+    }
+    //Done:
+    return array('regions' => $regions, 'buckets' => $buckets);
   }
 }
 /** Extends Language so that it can be created from an id. */
@@ -602,7 +641,7 @@ class LanguageFromStudy extends Language{
     $sid = $study->getId();
     //Fetching LanguageIx
     $q = "SELECT LanguageIx FROM Languages_$sid ORDER BY LanguageIx ASC LIMIT 1";
-    if($r = $this->dbConnection->query($q)->fetch_row()){
+    if($r = Config::getConnection()->query($q)->fetch_row()){
       $this->id = $r[0];
     }else die("Could not find language for studyId: $sid.");
     $this->findKey();
