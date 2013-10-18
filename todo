@@ -1,14 +1,15 @@
+2013-10-11:
+ - Report problem with http://lingweb.eva.mpg.de/sndcomp/admin/ to Hans-Jörg
+   when sending the next update along
+
 2013-10-04:
  - In Multitable:
    - Words in their cells to the left, maybe
    - Cross to the top right
-   - No line breaks between languages and their superscripts
- - Playbacks that don't have a pronounciation seem to block the playqueue in mapvie in mapvieww
  - Use colors for RegionGroups just like for Families in the Andean Study, when viewing MultiTables
  - github.com/clld
    - We'd like to use their format, but we don't wanna loose our special presentation features.
    - This is to be kept in mind as an interesting thing.
- - In MultitableTransposed, counting for languages is off by one when no words are shown
 
 2013-09-19:
  - Break up Tabulator.php into template like parts that can easily be included
@@ -40,7 +41,6 @@
    - Refine database/Language.php:getDescription
      - Also think about the way it's included in the Tabulator.php:languageHeadline
    - Need script for landing with /<Study> or /<Translation> like fonetika.org/Andean or fonetika.org/es (spanish translation)
-   - Think about building a script that finds all unused SoundFiles and all supposed SoundFiles that don't exist
 
 2013-07-18:
  - Wordslist to be prettier and use lexemes
@@ -48,9 +48,6 @@
    which means that it'll become more generic soon.
  - Fix tables under Consonants Other in ipaKeyboard.
    - Almost done
-
-2013-07-11:
- - Change the way that Words/Phonetics are displayed on the page depending on lexemes
 
 From Polina:
  - Add save buttons directly next to dt inputs
@@ -82,7 +79,6 @@ Storing of mySelection in Mapview and in TopMenu between views
  - Think about splitting off all queries into the database dir, so that it's easier to grasp them all.
    - Introduce a general dbaccess class that handles all issues not handled by any of the other classes.
      This will also come in handy once another db with a different layout is included.
- - Comment / Document more.
  - Think about a smaller/faster/better vm client os than XUbuntu
    - This way Paul (Maybe also Scott?) would have a nicer time working with it
    - This could already use github to pull stuff from

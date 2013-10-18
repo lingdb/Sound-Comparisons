@@ -7,14 +7,14 @@ require_once 'DBTable.php';
   encapsules all these pairs.
 */
 class Transcription extends DBTable{
-  protected $word      = null; // The Word the Transcription belongs to
-  protected $language  = null; // The Language the Transcription belongs to
-  protected $sid       = null; // The id of the Study the Transcription belongs in
+  protected $word     = null; // The Word the Transcription belongs to
+  protected $language = null; // The Language the Transcription belongs to
+  protected $sid      = null; // The id of the Study the Transcription belongs in
   /***/
   protected function buildSelectQuery($fs){
-    $wid  = $this->word->getId();
-    $lid  = $this->language->getId();
-    $sid  = $this->sid;
+    $wid = $this->word->getId();
+    $lid = $this->language->getId();
+    $sid = $this->sid;
     return "SELECT $fs "
          . "FROM Transcriptions_$sid "
          . "WHERE LanguageIx = $lid "
@@ -221,8 +221,7 @@ class Transcription extends DBTable{
       $historical = 1;
     //Altspellings:
     $alt = $this->getAltSpelling($v);
-    if(!$alt)
-      $alt = '';
+    if(!$alt) $alt = '';
     //Phonetics and Soundfiles:
     $hasSoundFile = false;
     $path = $this->getSoundFilePath($v);
@@ -245,11 +244,15 @@ class Transcription extends DBTable{
       array_push($psf, $tuple);
     }
     //Color:
-    $color = $this->language->getColor();
+    $color = array(
+      'color'      => '#'.$this->language->getRegion()->getColor()
+    , 'opacity'    => $this->language->getOpacity()
+    , 'colorDepth' => $this->language->getColorDepth()
+    );
     //Languagelink:
     $languageLink = $v->gpv()->setView('LanguageView')->setLanguage($this->language)->setWords()->link();
-    $languageLink = preg_replace("/\"/",'\\"',$languageLink);
-    $languageLink = preg_replace("/'/","\\'",$languageLink);
+    $languageLink = preg_replace('/"/', '\\"', $languageLink);
+    $languageLink = preg_replace("/'/", "\\'", $languageLink);
     //Complete JSON:
     $data = array(
       'altSpelling'        => $alt
@@ -277,9 +280,9 @@ class TranscriptionFromWordLang extends Transcription{
   */
   public function __construct($word, $language){
     if(!isset($word))
-      die('Invalid Word in TranscriptionFromWordLang');
+      Config::error('Invalid Word in TranscriptionFromWordLang');
     if(!isset($language))
-      die('Invalid Language in TranscriptionFromWordLang');
+      Config::error('Invalid Language in TranscriptionFromWordLang');
     $this->word     = $word;
     $this->language = $language;
     $this->sid      = $language->getStudy()->getId();

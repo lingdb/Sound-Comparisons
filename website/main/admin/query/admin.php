@@ -3,10 +3,10 @@
   require_once 'common.php';
   /* Checking for edit rights: */
   if(!session_mayEdit())
-    die('You are not allowed to access this feature.');
+    Config::error('You are not allowed to access this feature.');
   /* Ensuring an action is given: */
   if(!isset($_GET['action']))
-    die('Missing get parameter:action!');
+    Config::error('Missing get parameter:action!');
   /* Dealing with the action: */
   switch($_GET['action']){
     /* Parameters: username, password, mayTranslate, mayEdit */
@@ -23,7 +23,7 @@
       /* Checking that username is not taken: */
       $q = "SELECT COUNT(*) FROM Edit_Users WHERE Login = '$username'";
       $r = $dbConnection->query($q)->fetch_row();
-      if($r[0] > 0) die("Login '$username' already taken.");
+      if($r[0] > 0) Config::error("Login '$username' already taken.");
       /* Inserting new user: */
       $q = "INSERT INTO Edit_Users(Login, Hash, AccessEdit, AccessTranslate) "
          . "VALUES ('$username','$password',$mayEdit,$mayTranslate)";
@@ -32,7 +32,7 @@
     break;
     /* Parameters: userid, login, password, mayTranslate, mayEdit */
     case 'update':
-      if(!isset($_POST['userid'])) die('userid missing!');
+      if(!isset($_POST['userid'])) Config::error('userid missing!');
       $userid = $dbConnection->escape_string($_POST['userid']);
       if(isset($_POST['login'])){
         $login = $dbConnection->escape_string($_POST['login']);
@@ -72,12 +72,12 @@
     case 'delete':
       $userid = $dbConnection->escape_string($_POST['userid']);
       /* Checking that the user won't delete itself: */
-      if($userid == session_getUid()) die("You cannot delete yourself, sorry.");
+      if($userid == session_getUid()) Config::error("You cannot delete yourself, sorry.");
       /* Deleting the user: */
       $q = "DELETE FROM Edit_Users WHERE UserId = $userid";
       $dbConnection->query($q);
       echo "Deleted user: $userid";
     break;
-    default: die('Call to unsupported action.');
+    default: Config::error('Call to unsupported action.');
   }
 ?>

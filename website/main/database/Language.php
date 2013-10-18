@@ -14,7 +14,7 @@ class Language extends DBEntry{
   protected function findKey(){
     if($r = $this->fetchFields('ShortName')){
       $this->key = $r[0];
-    }else die("database/Language.php: No name for Language: ".$this->id);
+    }else Config::error("database/Language.php: No name for Language: ".$this->id);
   }
   /**
     @return [$skey] String
@@ -25,9 +25,9 @@ class Language extends DBEntry{
     $id = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx, $id) "
        . "FROM RegionLanguages_$sid WHERE LanguageIx = $id";
-    if($r = $this->fetchRow($q))
+    if($r = $this->fetchOneBy($q))
       return $r[0];
-    die("Fail in database/Language->getSortKey() for LanguageIx $id");
+    Config::error("Fail in database/Language->getSortKey() for LanguageIx $id");
   }
   /**
     @param [$superscript=true] Bool
@@ -123,7 +123,7 @@ class Language extends DBEntry{
     $q = "SELECT Status, StatusTooltip FROM LanguageStatusTypes "
        . "WHERE LanguageStatusType = (SELECT LanguageStatusType FROM Languages_$sid WHERE LanguageIx = $id) "
        . "AND Status IS NOT NULL AND StatusTooltip IS NOT NULL";
-    if($r = $this->fetchRow($q)){
+    if($r = $this->fetchOneBy($q)){
       $s    = $r[0];
       $ttip = $r[1];
     }
@@ -145,12 +145,8 @@ class Language extends DBEntry{
     Returns the LanguageStatusType for a Language.
   */
   public function getLanguageStatusType(){
-    $sid = $this->getValueManager()->getStudy()->getId();
-    $id  = $this->id;
-    $q   = "SELECT LanguageStatusType FROM Languages_$sid WHERE LanguageIx = $id";
-    if($r = $this->fetchRow($q)){
+    if($r = $this->fetchFields('LanguageStatusType'))
       return $r[0];
-    }
     return null;
   }
   /**
@@ -161,20 +157,28 @@ class Language extends DBEntry{
     the std. background color of the website is returned.
   */
   public function getColor(){
-    $skey = $this->getValueManager()->getStudy()->getKey();
-    $sid  = $this->getValueManager()->getStudy()->getId();
-    $id   = $this->getId();
     if($this->getValueManager()->getStudy()->getColorByFamily()){
-      $q = "SELECT FamilyColorOnWebsite FROM Families WHERE CONCAT(StudyIx, FamilyIx) "
-         . "= (SELECT CONCAT(StudyIx, FamilyIx) FROM Languages_$sid WHERE LanguageIx = $id)";
+      $compare = $this->buildSelectQuery('CONCAT(StudyIx, FamilyIx)');
+      $q = "SELECT FamilyColorOnWebsite FROM Families WHERE CONCAT(StudyIx, FamilyIx) = ($compare)";
     }else{
-      $q = "SELECT Color FROM LanguageStatusTypes WHERE LanguageStatusType = ("
-         . "SELECT LanguageStatusType FROM Languages_$sid WHERE LanguageIx = $id)";
+      $compare = $this->buildSelectQuery('LanguageStatusType');
+      $q = "SELECT Color FROM LanguageStatusTypes WHERE LanguageStatusType = ($compare)";
     }
-    if($r = $this->fetchRow($q)){
+    if($r = $this->fetchOneBy($q))
       return '#'.$r[0];
-    }
     return '#FFFACD';
+  }
+  /***/
+  public function getOpacity(){
+    $compare = $this->buildSelectQuery('LanguageStatusType');
+    $q = "SELECT Opacity FROM LanguageStatusTypes WHERE LanguageStatusType = ($compare)";
+    return $this->fetchOneBy($q);
+  }
+  /***/
+  public function getColorDepth(){
+    $compare = $this->buildSelectQuery('LanguageStatusType');
+    $q = "SELECT ColorDepth FROM LanguageStatusTypes WHERE LanguageStatusType = ($compare)";
+    return $this->fetchOneBy($q);
   }
   /**
     @return [$rfcLanguage] Language
@@ -187,7 +191,7 @@ class Language extends DBEntry{
        . "WHERE LanguageIx = $id "
        . "AND RfcLanguage = ANY (SELECT LanguageIx FROM Languages_$sid) "
        . "AND RfcLanguage != $id"; // No identities
-    if($r = $this->fetchRow($q))
+    if($r = $this->fetchOneBy($q))
       return new LanguageFromId($this->v, $r[0]);
     return null;
   }
@@ -199,7 +203,7 @@ class Language extends DBEntry{
     $sKey = $this->getValueManager()->getStudy()->getKey();
     $id = $this->getId();
     $q = "SELECT COUNT(*) FROM Languages_$sKey WHERE RfcLanguage = $id AND LanguageIx != $id";
-    if($r = $this->fetchRow($q))
+    if($r = $this->fetchOneBy($q))
       return ($r[0] > 0);
     return false;
   }
@@ -211,7 +215,7 @@ class Language extends DBEntry{
   public function getPath(){
     if($r = $this->fetchFields('FilePathPart'))
       return $r[0];
-    else die('No CcdOverallFilename for LanguageId: '.$this->id);
+    else Config::error('No CcdOverallFilename for LanguageId: '.$this->id);
   }
   /**
     @return $regions Region[]
@@ -249,7 +253,7 @@ class Language extends DBEntry{
        . "SELECT LanguageIx FROM RegionLanguages_$sid "
        . "WHERE CONCAT(StudyIx, FamilyIX, SubFamilyIx, RegionGpIx) = $regionId"
        . "))";
-    $r = $this->fetchRow($q);
+    $r = $this->fetchOneBy($q);
     return ($r[0] == 1);
   }
   /**
@@ -271,7 +275,7 @@ class Language extends DBEntry{
     $id = $this->id;
     $q = "SELECT S.Name FROM Studies as S JOIN RegionLanguages as RL USING (StudyIx, FamilyIx, SubFamilyIx) "
        . "WHERE RL.LanguageIx = $id LIMIT 1";
-    if($r = $this->fetchRow($q))
+    if($r = $this->fetchOneBy($q))
       return new StudyFromKey($this->v, $r[0]);
     //Fallback on selecting study as prefix of id:
     /*
@@ -283,10 +287,10 @@ class Language extends DBEntry{
     $q = "SELECT Name FROM Studies WHERE $id LIKE "
        . "CONCAT(REPLACE(CONCAT(StudyIx, FamilyIx, SubFamilyIx),'0',''),'%') "
        . "ORDER BY CONCAT(StudyIx, FamilyIx, SubFamilyIx) LIMIT 1";
-    if($r = $this->fetchRow($q))
+    if($r = $this->fetchOneBy($q))
       return new StudyFromKey($this->v, $r[0]);
     //No Study found:
-    die("No Study found for LanguageIx: $id.");
+    Config::error("No Study found for LanguageIx: $id.");
   }
   /**
     @param [$html=true] Bool - decides if getFlag produces a html img tag or the raw flag url.
@@ -297,7 +301,7 @@ class Language extends DBEntry{
     $sid = $this->getValueManager()->getStudy()->getId();
     $id = $this->id;
     $q = "SELECT Flag FROM Languages_$sid WHERE LanguageIx = $id AND Flag != '' AND FLAG IS NOT NULL";
-    if($r = $this->fetchRow($q)){
+    if($r = $this->fetchOneBy($q)){
       $flag = $r[0];
       $q = "SELECT Tooltip FROM FlagTooltip WHERE Flag = '$flag'";
       $tooltip = '';
@@ -353,7 +357,7 @@ class Language extends DBEntry{
          . "WHERE BrowserMatch = '$bm' "
          . "AND ISOCode = '$iso' "
          . "AND WikipediaLinkPart = '$wpart'";
-      if($r = $this->fetchRow($q))
+      if($r = $this->fetchOneBy($q))
         return "<a href='".$r[0]."' target='_blank'>"
              . "<img class='favicon favicon-bordered' "
              . "src='http://en.wikipedia.org/favicon.ico' title='$tooltip' /></a>";
@@ -371,7 +375,7 @@ class Language extends DBEntry{
     $id = $this->id;
     $q = "SELECT ISOCode FROM Languages_$sid "
        . "WHERE LanguageIx = $id AND ISOCode != ''";
-    if($r = $this->fetchRow($q)){
+    if($r = $this->fetchOneBy($q)){
       $iso = $r[0];
       //Enthnologue:
       $tooltip = $t->st('tooltip_languages_link_ethnologue');
@@ -404,27 +408,23 @@ class Language extends DBEntry{
   }
   /**
     @param $t Translator
-    Displays the detailes information of a language.
+    Displays the detailed information of a language.
   */
   public function getDescription($t){
-    $sid = $this->getValueManager()->getStudy()->getId();
-    $id = $this->id;
     $desc = '';
-    $q = "SELECT "
-       . "Tooltip"
-       . ", SpecificLanguageVarietyName"
-       . ", WebsiteSubgroupName "
-       . ", WebsiteSubgroupWikipediaString "
-       . ", HistoricalPeriod "
-       . ", HistoricalPeriodWikipediaString "
-       . ", StateRegion "
-       . ", NearestCity "
-       . ", PreciseLocality "
-       . ", PreciseLocalityNationalSpelling "
-       . ", ExternalWeblink "
-       . "FROM Languages_$sid "
-       . "WHERE LanguageIx = $id";
-    if($r = Config::getConnection()->query($q)->fetch_assoc()){
+    if($r = $this->fetchAssoc(
+          'Tooltip'
+        , 'SpecificLanguageVarietyName'
+        , 'WebsiteSubgroupName'
+        , 'WebsiteSubgroupWikipediaString'
+        , 'HistoricalPeriod'
+        , 'HistoricalPeriodWikipediaString'
+        , 'StateRegion'
+        , 'NearestCity'
+        , 'PreciseLocality'
+        , 'PreciseLocalityNationalSpelling'
+        , 'ExternalWeblink')
+      ){
       //Description lines:
       $description = $r['Tooltip'];
       if($description != '')
@@ -568,8 +568,9 @@ class Language extends DBEntry{
     foreach($languages as $l){
       $r = $l->getRegion();
       if($r === null){
-        error_log('database/Language.php:mkregionBuckets'
-        . ' - cannot find Region for LanguageIx:'.$l->getId());
+        Config::error('database/Language.php:mkregionBuckets '
+                     .'cannot find Region for LanguageIx: '
+                     .$l->getId());
         continue;
       }
       $rId  = $r->getId();
@@ -622,11 +623,11 @@ class LanguageFromKey extends Language{
       , "SELECT LanguageIx FROM Languages WHERE ShortName LIKE '$key'"
     );
     foreach($qs as $q){
-      if($r = $this->fetchRow($q))
+      if($r = $this->fetchOneBy($q))
         $this->id = $r[0];
     }
     if($this->id == null)
-      die("No Id found for LanguageKey: $key");
+      Config::error("No Id found for LanguageKey: $key");
   }
 }
 /** Extends Language so that it can be created from a Study. */
@@ -643,7 +644,7 @@ class LanguageFromStudy extends Language{
     $q = "SELECT LanguageIx FROM Languages_$sid ORDER BY LanguageIx ASC LIMIT 1";
     if($r = Config::getConnection()->query($q)->fetch_row()){
       $this->id = $r[0];
-    }else die("Could not find language for studyId: $sid.");
+    }else Config::error("Could not find language for studyId: $sid.");
     $this->findKey();
   }
 }

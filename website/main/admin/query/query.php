@@ -2,8 +2,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate() or die('403 Forbidden');
-  session_mayEdit()  or die('403 Forbidden');
+  session_validate() or Config::error('403 Forbidden');
+  session_mayEdit()  or Config::error('403 Forbidden');
   //Actions:
   switch($_GET['action']){
     /**
@@ -45,7 +45,7 @@
          . "VALUES ($studyix, $familyix, $subfamilyix, '$name')";
       $dbConnection->query($q);
       if($dbConnection->affected_rows != 1)
-        die('FAIL');
+        Config::error('FAIL');
       //Done:
       echo "<option data-dbid='$studyix$familyix$subfamilyix' data-studyix='$studyix'"
          . " data-familyix='$familyix' data-subfamilyix='$subfamilyix'>$name</option>";

@@ -39,5 +39,14 @@ class Config {
     if(array_key_exists('db',$login) && is_string($login['db']))
       self::$db = $login['db'];
   }
+  /*
+    This is the way that all parts of the website will use in the future to log their errors.
+    A possible improvement will be, to let this forward to a nice error page.
+  */
+  public static function error($msg){
+  //$rand = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'),0,5);
+    error_log($msg);
+    if(Config::$debug) die($msg);
+  }
 }
 ?>

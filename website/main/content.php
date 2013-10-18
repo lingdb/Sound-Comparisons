@@ -16,13 +16,13 @@ if($v->gpv()->isView('WordView')){
   if($words = $v->getWords()){
     $tabulator->tabluateWord(current($words));
   }else{
-    die("Got no single word to display. (PageView)");
+    Config::error("Got no single word to display. (PageView)");
   }
 }else if($v->gpv()->isView('LanguageView')){
   if($ls = $v->getLanguages()){
       $tabulator->languageTable(current($ls));
   }else{
-    die("Got no single language to display. (PageView)");
+    Config::error("Got no single language to display. (PageView)");
   }
 }else if($v->gpv()->isView('MapView')){
   $t        = $v->getTranslator();

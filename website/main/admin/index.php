@@ -35,13 +35,13 @@
         $newP    = md5($_POST['new']);
         $confirm = md5($_POST['confirm']);
         if($newP != $confirm)
-          die("New password doesn't match confirmation.");
+          Config::error("New password doesn't match confirmation.");
         $uid = session_getUid();
         $q = "UPDATE Edit_Users SET Hash = '$newP' WHERE UserId = $uid";
         $dbConnection->query($q);
         session_destroy();
         header('LOCATION: index.php');
-      }else die('Invalid session!');
+      }else Config::error('Invalid session!');
     break;
     default:
       if(session_validate($dbConnection)){?>

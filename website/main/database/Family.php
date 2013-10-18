@@ -24,7 +24,7 @@ class Family extends DBEntry{
     $set  = Config::getConnection()->query($q);
     if($r = $set->fetch_row())
       return $r[0];
-    die('No color for Family:\t'.$this->getName());
+    Config::error('No color for Family:\t'.$this->getName());
   }
   /***/
   public function getRegions(){
@@ -61,7 +61,7 @@ class FamilyFromId extends Family{
     $set  = Config::getConnection()->query($q);
     if($r = $set->fetch_row()){
       $this->key = $r[0];
-    }else die("Invalid FamilyId: $id");
+    }else Config::error("Invalid FamilyId: $id");
   }
 }
 /***/
@@ -73,7 +73,7 @@ class FamilyFromKey extends Family{
     $q = "SELECT CONCAT(StudyIx, FamilyIx) FROM Families WHERE FamilyNm = '$key'";
     if($r = Config::getConnection()->query($q)->fetch_row()){
       $this->id = $r[0];
-    }else die("Invalid FamilyNm: $key");
+    }else Config::error("Invalid FamilyNm: $key");
   }
 }
 ?>

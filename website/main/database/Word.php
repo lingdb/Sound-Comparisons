@@ -255,7 +255,7 @@ class Word extends DBEntry{
       if(count($mgs) > 0)
         return $mgs;
     }
-    die("Could not find MeaningGroups in Word:getMeaningGroups() for id:$id in study:$sid.");
+    Config::error("Could not find MeaningGroups in Word:getMeaningGroups() for id:$id in study:$sid.");
   }
   /**
     @param $w Word
@@ -350,11 +350,11 @@ class WordFromKey extends Word{
     if($sid){
       $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$sid "
        . "WHERE (FullRfcModernLg01 LIKE '$key' OR FullRfcProtoLg01 LIKE '$key')";
-    }else die('main/database/Word.php:WordFromKey has no $studyId given!');
+    }else Config::error('main/database/Word.php:WordFromKey has no $studyId given!');
     if($word = Config::getConnection()->query($q)->fetch_row()){
       $this->id = $word[0];
       $this->sid = $sid;
-    }else die("Could not find word: $key");
+    }else Config::error("Could not find word: $key");
   }
 }
 /** WordFromId provides a constructor to create a Word from it's id. */
@@ -371,12 +371,12 @@ class WordFromId extends Word{
       $sid = $study->getId();
     }else if($study = $this->getValueManager()->getStudy()){
       $sid = $study->getId();
-    }else die('Could not find $sid in main/database/Word.php:WordFromId:__construct() with id:\t'.$id);
+    }else Config::error('Could not find $sid in main/database/Word.php:WordFromId:__construct() with id:\t'.$id);
     $query = "SELECT FullRfcModernLg01 FROM Words_$sid WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
     if($word = Config::getConnection()->query($query)->fetch_assoc()){
       $this->key = $word['FullRfcModernLg01'];
       $this->sid = $sid;
-    }else die("Invalid WordId: '$id' with query: $query");
+    }else Config::error("Invalid WordId: '$id' with query: $query");
   }
 }
 /**
@@ -398,7 +398,7 @@ class WordFromStudy extends Word{
       $this->id  = $r[0];
       $this->key = $r[1];
       $this->sid = $sid;
-    }else die("No Word found for StudyId: $sid");
+    }else Config::error("No Word found for StudyId: $sid");
   }
 }
 ?>

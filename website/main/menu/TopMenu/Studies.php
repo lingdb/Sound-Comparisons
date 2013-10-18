@@ -8,7 +8,7 @@
        data-toggle="dropdown"
        ><i class='icon-dropdown-custom'></i><? echo $v->getStudy()->getName($v); ?></a>
     <ul class="dropdown-menu"><?
-      foreach($v->gsm()->getStudies() as $s){ 
+      foreach(Study::getStudies() as $s){ 
         if($s->getId() === $sid)
           continue;
         $href = $v->gwo()->clear()->setRegions()->setLanguages()->setWords()->setStudy($s)->link();

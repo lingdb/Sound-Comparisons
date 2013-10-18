@@ -51,7 +51,7 @@ class MeaningGroupFromId extends MeaningGroup{
     $q = "SELECT Name FROM MeaningGroups WHERE MeaningGroupIx = $id";
     if($r = Config::getConnection()->query($q)->fetch_row()){
       $this->key = $r[0];
-    }else die("No name for MeaningGroup: $id.");
+    }else Config::error("No name for MeaningGroup: $id.");
   }
 }
 /** Allowes to create a MeaningGroup from it's key. */
@@ -66,7 +66,7 @@ class MeaningGroupFromKey extends MeaningGroup{
     $q = "SELECT MeaningGroupIx FROM MeaningGroups WHERE Name = '$key'";
     if($r = Config::getConnection()->query($q)->fetch_row()){
       $this->id = $r[0];
-    }else die("No Id for MeaningGroup with name: $key.");
+    }else Config::error("No Id for MeaningGroup with name: $key.");
   }
 }
 ?>

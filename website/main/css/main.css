@@ -10,6 +10,7 @@ a.anchor {display: none;}
 .color-region {color: #000000; font-weight: bold;}
 .color-language, #topMenu .colorWord {color: #4380C1;}
 .color-word, #topMenu .colorWord {color: #006400;}
+.color-language {white-space: nowrap;}
 .container-fluid {padding: 0px 5px 0px 5px;}
 .noborders {border: none;}
 .centertext {text-align: center;}
@@ -216,7 +217,7 @@ dd.languageList {
   padding: 0px;
 }
 #wordHeadline_playAll {position: relative; top: 20px;}
-.remove {float:right;}
+.remove {float: right;}
 .languageHeadlineParent {width: 100%}
 #languageHeadline, #languageDescription {text-align: center;}
 #languageHeadline h3 {border: 0px; display: inline;}

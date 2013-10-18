@@ -2,8 +2,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate() or die('403 Forbidden');
-  session_mayEdit()  or die('403 Forbidden');
+  session_validate() or Config::error('403 Forbidden');
+  session_mayEdit()  or Config::error('403 Forbidden');
   /*
     Function to make tuples to insert into the db from parsed csv data
     $csv : String[][] - an array of lines which are in turn arrays of string.
@@ -53,7 +53,7 @@
   $queries = array();
   /* Filehandling */
   if(count($_FILES) == 0)
-    die('No file given.');
+    Config::error('No file given.');
   $uploads = $_FILES['upload'];
   //Iterating the files:
   while(count($uploads['name']) > 0){
@@ -64,7 +64,7 @@
     $csv = array();
     //Removing the headline and \r from $fcontent:
     if(!preg_match("/^[^\n]*\r?\n(.*)$/AsD", $fcontent, $matches))
-      die('Failed to dissect file into headline and content.');
+      Config::error('Failed to dissect file into headline and content.');
     $fcontent = preg_replace("/\r/", '', $matches[1]);
     //Handling the lines:
     foreach(preg_split("/((\r?\n)|(\r\n?))/", $fcontent) as $line){
@@ -154,7 +154,7 @@
         array_push($queries, 'DELETE FROM Languages_'.$matches[1], $q);
       break;
       case (preg_match('/^LanguageStatusTypes\.txt$/', $fname, $matches) ? true : false):
-        $q = 'INSERT INTO LanguageStatusTypes(LanguageStatusType, Description, Status, StatusTooltip, Color) VALUES '
+        $q = 'INSERT INTO LanguageStatusTypes(LanguageStatusType, Description, Status, StatusTooltip, Color, Opacity, ColorDepth) VALUES '
            . mkTuples($csv, array(1,2,3,4));
         array_push($queries, "DELETE FROM LanguageStatusTypes WHERE Description != ''", $q);
       break;
@@ -178,8 +178,8 @@
       break;
       case (preg_match('/^RegionGroups_(.*)\.txt$/', $fname, $matches) ? true : false):
         $q = 'INSERT INTO Regions_'.$matches[1].'(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx, '
-           . 'RegionGpTypeIx, RegionGpNameLong, RegionGpNameShort) VALUES '
-           . mkTuples($csv, array(5,6));
+           . 'RegionGpTypeIx, RegionGpNameLong, RegionGpNameShort, Color) VALUES '
+           . mkTuples($csv, array(5,6,7));
         array_push($queries, 'DELETE FROM Regions_'.$matches[1], $q);
       break;
       case (preg_match('/^Studies\.txt$/', $fname, $matches) ? true : false):

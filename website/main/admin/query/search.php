@@ -26,8 +26,8 @@
   require_once 'search/WordsSearchProvider.php';
   chdir('..');
   require_once 'common.php';
-  session_validate()     or die('403 Forbidden');
-  session_mayTranslate() or die('403 Forbidden');
+  session_validate()     or Config::error('403 Forbidden');
+  session_mayTranslate() or Config::error('403 Forbidden');
   /* Providers: */
   $providers = array();
   foreach(array(
@@ -68,7 +68,7 @@
       if(array_key_exists($searchProvider, $providers)){
         $p = $providers[$searchProvider];
         $p->update($translationId, $payload, $update);
-      }else die("Unsupported SearchProvider: $searchProvider");
+      }else Config::error("Unsupported SearchProvider: $searchProvider");
     break;
     default:
       echo "Undefined query; Action needs to be [search|update].";

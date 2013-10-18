@@ -54,7 +54,7 @@ abstract class SubManager{
     @return $foo MISC
   */
   public function pack(){
-    die('Call to SubManager:pack() which has to be overwritten but is not.');
+    Config::error('Call to SubManager:pack() which has to be overwritten but is not.');
   }
   /*-- Shortcut functions below: --*/
   protected function gvm(){

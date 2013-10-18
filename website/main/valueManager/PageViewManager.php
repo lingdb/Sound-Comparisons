@@ -48,7 +48,7 @@ abstract class PageViewManager extends SubManager{
   */
   public function transpose(){
     if(!$this->isSelection() || $this->isView('MapView'))
-      return die('Could not transpose PageView:\t'.$this->getType());
+      return Config::error('Could not transpose PageView:\t'.$this->getType());
     if($this->isView('MultiView'))
       return $this->setView('MultiTransposed');
     if($this->isView('MultiTransposed'))

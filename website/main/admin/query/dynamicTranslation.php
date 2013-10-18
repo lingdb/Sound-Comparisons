@@ -21,8 +21,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate()     or die('403 Forbidden');
-  session_mayTranslate() or die('403 Forbidden');
+  session_validate()     or Config::error('403 Forbidden');
+  session_mayTranslate() or Config::error('403 Forbidden');
   /* Constants */
   define('PAGE_ITEM_LIMIT', 30);
   /**

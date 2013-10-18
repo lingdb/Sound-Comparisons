@@ -8,17 +8,6 @@ abstract class StudyManager extends SubManager{
     return $this->study;
   }
   /**
-    @return Study[]
-  */
-  public function getStudies(){
-    $studies = array();
-    $set = Config::getConnection()->query('SELECT DISTINCT Name FROM Studies');
-    while($r = $set->fetch_row()){
-      array_push($studies, new StudyFromKey($this->gvm(), $r[0]));
-    }
-    return $studies;
-  }
-  /**
     @param study Study
     @return $v ValueManager
   */

@@ -2,8 +2,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate() or die('403 Forbidden');
-  session_mayTranslate() or die('403 Forbidden');
+  session_validate()     or Config::error('403 Forbidden');
+  session_mayTranslate() or Config::error('403 Forbidden');
   /**
     @param $imagePath String
     @return $imagePath String
@@ -90,7 +90,7 @@
       $translationId = $dbConnection->escape_string($_GET['TranslationId']);
       //Prevent deletion on default language:
       if($translationId == '1')
-        die('FAIL');
+        Config::error('FAIL');
       //Delete static translations:
       $query = "DELETE FROM Page_StaticTranslation WHERE TranslationId = $translationId";
       $dbConnection->query($query);

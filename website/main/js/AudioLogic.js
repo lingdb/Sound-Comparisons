@@ -61,7 +61,10 @@ AudioLogic = Backbone.View.extend({
   Stops another audio, if it's currently playing.
 */
 , play: function(audio){
-    if(!audio) return;
+    if(!audio){
+      if(f = this.playFinished) f();
+      return;
+    }
     if(this.current) this.stop();
     this.current = audio;
     this.onDemand(audio);

@@ -6,8 +6,8 @@
   /* Setup and session verification */
   chdir('..');
   require_once 'common.php';
-  session_validate() or die('403 Forbidden');
-  session_mayTranslate() or die('403 Forbidden');
+  session_validate()     or Config::error('403 Forbidden');
+  session_mayTranslate() or Config::error('403 Forbidden');
   /* The helpful esc function */
   $esc = function($s) use ($dbConnection){
     return "'".$dbConnection->escape_string($s)."'";

@@ -4,14 +4,14 @@
 */
 function tables_multiwordTableTransposed($v){
   //Setup:
-  $t          = $v->getTranslator();
-  $languages  = Language::mkRegionBuckets($v->getLanguages());
-  $regions    = $languages['regions']; // RegionId -> Region
-  $languages  = $languages['buckets']; // RegionId -> Language[]
-  $words      = Word::mkMGBuckets($v->getWords());
-  $mgs        = $words['mgs'];
-  $words      = $words['buckets'];
-  $lOffset    = $v->gwo()->isLogical() ? '<th></th>' : '';
+  $t         = $v->getTranslator();
+  $languages = Language::mkRegionBuckets($v->getLanguages());
+  $regions   = $languages['regions']; // RegionId -> Region
+  $languages = $languages['buckets']; // RegionId -> Language[]
+  $words     = Word::mkMGBuckets($v->getWords());
+  $mgs       = $words['mgs'];
+  $words     = $words['buckets'];
+  $lOffset   = $v->gwo()->isLogical() ? '<th></th>' : '';
   //The thead, consisting of rows for: regions, delete and languages, plays:
   echo '<table id="multitabletrans" class="table table-bordered table-striped"><thead>';
   //The Regions:
@@ -34,7 +34,7 @@ function tables_multiwordTableTransposed($v){
   if(count($languages) === 0){
     for($i = 1; $i <= 3; $i++)
       echo '<th class="languageCell color-language">'
-         . $t->st('tabulator_multi_langrow').' '.($i+1)
+         . $t->st('tabulator_multi_langrow').' '.$i
          . '</th>';
   }else foreach($languages as $l){
     $lhref = $v->delLanguage($l)->setUserCleaned()->link();

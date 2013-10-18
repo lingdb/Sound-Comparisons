@@ -228,13 +228,13 @@ class Tabulator{
       if(!$l->getLocation())
         continue;
       foreach($v->getWords() as $w){
-        $t    = new TranscriptionFromWordLang($w, $l);
+        $t = new TranscriptionFromWordLang($w, $l);
         array_push($transcriptions, $t->toJSON());
       }
     }
     $data = array(
-      'regionZoom'      => $v->getStudy()->getMapZoomCorners()
-    , 'transcriptions'  => $transcriptions
+      'regionZoom'     => $v->getStudy()->getMapZoomCorners()
+    , 'transcriptions' => $transcriptions
     );
     return json_encode($data);
   }

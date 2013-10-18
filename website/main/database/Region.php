@@ -11,6 +11,12 @@ define("REGIONTYPE_SPELLING", 2);
   The Region is an entry of the Region table in the database.
 */
 class Region extends DBEntry {
+  /***/
+  public function buildSelectQuery($fs){
+    $sid = $this->getValueManager()->getStudy()->getId();
+    $id  = $this->id;
+    return "SELECT $fs FROM Regions_$sid WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
+  }
   /**
     @return $shortName String
     Fetches the ShortName of a Region.
@@ -23,11 +29,7 @@ class Region extends DBEntry {
       if($trans[0] != '')
         return $trans[0];
     }
-    $sid = $this->getValueManager()->getStudy()->getId();
-    $id  = $this->id;
-    $q   = "SELECT RegionGpNameShort FROM Regions_$sid WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    $r   = Config::getConnection()->query($q)->fetch_row();
-    return $r[0];
+    return current($this->fetchFields('RegionGpNameShort'));
   }
   /**
     @return $name String
@@ -38,28 +40,27 @@ class Region extends DBEntry {
       if($trans[1] != '')
         return $trans[1];
     }
-    $sid = $this->getValueManager()->getStudy()->getId();
-    $id  = $this->id;
-    $q   = "SELECT RegionGpNameLong FROM Regions_$sid WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    $r   = Config::getConnection()->query($q)->fetch_row();
-    return $r[0];
+    return current($this->fetchFields('RegionGpNameLong'));
   }
   /**
     @return family Family
   */
   public function getFamily(){
-    $sid = $this->getValueManager()->getStudy()->getId();
-    $id  = $this->id;
-    $q = "SELECT CONCAT(StudyIx, FamilyIx) FROM Regions_$sid "
-       . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    $r = Config::getConnection()->query($q)->fetch_row();
-    return new FamilyFromId($this->v, $r[0]);
+    $r = $this->fetchFields('CONCAT(StudyIx, FamilyIx)');
+    return new FamilyFromId($this->getValueManager(), $r[0]);
+  }
+  /***/
+  public function getColor(){
+    if($this->getValueManager()->getStudy()->getColorByFamily())
+      return $this->getFamily()->getColor();
+    return current($this->fetchFields('Color'));
   }
   /***/
   public function getColorStyle(){
-    $style = $this->getFamily()->getColor();
-    if($style !== '') $style = " style='background-color: #$style;'";
-    return $style;
+    $color = $this->getColor();
+    if($color !== '')
+      return " style='background-color: #$color;'";
+    return '';
   }
   /**
     @param [$allowNoTranscriptions = false]
@@ -114,11 +115,7 @@ class Region extends DBEntry {
     The types are defined at the top of this file.
   **/
   public function getType(){
-    $sid = $this->getValueManager()->getStudy()->getId();
-    $id = $this->id;
-    $q = "SELECT RegionGpTypeIx FROM Regions_$sid "
-       . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    if($r = Config::getConnection()->query($q)->fetch_row())
+    if($r = $this->fetchFields('RegionGpTypeIx'))
       return $r[0];
     return REGIONTYPE_NORMAL;
   }
@@ -140,7 +137,7 @@ class RegionFromKey extends Region{
        . "OR RegionGpNameShort LIKE '$key'";
     if($r = Config::getConnection()->query($q)->fetch_row())
       $this->id = $r[0];
-    else die('Invalid RegionKey: ' . $key);
+    else Config::error('Invalid RegionKey: ' . $key);
   }
 }
 /**
@@ -154,11 +151,9 @@ class RegionFromId extends Region{
   public function __construct($v, $id){
     $this->setup($v);
     $this->id = $id;
-    $q = "SELECT RegionGpNameLong FROM Regions "
-       . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $id";
-    if($r = Config::getConnection()->query($q)->fetch_row()){
+    if($r = $this->fetchFields('RegionGpNameLong')){
       $this->key = $r[0];
-    }else die('Invalid RegionId: ' . $id);
+    }else Config::error('Invalid RegionId: ' . $id);
   }
 }
 ?>

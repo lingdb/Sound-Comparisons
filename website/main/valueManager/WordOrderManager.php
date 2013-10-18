@@ -111,13 +111,7 @@ class InitWordOrderManager extends WordOrderManager{
       }
       //Setting phLang per default:
       if(!$this->phLang){
-        $sId = $v->getStudy()->getId();
-        $q   = "SELECT LanguageIx FROM Languages_$sId "
-             . "WHERE IsOrthographyHasNoTranscriptions = 0 "
-             . "OR IsOrthographyHasNoTranscriptions IS NULL "
-             . "LIMIT 1";
-        $r   = Config::getConnection()->query($q)->fetch_row();
-        $this->phLang = new LanguageFromId($v, $r[0]);
+        $this->phLang = $v->getStudy()->getDefaultPhoneticLanguage();
       }
     }
   }

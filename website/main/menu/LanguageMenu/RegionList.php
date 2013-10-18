@@ -9,6 +9,7 @@
   Builds the RegionList for LanguageMenu.php
 */
 function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl = false){
+  $colorByFamily = $v->getStudy()->getColorByFamily();
   $regionList = $dl ? '<dl class="regionList">' : '<ul class="regionList">';
   foreach($regions as $r){
     $hasRegion = $v->hasRegion($r);
@@ -42,12 +43,14 @@ function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl =
       }
       $checkbox = "<a $href title='$ttip'><i class='$icon'></i></a>";
     }
+    //Color if it's not done by Family:
+    $color = $colorByFamily ? '' : $r->getcolorStyle();
     //The Region item itself:
     $href = $hasRegion ? $v->delRegion($r)->link()
                        : $v->addRegion($r)->link();
     $triangle = $hasRegion ? 'icon-chevron-up rotate90' : 'icon-chevron-down';
     $title = "$checkbox<a class='color-region' $href title='$rTtip'><i class='$triangle'></i>$rName</a>";
-    $regionList .= $dl ? "<dt>$title</dt>" : "<li>$title";
+    $regionList .= $dl ? "<dt $color>$title</dt>" : "<li>$title";
     //Content inside the region:
     if(!$hasRegion){
       $regionList .= $dl ? '<dd class="languageList">' : '<ul class="languageList">';

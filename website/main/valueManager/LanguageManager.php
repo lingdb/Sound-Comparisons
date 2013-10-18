@@ -104,41 +104,10 @@ abstract class LanguageManager extends SubManager{
   }
   /***/
   public function getDefaults($multiple = false){
-    $languages = array();
-    $v         = $this->gvm();
-    $studyId   = $v->getStudy()->getId();
-    if($multiple){
-      $q = "SELECT LanguageIx FROM Default_Multiple_Languages "
-         . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
-           . "SELECT CONCAT(StudyIx, REPLACE(FamilyIx, 0, '%')) FROM Studies WHERE Name = '$studyId'"
-         . ") AND LanguageIx = ANY (SELECT LanguageIx FROM Languages_$studyId)";
-      $set = Config::getConnection()->query($q);
-      while($r = $set->fetch_row())
-        array_push($languages, new LanguageFromId($v, $r[0]));
-      //No default languages found, defaulting to all:
-      if(count($languages) == 0){
-        $q = "SELECT LanguageIx FROM Languages_$studyId LIMIT 5";
-        $set = Config::getConnection()->query($q);
-        while($r = $set->fetch_row())
-          array_push($languages, new LanguageFromId($v, $r[0]));
-      }
-    }else{
-      //Trying to select default languages:
-      $q = "SELECT D.LanguageIx FROM Default_Languages AS D "
-         . "JOIN Studies AS S USING (StudyIx, FamilyIx) "
-         . "WHERE S.Name = '$studyId'";
-      $set = Config::getConnection()->query($q);
-      if($r = $set->fetch_row())
-        array_push($languages, new LanguageFromId($v, $r[0]));
-      //Fallback on first Language from Study:
-      if(count($languages) == 0){
-        $q = "SELECT LanguageIx FROM Languages_$studyId "
-           . "ORDER BY LanguageIx ASC LIMIT 1";
-        if($r = Config::getConnection()->query($q)->fetch_row())
-          array_push($languages, new LanguageFromId($v, $r[0]));
-      }
-    }
-    return $languages;
+    $s = $this->gvm()->getStudy();
+    if($multiple)
+      return $s->getDefaultLanguages();
+    return array($s->getDefaultLanguage());
   }
 }
 

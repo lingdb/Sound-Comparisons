@@ -6,7 +6,7 @@
     public function getType(){return 'whoAreWe';}
 
     public function displayName(){
-      die('WhoAreWeView:displayName() is not currently implemented!');
+      Config::error('WhoAreWeView:displayName() is not currently implemented!');
     }
 
     public function init(){

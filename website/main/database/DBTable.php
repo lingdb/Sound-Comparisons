@@ -1,23 +1,21 @@
 <?php
 /***/
 abstract class DBTable{
-  /**
-    @param $q String a query to be exetucted
-    @return [$r] the row that was fetched.
-    Fetches a single row from a query.
-  */
-  protected function fetchRow($q){
+  /***/
+  protected function fetchOneBy($q, $f = null){
+    if($f === null)
+      $f = function($set){return $set->fetch_row();};
     $set = Config::getConnection()->query($q);
-    if($r = $set->fetch_row())
-      return $r;
-    return null;
+    return $f($set);
   }
   /***/
-  protected function fetchRows($q){
+  protected function fetchAllBy($q, $f = null){
+    if($f === null)
+      $f  = function($set){return $set->fetch_row();};
     $rows = array();
     $set  = Config::getConnection()->query($q);
-    while($r = $set->fetch_row())
-      array_push($rows, $r);
+    for($i = 0; $i < $set->num_rows; $i++)
+      array_push($rows, $f($set));
     return $rows;
   }
   /**
@@ -26,21 +24,37 @@ abstract class DBTable{
     in a query and transforms it into a query that can be executed.
   */
   protected function buildSelectQuery($fs){
-    die('DBTable:buildSelectQuery() needs to be redefined.');
+    Config::error('DBTable:buildSelectQuery() needs to be redefined.');
+  }
+  /***/
+  protected function fetchHelper($fields, $all = false, $assoc = false){
+    if($q = $this->buildSelectQuery($fields)){
+      $f = $assoc ? function($set){return $set->fetch_assoc();}
+                  : function($set){return $set->fetch_row();  };
+      if($all) return $this->fetchAllBy($q, $f);
+      return $this->fetchOneBy($q, $f);
+    }
+    return null;
   }
   /***/
   protected function fetchFields(){
     $fs = implode(', ', func_get_args());
-    if($q = $this->buildSelectQuery($fs))
-      return $this->fetchRow($q);
-    return null;
+    return $this->fetchHelper($fs);
   }
   /***/
   protected function fetchFieldRows(){
     $fs = implode(', ', func_get_args());
-    if($q = $this->buildSelectQuery($fs))
-      return $this->fetchRows($q);
-    return array();
+    return $this->fetchHelper($fs, true);
+  }
+  /***/
+  protected function fetchAssoc(){
+    $fs = implode(', ', func_get_args());
+    return $this->fetchHelper($fs, false, true);
+  }
+  /***/
+  protected function fetchAssocs(){
+    $fs = implode(', ', func_get_args());
+    return $this->fetchHelper($fs, true, true);
   }
   /***/
   public function exists(){

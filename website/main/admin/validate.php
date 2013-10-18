@@ -63,7 +63,7 @@
   */
   function session_getUid(){
     if(!isset($_SESSION['UserId']))
-      die('UserId is not set in validate.php:session_getUid()');
+      Config::error('UserId is not set in validate.php:session_getUid()');
     return Config::getConnection()->escape_string($_SESSION['UserId']);
   }
 ?>

@@ -194,6 +194,114 @@ class Study extends DBEntry{
     }
     return null;
   }
+  /**
+    @return defaults Language[]
+    Tries to fetch entries from Default_Multiple_Languages.
+    If no defaults could be found, we fall back to the first 5
+    in the study.
+  */
+  public function getDefaultLanguages(){
+    $v  = RedirectingValueManager::getInstance();
+    $id = $this->id;
+    $q  = "SELECT LanguageIx FROM Default_Multiple_Languages "
+        . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
+          . "SELECT CONCAT(StudyIx, REPLACE(FamilyIx, 0, '%')) FROM Studies WHERE Name = '$id'"
+        . ") AND LanguageIx = ANY (SELECT LanguageIx FROM Languages_$id)";
+    $defaults = $this->fetchAllBy($q);
+    if(count($defaults) === 0){
+      $q = "SELECT LanguageIx FROM Languages_$id LIMIT 5";
+      $defaults = $this->fetchAllBy($q);
+    }
+    return __($defaults)->map(function($r) use ($v){
+      return new LanguageFromId($v, $r[0]);
+    });
+  }
+  /**
+    @return default Language
+    Tries to fetch entry from Default_Languages.
+    If no default could be found, we fall back to the first in the study.
+  */
+  public function getDefaultLanguage(){
+    $v  = RedirectingValueManager::getInstance();
+    $id = $this->id;
+    $q  = "SELECT D.LanguageIx FROM Default_Languages AS D "
+        . "JOIN Studies AS S USING (StudyIx, FamilyIx) "
+        . "WHERE S.Name = '$id'";
+    $default = $this->fetchOneBy($q);
+    if(!$default){
+      $q = "SELECT LanguageIx FROM Languages_$id "
+         . "ORDER BY LanguageIx ASC LIMIT 1";
+      $default = $this->fetchOneBy($q);
+    }
+    return new LanguageFromId($v, $default[0]);
+  }
+  /**
+    @return phLang Language
+  */
+  public function getDefaultPhoneticLanguage(){
+    $v  = RedirectingValueManager::getInstance();
+    $id = $this->id;
+    $q  = "SELECT LanguageIx FROM Languages_$id "
+        . "WHERE IsOrthographyHasNoTranscriptions = 0 "
+        . "OR IsOrthographyHasNoTranscriptions IS NULL "
+        . "LIMIT 1";
+    if($r = $this->fetchOneBy($q))
+      return new LanguageFromId($v, $r[0]);
+    return null;
+  }
+  /**
+    @return defaults Word[]
+    Tries to fetch entries from Default_Multiple_Words.
+    If no defaults could be found, we use the first 5 for the study.
+  */
+  public function getDefaultWords(){
+    $v  = RedirectingValueManager::getInstance();
+    $id = $this->id;
+    $q  = "SELECT DISTINCT CONCAT(IxElicitation, IxMorphologicalInstance) "
+        . "FROM Default_Multiple_Words WHERE CONCAT(StudyIx, FamilyIx) "
+        . "LIKE (SELECT CONCAT(StudyIx,REPLACE(FamilyIx, 0, ''),'%') "
+          . "FROM Studies WHERE Name = '$id')";
+    $defaults = $this->fetchAllBy($q);
+    if(count($defaults) === 0){
+      $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
+         . "FROM Words_$id "
+         . "ORDER BY IxElicitation LIMIT 5";
+      $defaults = $this->fetchAllBy($q);
+    }
+    return __($defaults)->map(function($r) use ($v){
+      return new WordFromId($v, $r[0]);
+    });
+  }
+  /**
+    @return default Word
+    Tries to fetch entry from Default_Words.
+    If no default could be found, we fall back to the first for the stody.
+  */
+  public function getDefaultWord(){
+    $v  = RedirectingValueManager::getInstance();
+    $id = $this->id;
+    $q  = "SELECT DISTINCT CONCAT(IxElicitation, IxMorphologicalInstance) "
+        . "FROM Default_Words WHERE CONCAT(StudyIx, FamilyIx) "
+        . "LIKE (SELECT CONCAT(StudyIx,REPLACE(FamilyIx, 0, ''),'%') "
+          . "FROM Studies WHERE Name = '$id')";
+    $default = $this->fetchOneBy($q);
+    if(!$default){
+      $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
+         . "FROM Words_$id LIMIT 1";
+      $default = $this->fetchOneBy($q);
+    }
+    return new WordFromId($v, $default[0]);
+  }
+  /***/
+  public static function getStudies(){
+    $v = RedirectingValueManager::getInstance();
+    $studies = array();
+    $set = Config::getConnection()->query('SELECT DISTINCT Name FROM Studies');
+    while($r = $set->fetch_row()){
+      array_push($studies, new StudyFromKey($v, $r[0]));
+    }
+    return $studies;
+  }
 }
 /** Extends the Study for a constructor to create a Study from a key. */
 class StudyFromKey extends Study{
@@ -209,7 +317,7 @@ class StudyFromKey extends Study{
     if($r[0] >= 1){
       $this->id = $key; // id == key
     }
-    else die("Invalid StudyName: $key");
+    else Config::error("Invalid StudyName: $key");
   }
 }
 ?>
