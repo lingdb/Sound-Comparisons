@@ -1,23 +1,30 @@
 <?php
   function renderContributor($c){
+    //Fetching
     $initials = $c->getInitials();
     $name     = $c->getName();
     $email    = $c->getEmail();
     $website  = $c->getPersonalWebsite();
     $role     = $c->getFullRoleDescription();
     $img      = $c->getAvatar();
+    //Prerender
+    if($email !== ''){
+      $email = "<dt>Email</dt><dd>$email</dd>";
+    }
+    if($website !== ''){
+      $website = "<dt>Website</dt><dd><a href='$website' target='_blank'>$website</a></dd>";
+    }
+    if($role !== ''){
+      $role = "<dt>About</dt><dd>$role</dd>";
+    }
+    //Finish:
     echo "<div id='$initials' class='well contributor'>"
          . "<h3>$name<a href='#$initials' class='anchor'> &para;</a>:</h3>"
          . "<div class='row-fluid'>"
            . "<div class='span1'><img src='$img' class='img-rounded avatar'></div>"
            . "<div class='offset1 span11'>"
              . "<dl class='dl-horizontal'>"
-               . "<dt>Email</dt>"
-               . "<dd>$email</dd>"
-               . "<dt>Website</dt>"
-               . "<dd><a href='$website' target='_blank'>$website</a></dd>"
-               . "<dt>About</dt>"
-               . "<dd>$role;</dd>"
+               . $email . $website . $role
              . "</dl>"
            . "</div>"
          . "</div>"

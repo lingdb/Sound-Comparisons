@@ -34,6 +34,8 @@
     /***/
     public function getEmail(){
       $r = $this->fetchFields('EmailUpToAt','EmailAfterAt');
+      if($r[0] === '' || $r[1] === '')
+        return '';
       return $r[0].' [ at ] '.$r[1];
     }
     /***/
@@ -44,7 +46,7 @@
     /***/
     public function getFullRoleDescription(){
       $frd = $this->fetchFields('FullRoleDescription');
-      return $frd[0];
+      return preg_replace('/\\n/','<br>',$frd[0]);
     }
     /***/
     public function getColumnDescription(){
@@ -61,7 +63,7 @@
         if(file_exists($file))
           return $file;
       }
-      return $prefix.'dummy.gif';
+      return $prefix.'dummy.png';
     }
     /***/
     protected static function mkContributor($v, $id, $column, $year = null, $pages = null){

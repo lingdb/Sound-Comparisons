@@ -75,8 +75,13 @@ if(typeof(google) !== 'undefined'){
       wo.off(null, null, this);
       var c = this.get('notAddedWos') - 1;
       this.set({notAddedWos: c});
-      if(c === 0)
-        this.placeWordOverlays();
+      if(c === 0){
+        var t = this;
+        var tid = window.setTimeout(function(){
+          window.clearTimeout(tid);
+          t.placeWordOverlays();
+        },1000);
+      }
       this.get('defaultBounds').extend(wo.get('position'));
     }
   , placeWordOverlays: function(){

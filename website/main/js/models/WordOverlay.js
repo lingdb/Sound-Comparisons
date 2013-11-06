@@ -99,6 +99,22 @@ WordOverlay = Backbone.Model.extend({
     return bbox;
   }
 /**
+ @param a bbox
+ @param b bbox
+ @return bbox
+ Shifts a given bbox by the x1,y1 values of another.
+*/
+, shiftBy: function(a, b){
+    return {
+      x1: a.x1 + b.x1
+    , y1: a.y1 + b.y1
+    , x2: a.x2 + b.x1
+    , y2: a.y2 + b.y1
+    , w:  a.w
+    , h:  a.h
+    };
+  }
+/**
   @param a bbox
   @param b bbox
   @return Bool
@@ -124,17 +140,17 @@ WordOverlay = Backbone.Model.extend({
     //Setup:
     var edges     = ['sw','se','nw','ne']
       , fallback  = 'ne'
+      , mapBox    = App.views.mapView.getBBox()
       , positions = _.map(edges, function(e){
-          return {edge: e, bbox: this.getBBox(e)};
+          return {edge: e, bbox: this.shiftBy(this.getBBox(e), mapBox)};
         }, this);
     //Filtering edges against wos:
     _.each(wos, function(wo){
-      var bbox = wo.getBBox();
+      var bbox = this.shiftBy(wo.getBBox(), mapBox);
       _.each(positions, function(p){
         if(this.overlap(bbox, p.bbox)){
           edges = _.filter(edges, function(e){
-            if(e === p.edge) return false;
-            return true;
+            return (e !== p.edge);
           });
         }
       }, this);

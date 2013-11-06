@@ -10,10 +10,8 @@ if(typeof(google) != 'undefined'){
     , 'click #map_menu_zoomCoreRegion': 'centerRegion'
     }
   , initialize: function(){
-      this.map = new google.maps.Map(
-        document.getElementById("map_canvas")
-      , this.model.get('mapOptions')
-      );
+      this.div = document.getElementById("map_canvas");
+      this.map = new google.maps.Map(this.div, this.model.get('mapOptions'));
       this.render();
       //SoundControlView:
       this.soundControlView = new SoundControlView({
@@ -21,6 +19,9 @@ if(typeof(google) != 'undefined'){
       //Window resize
       var view = this;
       $(window).resize(function(){view.adjustCanvasSize();});
+      google.maps.event.addListener(this.map, 'zoom_changed', function(){
+        view.model.placeWordOverlays();
+      });
     }
   , render: function(){
       this.adjustCanvasSize();
@@ -75,6 +76,35 @@ if(typeof(google) != 'undefined'){
       }).each(function(wo){
         playSequence.add(wo.getAudio());
       });
+    }
+  , getBBox: function(){
+      //This clever alg. from http://stackoverflow.com/questions/211703/is-it-possible-to-get-the-position-of-div-within-the-browser-viewport-not-withi
+      var e = this.div;
+      var offset = {x:0,y:0};
+      while(e){
+        offset.x += e.offsetLeft;
+        offset.y += e.offsetTop;
+        e = e.offsetParent;
+      }
+      if(document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)){
+        offset.x -= document.documentElement.scrollLeft;
+        offset.y -= document.documentElement.scrollTop;
+      }else if (document.body && (document.body.scrollTop || document.body.scrollLeft)){
+        offset.x -= document.body.scrollLeft;
+        offset.y -= document.body.scrollTop;
+      }else if (window.pageXOffset || window.pageYOffset){
+        offset.x -= window.pageXOffset;
+        offset.y -= window.pageYOffset;
+      }
+      e = $(this.div);
+      return {
+        x1: offset.x
+      , y1: offset.y
+      , x2: offset.x + e.width()
+      , y2: offset.y + e.height()
+      , w:  e.width()
+      , h:  e.height()
+      };
     }
   });
 }

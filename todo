@@ -12,18 +12,16 @@
    - This is to be kept in mind as an interesting thing.
 
 2013-09-19:
- - Break up Tabulator.php into template like parts that can easily be included
  - Learn about Zotero
  - Let map remember location when switching words
+   - This already implies building a bigger part of the site
+     as a .js application.
+   - Or does it?!
 
 2013-09-13:
  - Move 'view by' with tabs in topmenu to the middle.
    - This is no easy task (thinking of smaller screens and the hell of horizontal alignment)
-
-2013-09-12:
- - Placement of WordOverlay.js in MapView
-   still appears to be buggy.
-   I believe this to be caused by wrong bboxes.
+   - I could try and do this with .js, but that wouldn't be a nice solution.
 
 2013-09-11:
  - It appears in mapview, that if 'my selection' equals 'all languages',

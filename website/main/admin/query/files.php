@@ -49,6 +49,27 @@
     }
     return implode(",", $tuples);
   }
+  // Black magic from http://www.php.net/manual/de/function.str-getcsv.php#111665
+  function parse_csv ($csv_string, $delimiter = ",", $skip_empty_lines = true, $trim_fields = true){
+    $enc = preg_replace('/(?<!")""/', '!!Q!!', $csv_string);
+    $enc = preg_replace_callback('/"(.*?)"/s', function ($field){
+      return urlencode(utf8_encode($field[1]));
+    }, $enc);
+    $lines = preg_split($skip_empty_lines ? ($trim_fields ? '/( *\R)+/s' : '/\R+/s') : '/\R/s', $enc);
+    return array_map(function ($line) use ($delimiter, $trim_fields){
+      $fields = $trim_fields ? array_map('trim', explode($delimiter, $line)) : explode($delimiter, $line);
+      return array_map(function ($field){
+        return str_replace('!!Q!!', '"', utf8_decode(urldecode($field)));
+      }, $fields);
+    }, $lines);
+  }
+  function dissect($content){
+    $csv = parse_csv($content);
+    $n = count(__()->first($csv));
+    return __()->filter(__()->rest($csv), function($l) use ($n){
+      return count($l) === $n;
+    });
+  }
   //Queries to be executed for uploads:
   $queries = array();
   /* Filehandling */
@@ -61,17 +82,7 @@
     $ftmpname = array_pop($uploads['tmp_name']);
     $fcontent = file_get_contents($ftmpname);
     //Parsing the csv:
-    $csv = array();
-    //Removing the headline and \r from $fcontent:
-    if(!preg_match("/^[^\n]*\r?\n(.*)$/AsD", $fcontent, $matches))
-      Config::error('Failed to dissect file into headline and content.');
-    $fcontent = preg_replace("/\r/", '', $matches[1]);
-    //Handling the lines:
-    foreach(preg_split("/((\r?\n)|(\r\n?))/", $fcontent) as $line){
-      if($line == "")
-        continue; //I don't want empty lines in $csv
-      array_push($csv, str_getcsv($line));
-    }
+    $csv = dissect($fcontent);
     //Selecting the queries via switch:
     switch($fname){
       case (preg_match('/^Contributors.txt$/', $fname, $matches) ? true : false):

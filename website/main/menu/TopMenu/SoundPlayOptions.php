@@ -6,7 +6,6 @@ $click = $t->st('topmenu_soundoptions_click');
 ?>
 <ul id='topmenuSoundOptions' class='nav nav-tabs' title='<? echo $ttip; ?>'>
   <li>
-    <i class='icon-eject rotate90'></i>
     <div class='btn-group'>
       <button type='button'
               value='hover'

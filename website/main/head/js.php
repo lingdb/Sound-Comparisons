@@ -28,6 +28,7 @@
   <script src="js/views/MapView.js"></script>
   <script src="js/views/SoundControlView.js"></script>
   <script src="js/views/SoundPlayOptionView.js"></script>
+  <script src="js/views/ColorCalcView.js"></script>
   <script src="js/views/WordOverlayView.js"></script>
   <script src="js/App.js"></script>
   <script src="js/main.js"></script>
