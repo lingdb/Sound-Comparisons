@@ -17,29 +17,30 @@ function WordMenuBuildWordList($words, $v, $t){
     $href = '';
     if($multi){
       $icon = $hasWord ? 'icon-check' : 'icon-chkbox-custom';
-      $icon = "<i class='$icon'></i>";
       $ttip = $hasWord ? $t->st('multimenu_tooltip_del')
                        : $t->st('multimenu_tooltip_add');
       $href = $hasWord ? $v->delWord($w)->link()
                        : $v->addWord($w)->link();
-    }else if(!$hasWord){
-      if($v->gpv()->isView('MapView')){
-        $href = $v->setWord($w)->link();
-        $ttip = $t->st('menu_words_tooltip_choose_map');
-      }else{
-        $href = $v->gpv()->setView('WordView')->setWord($w)->link();
-        $ttip = $t->st('menu_words_tooltip_choose_single');
-      }
+      $icon = "<a title='$ttip' $href><i class='$icon'></i></a>";
     }
+    if($v->gpv()->isView('MapView')){
+      $href = $v->setWord($w)->link();
+      $ttip = $t->st('menu_words_tooltip_choose_map');
+    }else{
+      $href = $v->gpv()->setView('WordView')->setWord($w)->link();
+      $ttip = $t->st('menu_words_tooltip_choose_single');
+    }
+    if($ln = $w->getLongName()) // Prepending the LongName to the ttip if it exists
+      $ttip = "$ln\n$ttip";
     $phonetics = array('*'.$w->getProtoName());
     if($rf = $v->gwo()->getPhLang()){
       $tr  = new TranscriptionFromWordLang($w, $rf);
       $phonetics = $tr->getPhonetics($v);
     }
-    $trans = $w->getTranslation($v, true);
+    $trans = $w->getTranslation($v, true, false);
     $cname = $w->getKey();
     $ttip  = ($ttip === '') ? '' : " title='$ttip'";
-    $link  = ($href === '') ? $trans : "<a class='color-word wordLinkModernName'$ttip $href>$icon$trans</a>";
+    $link  = ($href === '') ? $trans : "$icon<a class='color-word wordLinkModernName'$ttip $href>$trans</a>";
     foreach($phonetics as $i => $phonetic){
       $subscript = '';
       if(count($phonetics) > 1){

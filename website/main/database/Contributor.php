@@ -76,13 +76,14 @@
     /***/
     public static function forLanguage($language){
       $dbConnection = Config::getConnection();
-      $v  = $language->getValueManager();
+      $v = $language->getValueManager();
+      $sid = $language->getValueManager()->getStudy()->getId();
       $id = $language->getId();
-      $q  = "SELECT ContributorSpokenBy, ContributorRecordedBy1, ContributorRecordedBy2"
-          . ", ContributorPhoneticTranscriptionBy, ContributorReconstructionBy"
-          . ", ContributorCitationAuthor1, Citation1Year, Citation1Pages"
-          . ", ContributorCitationAuthor2, Citation2Year, Citation2Pages"
-          . " FROM Languages WHERE LanguageIx = $id";
+      $q = "SELECT ContributorSpokenBy, ContributorRecordedBy1, ContributorRecordedBy2"
+         . ", ContributorPhoneticTranscriptionBy, ContributorReconstructionBy"
+         . ", ContributorCitationAuthor1, Citation1Year, Citation1Pages"
+         . ", ContributorCitationAuthor2, Citation2Year, Citation2Pages"
+         . " FROM Languages_$sid WHERE LanguageIx = $id";
       $ret = array();
       $r = $dbConnection->query($q)->fetch_row();
       if($i = $r[0]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorSpokenBy'));

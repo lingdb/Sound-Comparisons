@@ -34,6 +34,17 @@ class Word extends DBEntry{
   }
   /**
     @return String
+    Some Words have a LongName in addition to their ModernNames.
+  */
+  public function getLongName(){
+    if($trans = $this->getValueManager()->getTranslator()->getWordLongTranslation($this)){
+      return $trans;
+    }
+    $f = $this->fetchField('LongerRfcModernLg01');
+    return ($f === '') ? null : $f;
+  }
+  /**
+    @return String
     Fetches a Words ProtoName directly from the Table.
   */
   public function getProtoName(){
@@ -97,8 +108,7 @@ class Word extends DBEntry{
           array_push($translations, $str);
       }
       //Gluing translations together, removing duplicates:
-      $glue = '<br/>';
-      if(!$break) $glue = ', ';
+      $glue = $break ? '<br/>' : ', ';
       $ret = implode($glue, array_unique($translations));
       //Done:
       if($ret != '') return $ret;

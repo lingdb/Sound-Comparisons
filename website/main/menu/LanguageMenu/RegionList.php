@@ -55,38 +55,35 @@ function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl =
     if(!$hasRegion){
       $regionList .= $dl ? '<dd class="languageList">' : '<ul class="languageList">';
       foreach($languages as $l){
-        $flag    = $showFlags ? $l->getFlag() : '';
-        $sn      = $l->getShortName();
-        $ln      = $l->getLongName(false);
-        $hasL    = $v->hasLanguage($l);
-        $checked = $hasL ? 'icon-check' : 'icon-chkbox-custom';
-        if($hasL){
-          if($isMultiView){ // Has && Multi
+        $flag = $showFlags ? $l->getFlag() : '';
+        $sn   = $l->getShortName();
+        $ln   = $l->getLongName(false);
+        $hasL = $v->hasLanguage($l);
+        $icon = '';
+        if($isMultiView){
+          $checked = $hasL ? 'icon-check' : 'icon-chkbox-custom';
+          if($hasL){
             if($isMapView){
               $ttip = "$ln\n".$t->st('multimenu_tooltip_del_map');
             }else{
               $ttip = "$ln\n".$t->st('multimenu_tooltip_del');
             }
             $href = $v->delLanguage($l)->setUserCleaned()->link('','data-href');
-            $regionList .= "<li><a class='color-language' title='$ttip' $href>"
-                         . "<i class='$checked'></i>$flag$sn</a></li>";
-          }else{ // Has && ¬Multi
-            $regionList .= "<li class='color-language selected' title='$ln'>$flag$sn</li>";
-          }
-        }else{
-          if($isMultiView){ // ¬Has && Multi
+          }else{
             if($isMapView){
               $ttip = "$ln\n".$t->st('multimenu_tooltip_add_map');
             }else{
               $ttip = "$ln\n".$t->st('multimenu_tooltip_add');
             }
             $href = $v->addLanguage($l)->link('','data-href');
-            $regionList .= "<li><a class='color-language' title='$ttip' $href>"
-                         . "<i class='$checked'></i>$flag$sn</a></li>";
-          }else{ // ¬Has && ¬Multi
-            $goL = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
-            $regionList .= "<li><a class='color-language' title='$ln' $goL>$flag$sn</a></li>";
           }
+          $icon = "<a title='$ttip' $href><i class='$checked'></i></a>";
+        }
+        $goL = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
+        if($hasL){
+          $regionList .= "<li>$icon<a class='color-language selected' title='$ln' $goL>$flag$sn</a></li>";
+        }else{
+          $regionList .= "<li>$icon<a class='color-language' title='$ln' $goL>$flag$sn</a></li>";
         }
       }
       $regionList .= $dl ? '</dd>' : '</ul>';

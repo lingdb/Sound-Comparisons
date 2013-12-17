@@ -16,12 +16,13 @@ if(typeof(google) !== 'undefined'){
         , color = this.model.get('color');
       //Calculating the color values:
       color.opacity /= 100;
-      color.color = this.getColorDepth(color.color, color.colorDepth);
+//FIXME we don't use hsl at the moment.
+//    color.color = this.getColorDepth(color.color, color.colorDepth);
       //Filling and styling the div:
       $(div).addClass('mapAudio', 'audio')
             .html(this.model.get('content'))
             .css('background-color', color.color)
-            .css('opacity', color.opacity);
+            .find('.transcription').css('font-size','14px');
       //Handling the callbacks:
       $('.transcription', div).each(function(){
         var audio = $(this).next().get(0);

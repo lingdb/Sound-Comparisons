@@ -19,24 +19,29 @@ class Tabulator{
     if($p = $word->getPrev($v)){
       $href  = $v->setWord($p)->link();
       $trans = $p->getTranslation($v, true, false);
+      $ttip  = '';
+      if($ln = $p->getLongName()) $ttip = "title='$ln'";
       $prev  = $t->st('tabulator_word_prev');
-      $prev  = "<a id='prevLink' $href class='pull-left nounderline'>"
+      $prev  = "<a id='prevLink' $href $ttip class='pull-left nounderline'>"
              . "<div class='color-word inline'>$trans </div>← $prev</a>";
     }
     //Next Word:
     $next = '';
     if($n = $word->getNext($v)){
       $href  = $v->setWord($n)->link();
-      $next  = $t->st('tabulator_word_next');
       $trans = $n->getTranslation($v, true, false);
-      $next  = "<a id='nextLink' $href class='pull-right nounderline'>"
+      $ttip  = '';
+      if($ln = $n->getLongName()) $ttip = "title='$ln'";
+      $next  = $t->st('tabulator_word_next');
+      $next  = "<a id='nextLink' $href $ttip class='pull-right nounderline'>"
              . "$next →<div class='color-word inline'> $trans</div></a>";
     }
     //Content:
     $mapsLink = $v->gpv()->isView('MapView') ? '' : $word->getMapsLink($t);
+    $name = $word->getLongName();
+    if(!$name) $name = $word->getTranslation($v, true, false);
     $content = '<h1 class="color-word">'
-             . $word->getTranslation($v, true, false)
-             . $mapsLink
+             . $name . $mapsLink
              . '</h1>';
     //Composition
     return "<div class='row-fluid'>"
@@ -77,7 +82,8 @@ class Tabulator{
         $rSpan       = ceil(count($languages)/6);
         if($rSpan   == 0) $rSpan++;
         $rSpanSum   += $rSpan;
-        $rContent   .= '<th rowspan="'.$rSpan.'">'.$r->getShortName().'</th>';
+        $color       = $colorFamily ? '' : ' style="background-color: #'.$r->getColor().';"';
+        $rContent   .= "<th rowspan='$rSpan'$color>".$r->getShortName().'</th>';
         $cellCount   = $maxLangCount;
         foreach($languages as $l){
           if($cellCount == 0){

@@ -210,7 +210,7 @@ dd.languageList {
   border-color: #b94a48;
   opacity: 0.75;
 }
-.wordList > li {height: 20px;}
+.wordList > li {height: auto; min-height: 20px;}
 /*Style in contentArea:*/
 #contentArea {overflow: hidden;}
 #contentArea > table {margin-left: auto; margin-right: auto;}

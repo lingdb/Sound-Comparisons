@@ -46,7 +46,8 @@
   , new RegionsSearchProvider('Trans_RegionGpNameLong',  $dbConnection)
   , new StudySearchProvider($dbConnection)
   , new StudyTitleSearchProvider($dbConnection)
-  , new WordsSearchProvider($dbConnection)
+  , new WordsSearchProvider('Trans_FullRfcModernLg01',   $dbConnection)
+  , new WordsSearchProvider('Trans_LongerRfcModernLg01', $dbConnection)
   ) as $p) $providers[$p->getName()] = $p;
   /* Action handling: */
   switch($_GET['action']){

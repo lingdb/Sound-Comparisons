@@ -1,3 +1,38 @@
+2013-12-11:
+ - In Selection for SpellingLanguages, the selectionbox is to far to the right
+ - Zooming in on the map when changing stuff is annoying, Paul wants it gone.
+ - Overlapping words in wordlist in Mapudungun
+ - Do something with the Families and Colors in some views
+ - Fix translations for words via clever script that awaits construction
+   - This should be already done by herpaderpdingdong
+ - Copy new translations for Mapudungun over in admin interface
+ - Continue constructing paging for search
+
+2013-11-26:
+ - See if I can replace the dynamic translation by extending the search feature a little.
+   - Search works like a charm, and isn't as broken to handle as the older dt part
+   - It would just need some paging.
+ - Had a look at the program normalize-audio,
+   which might be helpful to normalize the recordings in the sound directory
+
+2013-11-12:
+ - Selecting a different Word in MapView changes to Zoom and Area.
+ - We need a script to normalize the volume of soundfiles.
+ - Check if the MapView can start zoomed in.
+ - Build the Website as a dynamic .js application,
+   so that many changes happen faster.
+   Try to share templates between the App and the Serverside,
+   so that php can still generate pages.
+ - MapView in Mapudungun for Blood has Next and Prev Links identical.
+   This also appears to be a problem with different other words (and studies?)
+
+2013-11-07:
+ - Minifications breaks .js, due to incorrect order of some .js files
+   - ColorCalFoo needs to be moved further to the front.
+ - Allow html or something thelike of about pages
+ - Add in a home button (before 'view by')
+   - Build something to allow for paul to add content
+
 2013-10-11:
  - Report problem with http://lingweb.eva.mpg.de/sndcomp/admin/ to Hans-Jörg
    when sending the next update along

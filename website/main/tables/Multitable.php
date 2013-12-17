@@ -139,7 +139,7 @@ function tables_multiwordTable($v){
           $alt = "<div class='altSpelling'>$spelling</div>";
         }else $alt = '';
         $pho = $tr->getPhonetic($v, true);
-        echo "<td class='transcription'>$alt.$pho</td>";
+        echo "<td class='transcription'>$alt$pho</td>";
       }
       //The row ends:
       echo '</tr>';

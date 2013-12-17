@@ -225,8 +225,9 @@
            . 'MeaningGroupIx, MeaningGroupMemberIx, ThisFySortOrderByAlphabeticalOfFamilyAncestor, '
            . 'SoundFileWordIdentifierText, FileNameRfcModernLg01, FileNameRfcModernLg02, '
            . 'FileNameRfcProtoLg01, FileNameRfcProtoLg02, FullRfcModernLg01, '
-           . 'FullRfcModernLg02, FullRfcProtoLg01, FullRfcProtoLg02, FullRfcProtoLg01AltvRoot, '
-           . 'FullRfcProtoLg02AltvRoot) VALUES '.mkTuples($csv, array(5,6,7,8,9,10,11,12,13,14,15));
+           . 'LongerRfcModernLg01, FullRfcModernLg02, LongerRfcModernLg02, '
+           . 'FullRfcProtoLg01, FullRfcProtoLg02, FullRfcProtoLg01AltvRoot, '
+           . 'FullRfcProtoLg02AltvRoot) VALUES '.mkTuples($csv, array(5,6,7,8,9,10,11,12,13,14,15,16,17));
         array_push($queries, 'DELETE FROM Words_'.$matches[1], $q);
       break;
     }

@@ -16,6 +16,10 @@ if(typeof(google) != 'undefined'){
       //SoundControlView:
       this.soundControlView = new SoundControlView({
         el: this.map, model: this});
+      if(typeof(MouseTrackView) !== 'undefined'){
+        this.mouseTrackView = new MouseTrackView({
+        el: this.map, model: this});
+      }
       //Window resize
       var view = this;
       $(window).resize(function(){view.adjustCanvasSize();});

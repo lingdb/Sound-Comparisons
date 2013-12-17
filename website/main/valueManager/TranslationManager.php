@@ -111,6 +111,21 @@ abstract class TranslationManager extends SubManager{
     return null;
   }
   /**
+    @param $word Word
+    @return String translation, null if no translation is found.
+  */
+  public function getWordLongTranslation($word){
+    $id  = $word->getId();
+    $sid = $this->gvm()->getStudy()->getKey();
+    $t   = $this->translationId;
+    $q   = "SELECT Trans_LongerRfcModernLg01 FROM Page_DynamicTranslation_Words "
+         . "WHERE TranslationId = $t AND Study = '$sid' "
+         . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
+    if($r = Config::getConnection()->query($q)->fetch_row())
+      return ($r[0] === '') ? null : $r[0];
+    return null;
+  }
+  /**
     The returned $translation comes with several fields:
       'ShortName', 'SpellingRfcLangName'
       , 'SpecificLanguageVarietyName'
