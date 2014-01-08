@@ -249,22 +249,20 @@ class Word extends DBEntry{
     $v   = $this->getValueManager();
     $id  = $this->getId();
     $sid = $v->getStudy()->getId();
-    $queries = array(
-      "SELECT DISTINCT MeaningGroupIx FROM MeaningGroupMembers "
-    . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = $id "
-    . "AND CONCAT(StudyIx, FamilyIx) LIKE ("
-    . "SELECT CONCAT(StudyIx, REPLACE(FamilyIx, 0, '%')) FROM Studies WHERE Name = '$sid')"
-    , "SELECT DISTINCT MeaningGroupIx FROM MeaningGroupMembers "
-    . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = $id"
-    );
-    foreach($queries as $q){
-      $set = Config::getConnection()->query($q);
-      $mgs = array();
-      while($r = $set->fetch_row())
-        array_push($mgs, new MeaningGroupFromId($v, $r[0]));
-      if(count($mgs) > 0)
-        return $mgs;
-    }
+    $q = "SELECT StudyIx, FamilyIx FROM Studies WHERE Name = '$sid'";
+    $r = Config::getConnection()->query($q)->fetch_row();
+    $sIx = $r[0]; $fIx = $r[1];
+    $q = "SELECT DISTINCT MeaningGroupIX "
+       . "FROM MeaningGroupMembers "
+       . "WHERE StudyIx = $sIx "
+       . "AND (FamilyIx = 0 OR FamilyIx = $fIx) "
+       . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
+    $set = Config::getConnection()->query($q);
+    $mgs = array();
+    while($r = $set->fetch_row())
+      array_push($mgs, new MeaningGroupFromId($v, $r[0]));
+    if(count($mgs) > 0)
+      return $mgs;
     Config::error("Could not find MeaningGroups in Word:getMeaningGroups() for id:$id in study:$sid.");
   }
   /**

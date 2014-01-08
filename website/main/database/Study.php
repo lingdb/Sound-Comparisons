@@ -85,11 +85,13 @@ class Study extends DBEntry{
   */
   public function getMeaningGroups(){
     $id = $this->id;
-    $q = "SELECT DISTINCT MeaningGroupIx "
+    $q = "SELECT StudyIx, FamilyIx FROM Studies WHERE Name = '$id'";
+    $r = Config::getConnection()->query($q)->fetch_row();
+    $sIx = $r[0]; $fIx = $r[1];
+    $q = "SELECT DISTINCT MeaningGroupIX "
        . "FROM MeaningGroupMembers "
-       . "WHERE CONCAT(StudyIx, FamilyIx) "
-       . "LIKE (SELECT CONCAT(REPLACE(CONCAT(StudyIx, FamilyIx),0,''),'%') "
-       . "FROM Studies WHERE Name = '$id')";
+       . "WHERE StudyIx = $sIx AND "
+       . "(FamilyIx = 0 OR FamilyIx = $fIx)";
     $set = Config::getConnection()->query($q);
     $ret = array();
     while($r = $set->fetch_row()){
