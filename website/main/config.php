@@ -6,6 +6,8 @@
 */
 require_once 'extern/underscore.php';
 require_once 'database/Database.php';
+//Making sure we've got a default timezone:
+date_default_timezone_set('UTC');
 /* A class to bundle all configuration issues for the website. */
 class Config {
   /* Configuration: */

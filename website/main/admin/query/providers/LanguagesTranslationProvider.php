@@ -1,25 +1,14 @@
 <?php
   /***/
-  require_once "DynamicSearchProvider.php";
-  class LanguagesSearchProvider extends DynamicSearchProvider{
+  require_once "DynamicTranslationProvider.php";
+  class LanguagesTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){return 'Page_DynamicTranslation_Languages';}
     public function searchColumn($c, $tId, $searchText){
       //Setup
       $ret = array();
-      switch($c){
-        case 'Trans_ShortName':
-          $description = $this->getDescription('dt_languages_shortName');
-          $origCol = 'ShortName';
-        break;
-        case 'Trans_SpellingRfcLangName':
-          $description = $this->getDescription('dt_languages_specificLanguageVarietyName');
-          $origCol = 'SpellingRfcLangName';
-        break;
-        case 'Trans_SpecificLanguageVarietyName':
-          $description = $this->getDescription('dt_languages_spellingRfcLangName');
-          $origCol = 'SpecificLanguageVarietyName';
-        break;
-      }
+      $tCols = $this->translateColumn($c);
+      $description = $tCols['description'];
+      $origCol = $tCols['origCol'];
       //We need all Studies to build the search queries:
       $q = 'SELECT Name FROM Studies';
       $studies = $this->dbConnection->query($q);
@@ -58,10 +47,10 @@
         , 'Match'       => $match
         , 'Original'    => $original[0]
         , 'Translation' => array(
-            'TranslationId'  => $tId
-          , 'Translation'    => $translation[0]
-          , 'Payload'        => implode(',', array($study, $lIx))
-          , 'SearchProvider' => $this->getName()
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => implode(',', array($study, $lIx))
+          , 'TranslationProvider' => $this->getName()
           )
         ));
       }
@@ -103,6 +92,60 @@
       );
       foreach($qs as $q)
         $db->query($q);
+    }
+    public function offsetsColumn($c, $tId, $study){
+      $q = "SELECT COUNT(*) FROM Languages_$study";
+      $r = $this->querySingleRow($q);
+      return $this->offsetsFromCount(current($r));
+    }
+    public function pageColumn($c, $tId, $study, $offset){
+      //Setup
+      $ret = array();
+      $tCols = $this->translateColumn($c);
+      $description = $tCols['description'];
+      $origCol = $tCols['origCol'];
+      //Page query:
+      $q = "SELECT $origCol, LanguageIx FROM Languages_$study LIMIT 30 OFFSET $offset";
+      foreach($this->fetchRows($q) as $r){
+        $q = "SELECT $c "
+           . "FROM Page_DynamicTranslation_Languages "
+           . "WHERE TranslationId = $tId "
+           . "AND Study = '$study' "
+           . "AND LanguageIx = ".$r[1];
+        $translation = $this->querySingleRow($q);
+        array_push($ret, array(
+          'Description' => $description
+        , 'Original'    => $r[0]
+        , 'Translation' => array(
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => implode(',', array($study, $r[1]))
+          , 'TranslationProvider' => $this->getName()
+          )
+        ));
+      }
+      return $ret;
+    }
+    public function translateColumn($c){
+      switch($c){
+        case 'Trans_ShortName':
+          $description = $this->getDescription('dt_languages_shortName');
+          $origCol = 'ShortName';
+        break;
+        case 'Trans_SpellingRfcLangName':
+          $description = $this->getDescription('dt_languages_specificLanguageVarietyName');
+          $origCol = 'SpellingRfcLangName';
+        break;
+        case 'Trans_SpecificLanguageVarietyName':
+          $description = $this->getDescription('dt_languages_spellingRfcLangName');
+          $origCol = 'SpecificLanguageVarietyName';
+        break;
+      }
+      return array('description' => $description, 'origCol' => $origCol);
+    }
+    public function deleteTranslation($tId){
+      $q = "DELETE FROM Page_DynamicTranslation_Languages WHERE TranslationId = $tId";
+      $this->dbConnection->query($q);
     }
   }
 ?>

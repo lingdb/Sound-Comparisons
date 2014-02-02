@@ -20,7 +20,7 @@ $pv    = $v->gpv();
 $title = $t->st('topmenu_views');
 ?>
 <ul class="nav nav-tabs">
-<div class="brand"><? echo $title; ?></div>
+<div class="brand"><?php echo $title; ?></div>
 <?php
 //Views:
 if($pv->isView('WordView')){

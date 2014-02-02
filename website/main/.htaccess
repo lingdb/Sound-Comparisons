@@ -10,7 +10,7 @@ Options +FollowSymlinks -MultiViews
 RewriteBase /shk/main/
 
 # Rule for Spektrum der Wissenschaft 2014-01-13
-RewriteRule ^AndesNumerals$ ?study=Andean&languages=Huancayo,Chimborazo,Cuzco,Tiwanaku,Chipaya:\ \ Aransaya&words=one,two,three,four,five,six,seven,eight,nine,ten&pageView=multiViewTransposed&wo_order=logical&wo_phLang=Ancestral\ Quechua [L,B]
+RewriteRule ^AndesNumerals$ index.php?study=Andean&languages=Huancayo,Chimborazo,Cuzco,Tiwanaku,Chipaya:\ \ Aransaya&words=one,two,three,four,five,six,seven,eight,nine,ten&pageView=multiViewTransposed&wo_order=logical&wo_phLang=Ancestral\ Quechua [L,B]
 
 # Rules to aid searching
 RewriteRule ^go/([^/]+)/([^/]*) ?search1=$1&search2=$2 [R,NC]

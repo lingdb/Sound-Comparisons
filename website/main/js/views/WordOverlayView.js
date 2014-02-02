@@ -61,7 +61,7 @@ if(typeof(google) !== 'undefined'){
     }
   , getPoint: function(){
       var p = this.model.get('position');
-      return this.getProjection().fromLatLngToDivPixel(p);
+      return this.getProjection().fromLatLngToContainerPixel(p);
     }
   , draw: function(){
       var bbox = this.model.getBBox()

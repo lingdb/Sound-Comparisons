@@ -36,8 +36,8 @@
     renderContributor($c);
   $cTitle = $t->st('whoarewe_citecontributors_title');
 ?>
-<h2><? echo $cTitle; ?>:</h2><hr>
-<?
+<h2><?php echo $cTitle; ?>:</h2><hr>
+<?php
   foreach(Contributor::citeContributors($v) as $c)
     renderContributor($c);
 ?>

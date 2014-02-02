@@ -1,21 +1,14 @@
 <?php
   /***/
-  require_once "DynamicSearchProvider.php";
-  class WordsSearchProvider extends DynamicSearchProvider{
+  require_once "DynamicTranslationProvider.php";
+  class WordsTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){ return 'Page_DynamicTranslation_Words';}
     public function searchColumn($c, $tId, $searchText){
       //Setup
       $ret = array();
-      switch($c){
-        case 'Trans_FullRfcModernLg01':
-          $description = $this->getDescription('dt_words_fullRfcModernLg01');
-          $origCol = 'FullRfcModernLg01';
-        break;
-        case 'Trans_LongerRfcModernLg01':
-          $description = $this->getDescription('dt_words_longerRfcModernLg01');
-          $origCol = 'LongerRfcModernLg01';
-        break;
-      }
+      $tCol = $this->translateColumn($c);
+      $description = $tCol['description'];
+      $origCol = $tCol['origCol'];
       //We need all Studies to build the search queries:
       $q = 'SELECT Name FROM Studies';
       $studies = $this->dbConnection->query($q);
@@ -59,10 +52,10 @@
         , 'Match'       => $match
         , 'Original'    => $original[0]
         , 'Translation' => array(
-            'TranslationId'  => $tId
-          , 'Translation'    => $translation[0]
-          , 'Payload'        => implode(',', array($study, $wId))
-          , 'SearchProvider' => $this->getName()
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => implode(',', array($study, $wId))
+          , 'TranslationProvider' => $this->getName()
           )
         ));
       }
@@ -112,6 +105,62 @@
       );
       foreach($qs as $q)
         $db->query($q);
+    }
+    public function offsetsColumn($c, $tId, $study){
+      $q = "SELECT COUNT(*) FROM Words_$study";
+      $r = $this->querySingleRow($q);
+      return $this->offsetsFromCount(current($r));
+    }
+    public function pageColumn($c, $tId, $study, $offset){
+      //Setup
+      $ret = array();
+      $tCol = $this->translateColumn($c);
+      $description = $tCol['description'];
+      $origCol = $tCol['origCol'];
+      //We need all Studies to build the search queries:
+      $q = 'SELECT Name FROM Studies';
+      $studies = $this->dbConnection->query($q);
+      $studies = $this->fetchRows($studies);
+      //Page query:
+      $q = "SELECT $origCol, CONCAT(IxElicitation, IxMorphologicalInstance) "
+         . "FROM Words_$s LIMIT 30 OFFSET $offset";
+      foreach($this->fetchRows($q) as $r){
+        $q = "SELECT $c "
+           . "FROM Page_DynamicTranslation_Words "
+           . "WHERE TranslationId = $tId "
+           . "AND Study = '$study' "
+           . "AND CONCAT(IxElicitation, "
+           . "IxMorphologicalInstance) = ".$r[1];
+        $translation = $this->querySingleRow($q);
+        array_push($ret, array(
+          'Description' => $description
+        , 'Original'    => $r[0]
+        , 'Translation' => array(
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => implode(',', array($study, $r[1]))
+          , 'TranslationProvider' => $this->getName()
+          )
+        ));
+      }
+      return $ret;
+    }
+    public function translateColumn($c){
+      switch($c){
+        case 'Trans_FullRfcModernLg01':
+          $description = $this->getDescription('dt_words_fullRfcModernLg01');
+          $origCol = 'FullRfcModernLg01';
+        break;
+        case 'Trans_LongerRfcModernLg01':
+          $description = $this->getDescription('dt_words_longerRfcModernLg01');
+          $origCol = 'LongerRfcModernLg01';
+        break;
+      }
+      return array('description' => $description, 'origCol' => $origCol);
+    }
+    public function deleteTranslation($tId){
+      $q = "DELETE FROM Page_DynamicTranslation_Words WHERE TranslationId = $tId";
+      $this->dbConnection->query($q);
     }
   }
 ?>

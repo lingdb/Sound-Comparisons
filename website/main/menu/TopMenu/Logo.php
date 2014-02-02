@@ -3,8 +3,8 @@
 ?>
 <div id="logo">
 <a target="_blank"
-   title="<? echo $logoTitle; ?>"
+   title="<?php echo $logoTitle; ?>"
    href="http://www.eva.mpg.de/lingua/"
    ><img src="img/logo.png"></a>
 </div>
-<? unset($logoTitle); ?>
+<?php unset($logoTitle); ?>

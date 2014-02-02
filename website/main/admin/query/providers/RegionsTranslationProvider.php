@@ -1,21 +1,14 @@
 <?php
   /***/
-  require_once "DynamicSearchProvider.php";
-  class RegionsSearchProvider extends DynamicSearchProvider{
+  require_once "DynamicTranslationProvider.php";
+  class RegionsTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){return 'Page_DynamicTranslation_Regions';}
     public function searchColumn($c, $tId, $searchText){
       //Setup
       $ret = array();
-      switch($c){
-        case 'Trans_RegionGpNameShort':
-          $description = $this->getDescription('dt_regions_regionGpNameShort');
-          $origCol = 'RegionGpNameShort';
-        break;
-        case 'Trans_RegionGpNameLong':
-          $description = $this->getDescription('dt_regions_regionGpNameLong');
-          $origCol = 'RegionGpNameLong';
-        break;
-      }
+      $tCol = $this->translateColumn($c);
+      $description = $tCol['description'];
+      $origCol = $tCol['origCol'];
       //We need all Studies to build the search queries:
       $q = 'SELECT Name FROM Studies';
       $studies = $this->dbConnection->query($q);
@@ -55,10 +48,10 @@
         , 'Match'       => $match
         , 'Original'    => $original[0]
         , 'Translation' => array(
-            'TranslationId'  => $tId
-          , 'Translation'    => $translation[0]
-          , 'Payload'        => implode(',', array($study, $rId))
-          , 'SearchProvider' => $this->getName()
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => implode(',', array($study, $rId))
+          , 'TranslationProvider' => $this->getName()
           )
         ));
       }
@@ -98,6 +91,57 @@
       );
       foreach($qs as $q)
         $db->query($q);
+    }
+    public function offsetsColumn($c, $tId, $study){
+      $q = "SELECT COUNT(*) FROM Regions_$study";
+      $r = $this->querySingleRow($q);
+      return $this->offsetsFromCount(current($r));
+    }
+    public function pageColumn($c, $tId, $study, $offset){
+      //Setup
+      $ret = array();
+      $tCol = translateColumn($c);
+      $description = $tCol['description'];
+      $origCol = $tCol['origCol'];
+      //Page query:
+      $q = "SELECT $origCol, CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
+         . "FROM Regions_$s LIMIT 30 OFFSET $offset";
+      foreach($this->fetchRows($q) as $r){
+        $q = "SELECT $c "
+           . "FROM Page_DynamicTranslation_Regions "
+           . "WHERE TranslationId = $tId "
+           . "AND Study = '$study' "
+           . "AND RegionIdentifier = ".$r[1];
+        $translation = $this->querySingleRow($q);
+        array_push($ret, array(
+          'Description' => $description
+        , 'Original'    => $r[0]
+        , 'Translation' => array(
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => implode(',', array($study, $r[1]))
+          , 'TranslationProvider' => $this->getName()
+          )
+        ));
+      }
+      return $ret;
+    }
+    public function translateColumn($c){
+      switch($c){
+        case 'Trans_RegionGpNameShort':
+          $description = $this->getDescription('dt_regions_regionGpNameShort');
+          $origCol = 'RegionGpNameShort';
+        break;
+        case 'Trans_RegionGpNameLong':
+          $description = $this->getDescription('dt_regions_regionGpNameLong');
+          $origCol = 'RegionGpNameLong';
+        break;
+      }
+      return array('description' => $description, 'origCol' => $origCol);
+    }
+    public function deleteTranslation($tId){
+      $q = "DELETE FROM Page_DynamicTranslation_Regions WHERE TranslationId = $tId";
+      $this->dbConnection->query($q);
     }
   }
 ?>

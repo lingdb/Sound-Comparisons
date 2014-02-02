@@ -12,13 +12,20 @@
     $title   = "Translate all the things!";
     $jsFiles = array('jquery.iframe-post-form.js'
                     ,'autoresize.jquery.js'
-                    ,'dynamicTranslation.js'
-                    ,'translate.js'
-                    ,'TranslationSearch/Match.js'
-                    ,'TranslationSearch/Search.js'
-                    ,'TranslationSearch/SearchInput.js'
-                    ,'TranslationSearch/SearchInputRow.js'
-                    ,'TranslationSearch/DescriptionView.js'
+                    ,'models/Studies.js'
+                    ,'models/TranslationProviders.js'
+                    ,'models/Offsets.js'
+                    ,'models/Result.js'
+                    ,'collections/ResultCollection.js'
+                    ,'views/ControlGroupHide.js'
+                    ,'views/DescriptionView.js'
+                    ,'views/ResultRowView.js'
+                    ,'views/ResultCollectionView.js'
+                    ,'views/InputView.js'
+                    ,'views/BasicInput.js'
+                    ,'views/SearchInput.js'
+                    ,'views/TranslationSetupView.js'
+                    ,'views/WithSelectedTranslationView.js'
                     ,'Translation.js'
                     );
     require_once 'head.php';
@@ -28,7 +35,7 @@
     ?><div id="contentArea">
       <div id="Translations">
         <form class="form-horizontal">
-          <legend>Editing translations:</legend>
+          <legend>Editing translations <i class="icon-eye-close control-group-hide" title="Show/Hide controls"></i>:</legend>
           <div class="control-group">
             <label class="control-label" for="existingTranslations">Translation to edit:</label>
             <div class="controls">
@@ -104,34 +111,20 @@
             </div>
           </div>
         </form>
-        <form class="form-inline">
+        <form class="form-inline hide">
           <legend>With selected translation:</legend>
           <button id="Translations_Translate" class="btn" type="button"
             title="Static content is single words or sentences placed on the website that don't change."
-            >Translate static content</button>
-          <button id="Translations_TranslateDynamic" class="btn" type="button"
-            title="Dynamic content is words, languages, regions, etc."
-            >Translate dynamic content</button>
+            ><i class="icon-pencil"></i>Basic translation</button>
           <button id="Translations_TranslateSearch" class="btn" type="button"
-            title="Enter a string to translate and magic will happen.">Translation by search</button>
+            title="Enter a string to translate and magic will happen."
+            ><i class="icon-search"></i>Translation by search</button>
           <button id="Translations_Export" class="btn" type="button"
             title="Get an .sql script to insert static and dynamic translations."
-            >Export all translations</button>
+            ><i class="icon-download-alt"></i>Export all translations</button>
         </form>
       </div>
-      <div id="StaticTranslations" class="hide">
-        <table id="StaticTable" class="table">
-          <tr>
-            <th>Description</th>
-            <th>Original content</th>
-            <th>Translation</th>
-            <th>Action
-              <button id="Translations_Translate_SaveAll" type="button" class="btn">Save all</button>
-            </th>
-          </tr>
-        </table>
-      </div>
-      <div id="DynamicTranslations" class="hide">
+      <div id="BasicTranslation" class="hide">
         <form id="DynamicTranslations_SuffixList" class="form-inline">
           <legend>Category to translate:</legend>
         </form>
@@ -141,20 +134,6 @@
         <form id="DynamicTranslations_PageList" class="form-inline">
           <legend>Page to display:</legend>
         </form>
-        <table id="DynamicTranslations_Table" class="table">
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Original</th>
-              <th class="action">
-                Translation
-                <button id="DynamicTranslations_SaveAll" class="btn">Save all</button>
-                <img src="js/ajax-loader.gif" class="hide"/>
-              </th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
       </div>
       <div id="SearchTranslations" class="hide">
         <form class="form-inline">
@@ -164,6 +143,8 @@
           </label>
           <button id="SearchTranslationButton" class="btn"><i class="icon-search"></i>Search</button>
         </form>
+      </div>
+      <div id="ResultCollectionView" class="hide">
         <table class="table table-bordered">
           <thead><tr>
             <th>Description:</th>
@@ -172,9 +153,7 @@
             <th>Translation:</th>
           </tr></thead>
           <tbody><tr class="info">
-            <td colspan="4">
-              Nothing searched, nothing found.
-            </td>
+            <td colspan="4">Nothing to display.</td>
           <tr></tbody>
         </table>
       </div>

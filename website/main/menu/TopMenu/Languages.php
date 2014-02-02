@@ -7,16 +7,16 @@
     <a class="dropdown-toggle topLink"
        data-toggle="dropdown">
        <i class='icon-dropdown-custom'></i>
-       <? echo $t->showFlag(); ?>
+       <?php echo $t->showFlag(); ?>
        </a>
     <ul class="dropdown-menu">
-      <? foreach($t->getOthers() as $ot){
+      <?php foreach($t->getOthers() as $ot){
            $href = $v->setTranslator($ot)->link();
            $cont = $ot->showFlag()
                  . $ot->showName();
       ?>
-      <li><a <? echo $href; ?>><? echo $cont; ?></a></li>
-      <? } ?>
+      <li><a <?php echo $href; ?>><?php echo $cont; ?></a></li>
+      <?php } ?>
     </ul>
   </li>
 </ul>

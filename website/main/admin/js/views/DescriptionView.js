@@ -24,7 +24,7 @@ DescriptionView = Backbone.View.extend({
     , Description: this.$('textarea').val()
     };
     var el = this.el;
-    $.get('query/translation.php', q).done(function(){
+    $.get(window.Translation.url, q).done(function(){
       el.html(q.Description);
     });
   }

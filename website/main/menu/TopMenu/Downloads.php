@@ -11,20 +11,20 @@ $sndCont = $t->st('topmenu_download_zip');
   <li>
     <a class="dropdown-toggle topLink"
        data-toggle="dropdown"
-       title="<? echo $dwnload; ?>"
+       title="<?php echo $dwnload; ?>"
        ><i class='icon-dropdown-custom'></i><i class="icon-download-alt"></i></a>
     <ul class="dropdown-menu">
       <li>
-        <a <? echo $csvLink; ?>><? echo $csvCont; ?></a>
+        <a <?php echo $csvLink; ?>><?php echo $csvCont; ?></a>
       </li>
       <li>
         <a target="_blank"
-           <? echo $sndLink; ?>><? echo $sndCont; ?></a>
+           <?php echo $sndLink; ?>><?php echo $sndCont; ?></a>
       </li>
     </ul>
   </li>
 </ul>
-<?
+<?php
   unset($dwnload);
   unset($csvLink);
   unset($csvCont);

@@ -1,24 +1,14 @@
 <?php
   /***/
-  require_once "DynamicSearchProvider.php";
-  class LanguageStatusTypesSearchProvider extends DynamicSearchProvider{
+  require_once "DynamicTranslationProvider.php";
+  class LanguageStatusTypesTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){return 'Page_DynamicTranslation_LanguageStatusTypes';}
     public function searchColumn($c, $tId, $searchText){
       //Setup:
       $ret = array();
-      switch($c){
-        case 'Trans_Status':
-          $description = $this->getDescription('dt_languageStatusTypes_status');
-          $origCol     = 'Status';
-        break;
-        case 'Trans_Description':
-          $description = $this->getDescription('dt_languageStatusTypes_description');
-          $origCol     = 'Description';
-        break;
-        case 'Trans_StatusTooltip':
-          $description = $this->getDescription('dt_languageStatusTypes_statusTooltip');
-          $origCol     = 'StatusTooltip';
-      }
+      $tCols = $this->translateColumn($c);
+      $description = $tCols['description'];
+      $origCol = $tCols['origCol'];
       //Search queries:
       $qs = array(
         "SELECT LanguageStatusType, $c "
@@ -47,10 +37,10 @@
         , 'Match'       => $match
         , 'Original'    => $original[0]
         , 'Translation' => array(
-            'TranslationId'  => $tId
-          , 'Translation'    => $translation[0]
-          , 'Payload'        => $payload
-          , 'SearchProvider' => $this->getName()
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => $payload
+          , 'TranslationProvider' => $this->getName()
           )
         ));
       }
@@ -84,6 +74,59 @@
       );
       foreach($qs as $q)
         $db->query($q);
+    }
+    public function offsetsColumn($c, $tId, $study){
+      $q = "SELECT COUNT(*) FROM LanguageStatusTypes WHERE Description != ''";
+      $r = $this->querySingleRow($q);
+      return $this->offsetsFromCount(current($r));
+    }
+    public function pageColumn($c, $tId, $study, $offset){
+      //Setup:
+      $ret = array();
+      $tCols = $this->translateColumn($c);
+      $description = $tCols['description'];
+      $origCol = $tCols['origCol'];
+      //Page query:
+      $q = "SELECT LanguageStatusType, $origCol "
+         . "FROM LanguageStatusTypes LIMIT 30 OFFSET $offset";
+      foreach($this->fetchRows($q) as $r){
+        $q = "SELECT $c FROM "
+           . "Page_DynamicTranslation_LanguageStatusTypes "
+           . "WHERE TranslationId = $tId "
+           . "AND LanguageStatusType = ".$r[0];
+        $translation = $this->dbConnection->query($q)->fetch_row();
+        array_push($ret, array(
+          'Description' => $description
+        , 'Original'    => $r[1]
+        , 'Translation' => array(
+            'TranslationId'       => $tId
+          , 'Translation'         => $translation[0]
+          , 'Payload'             => $r[0]
+          , 'TranslationProvider' => $this->getName()
+          )
+        ));
+      }
+      return $ret;
+    }
+    public function translateColumn($c){
+      switch($c){
+        case 'Trans_Status':
+          $description = $this->getDescription('dt_languageStatusTypes_status');
+          $origCol     = 'Status';
+        break;
+        case 'Trans_Description':
+          $description = $this->getDescription('dt_languageStatusTypes_description');
+          $origCol     = 'Description';
+        break;
+        case 'Trans_StatusTooltip':
+          $description = $this->getDescription('dt_languageStatusTypes_statusTooltip');
+          $origCol     = 'StatusTooltip';
+      }
+      return array('description' => $description, 'origCol' => $origCol);
+    }
+    public function deleteTranslation($tId){
+      $q = "DELETE FROM Page_DynamicTranslation_LanguageStatusTypes WHERE TranslationId = $tId";
+      $this->dbConnection->query($q);
     }
   }
 ?>

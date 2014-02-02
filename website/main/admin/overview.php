@@ -14,7 +14,7 @@
   </fieldset>
 </form>
 <?php if(session_mayEdit()){ ?>
-  <form id="#addUser" class="form-horizontal">
+  <form id="addUser" class="form-horizontal">
     <legend>Add user:</legend>
     <div class="control-group">
       <label class="control-label" for="username">Username:</label>
@@ -42,7 +42,7 @@
     </div>
     <div class="control-group">
       <div class="controls">
-        <button class="btn">Create</button>
+        <button class="btn" id="createUser">Create</button>
       </div>
     </div>
   </form>

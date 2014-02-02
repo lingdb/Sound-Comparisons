@@ -6,16 +6,16 @@ Search = Backbone.Collection.extend({
       return;
     }
     var query = {
-      TranslationId: window.Translation.translationId
+      TranslationId: window.Translation.currentTranslation.get('TranslationId') 
     , SearchText:    searchText
     , action:        'search'
     };
-    if(query.TranslationId === null){
+    if(!query.TranslationId){
       alert('Please select a Translation first.');
       return;
     }
     var s = this;
-    $.get('query/search.php', query).done(function(ds){
+    $.get(window.Translation.url, query).done(function(ds){
       ds = $.parseJSON(ds);
       var ms = _.map(ds, function(d){return new Match(d);});
       s.reset(ms);
