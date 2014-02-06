@@ -1,0 +1,126 @@
+<div id='ipaVowels' class='hide'>
+<div class='inline'>
+<h3>Vowels</h3>
+<table class="table table-bordered table-condensed"><tbody>
+  <tr>
+    <th></th>
+    <th colspan="2">Front</th>
+    <th colspan="2"></th>
+    <th colspan="2">Central</th>
+    <th colspan="2"></th>
+    <th colspan="2">Back</th>
+  </tr>
+  <tr>
+    <td>Close</td>
+    <td description="U+0069 : Close front unrounded vowel - LATIN SMALL LETTER I" unicode="i">i</td>
+    <td description="U+0079 : Close front rounded vowel - LATIN SMALL LETTER Y" unicode="y">y</td>
+    <td colspan='2'></td>
+    <td description="U+0268 : Close central unrounded vowel - LATIN SMALL LETTER I WITH STROKE" unicode="ɨ">ɨ</td>
+    <td description="U+0289 : Close central rounded vowel - LATIN SMALL LETTER U BAR" unicode="ʉ">ʉ</td>
+    <td colspan='2'></td>
+    <td description="U+026F : Close back unrounded vowel - LATIN SMALL LETTER TURNED M" unicode="ɯ">ɯ</td>
+    <td description="U+0075 : Close back rounded vowel - LATIN SMALL LETTER U" unicode="u">u</td>
+  </tr>
+  <tr>
+    <td></td><td></td>
+    <td description="U+026A : Near-close near-front unrounded vowel - LATIN LETTER SMALL CAPITAL I" unicode="ɪ">ɪ</td>
+    <td description="U+028F : Near-close near-front rounded vowel - LATIN LETTER SMALL CAPITAL Y" unicode="ʏ">ʏ</td>
+    <td colspan='4'></td>
+    <td description="U+028A : Near-close near-back rounded vowel - LATIN SMALL LETTER UPSILON" unicode="ʊ">ʊ</td>  
+    <td colspan='2'></td>
+  </tr>
+  <tr>
+    <td>Close-mid</td>
+    <td></td>
+    <td description="U+0065 : Close-mid front unrounded vowel - LATIN SMALL LETTER E" unicode="e">e</td>
+    <td description="U+00F8 : Close-mid front rounded vowel - LATIN SMALL LETTER O WITH STROKE" unicode="ø">ø</td>
+    <td></td>
+    <td description="U+0258 : Close-mid central unrounded vowel - LATIN SMALL LETTER REVERSED E" unicode="ɘ">ɘ</td>
+    <td description="U+0275 : Close-mid central rounded vowel - LATIN SMALL LETTER BARRED O" unicode="ɵ">ɵ</td>
+    <td colspan='2'></td>
+    <td description="U+0264 : Close-mid back unrounded vowel - LATIN SMALL LETTER RAMS HORN" unicode="ɤ">ɤ</td>
+    <td description="U+006F : Close-mid back rounded vowel - LATIN SMALL LETTER O" unicode="o">o</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td colspan='4'></td>
+    <td colspan='2' description="U+0259 : Mid central vowel - LATIN SMALL LETTER SCHWA" unicode="ə">ə</td>
+    <td colspan='4'></td>
+  </tr>
+  <tr>
+    <td>Open-mid</td>
+    <td colspan='2'></td>
+    <td description="U+025B : Open-mid front unrounded vowel - LATIN SMALL LETTER OPEN E" unicode="ɛ">ɛ</td>
+    <td description="U+0153 : Open-mid front rounded vowel - LATIN SMALL LIGATURE OE" unicode="œ">œ</td>
+    <td></td>
+    <td description="U+025C : Open-mid central unrounded vowel - LATIN SMALL LETTER REVERSED OPEN E" unicode="ɜ">ɜ</td>
+    <td description="U+025E : Open-mid central rounded vowel - LATIN SMALL LETTER CLOSED REVERSED OPEN E" unicode="ɞ">ɞ</td>
+    <td></td>
+    <td description="U+028C : Open-mid back unrounded vowel - LATIN SMALL LETTER TURNED V" unicode="ʌ">ʌ</td>
+    <td description="U+0254 : Open-mid back rounded vowel - LATIN SMALL LETTER OPEN O" unicode="ɔ">ɔ</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td colspan='2'></td>
+    <td colspan='2' description="U+00E6 : Near-open front unrounded vowel - LATIN SMALL LETTER AE" unicode="æ">æ</td>
+    <td></td>
+    <td colspan='2' description="U+0250 : Near-open central vowel - LATIN SMALL LETTER TURNED A" unicode="ɐ">ɐ</td>
+    <td colspan='3'></td>
+  </tr>
+  <tr>
+    <td>Open</td>
+    <td colspan='3'></td>
+    <td description="U+0061 : Open front unrounded vowel - LATIN SMALL LETTER A" unicode="a">a</td>
+    <td description="U+0276 : Open front rounded vowel - LATIN LETTER SMALL CAPITAL OE" unicode="ɶ">ɶ</td>
+    <td colspan='3'></td>
+    <td description="U+0251 : Open back unrounded vowel - LATIN SMALL LETTER ALPHA" unicode="ɑ">ɑ</td>
+    <td description="U+0252 : Open back rounded vowel - LATIN SMALL LETTER TURNED ALPHA" unicode="ɒ">ɒ</td>
+  </tr>
+</tbody></table>
+<br>
+<table class="table table-bordered table-condensed">
+<tbody><tr><th colspan="9">Suprasegmentals</th>
+</tr><tr>
+  <td description="U+02C8 : Primary stress - MODIFIER LETTER VERTICAL LINE" unicode="ˈ">ˈ</td>
+  <td description="U+02CC : Secondary stress - MODIFIER LETTER LOW VERTICAL LINE" unicode="ˌ">ˌ</td>
+  <td description="U+02D0 : Long - MODIFIER LETTER TRIANGULAR COLON" unicode="ː">&nbsp;&nbsp;◌ː&nbsp;&nbsp;</td>
+  <td description="U+02D1 : Half-long - MODIFIER LETTER HALF TRIANGULAR COLON" unicode="ˑ">◌ˑ</td>
+  <td description="U+0306 : Extra-short - COMBINING BREVE" unicode="̆">◌̆</td>
+  <td description="U+007C : Minor (foot) group - VERTICAL LINE" unicode="|">|</td>
+  <td description="U+2016 : Major (intonation) group - DOUBLE VERTICAL LINE" unicode="‖">‖</td>
+  <td description="U+002E : Syllable break - FULL STOP" unicode=".">.</td>
+  <td description="U+203F : Linking (absence of a break) - UNDERTIE" unicode="‿">‿</td>
+</tr>
+</tbody></table>
+</div><div class="inline">
+  <h3>Diacritics</h3>
+  <table class="table table-bordered table-condensed"><tbody>
+  <tr>
+    <td description="U+0303 : Nasalized - COMBINING TILDE" unicode="̃">◌̃ Nasalized</td>
+    <td colspan="2"></td>
+    <td description="U+02DE : Rhoticity - MODIFIER LETTER RHOTIC HOOK" unicode="˞">◌˞ Rhoticity</td>
+    <td description="U+025A : Mid central vowel with rhoticity - LATIN SMALL LETTER SCHWA WITH HOOK" unicode="ɚ">ɚ</td>
+    <td description="U+025D : Open-mid central unrounded vowel with rhoticity - LATIN SMALL LETTER REVERSED OPEN E WITH HOOK" unicode="ɝ">ɝ</td>    
+  </tr><tr>
+    <td description="U+02D4 : Raised - MODIFIER LETTER UP TACK" unicode="˔">◌˔ Raised</td>
+    <td description="U+031D : Raised - COMBINING UP TACK BELOW" unicode="̝">◌̝ Raised</td>
+    <td description="U+02D5 : Lowered - MODIFIER LETTER DOWN TACK" unicode="˕">◌˕ Lowered</td>
+    <td description="U+031E : Lowered - COMBINING DOWN TACK BELOW" unicode="̞">◌̞ Lowered</td>
+    <td colspan="2"></td>
+  </tr><tr>
+    <td description="U+031F : Advanced - COMBINING PLUS SIGN BELOW" unicode="̟">◌̟ Advanced</td>
+    <td description="U+0320 : Retracted - COMBINING MINUS SIGN BELOW" unicode="̠">◌̠ Retracted</td>
+    <td colspan="2"></td>
+    <td description="U+0308 : Centralized - COMBINING DIAERESIS" unicode="̈">◌̈ Centralized</td>
+    <td description="U+033D : Mid-centralized - COMBINING X ABOVE" unicode="̽">◌̽ Mid-centralized</td>
+  </tr><tr>
+    <td description="U+0339 : More rounded - COMBINING RIGHT HALF RING BELOW" unicode="̹">◌̹ More rounded</td>      
+    <td description="U+031C : Less rounded - COMBINING LEFT HALF RING BELOW" unicode="̜">◌̜ Less rounded</td>
+    <td></td>
+    <td description="U+0325 : Voiceless - COMBINING RING BELOW" unicode="̥">◌̥ Voiceless</td>
+    <td description="U+0324 : Breathy voiced - COMBINING DIAERESIS BELOW" unicode="̤">◌̤ Breathy voiced</td>
+    <td description="U+0330 : Creaky voiced - COMBINING TILDE BELOW" unicode="̰">◌̰ Creaky voiced</td>
+  </tr>
+</tbody></table>
+</div>
+</div>

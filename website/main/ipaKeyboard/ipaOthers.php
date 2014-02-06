@@ -1,0 +1,109 @@
+<div id='ipaOthers' class='hide'>
+<div class="pull-left">
+  <h4>Consonants (Non-Pulmonic)</h4>
+  <table class="table table-bordered table-condensed"><tbody>
+  <tr><th>Ejectives</th>
+    <td unicode="ʼ" description="U+02BC : Ejective - MODIFIER LETTER APOSTROPHE">ʼ</td>
+  </tr>
+  <tr><th>Voiced implosives</th>
+    <td unicode="ɓ" description="U+0253 : Voiced bilabial implosive - LATIN SMALL LETTER B WITH HOOK">ɓ</td>
+    <td unicode="ɗ" description="U+0257 : Voiced alveolar implosive - LATIN SMALL LETTER D WITH HOOK">ɗ</td>
+    <td unicode="ʄ" description="U+0284 : Voiced palatal implosive - LATIN SMALL LETTER DOTLESS J WITH STROKE AND HOOK">ʄ</td>
+    <td unicode="ɠ" description="U+0260 : Voiced velar implosive - LATIN SMALL LETTER G WITH HOOK">ɠ</td>
+    <td unicode="ʛ" description="U+029B : Voiced uvular implosive - LATIN LETTER SMALL CAPITAL G WITH HOOK">ʛ</td>
+  </tr>
+  <tr><th>Clicks</th>
+    <td unicode="ʘ" description="U+0298 : Bilabial click - LATIN LETTER BILABIAL CLICK">ʘ</td>
+    <td unicode="ǀ" description="U+01C0 : Dental click - LATIN LETTER DENTAL CLICK">ǀ</td>
+    <td unicode="ǃ" description="U+01C3 : (Post)alveolar click - LATIN LETTER RETROFLEX CLICK">ǃ</td>
+    <td unicode="ǂ" description="U+01C2 : Palatoalveolar click - LATIN LETTER ALVEOLAR CLICK">ǂ</td>
+    <td unicode="ǁ" description="U+01C1 : Alveolar lateral click - LATIN LETTER LATERAL CLICK">ǁ</td>
+  </tr>
+  </tbody></table>
+  <h3>Others</h3>
+  <table class="table table-bordered table-condensed">
+  <tbody><tr>
+    <td unicode="ʍ" description="U+028D : Voiceless labial-velar fricative - LATIN SMALL LETTER TURNED W">ʍ</td>
+    <td unicode="ʡ" description="U+02A1 : Epiglottal plosive - LATIN LETTER GLOTTAL STOP WITH STROKE">ʡ</td>
+    <td unicode="ʬ" description="U+02AC : Bilabial percussive - LATIN LETTER BILABIAL PERCUSSIVE">ʬ</td>
+    <td unicode="¡" description="U+00A1 : Sublaminal lower alveolar percussive click - INVERTED EXCLAMATION MARK">¡</td>
+    <td unicode="w" description="U+0077 : Voiced labial-velar approximant - LATIN SMALL LETTER W">w</td>
+    <td unicode="ɕ" description="U+0255 : Voiceless alveolo-palatal fricative - LATIN SMALL LETTER C WITH CURL">ɕ</td>
+  </tr><tr>
+    <td unicode="ʭ" description="U+02AD : Bidental percussive - LATIN LETTER BIDENTAL PERCUSSIVE">ʭ</td>
+    <td unicode="ǃ¡" description="Alveolar and sublaminal click (cluck-click)">ǃ¡</td>
+    <td unicode="ɥ" description="U+0265 : Voiced labial-palatal approximant - LATIN SMALL LETTER TURNED H">ɥ</td>
+    <td unicode="ʑ" description="U+0291 : Voiced alveolo-palatal fricative - LATIN SMALL LETTER Z WITH CURL">ʑ</td>
+    <td unicode="ʪ" description="U+02AA : Voiceless lateralized alveolar fricative - LATIN SMALL LETTER LS DIGRAPH">ʪ</td>
+    <td unicode="ʜ" description="U+029C : Voiceless epiglottal fricative - LATIN LETTER SMALL CAPITAL H">ʜ</td>
+  </tr><tr>
+    <td unicode="ɺ" description="U+027A : Voiced alveolar lateral flap - LATIN SMALL LETTER TURNED R WITH LONG LEG">ɺ</td>
+    <td unicode="ʫ" description="U+02AB : Voiced lateralized alveolar fricative - LATIN SMALL LETTER LZ DIGRAPH">ʫ</td>
+    <td unicode="ʢ" description="U+02A2 : Voiced epiglottal fricative - LATIN LETTER REVERSED GLOTTAL STOP WITH STROKE">ʢ</td>
+    <td unicode="ɧ" description="U+0267 : Voiceless simultaneous postalveolar and velar fricative - LATIN SMALL LETTER HENG WITH HOOK">ɧ</td>
+    <td unicode="ʩ" description="U+02A9 : Velopharyngeal fricative - LATIN SMALL LETTER FENG DIGRAPH">ʩ</td>
+  </tr>
+  </tbody></table>
+</div><div class="pull-right">
+  <h3>Diacritics</h3>
+  <table class="table table-bordered table-condensed">
+    <tbody><tr>
+      <td description="U+0329 : Syllabic - COMBINING VERTICAL LINE BELOW" unicode="̩">◌̩ Syllabic</td>
+      <td colspan='2'></td>
+      <td description="U+02B0 : Aspirated - MODIFIER LETTER SMALL H" unicode="ʰ">◌ʰ Aspirated</td>
+      <td description="U+20ED : Unaspirated - MODIFIER LETTER UNASPIRATED" unicode="⃭">◌˭ Unaspirated</td>
+      <td description="U+02BC : Ejective - MODIFIER LETTER APOSTROPHE" unicode="ʼ">◌ʼ Ejective</td>
+      <td description="U+0361 : Affricate or double articulation - COMBINING DOUBLE INVERTED BREVE" unicode="͡">◌͡ Affricate or double articulation</td>
+      <td description="U+035C : Affricate or double articulation - COMBINING DOUBLE BREVE BELOW" unicode="͜">◌͜ Affricate or double articulation</td>
+    </tr><tr>
+      <td description="U+0303 : Nasalized - COMBINING TILDE" unicode="̃">◌̃ Nasalized</td>
+      <td description="U+02B7 : Labialized - MODIFIER LETTER SMALL W" unicode="ʷ">◌ʷ Labialized</td>
+      <td description="U+02B2 : Palatalized - MODIFIER LETTER SMALL J" unicode="ʲ">◌ʲ Palatalized</td>
+      <td description="U+02E0 : Velarized - MODIFIER LETTER SMALL GAMMA" unicode="ˠ">◌ˠ Velarized</td>
+      <td description="U+0334 : Velarized or pharyngealized - COMBINING TILDE OVERLAY" unicode="̴">◌̴ Velarized or pharyngealized</td>
+      <td description="U+02E4 : Pharyngealized - MODIFIER LETTER SMALL REVERSED GLOTTAL STOP" unicode="ˤ">◌ˤ Pharyngealized</td>
+      <td colspan='2'></td>
+    </tr><tr>
+      <td description="U+0325 : Voiceless - COMBINING RING BELOW" unicode="̥">◌̥ Voiceless</td>
+      <td description="U+02EC : Voicing - MODIFIER LETTER VOICING" unicode="ˬ">ˬ Voicing</td>
+      <td description="U+032C : Voiced - COMBINING CARON BELOW" unicode="̬">◌̬ Voiced</td>
+      <td description="U+0324 : Breathy voiced - COMBINING DIAERESIS BELOW" unicode="̤">◌̤ Breathy voiced</td>
+      <td description="U+0330 : Creaky voiced - COMBINING TILDE BELOW" unicode="̰">◌̰ Creaky voiced</td>
+      <td colspan='3'></td>
+    </tr><tr>
+      <td description="U+02D4 : Raised - MODIFIER LETTER UP TACK" unicode="˔">◌˔ Raised</td>
+      <td description="U+031D : Raised - COMBINING UP TACK BELOW" unicode="̝">◌̝ Raised</td>
+      <td description="U+02D5 : Lowered - MODIFIER LETTER DOWN TACK" unicode="˕">◌˕ Lowered</td>
+      <td description="U+031E : Lowered - COMBINING DOWN TACK BELOW" unicode="̞">◌̞ Lowered</td>
+      <td></td>
+      <td description="U+0346 : Dentolabial - COMBINING BRIDGE ABOVE" unicode="͆">◌͆ Dentolabial</td>
+      <td description="U+033C : Linguolabial - COMBINING SEAGULL BELOW" unicode="̼">◌̼ Linguolabial</td>
+      <td description="U+034D : Labial spreading - COMBINING LEFT RIGHT ARROW BELOW" unicode="͍">◌͍ Labial spreading</td>
+    </tr><tr>
+      <td description="U+032A : Dental - COMBINING BRIDGE BELOW" unicode="̪">◌̪ Dental</td>
+      <td description="U+0347 : Alveolar - COMBINING EQUALS SIGN BELOW" unicode="͇">◌͇ Alveolar</td>
+      <td description="U+033A : Apical - COMBINING INVERTED BRIDGE BELOW" unicode="̺">◌̺ Apical</td>
+      <td description="U+033B : Laminal - COMBINING SQUARE BELOW" unicode="̻">◌̻ Laminal</td>
+      <td description="Interdental/bidental" unicode="◌̪͆">◌̪͆ Interdental/bidental</td>
+      <td colspan='3'></td>
+    </tr><tr>
+      <td description="U+031A : No audible release - COMBINING LEFT ANGLE ABOVE" unicode="̚">◌̚ No audible release</td>
+      <td description="U+02E1 : Lateral release - MODIFIER LETTER SMALL L" unicode="ˡ">◌ˡ Lateral release</td>
+      <td description="U+207F : Nasal release - SUPERSCRIPT LATIN SMALL LETTER N" unicode="ⁿ">◌ⁿ Nasal release</td>
+      <td description="U+034B : Nasal escape - COMBINING HOMOTHETIC ABOVE" unicode="͋">◌͋ Nasal escape</td>
+      <td description="U+034A : Denasal - COMBINING NOT TILDE ABOVE" unicode="͊">◌͊ Denasal</td>
+      <td description="U+034C : Velopharyngeal friction - COMBINING ALMOST EQUAL TO ABOVE" unicode="͌">◌͌ Velopharyngeal friction</td>
+      <td colspan='2'></td>
+      <?php //Maybe we want to use these later…
+      /*<td description="U+0348 : Strong articulation - COMBINING DOUBLE VERTICAL LINE BELOW" unicode="͈">◌͈ Strong articulation</td>
+      <td description="U+0349 : Weak articulation - COMBINING LEFT ANGLE BELOW" unicode="͉">◌͉ Weak articulation</td>
+      <td description="U+034E : Whistled articulation - COMBINING UPWARDS ARROW BELOW" unicode="͎">◌͎ Whistled articulation</td>
+      <td description="U+005C : Reiterated articulation - REVERSE SOLIDUS" unicode="\">\ Reiterated articulation</td>
+      <td description="U+0362 : Sliding articulation - COMBINING DOUBLE RIGHTWARDS ARROW BELOW" unicode="͢">◌͢ Sliding articulation</td>
+      <td description="U+208D : Initial partial - SUBSCRIPT LEFT PARENTHESIS" unicode="₍">₍◌ Initial partial</td>
+      <td description="U+208E : Final partial - SUBSCRIPT RIGHT PARENTHESIS" unicode="₎">◌₎ Final partial</td>*/
+      ?>
+    </tr>
+  </tbody></table>
+</div>
+</div>

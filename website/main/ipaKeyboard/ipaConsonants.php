@@ -1,0 +1,172 @@
+<div id='ipaConsonants'>
+<table class="table table-bordered table-condensed">
+<tbody><tr>
+<th></th>
+<th colspan="2">Bilabial</th>
+<th colspan="2">Labiodental</th>
+<th colspan="2">Dental</th>
+<th colspan="2">Alveolar</th>
+<th colspan="2">Postalveolar</th>
+<th colspan="2">Retroflex</th>
+<th colspan="2">Palatal</th>
+<th colspan="2">Velar</th>
+<th colspan="2">Uvular</th>
+<th colspan="2">Pharyngeal</th>
+<th colspan="2">Glottal</th>
+</tr>
+<tr>
+  <th>Plosive</th>
+  <td class="hbr" unicode="p" description="U+0070 : Voiceless bilabial plosive - LATIN SMALL LETTER P">p</td>
+  <td class="hbl" unicode="b" description="U+0062 : Voiced bilabial plosive - LATIN SMALL LETTER B">b</td>
+  <td colspan="2"></td>
+  <td class="hbr" colspan="2"></td>
+  <td class="hbs" unicode="t" description="U+0074 : Voiceless alveolar plosive - LATIN SMALL LETTER T">t</td>
+  <td class="hbs" unicode="d" description="U+0064 : Voiced alveolar plosive - LATIN SMALL LETTER D">d</td>
+  <td class="hbl" colspan="2"></td>
+  <td class="hbr" unicode="ʈ" description="U+0288 : Voiceless retroflex plosive - LATIN SMALL LETTER T WITH RETROFLEX HOOK">ʈ</td>
+  <td class="hbl" unicode="ɖ" description="U+0256 : Voiced retroflex plosive - LATIN SMALL LETTER D WITH TAIL">ɖ</td>
+  <td class="hbr" unicode="ɟ" description="U+025F : Voiced palatal plosive - LATIN SMALL LETTER DOTLESS J WITH STROKE">c</td>
+  <td class="hbl" unicode="ɟ" description="U+025F : Voiced palatal plosive - LATIN SMALL LETTER DOTLESS J WITH STROKE">ɟ</td>
+  <td class="hbr" unicode="k" description="U+006B : Voiceless velar plosive - LATIN SMALL LETTER K">k</td>
+  <td class="hbl" unicode="ɡ" description="U+0261 : Voiced velar plosive - LATIN SMALL LETTER SCRIPT G">ɡ</td>
+  <td class="hbr" unicode="q" description="U+0071 : Voiceless uvular plosive - LATIN SMALL LETTER Q">q</td>
+  <td class="hbl" unicode="ɢ" description="U+0262 : Voiced uvular plosive - LATIN LETTER SMALL CAPITAL G">ɢ</td>
+  <td></td><td class='impossible'></td>
+  <td unicode="ʔ" description="U+0294 : Voiceless glottal plosive - LATIN LETTER GLOTTAL STOP">ʔ</td>
+  <td class='impossible'></td>
+</tr>
+<tr>
+  <th>Nasal</th>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="m" description="U+006D : Voiced bilabial nasal - LATIN SMALL LETTER M">m</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɱ" description="U+0271 : Voiced labiodental nasal - LATIN SMALL LETTER M WITH HOOK">ɱ</td>
+  <td class="hbr" colspan="2"></td>
+  <td class="hbs"></td>
+  <td class="hbs" unicode="n" description="U+006E : Voiced alveolar nasal - LATIN SMALL LETTER N">n</td>
+  <td class="hbl" colspan="2"></td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɳ" description="U+0273 : Voiced retroflex nasal - LATIN SMALL LETTER N WITH RETROFLEX HOOK">ɳ</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɲ" description="U+0272 : Voiced palatal nasal - LATIN SMALL LETTER N WITH LEFT HOOK">ɲ</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ŋ" description="U+014B : Voiced velar nasal - LATIN SMALL LETTER ENG">ŋ</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɴ" description="U+0274 : Voiced uvular nasal - LATIN LETTER SMALL CAPITAL N">ɴ</td>
+  <td colspan="2" class='impossible'></td>
+  <td colspan="2" class='impossible'></td>
+</tr>
+<tr>
+  <th>Trill</th>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ʙ" description="U+0299 : Voiced bilabial trill - LATIN LETTER SMALL CAPITAL B">ʙ</td>
+  <td colspan="2"></td>
+  <td class="hbr" colspan="2"></td>
+  <td class="hbs"></td>
+  <td class="hbs" unicode="r" description="U+0072 : Voiced alveolar trill - LATIN SMALL LETTER R">r</td>
+  <td class="hbl" colspan="2"></td>
+  <td colspan="2"></td>
+  <td colspan="2"></td>
+  <td colspan="2" class='impossible'></td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ʀ" description="U+0280 : Voiced uvular trill - LATIN LETTER SMALL CAPITAL R">ʀ</td>
+  <td colspan="2"></td>
+  <td colspan="2" class='impossible'></td>
+</tr>
+<tr>
+  <th>Tap or Flap</th>
+  <td colspan="2"></td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ⱱ" description="U+2C71 : Voiced labiodental flap - LATIN SMALL LETTER V WITH RIGHT HOOK">ⱱ</td>
+  <td class="hbr" colspan="2"></td>
+  <td class="hbs"></td>
+  <td class="hbs" unicode="ɾ" description="U+027E : Voiced alveolar flap - LATIN SMALL LETTER R WITH FISHHOOK">ɾ</td>
+  <td class="hbl" colspan="2"></td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɽ" description="U+027D : Voiced retroflex flap - LATIN SMALL LETTER R WITH TAIL">ɽ</td>
+  <td colspan="2"></td>
+  <td colspan="2" class='impossible'></td>
+  <td colspan="2"></td>
+  <td colspan="2"></td>
+  <td colspan="2" class='impossible'></td>
+</tr>
+<tr>
+  <th>Fricative</th>
+  <td class="hbr" unicode="ɸ" description="U+0278 : Voiceless bilabial fricative - LATIN SMALL LETTER PHI">ɸ</td>
+  <td class="hbl" unicode="β" description="U+03B2 : Voiced bilabial fricative - GREEK SMALL LETTER BETA">β</td>
+  <td class="hbr" unicode="f" description="U+0066 : Voiceless labiodental fricative - LATIN SMALL LETTER F">f</td>
+  <td class="hbl" unicode="v" description="U+0076 : Voiced labiodental fricative - LATIN SMALL LETTER V">v</td>
+  <td class="hbr" unicode="θ" description="U+03B8 : Voiceless dental fricative - GREEK SMALL LETTER THETA">θ</td>
+  <td class="hbl" unicode="ð" description="U+00F0 : Voiced dental fricative - LATIN SMALL LETTER ETH">ð</td>
+  <td class="hbr" unicode="s" description="U+0073 : Voiceless alveolar fricative - LATIN SMALL LETTER S">s</td>
+  <td class="hbl" unicode="z" description="U+007A : Voiced alveolar fricative - LATIN SMALL LETTER Z">z</td>
+  <td class="hbr" unicode="ʃ" description="U+0283 : Voiceless postalveolar fricative - LATIN SMALL LETTER ESH">ʃ</td>
+  <td class="hbl" unicode="ʒ" description="U+0292 : Voiced postalveolar fricative - LATIN SMALL LETTER EZH">ʒ</td>
+  <td class="hbr" unicode="ʂ" description="U+0282 : Voiceless retroflex fricative - LATIN SMALL LETTER S WITH HOOK">ʂ</td>
+  <td class="hbl" unicode="ʐ" description="U+0290 : Voiced retroflex fricative - LATIN SMALL LETTER Z WITH RETROFLEX HOOK">ʐ</td>
+  <td class="hbr" unicode="ç" description="U+00E7 : Voiceless palatal fricative - LATIN SMALL LETTER C WITH CEDILLA">ç</td>
+  <td class="hbl" unicode="ʝ" description="U+029D : Voiceless palatal fricative - LATIN SMALL LETTER J WITH CROSSED-TAIL">ʝ</td>
+  <td class="hbr" unicode="x" description="U+0078 : Voiceless velar fricative - LATIN SMALL LETTER X">x</td>
+  <td class="hbl" unicode="ɣ" description="U+0263 : Voiced velar fricative - LATIN SMALL LETTER GAMMA">ɣ</td>
+  <td class="hbr" unicode="χ" description="U+03C7 : Voiceless uvular fricative - GREEK SMALL LETTER CHI">χ</td>
+  <td class="hbl" unicode="ʁ" description="U+0281 : Voiced uvular fricative - LATIN LETTER SMALL CAPITAL INVERTED R">ʁ</td>
+  <td class="hbr" unicode="ħ" description="U+0127 : Voiceless pharyngeal fricative - LATIN SMALL LETTER H WITH STROKE">ħ</td>
+  <td class="hbl" unicode="ʕ" description="U+0295 : Voiced pharyngeal fricative - LATIN LETTER PHARYNGEAL VOICED FRICATIVE">ʕ</td>
+  <td class="hbr" unicode="h" description="U+0068 : Voiceless glottal fricative - LATIN SMALL LETTER H">h</td>
+  <td class="hbl" unicode="ɦ" description="U+0266 : Voiced glottal fricative - LATIN SMALL LETTER H WITH HOOK">ɦ</td>
+</tr>
+<tr>
+  <th>Lateral fricative</th>
+  <td class='impossible' colspan='2'></td>
+  <td class='impossible' colspan='2'></td>
+  <td class="hbr" colspan='2'></td>
+  <td class="hbs" unicode="ɬ" description="U+026C : Voiceless alveolar lateral fricative - LATIN SMALL LETTER L WITH BELT">ɬ</td>
+  <td class="hbs" unicode="ɮ" description="U+026E : Voiced alveolar lateral fricative - LATIN SMALL LETTER LEZH">ɮ</td>
+  <td class="hbl" colspan='2'></td>
+  <td colspan='2'></td>
+  <td colspan='2'></td>
+  <td colspan='2'></td>
+  <td colspan='2'></td>
+  <td class='impossible' colspan='2'></td>
+  <td class='impossible' colspan='2'></td>
+</tr>
+<tr>
+  <th>Approximant</th>
+  <td colspan='2'></td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ʋ" description="U+028B : Voiced labiodental approximant - LATIN SMALL LETTER V WITH HOOK">ʋ</td>
+  <td class="hbr" colspan='2'></td>
+  <td class="hbs"></td>
+  <td class="hbs" unicode="ɹ" description="U+0279 : Voiced alveolar approximant - LATIN SMALL LETTER TURNED R">ɹ</td>
+  <td class="hbl" colspan='2'></td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɻ" description="U+027B : Voiced retroflex approximant - LATIN SMALL LETTER TURNED R WITH HOOK">ɻ</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="j" description="U+006A : Voiced palatal approximant - LATIN SMALL LETTER J">j</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɰ" description="U+0270 : Voiced velar approximant - LATIN SMALL LETTER TURNED M WITH LONG LEG">ɰ</td>
+  <td colspan='2'></td>
+  <td colspan='2'></td>
+  <td colspan='2' class='impossible'></td>
+</tr>
+<tr>
+  <th>Lateral approximant</th>
+  <td colspan='2' class='impossible'></td>
+  <td colspan='2' class='impossible'></td>
+  <td class="hbr" colspan='2'></td>
+  <td class="hbs"></td>
+  <td class="hbs" unicode="l" description="U+006C : Voiced alveolar lateral approximant - LATIN SMALL LETTER L">l</td>
+  <td class="hbl" colspan='2'></td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ɭ" description="U+026D : Voiced retroflex lateral approximant - LATIN SMALL LETTER L WITH RETROFLEX HOOK">ɭ</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ʎ" description="U+028E : Voiced palatal lateral approximant - LATIN SMALL LETTER TURNED Y">ʎ</td>
+  <td class="hbr"></td>
+  <td class="hbl" unicode="ʟ" description="U+029F : Voiced velar lateral approximant - LATIN LETTER SMALL CAPITAL L">ʟ</td>
+  <td colspan='2'></td>
+  <td colspan='2' class='impossible'></td>
+  <td class='impossible'></td>
+  <td class='special' unicode="ɫ" description="U+026B : Voiced velarized/pharyngealized alveolar lateral approximant - LATIN SMALL LETTER L WITH MIDDLE TILDE">ɫ</td>
+</tr>
+</tbody></table>
+</div>

@@ -1,22 +1,21 @@
 <?php
-  /* FIXME comments are outdated and will need rewriting. */
   /**
-    The following files define the fetchTranslations_$suffix
-    and the savetranslation_$suffix methods.
-    Both groups of functions are of the same Type.
-    Functions in the form of fetchTranslations_$suffix
-    return an array compatible with mkJSON defined below.
-    Functions in the form of saveTranslation_$suffix
-    take an entry as produced by mkJSON as a parameter
-    and try to save it correctly in the database.
-  */
-  /**
-    Translation by Search has prooved very effective,
-    and I've decided that I'd like to use it for the
-    other parts of translation aswell.
-    To aid this decision, translation_common.php
-    sets up the $providers to be used by search.php
-    aswell as other parts that will follow.
+    The translation methods implemented in this file have grown from the original Translation by Search feature.
+    While formerly there was only static translation, which was basically a dictionary,
+    I soon discovered, that a more dynamic approach was required,
+    where keys could be changed/added/removed while still map to different translations.
+    This led to a feature I called Dynamic Translation.
+    When working with Dynamic Translation it was discovered,
+    that it was quite a problem to find a single translation
+    based on a mistake observed on the site.
+    This problem led to Translation by Search,
+    where different Search Providers allowed to search for a given translation,
+    and receive methods to edit it.
+    Since Translation by Search and it's Search Providers worked in
+    a stable and modular way, I decided to rewrite these Search Providers
+    into Translation Providers, which also allow for paging in addition to the usual search procedure.
+    In addition to the now completely modular, unified approach to translation,
+    the site also got a new JavaScript interface, which uses the methods supplied by this file.
   */
   require_once 'providers/TranslationProvider.php';
   require_once 'providers/StaticTranslationProvider.php';

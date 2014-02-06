@@ -79,7 +79,7 @@ return "<table id='wordlistfilter' class='table-bordered table-striped'>"
      . "<tr><td>$spList</td><td>$phList</td></tr>"
      . "<tr><td><input id='SpellingFilter' type='text'/></td>"
      . "<td><input id='PhoneticFilter' type='text'/>"
-     . "<a id='IPAOpenKeyboard' class='superscript' title='$ipaOpenTitle'>IPA</a>"
+     . "<a href='#ipaKeyboard' data-toggle='modal' id='IPAOpenKeyboard' class='superscript' title='$ipaOpenTitle'>IPA</a>"
      . "</td></tr>$buttons</table>";
 }
 ?>

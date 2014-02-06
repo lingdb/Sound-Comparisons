@@ -74,6 +74,7 @@ i, .icon, .favicon, input[type="radio"] {
   font-variant: small-caps;
 }
 .subscript + .superscript {margin-left: -0.5em;}
+.inline {display: inline-block; margin: 0.5em;}
 /*Style in topMenu:*/
 #topMenu {
   margin: 5px 0px 5px 0px;
@@ -277,62 +278,14 @@ dd.languageList {
 #SoundControlView > i[data-direction="ew"] {top: 17px; left: 30px;}
 #multitable .languageCell>.multitablePlayWe {float: left;}
 #multitabletrans .icons, #multitable .icons {white-space: nowrap;}
-/*IPA Keyboard*/
-#ipaKeyboard {
-  -webkit-border-radius: 5px;
-  -moz-border-radius:    5px;
-  border-radius:         5px;
-  border:  1px solid #dddddd;
-  display:     none;
-  position:    absolute;
-  top:         0px;
-  left:        0px;
-  background:  #F2F6CA;
-}
-#keyboardHead {
-  font-size:      10pt;
-  color:          #EEE;
-  background:     #F9F9F9;
-  text-align:     center;
-  width:          100%;
-  height:         3%;
-  padding-top:    1%;
-  padding-bottom: 1%;
-  border-bottom:  1px solid #dddddd;
-}
-/*#ipaKeyboard table {empty-cells: hide; border: none;}*/
-#ipaKeyboard table, #ipaKeyboard td, #ipaKeyboard th {border-color: #666;}
-#ipaKeyboard td, #ipaKeyboard th {padding: 0.25em; white-space: normal; max-width: 10em;}
-#ipaKeyboard td.spacer {width: 1em; height: 0.5em;}
-#ipaKeyboard td.impossible {background-color: #A1A1A1;}
-#ipaKeyboard td.special {background-color: #7C9DC1;}
-#ipaKeyboard td.hbl {border-left: none;}
-#ipaKeyboard td.hbr {border-right: none;}
-#ipaKeyboard td.hbs {border-left: none; border-right: none;}
-.inline {display: inline-block; margin: 0.5em;}
-.ipaButtonAct {color:#000;}
-.ipaButtonInAct {color:#555;}
-.fadeIn {
-  display: block;
-  margin-bottom: 5em;
-}
-.fadeOut {display: none;}
-#keyboardFooter {
-  color:       #000;
-  background:  #F9F9F9;
-  text-align:  center;
-  width:       100%;
-  height:      2em;
-  padding-top: 0.75em;
-  font-weight: bold;
-  border-top:  1px solid #dddddd;
-  position:    absolute;
-  bottom:      0px;
-  margin:      0px;
-}
-#ipaButtonTone {margin-right: 20px;}
-#ipaClose {position: absolute; right: 5px;}
 /* Contributors page: */
 .contributor:target {
   border-color: #B94A48;
+}
+/* IPA Keyboard: */
+#ipaKeyboard {
+  margin-left: 0px;
+}
+#ipaKeyboard > .modal-body {
+  max-height: none;
 }

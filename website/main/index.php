@@ -30,19 +30,7 @@
     <div id='saveLocation' <?php
       echo $valueManager->link();
     ?> ></div>
-    <div id='ipaKeyboard'>
-      <div id='keyboardHead'>
-        <button id='ipaButtonConsonants' class='ipaButtonAct'>Consonants Main</button>
-        <button id='ipaButtonOthers' class='ipaButtonInAct'>Consonants Other</button>
-        <button id='ipaButtonVowels' class='ipaButtonInAct'>Vowels</button>
-        <button id='ipaButtonTone' class='ipaButtonInAct'>Tone</button>
-        <i id="ipaClose" class="icon-remove-sign" title="Close this thing."></i>
-      </div>
-      <div id='ipaContent'>
-        <?php require_once 'ipaKeyboard.php'; ?>
-      </div>
-      <div id='keyboardFooter'></div>
-    </div>
+    <?php require_once 'ipaKeyboard.php'; ?>
   </body>
 </html><?php
   $endTime = microtime(true);

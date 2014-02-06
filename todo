@@ -1,21 +1,12 @@
+2014-02-05:
+ - Fix slavic, http://lingweb.eva.mpg.de/sndcomp/?study=Slavic&pageView=mapView&translator=1&wo_order=alphabetical throws invalid WordId.
+ - Implement short links to be configured via admin interface
+
 2014-02-02:
- - Translation almost ready to ship
-   - Spacing rows in ResultCollectionView could be implemented as an enhancement.
-   - Also the new Translation doesn't hide some elements in Basic Input when they're not necessary.
+ - The new Translation doesn't hide some elements in Basic Input when they're not necessary.
 
 2014-01-31:
- - Update to new version of Google Maps
- - Replaced all <? with <?php
  - Map items appear to loose their position when moving the map
- - Translation by search works again.
-   - Basic translation will be next.
-
-2014-01-13:
- - Remember to fix import of MeaningGroups
-
-2013-12-18:
- - Remember to write a wonderful comment at the head of the new translation.php
- - Remember to merge devel into translation before merging translation into {devel,master}.
 
 2013-12-11:
  - In Selection for SpellingLanguages, the selectionbox is to far to the right
@@ -28,7 +19,6 @@
 2013-11-26:
  - Had a look at the program normalize-audio,
    which might be helpful to normalize the recordings in the sound directory
-   - We want this to be done soon.
 
 2013-11-12:
  - Build the Website as a dynamic .js application,
@@ -40,20 +30,11 @@
 
 2013-11-07:
  - Minifications breaks .js, due to incorrect order of some .js files
-   - ColorCalFoo needs to be moved further to the front.
  - Allow html or something thelike of about pages
  - Add in a home button (before 'view by')
    - Build something to allow for paul to add content
 
-2013-10-11:
- - Report problem with http://lingweb.eva.mpg.de/sndcomp/admin/ to Hans-Jörg
-   when sending the next update along
-
 2013-10-04:
- - In Multitable:
-   - Words in their cells to the left, maybe
-   - Cross to the top right
- - Use colors for RegionGroups just like for Families in the Andean Study, when viewing MultiTables
  - github.com/clld
    - We'd like to use their format, but we don't wanna loose our special presentation features.
    - This is to be kept in mind as an interesting thing.
@@ -63,7 +44,6 @@
  - Let map remember location when switching words
    - This already implies building a bigger part of the site
      as a .js application.
-   - Or does it?!
 
 2013-09-13:
  - Move 'view by' with tabs in topmenu to the middle.
@@ -73,9 +53,6 @@
 2013-09-11:
  - It appears in mapview, that if 'my selection' equals 'all languages',
    the buttons to change between them are pretty useless.
-
-2013-09-06:
- - Rewrite .htaccess file(s)
 
 2013-08-01:
  - Introduce seperate cells for items that have different variants with subscript
@@ -93,11 +70,6 @@
    which means that it'll become more generic soon.
  - Fix tables under Consonants Other in ipaKeyboard.
    - Almost done
-
-From Polina:
- - Add save buttons directly next to dt inputs
-   -> This will need some more rewriting
-   -> Maybe extend search to achieve this?
 
 From myself:
  - IsHtml field can be removed from v4.Page_StaticTranslation

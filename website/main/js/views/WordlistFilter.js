@@ -1,9 +1,59 @@
 /**
-  Adds an inputform to allow filtering the wordlist for particles of sundust.
+  Controls the filter box and mitigates it's effects.
 */
-function wordlistfilter(){
-  //Function to enhance input with ipaSymbols:
-  function enhanceIPA(input){
+WordlistFilter = Backbone.View.extend({
+  storage: {
+    content:    'wordlistfilter_content'
+  , inputId:    'wordlistfilter_inputId'
+  , selectedId: 'wordlistfilter_selectedId'
+  }
+, initialize: function(){
+    //Checking if former inputs can be found:
+    if(window.App.studyWatcher.studyChanged() || window.App.viewWatcher.viewChanged()){
+      this.clearStorage();
+    }else{
+      $(window.localStorage[this.storage.selectedId]).addClass('selected');
+      $(window.localStorage[this.storage.inputId]).val(window.localStorage[this.storage.content]);
+    }
+    //Checking if we can filter the languageTable aswell:
+    this.hasLanguageTable = ($('#languageTable').length > 0);
+    //Binding events:
+    var t = this;
+    $('#SpellingFilter').keyup(function(){ t.spellingFilter(); });
+    $('#PhoneticFilter').keyup(function(){ t.phoneticFilter(); });
+    $('#FilterAddMultiWords').click(function(){ t.pathfinder(true); });
+    $('#FilterRefreshMultiWords').click(function(){ t.pathfinder(false); });
+    //Initial triggers:
+    if($('#SpellingFilter').val() !== ''){
+      this.spellingFilter();
+    }
+    if($('#PhoneticFilter').val() !== ''){
+      this.phoneticFilter();
+    }
+    this.updateCount();
+  }
+, clearStorage: function(){
+    _.each(_.values(this.storage), function(k){
+      delete window.localStorage[k];
+    });
+    return this;
+  }
+, setStorage: function(selectedId, inputId, content){
+    window.localStorage[this.storage.selectedId] = selectedId;
+    window.localStorage[this.storage.inputId] = inputId;
+    window.localStorage[this.storage.content] = content;
+    return this;
+  }
+, chkInput: function(input){
+    if(input === ''){
+      $('#FilterSpelling').removeClass('selected');
+      $('#FilterPhonetic').removeClass('selected');
+      this.clearStorage();
+    }
+    return this;
+  }
+  //Extends the input string so that it matches IPA Symbols.
+, enhanceIPA: function(input){
     var vMust  = 'iyɨʉɯuɪʏʊeøɘɵɤoəɛœɜɞʌɔæɐaɶɑɒɚɝ'; // All from vowels section
     var vMay   = '˥˦˧˨˩↓↑↗↘̋́̄̀̏᷈᷅᷄̂̌ˈˌːˑ̆|‖.‿̃˔̟̹̜̠̝˕˞̞̰̤̥̈̽';           // All from tone
     var cMain  = 'pbtdʈɖɟɟkɡqɢʔmɱnɳɲŋɴʙrʀⱱɾɽɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦɬɮʋɹɻjɰlɭʎʟɫ'; // All from consonants main
@@ -27,29 +77,8 @@ function wordlistfilter(){
     input = input.toLowerCase();
     return input;
   }
-  //Restoring the cookies:
-  if(window.App.studyWatcher.studyChanged() || window.App.viewWatcher.viewChanged()){
-    $.cookie('wordlistfilter_content',    null);
-    $.cookie('wordlistfilter_inputId',    null);
-    $.cookie('wordlistfilter_selectedId', null);
-  }else{
-    $($.cookie('wordlistfilter_selectedId')).addClass('selected');
-    $($.cookie('wordlistfilter_inputId')).val($.cookie('wordlistfilter_content'));
-  }
-  //Clearing things on empty input:
-  function chk(input){
-    if(input != '')
-      return;
-    $('#FilterSpelling').removeClass('selected');
-    $('#FilterPhonetic').removeClass('selected');
-    $.cookie('wordlistfilter_selectedId', null);
-    $.cookie('wordlistfilter_inputId', null);
-    $.cookie('wordlistfilter_content', null);
-  }
-  //Check to see if we can filter in the languageTable aswell:
-  var hasLanguageTable = ($('#languageTable').length > 0);
-  //Function to fetch a filterSet from the LanguageTable
-  var getLanguageTableSet = function(useTranscriptions){
+//Projection from the LanguageTable to a filterSet
+, getLanguageTableSet: function(useTranscriptions){
     //If ¬useTranscriptions we use words to filter on.
     var set = $('#languageTable td.transcription').map(function(i, e){
       var ret = {target: $(e)};
@@ -61,9 +90,9 @@ function wordlistfilter(){
       return ret;
     });
     return set;
-  };
-  //Updating count of filtered words:
-  function updateCount(){
+  }
+//Updating the count of filtered words:
+, updateCount: function(){
     var c = $('ul.wordList li:visible').size();
     $('#FilterFoundMultiWords').text(c);
     if(c === 0){
@@ -73,11 +102,13 @@ function wordlistfilter(){
       if(i.val() === '')
         return;
       i.addClass('filterempty');
-    }else
+    }else{
       $('#PhoneticFilter, #SpellingFilter').removeClass('filterempty');
+    }
+    return this;
   }
-  //The magic filter function:
-  function filter(set, input){
+//The magic filter function:
+, filter: function(set, input){
     //General rewriting of input:
     input = input.replace(/^#/, '^');
     input = input.replace(/#$/, '$');
@@ -89,52 +120,44 @@ function wordlistfilter(){
       else
         e.target.hide();
     });
-    updateCount();
-  };
-  //The Spellingfilter:
-  function spellingFilter(){
+    return this.updateCount();
+  }
+, spellingFilter: function(){
     $('#PhoneticFilter').val('');
     $('#FilterPhonetic').removeClass('selected');
     $('#FilterSpelling').addClass('selected');
     var input = $('#SpellingFilter').val().toLowerCase();
-    $.cookie('wordlistfilter_selectedId', '#FilterSpelling');
-    $.cookie('wordlistfilter_inputId', '#SpellingFilter');
-    $.cookie('wordlistfilter_content', input);
+    this.setStorage('#FilterSpelling', '#SpellingFilter', input);
     var elems = $('ul.wordList .color-word').map(function(i, e){
       return {text: $(e).text(), target: $(e).closest('li')};
     });
-    filter(elems, input);
-    if(hasLanguageTable){
-      filter(getLanguageTableSet(false), input);
+    this.filter(elems, input);
+    if(this.hasLanguageTable){
+      this.filter(this.getLanguageTableSet(false), input);
       $('#languageTable').trigger('redraw');
     }
-    chk(input);
+    return this.chkInput(input);
   }
-  $('#SpellingFilter').keyup(spellingFilter);
-  //The Phoneticfilter:
-  function phoneticFilter(){
+, phoneticFilter: function(){
     $('#SpellingFilter').val('');
     $('#FilterSpelling').removeClass('selected');
     $('#FilterPhonetic').addClass('selected');
     var input = $('#PhoneticFilter').val();
-    $.cookie('wordlistfilter_selectedId', '#FilterPhonetic');
-    $.cookie('wordlistfilter_inputId', '#PhoneticFilter');
-    $.cookie('wordlistfilter_content', input);
+    this.setStorage('#FilterPhonetic', '#PhoneticFilter', input);
     var elems = $('ul.wordList .p50:nth-child(2)').map(function(i, e){
       var s = $(e).text();
       s = s.match(/\[(.*)\]/)[1];
       return {text: s, target: $(e).closest('li')};
     });
-    filter(elems, enhanceIPA(input));
-    if(hasLanguageTable){
-      filter(getLanguageTableSet(true), input);
+    this.filter(elems, this.enhanceIPA(input));
+    if(this.hasLanguageTable){
+      this.filter(this.getLanguageTableSet(true), input);
       $('#languageTable').trigger('redraw');
     }
-    chk(input);
+    return this.chkInput(input);
   }
-  $('#PhoneticFilter').keyup(phoneticFilter);
-  //The function that leads the way:
-  var pathfinder = function(keep){
+//The function that leads the way:
+, pathfinder: function(keep){
     var newWords = '';
     $('ul.wordList li:visible').each(function(){
       if($(this).parent().hasClass('selected'))
@@ -156,14 +179,5 @@ function wordlistfilter(){
       url += '&' + newWords.substring(0, newWords.length - 1);
     //Changing to the new page:
     window.location = url;
-  };
-  //Binding the buttons:
-  $('#FilterAddMultiWords').click(function(){ pathfinder(true); });
-  $('#FilterRefreshMultiWords').click(function(){ pathfinder(false); });
-  //Triggering filters initial:
-  if($('#SpellingFilter').val() != '')
-    spellingFilter();
-  if($('#PhoneticFilter').val() != '')
-    phoneticFilter();
-  updateCount();
-}
+  }
+});

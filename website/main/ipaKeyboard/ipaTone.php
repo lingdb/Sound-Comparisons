@@ -1,0 +1,38 @@
+<div id='ipaTone' class='hide'>
+<h3>Tone</h3>
+<table class="table table-bordered table-condensed">
+<tbody><tr>
+<th colspan="8">Tones and Word Accents</th>
+</tr>
+<tr>
+  <td description="U+030B : Extra high - COMBINING DOUBLE ACUTE ACCENT" unicode="̋" colspan="2">◌̋</td>
+  <td description="U+02E5 : Extra high - MODIFIER LETTER EXTRA-HIGH TONE BAR" unicode="˥" colspan="2">˥</td>
+  <td description="U+030C : Rising - COMBINING CARON" unicode="̌" colspan="2">◌̌</td>
+  <td description="U+2193 : Downstep (ExtIPA: ingressive airflow) - DOWNWARDS ARROW" unicode="↓" colspan="2">↓</td>  
+</tr>
+<tr>
+  <td description="U+0301 : High - COMBINING ACUTE ACCENT" unicode="́" colspan="2">◌́</td>
+  <td description="U+02E6 : High - MODIFIER LETTER HIGH TONE BAR" unicode="˦" colspan="2">˦</td>
+  <td description="U+0302 : Falling - COMBINING CIRCUMFLEX ACCENT" unicode="̂" colspan="2">◌̂</td>
+  <td description="U+2191 : Upstep (ExtIPA: egressive airflow) - UPWARDS ARROW" unicode="↑" colspan="2">↑</td>
+</tr>
+<tr>
+  <td description="U+0304 : Mid - COMBINING MACRON" unicode="̄" colspan="2">◌̄</td>
+  <td description="U+02E7 : Mid - MODIFIER LETTER MID TONE BAR" unicode="˧" colspan="2">˧</td>
+  <td description="U+1DC4 : High rising - COMBINING MACRON-ACUTE" unicode="᷄" colspan="2">◌᷄</td>
+  <td description="U+2197 : Global rise - NORTH EAST ARROW" unicode="↗" colspan="2">↗</td>
+</tr>
+<tr>
+  <td description="U+0300 : Low - COMBINING GRAVE ACCENT" unicode="̀" colspan="2">◌̀</td>
+  <td description="U+02E8 : Low - MODIFIER LETTER LOW TONE BAR" unicode="˨" colspan="2">˨</td>
+  <td description="U+1DC5 : Low rising - COMBINING GRAVE-MACRON" unicode="᷅" colspan="2">◌᷅</td>
+  <td description="U+2198 : Global fall - SOUTH EAST ARROW" unicode="↘" colspan="2">↘</td>
+</tr>
+<tr>
+  <td description="U+030F : Extra low - COMBINING DOUBLE GRAVE ACCENT" unicode="̏" colspan="2">◌̏</td>
+  <td description="U+02E9 : Extra low - MODIFIER LETTER EXTRA-LOW TONE BAR" unicode="˩" colspan="2">˩</td>
+  <td description="U+1DC8 : Rising-falling - COMBINING GRAVE-ACUTE-GRAVE" unicode="᷈" colspan="2">◌᷈</td>
+  <td class="spacer"></td>
+</tr>
+</tbody></table>
+</div>

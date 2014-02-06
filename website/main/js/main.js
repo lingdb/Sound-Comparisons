@@ -5,11 +5,10 @@ $(document).ready(function () {
 //initAudio();
   initPlaySequence();
   singleLanguageView();
-  wordlistfilter();
 //initLoad();
   initLogging();
-  initScroll();
-  initIpaKeyboard();
+//initScroll();
+//initIpaKeyboard();
   //Handling of special links
   $('*[data-href]').click(function(){
     window.location.href = $(this).attr('data-href');

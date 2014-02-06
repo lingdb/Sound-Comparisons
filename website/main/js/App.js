@@ -11,6 +11,8 @@ $(function(){
   }
   window.App.views.hideLinks = new HideLinks({
     el: null, model: window.App.viewWatcher});
+  window.App.views.ipaKeyboardView = new IPAKeyboardView({
+    el: $('#ipaKeyboard')});
   window.App.views.soundPlayOptionView = new SoundPlayOptionView({
     el:    $('#topmenuSoundOptions')
   , model: window.App.soundPlayOption
@@ -22,4 +24,5 @@ $(function(){
     , model: window.App.map
     });
   }
+  window.App.views.wordlistFilter = new WordlistFilter();
 });
