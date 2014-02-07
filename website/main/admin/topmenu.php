@@ -11,6 +11,8 @@
         echo '<li><a href="translate.php">Translate</a></li>';
       if(session_mayEdit($dbConnection))
         echo '<li><a href="dbimport.php">Import</a></li>';
+      if(session_mayTranslate($dbConnection))
+        echo '<li><a href="shortlinks.php">Shortlinks</a></li>';
       if(session_validate($dbConnection))
         echo '<li><a href="index.php?action=logout">Logout</a></li>';
     ?></ul>

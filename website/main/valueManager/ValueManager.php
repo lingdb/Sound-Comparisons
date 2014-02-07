@@ -155,7 +155,6 @@ abstract class ValueManager{
       return $attr.'="'.$target.$getStr.$anchor.'&ValueManagerLinks"';
     return $attr.'="'.$target.$getStr.$anchor.'"';
   }
-  
   /**
     An attribute added to links to determine the kind of pageView
     that the link will load.

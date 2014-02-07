@@ -7,6 +7,7 @@
   require_once 'valueManager/RedirectingValueManager.php';
   /* Startup: */
   $dbConnection = Config::getConnection();
+  require_once 'shortlink.php';
   $valueManager = RedirectingValuemanager::getInstance();
 ?><!DOCTYPE HTML><html><?php
     require 'head.php';
