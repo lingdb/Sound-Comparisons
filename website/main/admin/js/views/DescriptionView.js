@@ -19,7 +19,7 @@ DescriptionView = Backbone.View.extend({
   }
 , closeInput: function(){
     var q = {
-      action:      'updateTranslationDescription'
+      action:      'updateDescription'
     , Req:         this.el.attr('data-req')
     , Description: this.$('textarea').val()
     };

@@ -123,7 +123,7 @@
       $studies = $this->fetchRows($studies);
       //Page query:
       $q = "SELECT $origCol, CONCAT(IxElicitation, IxMorphologicalInstance) "
-         . "FROM Words_$s LIMIT 30 OFFSET $offset";
+         . "FROM Words_$study LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $q = "SELECT $c "
            . "FROM Page_DynamicTranslation_Words "

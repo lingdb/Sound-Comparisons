@@ -28,6 +28,7 @@ class MeaningGroup extends DBEntry{
     $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
        . "FROM MeaningGroupMembers "
        . "WHERE MeaningGroupIx = $id "
+       . "AND CONCAT(StudyIx, FamilyIx) = (SELECT CONCAT(StudyIx, FamilyIx) FROM Studies WHERE Name = '$sid')"
        . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = ANY("
          . "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$sid"
        . ") ORDER BY MeaningGroupMemberIx, IxElicitation ASC";

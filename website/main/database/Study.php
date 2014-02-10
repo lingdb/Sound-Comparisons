@@ -103,46 +103,27 @@ class Study extends DBEntry{
     @param [$v] ValueManager
     @return $words Word[]
     Returns all Words in a Study.
-    Words are sortet by the given ValueManager,
+    Words are sorted by the given ValueManager,
     or by the ValueManager that the Study was created with.
   */
   public function getWords($v = null){
-    if($v == null)
-      $v  = $this->getValueManager();
-    $id   = $this->id;
+    //Fetching words:
+    $id = $this->id;
     $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$id";
-    if($v->gwo()->isAlphabetical()){
-      if($spl = $v->gwo()->getSpLang()){
-        if($spl->getStudy()->getId() == $id){
-          $rfcId = $spl->getId();
-          $q = "SELECT DISTINCT CONCAT(IxElicitation, IxMorphologicalInstance) "
-             . "FROM Words_$id JOIN Transcriptions_$id USING (IxElicitation, IxMorphologicalInstance) "
-             . "WHERE LanguageIx = $rfcId "
-             . "ORDER BY SpellingAltv1, SpellingAltv2, FullRfcModernLg01";
-        }
-      }else{
-        $tid = $v->gtm()->getTarget();
-        /**
-          We select all the translated words,
-          but make sure to fill them up with the distinct
-          untranslated ones.
-          This way if only some words have been translated,
-          or none at all, we still get to see them.
-        */
-        $q = "SELECT DISTINCT CONCAT(IxElicitation, IxMorphologicalInstance) "
-           . "FROM Page_DynamicTranslation_Words "
-           . "WHERE TranslationId = $tid "
-           . "AND Study = '$id' "
-           . "UNION DISTINCT "
-           . "SELECT DISTINCT CONCAT(IxElicitation, IxMorphologicalInstance) "
-           . "FROM Words_$id";
-      }
+    $set = Config::getConnection()->query($q);
+    $words = array();
+    while($r = $set->fetch_row()){
+      array_push($words, new WordFromId($this->v, $r[0]));
     }
-    $words = Config::getConnection()->query($q);
-    $ret = array();
-    while($r = $words->fetch_row())
-      array_push($ret, new WordFromId($this->v, $r[0]));
-    return $ret;
+    //Sorting words:
+    $v = is_null($v) ? $this->getValueManager() : $v;
+    if($v->gwo()->isAlphabetical()){
+      usort($words, 'Word::compareOnTranslation');
+    }else{
+      usort($words, 'DBEntry::compareOnId');
+    }
+    //Done:
+    return $words;
   }
   /***/
   public function getColorByFamily(){

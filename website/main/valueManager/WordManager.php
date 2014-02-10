@@ -130,7 +130,7 @@ class InitWordManager extends WordManager{
       foreach(array_unique(explode(',',$_GET['words'])) as $key){
         $key = $this->decodeUrl($key);
         $w   = new WordFromKey($this->gvm(), $key, $studyId);
-        $this->words[$w->getId()] = $w;
+        array_push($this->words, $w);
       }
     }
   }

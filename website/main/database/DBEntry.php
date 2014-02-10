@@ -87,7 +87,7 @@ abstract class DBEntry extends DBTable{
   /**
     @param $set1 DBEntry[]
     @param $set2 DBEntry]]
-    @return has String matches /^(all|none|some)$/
+    @return $has String matches /^(all|none|some)$/
     'all' will only be returned, if $set2 has the same count
     as the intersection.
   */

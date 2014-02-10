@@ -28,42 +28,38 @@ $wordmenu .= WordMenuBuildSortBy($v, $t);
 //The search/filter block:
 $wordmenu .= WordMenuBuildSearchFilter($v, $t);
 //The meaningsets block:
-$isLogical = $v->gwo()->isLogical();
-if($isLogical){
+if($v->gwo()->isLogical()){
   $all         = $study->getMeaningGroups();
-  $none        = array(array_shift($all));
   $ahref       = $v->setMeaningGroups($all)->link();
-  $nhref       = $v->setMeaningGroups($none)->link();
+  $nhref       = $v->setMeaningGroups()->link();
   $meaningSets = $t->st('menu_words_meaningSets_title');
   $collapse    = $t->st('menu_words_meaningSets_collapse');
   $expand      = $t->st('menu_words_meaningSets_expand');
   $wordmenu .= "<h6>$meaningSets:"
              . "<a title='$expand' $ahref><i class='icon-plus'></i></a>"
              . "<a title='$collapse' $nhref><i class='icon-minus'></i></a></h6>";
-}
-//Building the wordlist:
-if($isLogical){
+  //Building the logical wordlist:
   $multi = $v->gpv()->isSelection();
   $wordmenu .= "<dl class='meaninggroupList'>";
   foreach($study->getMeaningGroups() as $mg){
+    $name = $mg->getName();
+    $mgWords = $mg->getWords();
     $collapsed = !$v->hasMeaningGroup($mg);
-    if($mg->getId() == 1) $collapsed = !$collapsed;
     $class = $collapsed ? 'class = "mgFold"' : 'class = "mgUnfold"';
-    $name  = $mg->getName();
     $checkbox = '';
     if($multi){
-      $has  = $v->gwm()->hasWords($mg->getWords());
+      $has  = $v->gwm()->hasWords($mgWords);
       $icon = 'icon-chkbox-custom';
       switch($has){
         case 'all':
           $icon = 'icon-check';
-          $href = $v->delWord($mg->getWords())->setUserCleaned()->link('','data-href');
+          $href = $v->delWord($mgWords)->setUserCleaned()->link('','data-href');
           $ttip = $t->st('multimenu_tooltip_minus');
         break;
         case 'some':
           $icon = 'icon-chkbox-half-custom';
         case 'none':
-          $href = $v->addWord($mg->getWords())->link('','data-href');
+          $href = $v->addWord($mgWords)->link('','data-href');
           $ttip = $t->st('multimenu_tooltip_plus');
       }
       $checkbox = "<a $href title='$ttip'><i class='$icon'></i></a>";
@@ -71,7 +67,7 @@ if($isLogical){
     $triangle = $collapsed ? 'icon-chevron-up rotate90' : 'icon-chevron-down';
     $href  = $v->toggleMeaningGroup($mg)->link();
     $title = "$checkbox<a class='color-meaninggroup' $href><i class='$triangle'></i>$name</a>";
-    $wList = $collapsed ? '' : '<dd>'.WordMenuBuildWordList($mg->getWords(), $v, $t).'</dd>';
+    $wList = $collapsed ? '' : '<dd>'.WordMenuBuildWordList($mgWords, $v, $t).'</dd>';
     $wordmenu .= "<dt $class>$title</dt>$wList";
   }
   $wordmenu .= "</dl>";

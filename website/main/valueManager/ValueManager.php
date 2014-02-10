@@ -147,8 +147,13 @@ abstract class ValueManager{
   public function link($target = '', $attr = 'href', $anchor = ''){
     $linkArray = $this->toArray();
     $getStr = '';
-    foreach($linkArray as $n => $v)
-      $getStr = $getStr.'&'.$n.'='.$v;
+    foreach($linkArray as $n => $v){
+      if(is_null($v)){
+        $getStr .= '&'.$n;
+      }else{
+        $getStr .= '&'.$n.'='.$v;
+      }
+    }
     if(count($getStr)>0)
       $getStr = '?'.substr($getStr,1);
     if(isset($_GET['ValueManagerLinks']))

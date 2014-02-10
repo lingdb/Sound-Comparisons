@@ -10,8 +10,8 @@ if(!session_mayTranslate($dbConnection))
   header('LOCATION: index.php');
 //Inserting/Updating of possible shortlinks:
 if($_POST['name']){
-  $name = $dbConnection->real_escape_string($_POST['name']);
-  $url  = ($_POST['url']) ? $dbConnection->real_escape_string($_POST['url']) : '';
+  $name = $dbConnection->escape_string($_POST['name']);
+  $url  = ($_POST['url']) ? $dbConnection->escape_string($_POST['url']) : '';
   if(empty($url)){
     $q = "DELETE FROM Page_ShortLinks WHERE Name = '$name'";
   }else{

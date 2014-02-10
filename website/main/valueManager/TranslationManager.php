@@ -293,7 +293,7 @@ abstract class TranslationManager extends SubManager{
   }
   /** Overwrites Submanager::pack*/
   public function pack(){
-    return array('translator' => $this->getTarget());
+    return array('hl' => $this->getBrowserMatch());
   }
   /*-- Shortcuts below --*/
   /**
@@ -331,14 +331,13 @@ class InitTranslationManager extends TranslationManager{
     $this->setValueManager($v);
     $db = Config::getConnection();
     //Phase 1:
-    if(isset($_GET['translator'])){
-      $this->translationId = $db->escape_string($_GET['translator']);
-      //Check if result is in table
-      $query = "SELECT * FROM Page_Translations WHERE TranslationId = "
-        .$this->translationId;
-      $chk = $db->query($query)->num_rows;
-      if($chk > 0)//Found a valid translation
+    if(isset($_GET['hl'])){ // hl as in host language.
+      $hl = $db->escape_string($_GET['hl']);
+      $q = "SELECT TranslationId FROM Page_Translations WHERE BrowserMatch = '$hl'";
+      if($r = $db->query($q)->fetch_row()){
+        $this->translationId = $r[0];
         return;
+      }
     }
     //Phase 2:
     if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){

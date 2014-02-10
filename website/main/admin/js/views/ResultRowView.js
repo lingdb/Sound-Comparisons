@@ -3,7 +3,10 @@
 , el: Row in a table
 */
 ResultRowView = Backbone.View.extend({
-  initialize: function(){
+  events: {
+    'click .copy-over': 'copyOver'
+  }
+, initialize: function(){
     this.btn = this.$('.saveButton');
     var row  = this;
     this.$('.updateInput').keyup(function(){row.keystroke();});
@@ -20,5 +23,9 @@ ResultRowView = Backbone.View.extend({
   }
 , keystroke: function(){
     this.btn.removeClass('btn-success btn-danger').addClass('btn-warning')
+  }
+, copyOver: function(){
+    var original = this.$('.copy-over').parent().text();
+    this.$('.updateInput').val(original).trigger('keyup');
   }
 });

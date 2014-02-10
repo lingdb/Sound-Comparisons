@@ -54,7 +54,6 @@ class Tabulator{
   public function tabluateWord($word){
     $v    = $this->valueManager;
     $t    = $v->getTranslator();
-    $ttip = $t->st('tabulator_multi_langonly'); // See all words in this language only
     //Calculating the maximum number of language cols:
     $maxLangCount = 0;
     foreach($v->getStudy()->getRegions() as $r){
@@ -93,7 +92,7 @@ class Tabulator{
           $href = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
           $sn   = $l->getShortName();
           $ln   = $l->getLongName(false);
-          $link = "<a class='tableLink color-language' $href title='$ln\n$ttip'>$sn</a><br />";
+          $link = "<a class='tableLink color-language' $href title='$ln'>$sn</a><br />";
           $tr   = new TranscriptionFromWordLang($word, $l);
           $spelling = '';
           if($s = $tr->getAltSpelling($v))
@@ -202,7 +201,6 @@ class Tabulator{
     $t = $v->getTranslator();
     echo $this->languageHeadline($language);
     echo '<table id="languageTable" class="table table-bordered table-striped"><tbody><tr>';
-    $ttip   = $t->st('tabulator_multi_wordonly');
     $width  = 6;
     $wCount = 0;
     foreach($v->getStudy()->getWords($v) as $w){
@@ -216,7 +214,9 @@ class Tabulator{
       if(!$tr->exists()) continue;
       $href   = $v->gpv()->setView('WordView')->setLanguages(array())->setWord($w)->link();
       $trans  = $w->getTranslation($v, true, false);
-      $entry .= "<a class='tableLink color-word' $href title='$ttip'>$trans</a><br />";
+      $ttip   = $w->getLongName();
+      $ttip   = (is_null($ttip)) ? '' : " title='$ttip'";
+      $entry .= "<a class='tableLink color-word' $href$ttip>$trans</a><br />";
       if($spelling = $tr->getAltSpelling($v))
         $entry .= "<div class='altSpelling' >".$spelling.'</div>';
       $entry .= $tr->getPhonetic($v, true).'</td>';

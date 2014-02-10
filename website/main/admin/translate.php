@@ -150,7 +150,7 @@
             <th>Description:</th>
             <th>Text that matched:</th>
             <th>Original:</th>
-            <th>Translation:</th>
+            <th>Translation:<input id="ResultSaveAll" type="button" class="btn pull-right" value="Save all"></th>
           </tr></thead>
           <tbody><tr class="info">
             <td colspan="4">Nothing to display.</td>

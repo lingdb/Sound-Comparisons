@@ -5,7 +5,7 @@
     and injects the according values into $_GET.
   */
   if(isset($_GET['shortLink'])){
-    $sLink = $dbConnection->real_escape_string($_GET['shortLink']);
+    $sLink = $dbConnection->escape_string($_GET['shortLink']);
     $q = "SELECT Target FROM Page_ShortLinks WHERE Name = '$sLink'";
     if($r = $dbConnection->query($q)->fetch_row()){
       $q = parse_url($r[0], PHP_URL_QUERY);

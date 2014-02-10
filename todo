@@ -1,12 +1,9 @@
 2014-02-07:
- - Let translator identify by browsermatch,
-   maybe also change it's parameter to be hl like google has it.
-
-2014-02-05:
- - Fix slavic, http://lingweb.eva.mpg.de/sndcomp/?study=Slavic&pageView=mapView&translator=1&wo_order=alphabetical throws invalid WordId.
-
-2014-02-02:
- - The new Translation doesn't hide some elements in Basic Input when they're not necessary.
+ - Check why Numbers MG is missing in Slavic
+ - Ask Hans-Jörg about a consistent way of sorting UTF-8 Strings in PHP
+ - Probably reimplement searchfeature for the site
+ - By a long shot use prepared statements everywhere
+ - Paul requests a saveAll button and paging at the button of the Translation page, aswell
 
 2014-01-31:
  - Map items appear to loose their position when moving the map

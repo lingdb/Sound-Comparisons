@@ -42,13 +42,13 @@ function tables_multiwordTable($v){
     $dhref = $v->delWord($w)->setUserCleaned()->link();
     $dttip = $t->st('tabulator_multi_tooltip_removeWord');
     $href  = $v->gpv()->setView('WordView')->setLanguages()->setWord($w)->link();
-    $ttip  = $t->st('tabulator_multi_wordonly');
+    $ttip  = ($ln = $w->getLongName()) ? " title='$ln'" : '';
     $ptip  = $t->st('tabulator_multi_playword');
     $trans = $w->getTranslation($v, true, false);
     $maps  = $w->getMapsLink($t);
     echo "<th>"
        . "<a $dhref title='$dttip' class='remove'><i class='icon-remove-custom'></i></a>"
-       . "<a class='tableLink color-word' $href title='$ttip'>$trans</a>"
+       . "<a class='tableLink color-word' $href$ttip>$trans</a>"
        . "</th>";
   }
   echo '</tr>';
@@ -114,13 +114,12 @@ function tables_multiwordTable($v){
       //Displaying the language:
       $lhref = $v->delLanguage($l)->setUserCleaned()->link();
       $lttip = $t->st('tabulator_multi_tooltip_removeLanguage');
-      $ttip  = $t->st('tabulator_multi_langonly');
+      $ttip  = $l->getLongName(false);
       $ptip  = $t->st('tabulator_multi_playlang');
       $href  = $v->gpv()->setView('LanguageView')->setWords()->setLanguage($l)->link();
       $sn    = $l->getShortName();
-      $ln    = $l->getLongName(false);
       echo "<td class='languageCell'>"
-         . "<a class='tableLink color-language' $href title='$ln\n$ttip'>$sn</a>"
+         . "<a class='tableLink color-language' $href title='$ttip'>$sn</a>"
          . "<a $lhref title='$lttip' class='remove'><i class='icon-remove-custom'></i></a>"
          . "</td><td>"
          . "<i class='icon-eject rotate90 multitablePlayWe' title='$ptip'></i>"

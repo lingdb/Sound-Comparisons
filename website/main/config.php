@@ -19,8 +19,10 @@ class Config {
   public  static $flags_enabled = false;
   public  static $soundPath     = "../sound";
   public  static $downloadPath  = "export/download";
+  public  static $locale        = "en-US";
   /* Accessible values: */
   private static $dbConnection  = null;
+  private static $collator      = null;
   /* Getter functions to fetch config values: */
   public static function getConnection(){
     if(is_null(self::$dbConnection)){
@@ -49,6 +51,23 @@ class Config {
   //$rand = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'),0,5);
     error_log($msg);
     if(Config::$debug) die($msg);
+  }
+  /**
+    @return collator [Collator]
+    This method requires the php5-intl package.
+  */
+  public static function getCollator(){
+    if(self::$collator === false)
+      return null;
+    if(is_null(self::$collator)){
+      if(class_exists('\\Collator')){
+        self::$collator = new \Collator(self::$locale);
+      }else{
+        self::$collator = false;
+        return null;
+      }
+    }
+    return self::$collator;
   }
 }
 ?>

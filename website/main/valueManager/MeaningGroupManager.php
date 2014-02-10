@@ -3,6 +3,7 @@ require_once 'SubManager.php';
 
 abstract class MeaningGroupManager extends SubManager{
   protected $meaningGroups = array();
+  protected $setEmpty = false;
   /**
     @param $mg MeaningGroup
     @return has Bool
@@ -24,9 +25,11 @@ abstract class MeaningGroupManager extends SubManager{
     @return $v ValueManager
   */
   public function delMeaningGroup($mg){
-    $mgm = clone $this;
     $mgs = array_diff_key($this->meaningGroups, array($mg->getId() => $mg));
-    return $this->gvm()->setM($mgm);
+    if(count($mgs) === 0){
+      return $this->setMeaningGroups();
+    }
+    return $this->setMeaningGroups($mgs);
   }
   /**
     @param $mg MeaningGroup
@@ -49,13 +52,22 @@ abstract class MeaningGroupManager extends SubManager{
   */
   public function setMeaningGroups($mgs){
     $mgm = clone $this;
-    $mgm->meaningGroups = $mgs;
+    if(is_null($mgs)){
+      $mgm->setEmpty = true;
+      $mgm->meaningGroups = array();
+    }else if(is_array($mgs)){
+      $mgm->meaningGroups = $mgs;
+    }else return $this->gvm();
     return $this->gvm()->setM($mgm);
   }
   /** Overwrites SubManager:pack() */
   public function pack(){
-    if(count($this->meaningGroups) <= 0)
+    if(count($this->meaningGroups) <= 0){
+      if($this->setEmpty){
+        return array('meaningGroups' => null);
+      }
       return array();
+    }
     $cmgs = array();
     foreach($this->meaningGroups as $mg){
       array_push($cmgs, $mg->getKey());
@@ -71,11 +83,20 @@ class InitMeaningGroupManager extends MeaningGroupManager{
   public function __construct($v){
     $this->setValueManager($v);
     if(isset($_GET['meaningGroups'])){
-      $arr = array_unique(explode(',', $_GET['meaningGroups']));
-      foreach($arr as $m){
-        $mg = new MeaningGroupFromKey($this->gvm(), $this->decodeUrl($m));
-        $this->meaningGroups[$mg->getId()] = $mg;
+      if($_GET['meaningGroups'] === ''){
+        //The meaningGroups stay empty in this case.
+        $this->setEmpty = true;
+      }else{
+        $arr = array_unique(explode(',', $_GET['meaningGroups']));
+        foreach($arr as $m){
+          $mg = new MeaningGroupFromKey($this->gvm(), $this->decodeUrl($m));
+          $this->meaningGroups[$mg->getId()] = $mg;
+        }
       }
+    }else{
+      $mgs = $this->gvm()->getStudy()->getMeaningGroups();
+      $mg = array_shift($mgs);
+      $this->meaningGroups[$mg->getId()] = $mg;
     }
   }
   /***/

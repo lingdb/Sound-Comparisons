@@ -25,13 +25,11 @@ function WordMenuBuildWordList($words, $v, $t){
     }
     if($v->gpv()->isView('MapView')){
       $href = $v->setWord($w)->link();
-      $ttip = $t->st('menu_words_tooltip_choose_map');
     }else{
       $href = $v->gpv()->setView('WordView')->setWord($w)->link();
-      $ttip = $t->st('menu_words_tooltip_choose_single');
     }
-    if($ln = $w->getLongName()) // Prepending the LongName to the ttip if it exists
-      $ttip = "$ln\n$ttip";
+    $ttip = $w->getLongName();
+    if(!$ttip) $ttip = '';
     $phonetics = array('*'.$w->getProtoName());
     if($rf = $v->gwo()->getPhLang()){
       $tr  = new TranscriptionFromWordLang($w, $rf);

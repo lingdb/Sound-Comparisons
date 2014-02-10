@@ -128,101 +128,22 @@ class Word extends DBEntry{
     in any order is a Neighbour to the first and vice versa.
   */
   private function getNeighbour($v, $next){
-    // Setting $order and $comp depending on $next:
-    $order = $next ? 'ASC' : 'DESC';
-    $comp  = $next ? '>'   : '<';
-    // Building the query:
-    $sId = $v->getStudy()->getId();
-    if($v->gwo()->isLogical()){ // Fetching neighbours by logical order
-      $eli   = $this->getIxElicitation();
-      $query = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$sId "
-             . "WHERE MeaningGroupIx != 0 "
-             . "AND IxElicitation != $eli "
-             . "AND MeaningGroupIx $comp= (SELECT DISTINCT MeaningGroupIx FROM Words_$sId WHERE IxElicitation = $eli LIMIT 1) "
-             . "AND MeaningGroupMemberIx $comp= (SELECT DISTINCT MeaningGroupMemberIx FROM Words_$sId WHERE IxElicitation = $eli LIMIT 1) "
-             . "ORDER BY MeaningGroupIx $order, MeaningGroupMemberIx $order, IxElicitation $order LIMIT 1";
-    }else if($v->gwo()->isAlphabetical()){
-      $id = $this->id;
-      if($spL  = $v->gwo()->getSpLang()){ // Fetching neighbours by alphabetical order in the current translation.
-        $rfcId = $spL->getId();
-        $q     = "SELECT CONCAT(T.SpellingAltv1, T.SpellingAltv2, W.FullRfcModernLg01) "
-               . "FROM Words_$sId AS W JOIN Transcriptions_$sId AS T USING (IxElicitation, IxMorphologicalInstance) "
-               . "WHERE T.LanguageIx = $rfcId "
-               . "AND CONCAT(W.IxElicitation, W.IxMorphologicalInstance) = $id "
-               . "LIMIT 1";
-        $trans = Config::getConnection()->query($q)->fetch_row();
-        $trans = $trans[0];
-        $query = "SELECT CONCAT(W.IxElicitation, W.IxMorphologicalInstance) "
-               . "FROM Words_$sId AS W JOIN Transcriptions_$sId AS T USING (IxElicitation, IxMorphologicalInstance) "
-               . "WHERE T.LanguageIx = $rfcId "                                   // Is in current language
-               . "AND CONCAT(W.IxElicitation, W.IxMorphologicalInstance) != $id " // Is not current word
-               . "AND CONCAT(T.SpellingAltv1, T.SpellingAltv2, W.FullRfcModernLg01) $comp '$trans' "      // Obeys current sorting
-               . "ORDER BY CONCAT(T.SpellingAltv1, T.SpellingAltv2, W.FullRfcModernLg01) $order LIMIT 1"; // Comes in correct order
-      }else{ // Alphabetical neighbours in the current translation without spLang.
-        $tid   = $v->gtm()->getTarget();
-        $q     = "SELECT Trans_FullRfcModernLg01 "
-               . "FROM Page_DynamicTranslation_Words "
-               . "WHERE TranslationId = $tid "
-               . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-        $trans = Config::getConnection()->query($q)->fetch_row();
-        $trans = $trans[0];
-        $query = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
-               . "FROM Page_DynamicTranslation_Words "
-               . "WHERE TranslationId = $tid "
-               . "AND CONCAT(IxElicitation, IxMorphologicalInstance) != $id "
-               . "AND Trans_FullRfcModernLg01 < '$trans' "
-               . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = ANY("
-                 . "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
-                 . "FROM Words_$sId"
-               .") ORDER BY Trans_FullRfcModernLg01 ASC LIMIT 1;";
+    $key = null;
+    $words = $v->getStudy()->getWords();
+    foreach($words as $k => $w){
+      if($w->getId() === $this->id){
+        $key = $k;
+        break;
       }
     }
-    //Trying to fetch the Word:
-    if($w = Config::getConnection()->query($query)->fetch_row()){
-      return new WordFromId($this->v, $w[0]);
+    $key += $next ? 1 : -1;
+    $key %= count($words);
+    if($key < 0){ // Making sure modulo wraps
+      $key += count($words);
     }
-    //No Word found, so this is the loop around case:
-    if($v->gwo()->isLogical()){
-      if($next){ //Fetch first word
-        $query = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
-          . "FROM Words_$sId WHERE MeaningGroupIx != 0 "
-          . "ORDER BY MeaningGroupIx ASC, MeaningGroupMemberIx ASC, IxElicitation ASC LIMIT 1";
-      }else{ //Fetch last word
-        $query = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
-          . "FROM Words_$sId WHERE MeaningGroupIx != 0 "
-          . "ORDER BY MeaningGroupIx DESC, MeaningGroupMemberIx DESC, IxElicitation DESC "
-          . "LIMIT 1";
-      }
-    }else if($v->gwo()->isAlphabetical()){
-      if($spL = $v->gwo()->getSpLang()){
-        $rfcId = $spL->getId();
-        if($next){//Fetch first word
-          $query = "SELECT CONCAT(W.IxElicitation, W.IxMorphologicalInstance) "
-               . "FROM Words_$sId AS W "
-               . "JOIN Transcriptions_$sId AS T USING (IxElicitation, IxMorphologicalInstance) "
-               . "WHERE T.LanguageIx = 11111110102 "
-               . "ORDER BY CONCAT(T.SpellingAltv1, T.SpellingAltv2, W.FullRfcModernLg01) ASC LIMIT 1";
-        }else{//Fetch last word
-          $query = "SELECT CONCAT(W.IxElicitation, W.IxMorphologicalInstance) "
-               . "FROM Words_$sId AS W JOIN Transcriptions_$sId AS T USING (IxElicitation, IxMorphologicalInstance) "
-               . "WHERE T.LanguageIx = $rfcId "
-               . "ORDER BY CONCAT(T.SpellingAltv1, T.SpellingAltv2, W.FullRfcModernLg01) DESC LIMIT 1";
-        }
-      }else{ //Alphabetical first/last in current translation without spLang.
-        $tid = $v->gtm()->getTarget();
-        $order = $next ? 'ASC' : 'DESC';
-        $query = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
-               . "FROM Page_DynamicTranslation_Words "
-               . "WHERE TranslationId = $tid "
-               . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = ANY ("
-                 . "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) "
-                 . "FROM Words_$sId"
-               .") ORDER BY Trans_FullRfcModernLg01 $order LIMIT 1";
-      }
+    if(array_key_exists($key, $words)){
+      return $words[$key];
     }
-    if($w = Config::getConnection()->query($query)->fetch_row())
-      return new WordFromId($this->v, $w[0]);
-    //This should no more occur:
     return null;
   }
   /**
@@ -293,13 +214,38 @@ class Word extends DBEntry{
     $href = $v->gpv()->setView('MapView')->setWord($this)->link();
     return "<a $href><img class='favicon' src='img/maps.png' title='$tooltip' /></a>";
   }
-  /***/
+  /**
+    @param $x Word
+    @param $y Word
+    Compares two Words by their translation.
+    If the php5-intl package is installed, it uses the Collator given by the config,
+    which is the better way to do this.
+    Otherwise, this function falls back on mysql to sort UTF8 strings,
+    which is quite slower.
+    With php5-intl:
+    Times (min, avg, max): 1.5812, 3.5744550561798, 4.8371
+    Without php5-intl:
+    Times (min, avg, max): 2.1598, 4.0123397727273, 16.2653
+    - The 16s spike might actually be an export link,
+      so I thikn the min values are the best to look at.
+      Also this data will change over time, and is just a hint.
+  */
   public static function compareOnTranslation($x, $y){
     $v  = $x->getValueManager();
     $tx = $x->getTranslation($v, true);
     $ty = $y->getTranslation($v, true);
-    if($tx === $ty) return 0;
-    return ($tx > $ty) ? 1 : -1;
+    //Checking if we've got php5-intl:
+    if($c = Config::getCollator()){
+      return $c->compare($tx,$ty);
+    }
+    //Fallback on mysql:
+    $db = Config::getConnection();
+    $tx = $db->escape_string($tx);
+    $ty = $db->escape_string($ty);
+    $q  = "SELECT '$tx' = '$ty', '$tx' > '$ty'";
+    $r  = $db->query($q)->fetch_row();
+    if($r[0] == 1) return 0;
+    return ($r[1] == 1) ? 1 : -1;
   }
   /**
     @param Word[] words
