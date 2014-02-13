@@ -162,8 +162,8 @@ class Tabulator{
       }else if($year || $pages){
         $info = "($year$pages)";
       } else $info = '';
-      $contributors .= "<tr><th class='text-left'>$cdesc:</th><td>"
-                     . "<a $link class='pull-right'>$name$info</a>"
+      $contributors .= "<tr><th class='text-right'>$cdesc:</th><td>"
+                     . "<a $link class='pull-left'>$name$info</a>"
                      . "</td></tr>";
     }
     $ttip = $t->st('tooltip_contributor_list');

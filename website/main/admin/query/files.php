@@ -153,15 +153,16 @@
            . 'ContributorSpokenBy, '
            . 'ContributorRecordedBy1, '
            . 'ContributorRecordedBy2, '
+           . 'ContributorSoundEditingBy, '
            . 'ContributorPhoneticTranscriptionBy, '
            . 'ContributorReconstructionBy, '
            . 'ContributorCitationAuthor1, '
            . 'Citation1Year, '
-           . 'Citation1Pages, '                  // 34
+           . 'Citation1Pages, '                  // 35
            . 'ContributorCitationAuthor2, '
            . 'Citation2Year, '
-           . 'Citation2Pages) VALUES '           // 37
-           . mkTuples($csv, array(3,7,8,9,11,12,13,14,15,16,17,18,19,20,21,25,26,34,37));
+           . 'Citation2Pages) VALUES '           // 38
+           . mkTuples($csv, array(3,7,8,9,11,12,13,14,15,16,17,18,19,20,21,25,26,35,38));
         array_push($queries, 'DELETE FROM Languages_'.$matches[1], $q);
       break;
       case (preg_match('/^LanguageStatusTypes\.txt$/', $fname, $matches) ? true : false):
@@ -213,10 +214,20 @@
            . mkTuples($csv, array(2,3,4));
         array_push($queries, 'DELETE FROM Families', $q);
       break;
+      case (preg_match('/^Transcription Superscript Info.txt/', $fname, $matches) ? true : false):
+        $q = 'INSERT INTO TranscrSuperscriptInfo (Ix, Abbreviation, HoverText) VALUES '
+           . mkTuples($csv, array(1,2));
+        array_push($queries, 'DELETE FROM TranscrSuperscriptInfo', $q);
+      break;
+      case (preg_match('/^Transcription Superscript Lender Lgs.txt/', $fname, $matches) ? true : false):
+        $q = 'INSERT INTO TranscrSuperscriptLenderLgs (IsoCode, Abbreviation, FullNameForHoverText) VALUES '
+           . mkTuples($csv, array(0,1,2));
+        array_push($queries, 'DELETE FROM TranscrSuperscriptLenderLgs', $q);
+      break;
       case (preg_match('/^Transcriptions_(.*)\.txt$/', $fname, $matches) ? true : false):
         $q = 'INSERT IGNORE INTO Transcriptions_'.$matches[1].'(StudyIx, FamilyIx, IxElicitation, '
            . 'IxMorphologicalInstance, AlternativeLexemIx, AlternativePhoneticRealisationIx, LanguageIx, '
-           . 'Phonetic, SpellingAltv1, SpellingAltv2, NotCognateWithMainWordInThisFamily) VALUES '
+           . 'Phonetic, SpellingAltv1, SpellingAltv2, NotCognateWithMainWordInThisFamily, CommonRootMorphemeStructDifferent) VALUES '
            . mkTuples($csv, array(7,8,9));
         array_push($queries, 'DELETE FROM Transcriptions_'.$matches[1], $q);
       break;

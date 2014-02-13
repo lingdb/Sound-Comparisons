@@ -4,11 +4,11 @@
   It than attempts to use avconv to generate .ogg from .mp3 or .mp3 from .ogg
   if one of them is missing.
 */
-$find  = shell_exec("find . -type f \( -name '*.ogg' -o -name '*.mp3' \)");
+$find  = shell_exec("find . -type f \( -name '*.ogg' -o -name '*.mp3' -o -name '*.wav' \)");
 $files = explode("\n", $find);
 $table = array();
 foreach($files as $f){
-  preg_match('/(.*)(ogg|mp3)$/', $f, $matches);
+  preg_match('/(.*)(ogg|mp3|wav)$/', $f, $matches);
   if(count($matches) < 3) continue;
   $name   = $matches[1];
   $suffix = $matches[2];
@@ -20,16 +20,17 @@ foreach($files as $f){
   }
 }
 foreach($table as $name => $suffixes){
-  if(count($suffixes) !== 1) continue;
-  switch($suffixes[0]){
-    case 'mp3':
-      $command = "avconv -y -i $name"."mp3 -acodec libvorbis -aq 60 $name"."ogg";
-    break;
-    case 'ogg':
-      $command = "avconv -y -i $name"."ogg -acodec libmp3lame -aq 60 $name"."mp3";
-    break;
+  $hasWav = in_array('wav', $suffixes);
+  $hasOgg = in_array('ogg', $suffixes);
+  $hasMp3 = in_array('mp3', $suffixes);
+  if(!$hasOgg){
+    $ext = $hasWav ? 'wav' : 'mp3';
+    echo "avconv -y -i $name$ext -acodec libvorbis -aq 60 $name"."ogg\n";
   }
-  echo "$command\n";
+  if(!$hasMp3){
+    $ext = $hasWav ? 'wav' : 'ogg';
+    echo "avconv -y -i $name$ext -acodec libmp3lame -aq 60 $name"."mp3\n";
+  }
 //exec($command);
 }
 ?>

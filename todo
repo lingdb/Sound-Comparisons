@@ -1,32 +1,31 @@
+2014-02-13:
+ - normalize-audio appears to be working for .wav files.
+   But I also need it to work on .mp3 and .ogg, otherwise it's no fun.
+   - Apparently normalize-{ogg,mp3} can help here.
+ - Up to ~1.6s are spent on a call of Study:getWords,
+   which means, that up to ~3s of site generation could be spent this way.
+   Look at http://127.0.0.1/shk/main/?study=Mapudungun&languages=Huilliche%20%28Lagos%29&pageView=languageView&hl=en&wo_order=alphabetical&wo_phLang=Ancestral%20Mapudungun
+   - It just took 8.2493s to generate.
+ - export/csv.php is the last pice to use database/Transcription:getNotCognates,
+   it could be cleaned up, if csv.php was rewritten.
+ - Show lexeme numbers >1 as subscripts for Transcriptions and Words
+ - Contributors on page for translations would be nice
+   - But we need a way of building this
+
 2014-02-07:
- - Check why Numbers MG is missing in Slavic
- - Ask Hans-Jörg about a consistent way of sorting UTF-8 Strings in PHP
- - Probably reimplement searchfeature for the site
  - By a long shot use prepared statements everywhere
  - Paul requests a saveAll button and paging at the button of the Translation page, aswell
-
-2014-01-31:
- - Map items appear to loose their position when moving the map
 
 2013-12-11:
  - In Selection for SpellingLanguages, the selectionbox is to far to the right
  - Zooming in on the map when changing stuff is annoying, Paul wants it gone.
    - Check if the MapView can start zoomed in, or build it all with Backbone.
- - Fix translations for words via clever script that awaits construction
-   - Check what is actually broken
- - Copy new translations for Mapudungun over in admin interface
-
-2013-11-26:
- - Had a look at the program normalize-audio,
-   which might be helpful to normalize the recordings in the sound directory
 
 2013-11-12:
  - Build the Website as a dynamic .js application,
    so that many changes happen faster.
    Try to share templates between the App and the Serverside,
    so that php can still generate pages.
- - MapView in Mapudungun for Blood has Next and Prev Links identical.
-   This also appears to be a problem with different other words (and studies?)
 
 2013-11-07:
  - Minifications breaks .js, due to incorrect order of some .js files
@@ -62,22 +61,10 @@
      - Leverage this to get rid of style.css, because we've got main.css now
    - Refine database/Language.php:getDescription
      - Also think about the way it's included in the Tabulator.php:languageHeadline
-   - Need script for landing with /<Study> or /<Translation> like fonetika.org/Andean or fonetika.org/es (spanish translation)
-
-2013-07-18:
- - Wordslist to be prettier and use lexemes
- - Note that genscript.php must also be aware of .wav files,
-   which means that it'll become more generic soon.
- - Fix tables under Consonants Other in ipaKeyboard.
-   - Almost done
 
 From myself:
  - IsHtml field can be removed from v4.Page_StaticTranslation
    - This will need adjustment in different places
-
-in IPA Keyboard: Consonants-Main (Plumonic) with grid in the table
-
-Center +- for LanguageSets and MeaningSets horizontally
 
 Using 'My Selection' in mapView removes all languages from the map
   where it should switch to the last selection
@@ -97,6 +84,6 @@ Storing of mySelection in Mapview and in TopMenu between views
    - Introduce a general dbaccess class that handles all issues not handled by any of the other classes.
      This will also come in handy once another db with a different layout is included.
  - Think about a smaller/faster/better vm client os than XUbuntu
-   - This way Paul (Maybe also Scott?) would have a nicer time working with it
+   - This way Paul would have a nicer time working with it
    - This could already use github to pull stuff from
    - I should base this on debian testing/stable

@@ -79,7 +79,7 @@
       $v = $language->getValueManager();
       $sid = $language->getValueManager()->getStudy()->getId();
       $id = $language->getId();
-      $q = "SELECT ContributorSpokenBy, ContributorRecordedBy1, ContributorRecordedBy2"
+      $q = "SELECT ContributorSpokenBy, ContributorRecordedBy1, ContributorRecordedBy2, ContributorSoundEditingBy "
          . ", ContributorPhoneticTranscriptionBy, ContributorReconstructionBy"
          . ", ContributorCitationAuthor1, Citation1Year, Citation1Pages"
          . ", ContributorCitationAuthor2, Citation2Year, Citation2Pages"
@@ -89,10 +89,11 @@
       if($i = $r[0]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorSpokenBy'));
       if($i = $r[1]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorRecordedBy1'));
       if($i = $r[2]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorRecordedBy2'));
-      if($i = $r[3]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorPhoneticTranscriptionBy'));
-      if($i = $r[4]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorReconstructionBy'));
-      if($i = $r[5]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorCitationAuthor1', $r[6], $r[7]));
-      if($i = $r[8]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorCitationAuthor2', $r[9], $r[10]));
+      if($i = $r[3]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorSoundEditingBy'));
+      if($i = $r[4]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorPhoneticTranscriptionBy'));
+      if($i = $r[5]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorReconstructionBy'));
+      if($i = $r[6]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorCitationAuthor1', $r[7], $r[8]));
+      if($i = $r[9]) array_push($ret, Contributor::mkContributor($v, $i, 'ContributorCitationAuthor2', $r[10], $r[11]));
       return $ret;
     }
     /***/

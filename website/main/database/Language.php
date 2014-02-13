@@ -339,7 +339,7 @@ class Language extends DBEntry{
     $tooltip = $t->st('tooltip_languages_link_mapview');
     $v = $this->getValueManager();
     $href = 'http://maps.google.com/maps?z=12&q='.implode(',', $ll);
-    return "<a href='$href'><img class='favicon' src='img/langmap.png' title='$tooltip' /></a>";
+    return "<a href='$href' target='_blank'><img class='favicon' src='img/langmap.png' title='$tooltip' /></a>";
   }
   /**
     @param $t Translator

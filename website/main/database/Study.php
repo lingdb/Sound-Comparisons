@@ -1,13 +1,12 @@
 <?php
-require_once 'DBEntry.php';
-require_once 'MeaningGroups.php';
+require_once 'StudyBase.php';
 /**
   An entry of the Studies table.
   The special thing about a Study is that it's only
   useful key attribute is it's Name.
   So the name becomes key and id.
 */
-class Study extends DBEntry{
+class Study extends StudyBase{
   /**
     @param [$v] ValueManager
     @return $name String
@@ -107,14 +106,7 @@ class Study extends DBEntry{
     or by the ValueManager that the Study was created with.
   */
   public function getWords($v = null){
-    //Fetching words:
-    $id = $this->id;
-    $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$id";
-    $set = Config::getConnection()->query($q);
-    $words = array();
-    while($r = $set->fetch_row()){
-      array_push($words, new WordFromId($this->v, $r[0]));
-    }
+    $words = parent::getWords();
     //Sorting words:
     $v = is_null($v) ? $this->getValueManager() : $v;
     if($v->gwo()->isAlphabetical()){

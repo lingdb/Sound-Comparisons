@@ -75,6 +75,24 @@ class Transcription extends DBTable{
     return $ret;
   }
   /**
+    @return [(String,String)]
+  */
+  public function getSuperscriptInfo(){
+    $ret = array();
+    $rows = $this->fetchFieldRows('NotCognateWithMainWordInThisFamily'
+                                 ,'CommonRootMorphemeStructDifferent');
+    foreach($rows as $r){
+      if($r[0] == '1'){
+        array_push($ret, array('NC!','tooltip_transcription_notcognate'));
+      }else if($r[1] == '1'){
+        array_push($ret, array('DM','tooltip_transcription_differentmorpheme'));
+      }else{
+        array_push($ret, null);
+      }
+    }
+    return $ret;
+  }
+  /**
     @return $ret Bool[]
   */
   public function getNotCognates(){
@@ -94,18 +112,19 @@ class Transcription extends DBTable{
     $t = $v->getTranslator();
     $phonetics = $this->getTranscriptions('PLAY');
     $sources   = $this->getSoundFiles($v->getSoundFiles());
-    $notCogs   = $this->getNotCognates();
-    $ret = array();
+    $supInfo   = $this->getSuperscriptInfo();
+    $ret       = array();
     foreach($phonetics as $i => $phonetic){
       //Historical:
       $h = '';
       if($this->getLanguage()->isHistorical())
         $h = '*';
       //Not cognate:
-      $nc = '';
-      if($notCogs[$i]){
-        $tooltip = $t->st('tooltip_transcription_notcognate');
-        $nc = "<div class='superscript' title='$tooltip'>NC!</div>";
+      $sInf = '';
+      if($s = $supInfo[$i]){
+        $sInf    = $s[0];
+        $tooltip = $t->st($s[1]);
+        $sInf    = "<div class='superscript' title='$tooltip'>$sInf</div>";
       }
       //Source files:
       $srcs = $sources[$i];
@@ -131,7 +150,7 @@ class Transcription extends DBTable{
         $phonetic = "[$phonetic]";
       }else $phonetic = "|$phonetic|";
       $audio = "<audio data-onDemand='$srcs' preload='auto' autobuffer=''></audio>";
-      array_push($ret, "<div class='audio'>$h$phonetic$subscript$nc$audio</div>");
+      array_push($ret, "<div class='audio'>$h$phonetic$subscript$sInf$audio</div>");
     }
     return $ret;
   }

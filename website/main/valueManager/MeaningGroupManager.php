@@ -50,7 +50,7 @@ abstract class MeaningGroupManager extends SubManager{
     @param $mgs MeaningGroup[]
     @return $v ValueManager
   */
-  public function setMeaningGroups($mgs){
+  public function setMeaningGroups($mgs = null){
     $mgm = clone $this;
     if(is_null($mgs)){
       $mgm->setEmpty = true;
