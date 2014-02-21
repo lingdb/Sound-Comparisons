@@ -1,7 +1,8 @@
+2014-02-20:
+ - Make filtering in wordlist faster if possible
+ - Also have a look into HHVM
+
 2014-02-13:
- - normalize-audio appears to be working for .wav files.
-   But I also need it to work on .mp3 and .ogg, otherwise it's no fun.
-   - Apparently normalize-{ogg,mp3} can help here.
  - Up to ~1.6s are spent on a call of Study:getWords,
    which means, that up to ~3s of site generation could be spent this way.
    Look at http://127.0.0.1/shk/main/?study=Mapudungun&languages=Huilliche%20%28Lagos%29&pageView=languageView&hl=en&wo_order=alphabetical&wo_phLang=Ancestral%20Mapudungun
@@ -14,10 +15,8 @@
 
 2014-02-07:
  - By a long shot use prepared statements everywhere
- - Paul requests a saveAll button and paging at the button of the Translation page, aswell
 
 2013-12-11:
- - In Selection for SpellingLanguages, the selectionbox is to far to the right
  - Zooming in on the map when changing stuff is annoying, Paul wants it gone.
    - Check if the MapView can start zoomed in, or build it all with Backbone.
 

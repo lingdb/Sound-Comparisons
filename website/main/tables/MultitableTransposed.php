@@ -102,7 +102,7 @@ function tables_multiwordTableTransposed($v){
   $showLanguage = function ($i, $j, $l = null, $w = null) use ($v, $t){
     $cell = '';
     if($w != null && $l != null){ // Output of a transcription
-      $tr = new TranscriptionFromWordLang($w, $l);
+      $tr = Transcription::getTranscriptionForWordLang($w, $l);
       $alt = '';
       if($spelling = $tr->getAltSpelling($v))
         $alt = "<div class='altSpelling'>$spelling</div>";

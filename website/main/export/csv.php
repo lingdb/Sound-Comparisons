@@ -95,7 +95,7 @@ if($v->gpv()->isView('WordView')||$v->gpv()->isView('MapView')){
       $rId   = $r->getId();
       foreach($r->getLanguages() as $l){
         $lr  = languageRow($l);
-        $tr  = transcriptionRow(new TranscriptionFromWordLang($word, $l));
+        $tr  = transcriptionRow(Transcription::getTranscriptionForWordLang($word, $l));
         $row = array_merge(array($fName, $rName, $rId), $lr, $tr);
         array_push($rows, $row);
       }
@@ -107,7 +107,7 @@ if($v->gpv()->isView('WordView')||$v->gpv()->isView('MapView')){
   $headline = array_merge(wordHeadline(), transcriptionHeadline());
   foreach($v->getStudy()->getWords() as $w){
     $wr = wordRow($w);
-    $tr = transcriptionRow(new TranscriptionFromWordLang($w, $language));
+    $tr = transcriptionRow(Transcription::getTranscriptionForWordLang($w, $language));
     array_push($rows, array_merge($wr, $tr));
   }
 }else if($v->gpv()->isSelection()){
@@ -121,7 +121,7 @@ if($v->gpv()->isView('WordView')||$v->gpv()->isView('MapView')){
     $lr = languageRow($l);
     foreach($ws as $w){
       $wr = wordRow($w);
-      $tr = transcriptionRow(new TranscriptionFromWordLang($w, $l));
+      $tr = transcriptionRow(Transcription::getTranscriptionForWordLang($w, $l));
       array_push($rows, array_merge($lr, $wr, $tr));
     }
   }

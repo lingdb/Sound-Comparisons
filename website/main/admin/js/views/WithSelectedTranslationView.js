@@ -4,7 +4,8 @@
 WithSelectedTranslationView = Backbone.View.extend({
   initialize: function(){
     this.listenTo(this.model, 'change', this.render);
-    this.basicInput = window.Translation.views.basicInput;
+    this.basicInput  = window.Translation.views.basicInput;
+    this.bInpMirror  = $('#BasicTranslationPageListMirror');
     this.searchInput = window.Translation.views.searchInput;
   }
 , render: function(){
@@ -15,17 +16,19 @@ WithSelectedTranslationView = Backbone.View.extend({
     }
   }
 , events: {
-    'click #Translations_Translate': 'clickTranslate'
+    'click #Translations_Translate':       'clickTranslate'
   , 'click #Translations_TranslateSearch': 'clickSearch'
-  , 'click #Translations_Export': 'clickExport'
+  , 'click #Translations_Export':          'clickExport'
   }
 , clickTranslate: function(){
     this.basicInput.show();
+    this.bInpMirror.show();
     this.searchInput.hide();
   }
 , clickSearch: function(){
     this.searchInput.show();
     this.basicInput.hide();
+    this.bInpMirror.hide();
   }
 , clickExport: function(){
     window.open('query/export.php', '_blank');

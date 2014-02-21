@@ -53,7 +53,7 @@ if(count($words) === 0)
   $words = $v->getStudy()->getWords();
 foreach($languages as $language){
   foreach($words as $word){
-    $t = new TranscriptionFromWordLang($word, $language);
+    $t = Transcription::getTranscriptionForWordLang($word, $language);
     //2.1.: Adding the SoundFiles from the Transcriptions to the .zip
     //We only add .mp3 because of smaller filesize, and compression not finishing otherwise.
     foreach($t->getSoundFiles(array('.mp3')) as $sf){

@@ -32,7 +32,7 @@ function WordMenuBuildWordList($words, $v, $t){
     if(!$ttip) $ttip = '';
     $phonetics = array('*'.$w->getProtoName());
     if($rf = $v->gwo()->getPhLang()){
-      $tr  = new TranscriptionFromWordLang($w, $rf);
+      $tr  = Transcription::getTranscriptionForWordLang($w, $rf);
       $phonetics = $tr->getPhonetics($v);
     }
     $trans = $w->getTranslation($v, true, false);

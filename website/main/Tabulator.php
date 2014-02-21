@@ -93,7 +93,7 @@ class Tabulator{
           $sn   = $l->getShortName();
           $ln   = $l->getLongName(false);
           $link = "<a class='tableLink color-language' $href title='$ln'>$sn</a><br />";
-          $tr   = new TranscriptionFromWordLang($word, $l);
+          $tr   = Transcription::getTranscriptionForWordLang($word, $l);
           $spelling = '';
           if($s = $tr->getAltSpelling($v))
             $spelling = "<div class='altSpelling' >$s</div>";
@@ -210,7 +210,7 @@ class Tabulator{
       }
       $wCount ++;
       $entry  = "<td class='transcription'>";
-      $tr     = new TranscriptionFromWordLang($w, $language);
+      $tr     = Transcription::getTranscriptionForWordLang($w, $language);
       if(!$tr->exists()) continue;
       $href   = $v->gpv()->setView('WordView')->setLanguages(array())->setWord($w)->link();
       $trans  = $w->getTranslation($v, true, false);
@@ -234,7 +234,7 @@ class Tabulator{
       if(!$l->getLocation())
         continue;
       foreach($v->getWords() as $w){
-        $t = new TranscriptionFromWordLang($w, $l);
+        $t = Transcription::getTranscriptionForWordLang($w, $l);
         array_push($transcriptions, $t->toJSON());
       }
     }

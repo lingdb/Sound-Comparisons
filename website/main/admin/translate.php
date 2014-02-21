@@ -150,12 +150,21 @@
             <th>Description:</th>
             <th>Text that matched:</th>
             <th>Original:</th>
-            <th>Translation:<input id="ResultSaveAll" type="button" class="btn pull-right" value="Save all"></th>
+            <th>Translation:<input type="button" class="btn pull-right ResultSaveAll" value="Save all"></th>
           </tr></thead>
           <tbody><tr class="info">
             <td colspan="4">Nothing to display.</td>
           <tr></tbody>
+          <tfoot><tr>
+            <th>Description:</th>
+            <th>Text that matched:</th>
+            <th>Original:</th>
+            <th>Translation:<input type="button" class="btn pull-right ResultSaveAll" value="Save all"></th>
+          </tr></tfoot>
         </table>
+      </div>
+      <div id="BasicTranslationPageListMirror" class="hide">
+        <form class="form-inline"></form>
       </div>
     </div>
   </body>

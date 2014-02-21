@@ -1,0 +1,7 @@
+Stats from: Thu Feb 20 13:26:38 CET 2014
+At the beginning:
+Times are: min=4.7958, max=6.6554, avg=6.299605
+After references in database:
+Times are: min=5.0377, max=6.7421, avg=6.40496
+After memoization of Transcriptions:
+Times are: min=4.8098, max=6.7112, avg=6.288784

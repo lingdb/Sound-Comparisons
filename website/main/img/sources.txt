@@ -8,4 +8,3 @@ c23daa885f8ce77d3bbc74d2642c78ec  glyphicons-halflings.xcf       Byproduct of mo
 85fcc42930acff4b333e0b3715c008fa  maps.png                       CC-BY http://findicons.com/icon/163930/map
 87216620dd4d3097b65637431c8d4e1d  people.png                     Freeware Non-commercial http://findicons.com/icon/15313/users_2?width=24
 4e0f8d8f778472422ea8867e94f676ad  info.png                       Freeware Non-commercial http://findicons.com/icon/48510/get_info
-339e248a244529d735b53818fc2e12ad  hover.png                      Screenshot from Windows taken by Paul

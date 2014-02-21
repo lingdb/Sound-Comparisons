@@ -4,7 +4,7 @@
 */
 ResultCollectionView = Backbone.View.extend({
   events: {
-    'click #ResultSaveAll': 'saveAll'
+    'click .ResultSaveAll': 'saveAll'
   }
 , initialize: function(){
     this.model.on('reset add remove', this.render, this);

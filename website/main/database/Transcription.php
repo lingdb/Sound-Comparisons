@@ -157,13 +157,13 @@ class Transcription extends DBTable{
   /**
     @param [$v] ValueManager
     @param [$break = false] Bool
-    @param [&$success = true] Bool
+    @param [$success = true] Bool
     @return $phonetic String
     Returns a div containing everything needed to play the audio aswell as the phonetic transcription.
     If the break parameter is true, and more than one phonetic is generated, phonetics will be seperated by <br />.
     $success will be false if neither a soundfile nor phonetics are available.
   */
-  public function getPhonetic($v = null, $break = false, &$success = true){
+  public function getPhonetic($v = null, $break = false, $success = true){
     $ps = $this->getPhonetics($v);
     $success = (count($ps) == 0);
     $glue = $break ? '<br>' : '';
@@ -212,7 +212,7 @@ class Transcription extends DBTable{
       }
       //If the Language has a RfcLanauge, we use that:
       if($l = $this->language->getRfcLanguage()){
-        $t = new TranscriptionFromWordLang($this->word, $l);
+        $t = self::getTranscriptionForWordLang($this->word, $l);
         return $t->getAltSpelling($v);
       }
     }
@@ -287,24 +287,27 @@ class Transcription extends DBTable{
     );
     return $data;
   }
-}
-/**
-  TranscriptionsFromWordLang adds a constructor to Transcription
-  that allows to create a Transcription for a given pair of Word and Language.
-*/
-class TranscriptionFromWordLang extends Transcription{
   /**
-    @param $word Word
-    @param $language Language
+    Because I'd like to create fewer objects, the former TranscriptionFromWordLang
+    shall now be produced only by the following factory method:
   */
-  public function __construct($word, $language){
+  private static $transcriptionMemo = array();
+  public static function getTranscriptionForWordLang($word, $language){
     if(!isset($word))
       Config::error('Invalid Word in TranscriptionFromWordLang');
     if(!isset($language))
       Config::error('Invalid Language in TranscriptionFromWordLang');
-    $this->word     = $word;
-    $this->language = $language;
-    $this->sid      = $language->getStudy()->getId();
+    //Check existence in $transcriptionMemo:
+    $k = $word->getId().'<>'.$language->getId();
+    if(array_key_exists($k, self::$transcriptionMemo)){
+      return self::$transcriptionMemo[$k];
+    }
+    $t = new Transcription();
+    $t->word     = $word;
+    $t->language = $language;
+    $t->sid      = $language->getStudy()->getId();
+    self::$transcriptionMemo[$k] = $t;
+    return $t;
   }
 }
 ?>

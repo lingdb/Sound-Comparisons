@@ -133,7 +133,7 @@ function tables_multiwordTable($v){
           echo '<td class="transcription">'.$c.'</td>';
         }
       }else foreach($words as $w){
-        $tr = new TranscriptionFromWordLang($w, $l);
+        $tr = Transcription::getTranscriptionForWordLang($w, $l);
         if($spelling = $tr->getAltSpelling($v)){
           $alt = "<div class='altSpelling'>$spelling</div>";
         }else $alt = '';

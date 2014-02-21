@@ -67,7 +67,19 @@ BasicInput = InputView.extend({
       target.find('button:last').click(function(e){
         e.preventDefault();
         t.offsets.set({selected: o});
+        t.mirrorOffsets();
       });
+    });
+    this.mirrorOffsets();
+  }
+, mirrorOffsets: function(){
+    var btns = this.$('#DynamicTranslations_PageList button')
+      , target = $('#BasicTranslationPageListMirror form');
+    target.find('button').remove();
+    btns.each(function(){
+      var b = $(this)
+        , mirror = b.clone().click(function(){b.click();}).removeAttr('id');
+      target.append(mirror);
     });
   }
 , fetchResults: function(){
@@ -104,6 +116,7 @@ BasicInput = InputView.extend({
 // A helperfunction to build buttons:
 , mkButton: function(text, selected){
     selected = (selected === true) ? ' disabled btn-inverse' : '';
-    return '<button class="btn btn-small'+selected+'">'+text+'</button>';
+    id = 'button-'+text;
+    return '<button id="'+id+'" class="btn btn-small'+selected+'">'+text+'</button>';
   }
 });
