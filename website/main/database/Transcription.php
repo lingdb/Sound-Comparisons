@@ -28,9 +28,11 @@ class Transcription extends DBTable{
     and the Word aswell as a static bit comming from the Config class.
   */
   public function getSoundFilePath($v){
+    Stopwatch::start('Transcription:getSoundFilePath');
     $soundPath = Config::$soundPath;
     $langPath  = $this->language->getPath();
     $wordPath  = $this->word->getPath();
+    Stopwatch::stop('Transcription:getSoundFilePath');
     return "$soundPath/$langPath/$langPath$wordPath";
   }
   /**
@@ -38,6 +40,7 @@ class Transcription extends DBTable{
     @return $files String[] complete locations of existing soundfiles
   */
   public function getSoundFiles($extensions = array('.mp3','.ogg')){
+    Stopwatch::start('Transcription:getSoundFiles');
     $files = array();
     //Alternative realisation:
     $path = $this->getSoundFilePath($this->word->getValueManager());
@@ -52,6 +55,7 @@ class Transcription extends DBTable{
       }
       array_push($files, $found);
     }
+    Stopwatch::stop('Transcription:getSoundFiles');
     return $files;
   }
   /***/
@@ -67,17 +71,20 @@ class Transcription extends DBTable{
     @return $ret String[]
   */
   public function getTranscriptions($default = ''){
+    Stopwatch::start('Transcription:getTranscriptions');
     $ret = array();
     foreach($this->fetchFieldRows('Phonetic') as $r){
       $t = ($r[0] === '') ? $default : $r[0];
       array_push($ret, $t);
     }
+    Stopwatch::stop('Transcription:getTranscriptions');
     return $ret;
   }
   /**
     @return [(String,String)]
   */
   public function getSuperscriptInfo(){
+    Stopwatch::start('Transcription:getSuperscriptInfo');
     $ret = array();
     $rows = $this->fetchFieldRows('NotCognateWithMainWordInThisFamily'
                                  ,'CommonRootMorphemeStructDifferent');
@@ -90,16 +97,19 @@ class Transcription extends DBTable{
         array_push($ret, null);
       }
     }
+    Stopwatch::stop('Transcription:getSuperscriptInfo');
     return $ret;
   }
   /**
     @return $ret Bool[]
   */
   public function getNotCognates(){
+    Stopwatch::start('Transcription:getNotCognates');
     $ret = array();
     foreach($this->fetchFieldRows('NotCognateWithMainWordInThisFamily') as $r){
       array_push($ret, ($r[0] == '1'));
     }
+    Stopwatch::stop('Transcription:getNotCognates');
     return $ret;
   }
   /**
@@ -108,6 +118,7 @@ class Transcription extends DBTable{
     Returns an array of divs.
   */
   public function getPhonetics($v = null){
+    Stopwatch::start('Transcription:getPhonetics');
     if(!$v) $v = $this->word->getValueManager();
     $t = $v->getTranslator();
     $phonetics = $this->getTranscriptions('PLAY');
@@ -152,6 +163,7 @@ class Transcription extends DBTable{
       $audio = "<audio data-onDemand='$srcs' preload='auto' autobuffer=''></audio>";
       array_push($ret, "<div class='audio'>$h$phonetic$subscript$sInf$audio</div>");
     }
+    Stopwatch::stop('Transcription:getPhonetics');
     return $ret;
   }
   /**
@@ -191,6 +203,7 @@ class Transcription extends DBTable{
     the ModernName of the Word is returned.
   */
   public function getAltSpelling($v = null){
+    Stopwatch::start('Transcription:getAltSpelling');
     if($alts = $this->fetchFields('SpellingAltv1','SpellingAltv2')){
       $s1 = $alts[0];
       $s2 = $alts[1];
@@ -204,24 +217,31 @@ class Transcription extends DBTable{
       if(strlen($s1) > 0) $altSpelling = $proto.$s1;
       if(isset($altSpelling)){
         $wTrans = $this->word->getTranslation($v, true, false);
-        if($altSpelling != $wTrans) return $altSpelling;
+        if($altSpelling != $wTrans){
+          Stopwatch::stop('Transcription:getAltSpelling');
+          return $altSpelling;
+        }
       }
       //If the Language is a RfcLanguage, we may return it's ModernName
       if($this->language->isRfcLanguage()){
+        Stopwatch::stop('Transcription:getAltSpelling');
         return $this->word->getModernName();
       }
       //If the Language has a RfcLanauge, we use that:
       if($l = $this->language->getRfcLanguage()){
         $t = self::getTranscriptionForWordLang($this->word, $l);
+        Stopwatch::stop('Transcription:getAltSpelling');
         return $t->getAltSpelling($v);
       }
     }
+    Stopwatch::stop('Transcription:getAltSpelling');
     return null;
   }
   /**
     @return json Array - Data ready to be used with json_encode
   */
   public function toJSON(){
+    Stopwatch::start('Transcription:toJSON');
     $v = $this->word->getValueManager();
     //Translation:
     $translation = $this->word->getTranslation($v);
@@ -285,6 +305,7 @@ class Transcription extends DBTable{
     , 'familyIx'           => $familyIx
     , 'color'              => $color
     );
+    Stopwatch::stop('Transcription:toJSON');
     return $data;
   }
   /**

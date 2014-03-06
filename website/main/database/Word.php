@@ -80,6 +80,7 @@ class Word extends DBEntry{
     otherwise they will be imploded with ', '.
   */
   public function getTranslation($v, $useSpLang = false, $break = true){
+    Stopwatch::start('Word:getTranslation');
     if(!$v) $v = $this->getValueManager();
     if($useSpLang) // The case to use the SpellingLanguage.
       $l = $v->gwo()->getSpLang();
@@ -111,9 +112,13 @@ class Word extends DBEntry{
       $glue = $break ? '<br/>' : ', ';
       $ret = implode($glue, array_unique($translations));
       //Done:
-      if($ret != '') return $ret;
+      if($ret != ''){
+        Stopwatch::stop('Word:getTranslation');
+        return $ret;
+      }
     }
     /*Fallback on fail*/
+    Stopwatch::stop('Word:getTranslation');
     return $this->getModernName();
   }
   /**
@@ -167,6 +172,7 @@ class Word extends DBEntry{
     Returns all the MeaningGroups that a Word belongs to.
   */
   public function getMeaningGroups(){
+    Stopwatch::start('Word:getMeaningGroups');
     $v   = $this->getValueManager();
     $id  = $this->getId();
     $sid = $v->getStudy()->getId();
@@ -182,8 +188,10 @@ class Word extends DBEntry{
     $mgs = array();
     while($r = $set->fetch_row())
       array_push($mgs, new MeaningGroupFromId($v, $r[0]));
-    if(count($mgs) > 0)
+    if(count($mgs) > 0){
+      Stopwatch::stop('Word:getMeaningGroups');
       return $mgs;
+    }
     Config::error("Could not find MeaningGroups in Word:getMeaningGroups() for id:$id in study:$sid.");
   }
   /**
@@ -254,6 +262,7 @@ class Word extends DBEntry{
     of Language::mkRegionBuckets.
   */
   public static function mkMGBuckets($words){
+    Stopwatch::start('Word:mkMGBuckets');
     $mgs     = array(); // MgId -> MeaningGroup
     $buckets = array(); // MgId -> Word[]
     //Sorting into buckets:
@@ -279,6 +288,7 @@ class Word extends DBEntry{
       $buckets[$mId] = $newBucket;
     }
     //Done:
+    Stopwatch::stop('Word:mkMGBuckets');
     return array('mgs' => $mgs, 'buckets' => $buckets);
   }
 }

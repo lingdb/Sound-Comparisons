@@ -1,6 +1,23 @@
+2014-03-06:
+ - Tried site performance with hhvm-nightly.
+   apach2+php: Times (min, avg, max): 2.0196, 3.0096589473684, 5.4663
+   hhvm:       Times (min, avg, max): 0.7163, 2.7047795918367, 6.4519
+   It appears that hhvm is a better choice than php,
+   but the database still makes for much slowdown.
+ - Prepared statements offer inherent problems with dynamic tables.
+   This is sad, because I'd like to use them.
+ - With the stopwatch I found out,
+   that about 3.4s (< 50%) are used on sorting words for
+   http://127.0.0.1/shk/main/?study=Mapudungun&languages=Huilliche%20%28Lagos%29&pageView=languageView&hl=en&wo_order=alphabetical&wo_phLang=Ancestral%20Mapudungun
+   If I could use a view to sort words,
+   or some other, smart method,
+   this could increase performance by a leap.
+
+2014-02-27:
+ - Ask Paul which fields he'd like to be in .csv exports.
+
 2014-02-20:
  - Make filtering in wordlist faster if possible
- - Also have a look into HHVM
 
 2014-02-13:
  - Up to ~1.6s are spent on a call of Study:getWords,
@@ -13,9 +30,6 @@
  - Contributors on page for translations would be nice
    - But we need a way of building this
 
-2014-02-07:
- - By a long shot use prepared statements everywhere
-
 2013-12-11:
  - Zooming in on the map when changing stuff is annoying, Paul wants it gone.
    - Check if the MapView can start zoomed in, or build it all with Backbone.
@@ -27,7 +41,6 @@
    so that php can still generate pages.
 
 2013-11-07:
- - Minifications breaks .js, due to incorrect order of some .js files
  - Allow html or something thelike of about pages
  - Add in a home button (before 'view by')
    - Build something to allow for paul to add content

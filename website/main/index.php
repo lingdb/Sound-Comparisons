@@ -4,8 +4,10 @@
   define('FLAGS_ENABLED', false);
   /* Requirements: */
   require_once 'config.php';
+  require_once 'stopwatch.php';
   require_once 'valueManager/RedirectingValueManager.php';
   /* Startup: */
+  Stopwatch::start('index.php');
   $dbConnection = Config::getConnection();
   require_once 'shortlink.php';
   $valueManager = RedirectingValuemanager::getInstance();
@@ -23,15 +25,24 @@
         <i class="icon-chevron-right"></i>
       </a>
       <div class="mycontent myflow row-fluid"><?php
+        Stopwatch::start('menu/LanguageMenu.php');
         require_once 'menu/LanguageMenu.php';
+        Stopwatch::stop('menu/LanguageMenu.php');
+        Stopwatch::start('content.php');
         require_once 'content.php';
+        Stopwatch::stop('content.php');
+        Stopwatch::start('menu/WordMenu.php');
         require_once 'menu/WordMenu.php';
+        Stopwatch::stop('menu/WordMenu.php');
       ?></div>
     </div>
     <div id='saveLocation' <?php
       echo $valueManager->link();
     ?> ></div>
-    <?php require_once 'ipaKeyboard.php'; ?>
+    <?php
+      require_once 'ipaKeyboard.php';
+      echo Stopwatch::stats();
+    ?>
   </body>
 </html><?php
   $endTime = microtime(true);

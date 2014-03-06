@@ -10,15 +10,17 @@
       $description = $tCol['description'];
       $origCol = $tCol['origCol'];
       //Search queries:
-      $qs = array(
-        "SELECT IsoCode, $origCol "
-      . "FROM TranscrSuperscriptLenderLgs "
-      . "WHERE $origCol LIKE '%$searchText%'"
-      , "SELECT IsoCode, $c "
-      . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-      . "WHERE $c LIKE '%$searchText%' "
-      . "AND TranslationId = $tId"
-      );
+      $qs = array("SELECT IsoCode, $c "
+          . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
+          . "WHERE $c LIKE '%$searchText%' "
+          . "AND TranslationId = $tId");
+      if($this->searchAllTranslations()){
+        array_push($qs,
+          "SELECT IsoCode, $origCol "
+        . "FROM TranscrSuperscriptLenderLgs "
+        . "WHERE $origCol LIKE '%$searchText%'"
+        );
+      }
       //Search results:
       foreach($this->runQueries($qs) as $r){
         $iso   = $r[0];

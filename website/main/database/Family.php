@@ -28,6 +28,7 @@ class Family extends DBEntry{
   }
   /***/
   public function getRegions(){
+    Stopwatch::start('Family:getRegions');
     $id   = $this->id;
     $sKey = $this->v->getStudy()->getKey();
     $q    = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) FROM Regions_$sKey "
@@ -37,6 +38,7 @@ class Family extends DBEntry{
     while($r = $set->fetch_row()){
       array_push($regs, new RegionFromId($this->v, $r[0]));
     }
+    Stopwatch::stop('Family:getRegions');
     return $regs;
   }
   /**
@@ -45,9 +47,11 @@ class Family extends DBEntry{
     Returns all languages in a Family
   */
   public function getLanguages($allowNoTranscriptions = false){
+    Stopwatch::start('Family:getLanguages');
     $langs = array();
     foreach($this->getRegions() as $r)
       $langs = DBEntry::union($langs, $r->getLanguages($allowNoTranscriptions));
+    Stopwatch::stop('Family:getLanguages');
     return $langs;
   }
 }

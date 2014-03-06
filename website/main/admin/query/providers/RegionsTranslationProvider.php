@@ -14,19 +14,19 @@
       $studies = $this->dbConnection->query($q);
       $studies = $this->fetchRows($studies);
       //Search queries:
-      $qs = array(
-        "SELECT $c, Study, RegionIdentifier "
-      . "FROM Page_DynamicTranslation_Regions "
-      . "WHERE $c LIKE '%$searchText%' "
-      . "AND TranslationId = $tId"
-      );
-      foreach($studies as $s){
-        $s = $s[0];
-        $q = "SELECT $origCol, '$s', "
-           . "CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
-           . "FROM Regions_$s "
-           . "WHERE $origCol LIKE '%$searchText%'";
-        array_push($qs, $q);
+      $qs = array("SELECT $c, Study, RegionIdentifier "
+          . "FROM Page_DynamicTranslation_Regions "
+          . "WHERE $c LIKE '%$searchText%' "
+          . "AND TranslationId = $tId");
+      if($this->searchAllTranslations()){
+        foreach($studies as $s){
+          $s = $s[0];
+          $q = "SELECT $origCol, '$s', "
+             . "CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
+             . "FROM Regions_$s "
+             . "WHERE $origCol LIKE '%$searchText%'";
+          array_push($qs, $q);
+        }
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){

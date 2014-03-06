@@ -138,6 +138,9 @@
       <div id="SearchTranslations" class="hide">
         <form class="form-inline">
           <legend>Translation by search:</legend>
+          <label>Search all translations:
+            <input id="SearchTranslationCheckAll" type="checkbox">
+          </label><br>
           <label>Enter the source text:
             <input id="SearchTranslationInput" type="text" placeholder="Search text">
           </label>

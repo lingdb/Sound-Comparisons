@@ -2,8 +2,7 @@
 $v     = $valueManager;
 $t     = $v->getTranslator();
 $about = array(
-  'title'         => $t->st('topmenu_about')
-, 'who_href'      => $v->gpv()->setView('WhoAreWeView')->link()
+  'who_href'      => $v->gpv()->setView('WhoAreWeView')->link()
 , 'further_href'  => $t->st('topmenu_about_furtherinfo_href')
 , 'research_href' => $t->st('topmenu_about_research_href')
 , 'contact_href'  => $t->st('topmenu_about_contact_href')
@@ -16,9 +15,7 @@ $about = array(
 <ul id="topmenuAbout" class="nav">
   <li>
     <a class="dropdown-toggle topLink"
-       data-toggle="dropdown"
-       title="<?php echo $about['title']; ?>">
-      <i class='icon-dropdown-custom'></i>
+       data-toggle="dropdown">
       <img src="img/info.png">
     </a>
     <ul class="dropdown-menu">

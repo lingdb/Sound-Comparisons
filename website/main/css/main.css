@@ -78,7 +78,7 @@ i, .icon, .favicon, input[type="radio"] {
 /*Style in topMenu:*/
 #topMenu {
   margin: 5px 0px 5px 0px;
-  height: 47px;
+  height: 37px;
 }
 #topMenu .nav-tabs {border-bottom: 0px;}
 #topMenu .nav-tabs > li:not(.active) > a {
@@ -104,10 +104,12 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EFEFEF', endC
 background: -webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#C8C8C8));
 background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 }
+#topMenu > .navbar-inner li > a {padding-bottom: 5px; padding-top: 5px;}
 #topMenu .brand {
   font-size: 17.5px;
-  padding.right: 0px;
-  margin-left: -15px;
+  margin-left: -10px;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }
 #topMenu .brand, #topMenu .topLink {
   text-shadow: none;
@@ -117,10 +119,9 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topmenuFamilies a.topLink {padding-left: 0px; font-size: 17.5px;}
 #topmenuFamilies li.active>a {height: 22px;}
 #topmenuSiteLang a.topLink {padding-left: 0px;}
-#topmenuDownloads {float: right; margin-right: 0px;}
+#topmenuDownloads {float: right; margin-right: 0px; margin-top: 7px;}
 #topmenuDownloads a.topLink {padding-right: 0px;}
-#topmenuSoundOptions {padding-top: 7px;}
-#topmenuSoundOptions i {margin-top: 4px;}
+#topmenuSoundOptions {padding-top: 2px;}
 #topmenuAbout {float: right; margin-right: 0px;}
 #topmenuAbout a.topLink {height: 30px; padding-top: 5px; padding-right: 0px;}
 #topmenuAbout a.topLink img {height: 30px; width: 30px;}
@@ -131,7 +132,7 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   float: left;
   height: 30px;
   width: 30px;
-  margin-top: 5px;
+  margin-top: 2.5px;
   margin-left: 5px;
 }
 /*Common style for left and right sides:*/
@@ -191,8 +192,11 @@ dd.languageList {
 #sortBy label {
   display: inline-block;
   white-space: nowrap;
-  margin-left: 5px;
   font-size: 12px;
+}
+#sortBy input[type="radio"]{
+  margin-left: 0px;
+  margin-right: 0px;
 }
 #wordlistfilter, #sortBy {
   border: 1px solid #dddddd;

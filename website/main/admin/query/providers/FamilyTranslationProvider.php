@@ -10,23 +10,21 @@
       $ret = array();
       $description = $this->getDescription('dt_families_trans');
       //Search queries:
-      $qs  = array(
-        "SELECT CONCAT(StudyIx, FamilyIx), Trans "
-      . "FROM Page_DynamicTranslation_Families "
-      . "WHERE Trans LIKE '%$searchText%'"
-      , "SELECT CONCAT(StudyIx, FamilyIx), FamilyNm "
-      . "FROM Families "
-      . "WHERE FamilyNm LIKE '%$searchText%'"
-      );
+      $qs = array('SELECT CONCAT(StudyIx, FamilyIx), Trans '
+          . 'FROM Page_DynamicTranslation_Families '
+          . "WHERE Trans LIKE '%$searchText%' AND TranslationId = $tId");
+      if($this->searchAllTranslations()){
+        array_push($qs,
+          'SELECT CONCAT(StudyIx, FamilyIx), FamilyNm '
+        . "FROM Families WHERE FamilyNm LIKE '%$searchText%'");
+      }
       foreach($this->runQueries($qs) as $r){
         $payload = $r[0];
         $match   = $r[1];
-        $q = "SELECT FamilyNm "
-           . "FROM Families "
+        $q = 'SELECT FamilyNm FROM Families '
            . "WHERE CONCAT(StudyIx, FamilyIx) = $payload";
         $original = $this->dbConnection->query($q)->fetch_row();
-        $q = "SELECT Trans "
-           . "FROM Page_DynamicTranslation_Families "
+        $q = 'SELECT Trans FROM Page_DynamicTranslation_Families '
            . "WHERE TranslationId = $tId "
            . "AND CONCAT(StudyIx, FamilyIx) = $payload";
         $translation = $this->dbConnection->query($q)->fetch_row();

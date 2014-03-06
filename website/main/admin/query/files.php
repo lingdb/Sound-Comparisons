@@ -50,7 +50,7 @@
     return implode(",", $tuples);
   }
   // Black magic from http://www.php.net/manual/de/function.str-getcsv.php#111665
-  function parse_csv ($csv_string, $delimiter = ",", $skip_empty_lines = true, $trim_fields = true){
+  function parse_csv($csv_string, $delimiter = ",", $skip_empty_lines = true, $trim_fields = true){
     $enc = preg_replace('/(?<!")""/', '!!Q!!', $csv_string);
     $enc = preg_replace_callback('/"(.*?)"/s', function ($field){
       return urlencode(utf8_encode($field[1]));

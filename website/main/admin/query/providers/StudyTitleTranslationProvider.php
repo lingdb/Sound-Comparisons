@@ -7,16 +7,18 @@
       $ret = array();
       $description = $this->getDescription('dt_studyTitle_trans');
       //Search queries:
-      $qs = array(
-        "SELECT StudyName, Trans "
-      . "FROM Page_DynamicTranslation_StudyTitle "
-      . "WHERE TranslationId = $tId "
-      . "AND Trans LIKE '%$searchText%'"
-      , "SELECT StudyName, Trans "
-      . "FROM Page_DynamicTranslation_StudyTitle "
-      . "WHERE TranslationId = 1 "
-      . "AND Trans LIKE '%$searchText%'"
-      );
+      $qs = array("SELECT StudyName, Trans "
+          . "FROM Page_DynamicTranslation_StudyTitle "
+          . "WHERE TranslationId = $tId "
+          . "AND Trans LIKE '%$searchText%'");
+      if($this->searchAllTranslations()){
+        array_push($qs,
+          "SELECT StudyName, Trans "
+        . "FROM Page_DynamicTranslation_StudyTitle "
+        . "WHERE TranslationId = 1 "
+        . "AND Trans LIKE '%$searchText%'"
+        );
+      }
       foreach($this->runQueries($qs) as $r){
         $payload = $r[0];
         $match   = $r[1];

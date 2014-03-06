@@ -7,15 +7,17 @@
       $ret = array();
       $description = $this->getDescription('dt_meaningGroups_trans');
       //Search queries:
-      $qs = array(
-        "SELECT MeaningGroupIx, Trans "
-      . "FROM Page_DynamicTranslation_MeaningGroups "
-      . "WHERE TranslationId = $tId "
-      . "AND Trans LIKE '%$searchText%'"
-      , "SELECT MeaningGroupIx, Name "
-      . "FROM MeaningGroups "
-      . "WHERE Name LIKE '%$searchText%'"
-      );
+      $qs = array("SELECT MeaningGroupIx, Trans "
+          . "FROM Page_DynamicTranslation_MeaningGroups "
+          . "WHERE TranslationId = $tId "
+          . "AND Trans LIKE '%$searchText%'");
+      if($this->searchAllTranslations()){
+        array_push($qs,
+          "SELECT MeaningGroupIx, Name "
+        . "FROM MeaningGroups "
+        . "WHERE Name LIKE '%$searchText%'"
+        );
+      }
       foreach($this->runQueries($qs) as $r){
         $payload = $r[0];
         $match   = $r[1];

@@ -26,12 +26,14 @@ class Study extends StudyBase{
     Returns an Array of all Regions in a Study.
   */
   public function getRegions(){
+    Stopwatch::start('Study:getRegions');
     $id = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) FROM Regions_$id";
     $set = Config::getConnection()->query($q);
     $ret = array();
     while($r = $set->fetch_row())
       array_push($ret, new RegionFromId($this->getValueManager(), $r[0]));
+    Stopwatch::stop('Study:getRegions');
     return $ret;
   }
   /**
@@ -39,6 +41,7 @@ class Study extends StudyBase{
     Returns an array of all Spelling languages in the study.
   */
   public function getSpellingLanguages(){
+    Stopwatch::start('Study:getSpellingLanguages');
     $id = $this->id;
     $q = "SELECT LanguageIx FROM Languages_$id WHERE IsSpellingRfcLang = 1";
     $set = Config::getConnection()->query($q);
@@ -46,6 +49,7 @@ class Study extends StudyBase{
     while($r = $set->fetch_row()){
       array_push($ret, new LanguageFromId($this->v, $r[0]));
     }
+    Stopwatch::stop('Study:getSpellingLanguages');
     return $ret;
   }
   /**
@@ -54,6 +58,7 @@ class Study extends StudyBase{
     Returns all languages in a Study
   */
   public function getLanguages($allowNoTranscriptions = false){
+    Stopwatch::start('Study:getLanguages');
     $id = $this->id;
     $q  = "SELECT LanguageIx FROM RegionLanguages_$id";
     $set = Config::getConnection()->query($q);
@@ -63,10 +68,12 @@ class Study extends StudyBase{
       if($l->hasTranscriptions() || $allowNoTranscriptions)
         array_push($ret, $l);
     }
+    Stopwatch::stop('Study:getLanguages');
     return $ret;
   }
   /***/
   public function getMapExcludeLanguages(){
+    Stopwatch::start('Study:getMapExcludeLanguages');
     $id = $this->id;
     $q  = "SELECT LanguageIx FROM Default_Languages_Exclude_Map "
         . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
@@ -76,6 +83,7 @@ class Study extends StudyBase{
     $ret = array();
     while($r = $set->fetch_row())
       array_push($ret, new LanguageFromId($this->v, $r[0]));
+    Stopwatch::stop('Study:getMapExcludeLanguages');
     return $ret;
   }
   /**
@@ -83,6 +91,7 @@ class Study extends StudyBase{
     Returns all MeaningGroups that occur for one or more Words in a Study.
   */
   public function getMeaningGroups(){
+    Stopwatch::start('Study:getMeaningGroup');
     $id = $this->id;
     $q = "SELECT StudyIx, FamilyIx FROM Studies WHERE Name = '$id'";
     $r = Config::getConnection()->query($q)->fetch_row();
@@ -96,6 +105,7 @@ class Study extends StudyBase{
     while($r = $set->fetch_row()){
       array_push($ret, new MeaningGroupFromId($this->getValueManager(), $r[0]));
     }
+    Stopwatch::stop('Study:getMeaningGroup');
     return $ret;
   }
   /**
@@ -106,6 +116,7 @@ class Study extends StudyBase{
     or by the ValueManager that the Study was created with.
   */
   public function getWords($v = null){
+    Stopwatch::start('Study:getWords');
     $words = parent::getWords();
     //Sorting words:
     $v = is_null($v) ? $this->getValueManager() : $v;
@@ -115,6 +126,7 @@ class Study extends StudyBase{
       usort($words, 'DBEntry::compareOnId');
     }
     //Done:
+    Stopwatch::stop('Study:getWords');
     return $words;
   }
   /***/
@@ -126,6 +138,7 @@ class Study extends StudyBase{
   }
   /***/
   public function getFamilies(){
+    Stopwatch::start('Study:getFamilies');
     $id   = $this->id;
     $q    = "SELECT CONCAT(StudyIx, FamilyIx) FROM Families "
           . "WHERE CONCAT(StudyIx, FamilyIx) LIKE ("
@@ -136,6 +149,7 @@ class Study extends StudyBase{
     while($r = $set->fetch_row()){
       array_push($fams, new FamilyFromId($this->v, $r[0]));
     }
+    Stopwatch::stop('Study:getFamilies');
     return $fams;
   }
   /**

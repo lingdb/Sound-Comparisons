@@ -15,9 +15,14 @@ if(!isset($valueManager)){
   The file is than presented for download by setting http-headers.
 */
 function buildCSV($filename, $headline, $rows){
+  //Sanitizing the filename:
+  $filename = preg_replace('/[\\?!\\(\\)\\[\\]\\{\\}\\<\\>\\\\\\/]/','',$filename);
+  //The final filename will carry the date.
   $filename .= '_'.date('Y-m-d h:i', time()).'.csv';
   ob_start();
   $df = fopen('php://output', 'w');
+  //UTF-8 BOM https://en.wikipedia.org/wiki/Byte_order_mark - should help excel a bit.
+  fputs($df, chr(239).chr(187).chr(191));
   fputcsv($df, $headline);
   foreach($rows as $row){
     fputcsv($df, $row);
@@ -27,10 +32,8 @@ function buildCSV($filename, $headline, $rows){
   header("Pragma: public");
   header("Expires: 0");
   header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-  header("Content-Type: application/force-download");
-  header("Content-Type: application/octet-stream");
-  header("Content-Type: application/download");
-  header("Content-Disposition: attachment;filename={$filename}");
+  header("Content-Type: text/csv; charset=utf-16");
+  header("Content-Disposition: attachment;filename=\"$filename\"");
   header("Content-Transfer-Encoding: binary");
   ob_end_flush();
 }
@@ -48,7 +51,7 @@ function wordRow($w){
 }
 /***/
 function languageHeadline(){
-  return array("LanguageName","LanguageId", "Latitude", "Longtitude");
+  return array("LanguageName","LanguageId", "Latitude", "Longitude");
 }
 /***/
 function languageRow($l){

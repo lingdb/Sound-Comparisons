@@ -14,6 +14,7 @@ SearchInput = InputView.extend({
         TranslationId: window.Translation.currentTranslation.get('TranslationId') 
       , SearchText:    text
       , action:        'search'
+      , searchAll:     this.$('#SearchTranslationCheckAll').is(':checked')
       };
       if(!query.TranslationId){
         alert('Please make sure a Translation is selected.');

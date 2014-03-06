@@ -121,5 +121,14 @@
       }
       return $offsets;
     }
+    /***/
+    public function searchAllTranslations(){
+      if(array_key_exists('searchAll', $_GET)){
+        if($_GET['searchAll'] === 'true'){
+          return true;
+        }
+      }
+      return false;
+    }
   }
 ?>

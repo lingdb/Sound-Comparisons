@@ -58,7 +58,7 @@ foreach($languages as $language){
     //We only add .mp3 because of smaller filesize, and compression not finishing otherwise.
     foreach($t->getSoundFiles(array('.mp3')) as $sf){
       foreach($sf as $f)
-        $zip->addFile($f, preg_replace('/\.\./', '', $f));
+        $zip->addFile($f, basename($f));
     }
   }
 }

@@ -15,6 +15,7 @@ class StudyBase extends DBEntry{
   private $words = null;
   /** This method is overwritten by Study. */
   public function getWords(){
+    Stopwatch::start('StudyBase:getWords');
     if(is_null($this->words)){
       $id = $this->id;
       $q = "SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Words_$id";
@@ -25,6 +26,7 @@ class StudyBase extends DBEntry{
       }
       $this->words = $words;
     }
+    Stopwatch::stop('StudyBase:getWords');
     return $this->words;
   }
 
