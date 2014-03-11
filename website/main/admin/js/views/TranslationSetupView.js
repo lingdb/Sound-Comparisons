@@ -13,6 +13,7 @@ TranslationSetupView = Backbone.View.extend({
     var view = this;
     $.get(this.queryTarget, {action: 'translations'}, function(data){
       var translations = $.parseJSON(data);
+      window.Translation.translations = translations;
       view.renderTranslations(translations);
     });
   }

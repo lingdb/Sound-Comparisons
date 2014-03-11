@@ -1,0 +1,51 @@
+{{#isDl}}
+<dl class="regionList">
+  {{#regions}}
+  <dt {{{color}}}>
+    {{#checkbox}}
+    <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
+    {{/checkbox}}
+    <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
+  </dt>
+  {{^selected}}
+  <dd class="languageList">
+    {{#languages}}
+      <li>
+      {{#icon}}
+        <a title="{{ttip}}" {{{link}}}><i class="{{checked}}"></i></a>
+      {{/icon}}
+      <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}" {{{link}}}>
+        {{{flag}}}{{{shortName}}}
+      </a>
+      </li>
+    {{/languages}}
+  </dd>
+  {{/selected}}
+  {{/regions}}
+</dl>
+{{/isDl}}
+{{^isDl}}
+<ul class="regionList">
+  {{#regions}}
+  <li>
+    {{#checkbox}}
+    <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
+    {{/checkbox}}
+    <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
+    {{^selected}}
+    <ul class="languageList">
+      {{#languages}}
+        <li>
+        {{#icon}}
+          <a title="{{ttip}}" {{{link}}}><i class="{{checked}}"></i></a>
+        {{/icon}}
+        <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}" {{{link}}}>
+          {{{flag}}}{{{shortName}}}
+        </a>
+        </li>
+      {{/languages}}
+    </ul>
+    {{/selected}}
+  {{/regions}}
+</ul>
+{{/isDl}}

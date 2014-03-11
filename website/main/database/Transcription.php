@@ -1,5 +1,6 @@
 <?php
 require_once 'DBTable.php';
+require_once 'Superscript.php';
 /**
   The Transcription is a link between a Word and a Language.
   There may be several entries in the Transcriptions Table
@@ -85,16 +86,40 @@ class Transcription extends DBTable{
   */
   public function getSuperscriptInfo(){
     Stopwatch::start('Transcription:getSuperscriptInfo');
-    $ret = array();
-    $rows = $this->fetchFieldRows('NotCognateWithMainWordInThisFamily'
-                                 ,'CommonRootMorphemeStructDifferent');
+    $ret  = array();
+    $rows = $this->fetchFieldRows(
+      'NotCognateWithMainWordInThisFamily'
+    , 'CommonRootMorphemeStructDifferent'
+    , 'DifferentMeaningToUsualForCognate'
+    , 'ActualMeaningInThisLanguage'
+    , 'OtherLexemeInLanguageForMeaning'
+    , 'RootIsLoanWordFromKnownDonor'
+    , 'RootSharedInAnotherFamily'
+    , 'IsoCodeKnownDonor'
+    );
     foreach($rows as $r){
-      if($r[0] == '1'){
-        array_push($ret, array('NC!','tooltip_transcription_notcognate'));
-      }else if($r[1] == '1'){
-        array_push($ret, array('DM','tooltip_transcription_differentmorpheme'));
-      }else{
-        array_push($ret, null);
+      if($r[0] === '1')
+        array_push($ret, Superscript::forTranscription('NotCognateWithMainWordInThisFamily'));
+      if($r[1] === '1')
+        array_push($ret, Superscript::forTranscription('CommonRootMorphemeStructDifferent'));
+      if($r[2] === '1')
+        array_push($ret, Superscript::forTranscription('DifferentMeaningToUsualForCognate'));
+      if(!empty($r[3])){
+        $s = Superscript::forTranscription('ActualMeaningInThisLanguage');
+        $s[1] .= $r[3];
+        array_push($ret, $s);
+      }
+      if(!empty($r[4])){
+        $s = Superscript::forTranscription('OtherLexemeInLanguageForMeaning');
+        $s[1] .= $r[4];
+        array_push($ret, $s);
+      }
+      if($r[5] === '1')
+        array_push($ret, Superscript::forTranscription('RootIsLoanWordFromKnownDonor'));
+      if($r[6] === '1')
+        array_push($ret, Superscript::forTranscription('RootSharedInAnotherFamily'));
+      if(!empty($r[7])){
+        array_push($ret, Superscript::forTranscription($r[7]));
       }
     }
     Stopwatch::stop('Transcription:getSuperscriptInfo');
@@ -132,10 +157,12 @@ class Transcription extends DBTable{
         $h = '*';
       //Not cognate:
       $sInf = '';
-      if($s = $supInfo[$i]){
-        $sInf    = $s[0];
-        $tooltip = $t->st($s[1]);
-        $sInf    = "<div class='superscript' title='$tooltip'>$sInf</div>";
+      if(array_key_exists($i, $supInfo)){
+        if($s = $supInfo[$i]){
+          $sInf    = $s[0];
+          $tooltip = $s[1];
+          $sInf    = "<div class='superscript' title='$tooltip'>$sInf</div>";
+        }
       }
       //Source files:
       $srcs = $sources[$i];

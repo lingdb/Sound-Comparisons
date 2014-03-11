@@ -23,22 +23,44 @@ BasicInput = InputView.extend({
       , cp = this.providers.get('selected')
       , target = this.$('#DynamicTranslations_SuffixList');
     //Cleaning up old entries:
-    target.find('button').remove();
-    //Building new entries:
-    var t = this;
+    target.find('button,hr,label').remove();
+    // Building new entries, starting with study dependent ones:
+    target.append('<label>General:</label>');
     _.each(ps, function(p){
-      target.append(t.mkButton(p, p === cp));
-      //Handling click events:
-      target.find('button:last').click(function(e){
-        e.preventDefault();
-        t.providers.set({selected: p});
-      });
+      if(this.providers.studyDependent(p)) return;
+      target.append(this.mkButton(p, p === cp));
+      this.addProviderClickHandler(target, p);
+    }, this);
+    target.append('<hr><label>By study:</label>');
+    _.each(ps, function(p){
+      if(!this.providers.studyDependent(p)) return;
+      target.append(this.mkButton(p, p === cp));
+      this.addProviderClickHandler(target, p);
+    }, this);
+  }
+, addProviderClickHandler: function(target, p){
+    var t = this;
+    target.find('button:last').click(function(e){
+      e.preventDefault();
+      t.providers.set({selected: p});
+      t.renderStudies();
     });
   }
 , renderStudies: function(){
     var xs = this.studies.get('names')
       , cs = this.studies.get('selected')
       , target = this.$('#DynamicTranslations_StudyList');
+    //Dependency from provider:
+    if(p = this.providers.get('selected')){
+      if(!this.providers.studyDependent(p)){
+        target.hide();
+        if(!cs){
+          this.studies.set({selected: _.head(xs)});
+        }
+        return;
+      }
+    }
+    target.show();
     //Cleaning up old entries:
     target.find('button').remove();
     //Building new entries:

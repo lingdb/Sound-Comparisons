@@ -237,6 +237,30 @@ abstract class TranslationManager extends SubManager{
     return null;
   }
   /**
+    @param $ix Either ISOCode Integer
+    If $ix is an ISOCode, the lookup is performed for ISOCodes,
+    otherwise it is done for simple TranscriptionSuperscripts.
+    @return $translation [$string]
+  */
+  public function getTranscrSuperscriptTranslation($ix){
+    $t = $this->translationId;
+    if(is_numeric($ix)){
+      $q = "SELECT Trans_Abbreviation, Trans_HoverText "
+         . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
+         . "WHERE Ix = $ix AND TranslationId = $t";
+    }else if(strlen($ix) === 3){
+      $q = "SELECT Trans_Abbreviation, Trans_FullNameForHoverText "
+         . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
+         . "WHERE IsoCode = '$ix' AND TranslationId = $t";
+    }else $q = '';
+    if($q !== ''){
+      if($r = Config::getConnection()->query($q)->fetch_row()){
+        return $r;
+      }
+    }
+    return null;
+  }
+  /**
     Returns the rfcLanguage linked to the current translation or null.
     @returns rfcLanguage Language
   */

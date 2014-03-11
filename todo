@@ -1,3 +1,27 @@
+2014-04-17:
+ - Building a better translation is the primary task today.
+   - A central dynamic translation table with very few columns that don't change would make things more robust.
+   - Providers for TranscrSuperscriptInfo, TranscrSuperscriptLenderLgs are missing!
+ - Remember to dump the database!
+ - Put db login specific things in a seperate file,
+   so that administration overhead becomes smaller.
+   Current config.php does many things that are not intended to happen there.
+ - Give save buttons in tbs a fixed width
+
+2014-03-11:
+ - When switching to do more via .js:
+   - I want to orientate on the JSON syntax for languages/families that robert uses under http://glottolog.org/resource/languoid/id/atla1278.json
+   - The whole data of glottolog is to be found under https://github.com/clld/glottolog-data and shall help me derive the layout for the json
+   - I'll need some kind of presentation for words, I think
+   - This is the chance to keep the map from zooming in many times
+   - Also the map should remember it's location when switching words
+   - We can also proxy to other clld sites, so that the .js can do happy/wild things
+   = this is currently underway in the experiment branch
+ - Make sure views are recreated when another Study is added
+   - It appears that this was one of the problems encountered with Romance
+   - Make sure we've got better error reporting here.
+ - Superscripts after Transcriptions appear to be buggy (look at Slavic)
+
 2014-03-06:
  - Tried site performance with hhvm-nightly.
    apach2+php: Times (min, avg, max): 2.0196, 3.0096589473684, 5.4663
@@ -30,10 +54,6 @@
  - Contributors on page for translations would be nice
    - But we need a way of building this
 
-2013-12-11:
- - Zooming in on the map when changing stuff is annoying, Paul wants it gone.
-   - Check if the MapView can start zoomed in, or build it all with Backbone.
-
 2013-11-12:
  - Build the Website as a dynamic .js application,
    so that many changes happen faster.
@@ -45,16 +65,8 @@
  - Add in a home button (before 'view by')
    - Build something to allow for paul to add content
 
-2013-10-04:
- - github.com/clld
-   - We'd like to use their format, but we don't wanna loose our special presentation features.
-   - This is to be kept in mind as an interesting thing.
-
 2013-09-19:
  - Learn about Zotero
- - Let map remember location when switching words
-   - This already implies building a bigger part of the site
-     as a .js application.
 
 2013-09-13:
  - Move 'view by' with tabs in topmenu to the middle.

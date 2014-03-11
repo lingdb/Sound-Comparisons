@@ -23,6 +23,7 @@ class Config {
   /* Accessible values: */
   private static $dbConnection  = null;
   private static $collator      = null;
+  private static $mustache      = null;
   /* Getter functions to fetch config values: */
   public static function getConnection(){
     if(is_null(self::$dbConnection)){
@@ -68,6 +69,20 @@ class Config {
       }
     }
     return self::$collator;
+  }
+  /***/
+  public static function getMustache(){
+    if(is_null(self::$mustache)){
+      require_once 'extern/mustache.php';
+      self::$mustache = new Mustache_Engine(array(
+        'charset' => 'UTF-8'
+      , 'loader'  => new Mustache_Loader_FilesystemLoader(
+          dirname(__FILE__).'/templates'
+        , array('extension' => 'html')
+        )
+      ));
+    }
+    return self::$mustache;
   }
 }
 ?>

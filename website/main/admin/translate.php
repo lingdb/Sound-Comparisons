@@ -129,7 +129,7 @@
           <legend>Category to translate:</legend>
         </form>
         <form id="DynamicTranslations_StudyList" class="form-inline">
-          <legend>Study to translate:</legend>
+          <label>now choose a study:</label>
         </form>
         <form id="DynamicTranslations_PageList" class="form-inline">
           <legend>Page to display:</legend>

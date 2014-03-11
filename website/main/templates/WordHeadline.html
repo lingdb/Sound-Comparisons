@@ -1,0 +1,20 @@
+<div class="row-fluid">
+  {{#prev}}
+  <div class="span3">
+    <a id="prevLink" {{{link}}} title="{{ttip}}" class="pull-left nounderline">
+    <div class="color-word inline">{{trans}} </div>← {{title}}</a>
+  </div>
+  {{/prev}}
+  <div class="span6 centertext" id="tableHeader">
+    <h1 class="color-word">
+      {{name}}{{{mapsLink}}}
+    </h1>
+  </div>
+  {{#next}}
+  <div class="span3">
+    <a id="nextLink" {{{link}}} title="{{ttip}}" class="pull-right nounderline">
+      {{title}} →<div class="color-word inline"> {{trans}}</div>
+    </a>
+  </div>
+  {{/next}}
+</div>

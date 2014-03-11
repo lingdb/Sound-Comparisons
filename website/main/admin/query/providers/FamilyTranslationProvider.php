@@ -10,17 +10,18 @@
       $ret = array();
       $description = $this->getDescription('dt_families_trans');
       //Search queries:
-      $qs = array('SELECT CONCAT(StudyIx, FamilyIx), Trans '
+      $qs = array('SELECT CONCAT(StudyIx, FamilyIx), Trans, TranslationId '
           . 'FROM Page_DynamicTranslation_Families '
           . "WHERE Trans LIKE '%$searchText%' AND TranslationId = $tId");
       if($this->searchAllTranslations()){
         array_push($qs,
-          'SELECT CONCAT(StudyIx, FamilyIx), FamilyNm '
+          'SELECT CONCAT(StudyIx, FamilyIx), FamilyNm, 1 '
         . "FROM Families WHERE FamilyNm LIKE '%$searchText%'");
       }
       foreach($this->runQueries($qs) as $r){
         $payload = $r[0];
         $match   = $r[1];
+        $matchId = $r[2];
         $q = 'SELECT FamilyNm FROM Families '
            . "WHERE CONCAT(StudyIx, FamilyIx) = $payload";
         $original = $this->dbConnection->query($q)->fetch_row();
@@ -31,6 +32,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId

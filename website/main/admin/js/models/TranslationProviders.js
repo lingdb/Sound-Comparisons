@@ -15,7 +15,14 @@ TranslationProviders = Backbone.Model.extend({
     var t = this;
     $.get(window.Translation.url, {action: 'providers'}, function(data){
       var ps = $.parseJSON(data);
-      t.set(_.extend(ps, {ready: true, providerGroups: _.keys(ps), providers: _.flatten(_.values(ps))}));
+      ps.providerGroups = _.filter(_.keys(ps), function(p){
+        return (p[0] !== '_');// Filtering providers only
+      });
+      ps.ready = true;
+      ps.providers = _.flatten(_.map(ps.providerGroups, function(pGroup){
+        ps[pGroup];
+      }));
+      t.set(ps);
     });
   }
 , selected: function(){
@@ -23,5 +30,8 @@ TranslationProviders = Backbone.Model.extend({
     if(!s || s === '')
       return null;
     return this.get(s);
+  }
+, studyDependent: function(p){
+    return (p in this.get('_dependsOnStudy'));
   }
 });

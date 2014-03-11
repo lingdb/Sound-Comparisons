@@ -10,12 +10,12 @@
       $description = $tCols['description'];
       $origCol = $tCols['origCol'];
       //Search queries:
-      $qs = array("SELECT LanguageStatusType, $c "
+      $qs = array("SELECT LanguageStatusType, $c, TranslationId "
           . "FROM Page_DynamicTranslation_LanguageStatusTypes "
           . "WHERE TranslationId = $tId AND $c LIKE '%$searchText%'");
       if($this->searchAllTranslations()){
         array_push($qs,
-          "SELECT LanguageStatusType, $origCol FROM LanguageStatusTypes "
+          "SELECT LanguageStatusType, $origCol, 1 FROM LanguageStatusTypes "
         . "WHERE $origCol LIKE '%$searchText%'"
         );
       }
@@ -23,6 +23,7 @@
       foreach($this->runQueries($qs) as $r){
         $payload = $r[0];
         $match   = $r[1];
+        $matchId = $r[2];
         $q = "SELECT $origCol FROM LanguageStatusTypes "
            . "WHERE LanguageStatusType = $payload";
         $original = $this->dbConnection->query($q)->fetch_row();
@@ -34,6 +35,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId

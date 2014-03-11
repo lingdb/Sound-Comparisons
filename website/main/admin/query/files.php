@@ -225,10 +225,20 @@
         array_push($queries, 'DELETE FROM TranscrSuperscriptLenderLgs', $q);
       break;
       case (preg_match('/^Transcriptions_(.*)\.txt$/', $fname, $matches) ? true : false):
-        $q = 'INSERT IGNORE INTO Transcriptions_'.$matches[1].'(StudyIx, FamilyIx, IxElicitation, '
-           . 'IxMorphologicalInstance, AlternativeLexemIx, AlternativePhoneticRealisationIx, LanguageIx, '
-           . 'Phonetic, SpellingAltv1, SpellingAltv2, NotCognateWithMainWordInThisFamily, CommonRootMorphemeStructDifferent) VALUES '
-           . mkTuples($csv, array(7,8,9));
+        $q = 'INSERT INTO Transcriptions_'.$matches[1].' ('
+           . 'StudyIx, FamilyIx, '
+           . 'IxElicitation, IxMorphologicalInstance, '
+           . 'AlternativePhoneticRealisationIx, AlternativeLexemIx, '
+           . 'LanguageIx, Phonetic, SpellingAltv1, SpellingAltv2, '
+           . 'NotCognateWithMainWordInThisFamily, '
+           . 'CommonRootMorphemeStructDifferent, '
+           . 'DifferentMeaningToUsualForCognate, '
+           . 'ActualMeaningInThisLanguage, '
+           . 'OtherLexemeInLanguageForMeaning, '
+           . 'RootIsLoanWordFromKnownDonor, '
+           . 'RootSharedInAnotherFamily, '
+           . 'IsoCodeKnownDonor) VALUES '
+           . mkTuples($csv, array(7,8,9,13,14,17));
         array_push($queries, 'DELETE FROM Transcriptions_'.$matches[1], $q);
       break;
       case (preg_match('/^Words_(.*)\.txt$/', $fname, $matches) ? true : false):

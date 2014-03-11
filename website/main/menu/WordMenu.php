@@ -19,34 +19,35 @@ if(!isset($valueManager)){
 $v = $valueManager;
 $t = $v->getTranslator();
 $study = $v->getStudy();
-//The headline:
-$wordmenu = '<div id="rightMenu" class="span2 well">'
-          . '<h3 class="color-word">'.$t->st('menu_words_words').'</h3>';
-//Building the Filtermenu:
-//The sortby block:
-$wordmenu .= WordMenuBuildSortBy($v, $t);
-//The search/filter block:
-$wordmenu .= WordMenuBuildSearchFilter($v, $t);
+//Starting to build it:
+$wordMenu = array(
+  'title'        => $t->st('menu_words_words')
+, 'sortBy'       => WordMenuBuildSortBy($v, $t)
+, 'searchFilter' => WordMenuBuildSearchFilter($v, $t)
+);
 //The meaningsets block:
 if($v->gwo()->isLogical()){
-  $all         = $study->getMeaningGroups();
-  $ahref       = $v->setMeaningGroups($all)->link();
-  $nhref       = $v->setMeaningGroups()->link();
-  $meaningSets = $t->st('menu_words_meaningSets_title');
-  $collapse    = $t->st('menu_words_meaningSets_collapse');
-  $expand      = $t->st('menu_words_meaningSets_expand');
-  $wordmenu .= "<h6>$meaningSets:"
-             . "<a title='$expand' $ahref><i class='icon-plus'></i></a>"
-             . "<a title='$collapse' $nhref><i class='icon-minus'></i></a></h6>";
+  $wordMenu['isLogical'] = true;
+  //Used for the meaningsets block:
+  $wordMenu['meaningSets'] = $t->st('menu_words_meaningSets_title');
+  $wordMenu['expand']      = $t->st('menu_words_meaningSets_expand');
+  $wordMenu['collapse']    = $t->st('menu_words_meaningSets_collapse');
+  $wordMenu['ahref']       = $v->setMeaningGroups($study->getMeaningGroups())->link();
+  $wordMenu['nhref']       = $v->setMeaningGroups()->link();
   //Building the logical wordlist:
+  $wordMenu['meaningGroups'] = array();
   $multi = $v->gpv()->isSelection();
-  $wordmenu .= "<dl class='meaninggroupList'>";
   foreach($study->getMeaningGroups() as $mg){
-    $name = $mg->getName();
-    $mgWords = $mg->getWords();
+    //Setup:
     $collapsed = !$v->hasMeaningGroup($mg);
-    $class = $collapsed ? 'class = "mgFold"' : 'class = "mgUnfold"';
-    $checkbox = '';
+    $mgWords = $mg->getWords();
+    $mGroup = array(
+      'name'     => $mg->getName()
+    , 'fold'     => $collapsed ? 'mgFold' : 'mgUnfold'
+    , 'triangle' => $collapsed ? 'icon-chevron-up rotate90' : 'icon-chevron-down'
+    , 'link'     => $v->toggleMeaningGroup($mg)->link()
+    );
+    //Checkbox:
     if($multi){
       $has  = $v->gwm()->hasWords($mgWords);
       $icon = 'icon-chkbox-custom';
@@ -62,18 +63,18 @@ if($v->gwo()->isLogical()){
           $href = $v->addWord($mgWords)->link('','data-href');
           $ttip = $t->st('multimenu_tooltip_plus');
       }
-      $checkbox = "<a $href title='$ttip'><i class='$icon'></i></a>";
+      $mGroup['checkbox'] = array(
+        'link' => $href
+      , 'ttip' => $ttip
+      , 'icon' => $icon
+      );
     }
-    $triangle = $collapsed ? 'icon-chevron-up rotate90' : 'icon-chevron-down';
-    $href  = $v->toggleMeaningGroup($mg)->link();
-    $title = "$checkbox<a class='color-meaninggroup' $href><i class='$triangle'></i>$name</a>";
-    $wList = $collapsed ? '' : '<dd>'.WordMenuBuildWordList($mgWords, $v, $t).'</dd>';
-    $wordmenu .= "<dt $class>$title</dt>$wList";
+    $mGroup['wordList'] = WordMenuBuildWordList($mgWords, $v, $t);
+    array_push($wordMenu['meaningGroups'], $mGroup);
   }
-  $wordmenu .= "</dl>";
 }else{
-  $wordmenu .= WordMenuBuildWordList($study->getWords(), $v, $t);
+  $wordMenu['wordList'] = WordMenuBuildWordList($study->getWords(), $v, $t);
 }
 //wordmenu finish:
-echo $wordmenu.'</div>';
+echo Config::getMustache()->render('WordMenu', $wordMenu);
 ?>

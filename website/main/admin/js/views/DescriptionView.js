@@ -11,7 +11,7 @@ DescriptionView = Backbone.View.extend({
     if($('#topMenu').attr('data-isadmin') != '1') return;
     if(this.$('textarea').length !== 0) return;
     var c = this.el.html();
-    this.el.html('<textarea style="width: 90%; height: 90%;">'+c+'</textarea>');
+    this.el.html('<textarea style="width: 90%; height: 90%; min-height: 15em;">'+c+'</textarea>');
     var descriptionView = this;
     this.$('textarea').autoResize().blur(function(){
       descriptionView.closeInput();

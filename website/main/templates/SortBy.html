@@ -1,0 +1,12 @@
+<h5 id="sortBy">
+  <img src="img/sort-icon.png" class="icon">
+  {{sortBy}}
+  {{#isLogical}}
+  <label class="radio"><input type="radio" {{{link}}}>{{aOrder}}</label>
+  <label class="radio"><input type="radio" checked>{{lOrder}}</label>
+  {{/isLogical}}
+  {{^isLogical}}
+  <label class="radio"><input type="radio" checked>{{aOrder}}</label>
+  <label class="radio"><input type="radio" {{{link}}}>{{lOrder}}</label>
+  {{/isLogical}}
+</h6>

@@ -279,11 +279,15 @@ class Language extends DBEntry{
   public function getStudy(){
     //Usual studyselection:
     $id = $this->id;
-    $q = "SELECT S.Name FROM Studies as S JOIN RegionLanguages as RL USING (StudyIx, FamilyIx, SubFamilyIx) "
-       . "WHERE RL.LanguageIx = $id LIMIT 1";
-    if($r = $this->fetchOneBy($q))
-      return new StudyFromKey($this->v, $r[0]);
-    //Fallback on selecting study as prefix of id:
+    $q1 = "SELECT S.Name FROM Studies as S JOIN RegionLanguages as RL USING (StudyIx, FamilyIx, SubFamilyIx) "
+        . "WHERE RL.LanguageIx = $id LIMIT 1";
+    /* Experience with Romance showed, that sometimes StudyIx, FamilyIx are enough: */
+    $q2 = "SELECT S.Name FROM Studies as S JOIN RegionLanguages as RL USING (StudyIx, FamilyIx) "
+        . "WHERE RL.LanguageIx = $id LIMIT 1";
+    foreach(array($q1, $q2) as $q){
+      if($r = $this->fetchOneBy($q))
+        return new StudyFromKey($this->v, $r[0]);
+    }
     /*
       Fallback on selecting Study as prefix of id:
       In this case the Prefix will be the CONCAT(StudyIx, FamilyIx, SubFamilyIx)

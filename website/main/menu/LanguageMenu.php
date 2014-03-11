@@ -22,33 +22,31 @@ $v = $valueManager;
 $t = $v->getTranslator();
 //We only build the menu if we've got a Study:
 if($study = $v->getStudy()){
-  $languagemenu = '<div class="span2 well" id="leftMenu">';
-  //The Headline:
-  $rHeadline     = $t->st('menu_regions_headline');
-  $languagemenu .= "<h3 class='color-language'>$rHeadline</h3>";
-  //The collapse/expand all menu:
-  $languageSets  = $t->st('menu_regions_languageSets_title').':';
-  $collapseHref  = $v->setRegions($study->getRegions())->link();
-  $collapseTitle = $t->st('menu_regions_languageSets_collapse');
-  $expandHref    = $v->setRegions()->link();
-  $expandTitle   = $t->st('menu_regions_languageSets_expand');
-  $c = "<a $collapseHref title='$collapseTitle'><i class='icon-minus'></i></a>";
-  $e = "<a $expandHref title='$expandTitle'><i class='icon-plus'></i></a>";
-  $languagemenu .= "<h6>$languageSets$e$c</h6>";
+  $languageMenu = array(
+    'headline'      => $t->st('menu_regions_headline')
+  , 'languageSets'  => $t->st('menu_regions_languageSets_title').':'
+  , 'collapseHref'  => $v->setRegions($study->getRegions())->link()
+  , 'collapseTitle' => $t->st('menu_regions_languageSets_collapse')
+  , 'expandHref'    => $v->setRegions()->link()
+  , 'expandTitle'   => $t->st('menu_regions_languageSets_expand')
+  );
   //The content:
   $showFlags = Config::$flags_enabled;
   if($study->getColorByFamily()){
-    $languagemenu .= '<dl class="familyList">';
+    $families = array();
     foreach($study->getFamilies() as $f){
       //Setup:
-      $fName   = $f->getName();
-      $fColor  = $f->getColor();
-      $hasF    = $v->gfm()->hasFamily($f);
+      $hasF = $v->gfm()->hasFamily($f);
       $regions = $f->getRegions();
-      $fHref   = $hasF ? $v->gfm()->delFamily($f)->link() : $v->gfm()->addFamily($f)->link();
       if(!count($regions)) continue;
+      $family = array(
+        'name'  => $f->getName()
+      , 'color' => $f->getColor()
+      , 'link'  => $hasF
+                 ? $v->gfm()->delFamily($f)->link()
+                 : $v->gfm()->addFamily($f)->link()
+      );
       //Checkboxes:
-      $checkbox = '';
       if($v->gpv()->isSelection()|| $v->gpv()->isView('MapView')){
         $languages = $f->getLanguages();
         $has  = $v->glm()->hasLanguages($languages);
@@ -65,20 +63,27 @@ if($study = $v->getStudy()){
             $href = $v->addLanguages($languages)->link('','data-href');
             $ttip = $t->st('multimenu_tooltip_add_family');
         }
-        $checkbox = "<a $href title='$ttip'><i class='$icon'></i></a>";
+        $family['checkbox'] = array(
+          'link'  => $href
+        , 'title' => $ttip
+        , 'icon'  => $icon
+        );
       }
       //The RegionList:
+      if(!$hasF){
+        $regions = LanguageMenuBuildRegionList($f->getRegions(), $v, $t, $showFlags);
+        $family['RegionList'] = Config::getMustache()->render('RegionList', $regions);
+      }
       $regions = $hasF ? '' : LanguageMenuBuildRegionList($f->getRegions(), $v, $t, $showFlags);
-      //Printing:
-      $languagemenu .= "<dt style='background-color: #$fColor;'>"
-                     . "$checkbox<a class='color-family' $fHref>$fName</a>"
-                     . "</dt><dd>$regions</dd>";
+      //Adding the family:
+      array_push($families, $family);
     }
-    $languagemenu .= '</dl>';
+    $languageMenu['families'] = $families;
   }else{
-    $languagemenu .= LanguageMenuBuildRegionList($study->getRegions(), $v, $t, $showFlags, true);
+    $regions = LanguageMenuBuildRegionList($study->getRegions(), $v, $t, $showFlags, true);
+    $languageMenu['RegionList'] = Config::getMustache()->render('RegionList', $regions);
   }
   //languageMenu finish:
-  echo $languagemenu.'</div>';
+  echo Config::getMustache()->render('LanguageMenu', $languageMenu);
 }
 ?>

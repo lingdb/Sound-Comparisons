@@ -1,0 +1,11 @@
+<ul class="wordList">
+  {{#words}}
+  <li{{#selected}} class="selected"{{/selected}}>
+    <div class="p50 color-word" data-canonicalName="{{cname}}">
+      {{{icon}}}
+      <a class="color-word wordLinkModernName" title="{{ttip}}" {{{link}}}>{{trans}}</a>
+      {{{subscript}}}
+    </div><div class="p50">{{{phonetic}}}</div>
+  </li>
+  {{/words}}
+</ul>

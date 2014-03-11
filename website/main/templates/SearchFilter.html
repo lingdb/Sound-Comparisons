@@ -1,0 +1,58 @@
+<table id="wordlistfilter" class="table-bordered table-striped">
+  <tr>
+    <td id="searchFilterTitle" class="userOption"><i class="icon-search"></i>{{sfby}}:</td>
+    <td id="Powersearch">
+      <a href='{{{psTarget}}}' title='{{psHover}}' target='_blank'><i class='icon-question-sign'></i></a>
+    </td>
+  </tr>
+  <tr>
+    <td id="SpellingTitle">{{spelling}} {{in}}</td>
+    <td id="PhoneticTitle">
+      {{phonetics}}
+      <div class="audio">
+        [<div class="transcription">fəˈnɛtɪks</div>]
+        <audio autobuffer="" preload="auto">
+          <source src="{{soundPath}}/fonetiks.ogg"></source>
+          <source src="{{soundPath}}/fonetiks.mp3"></source>
+        </audio>
+      </div>
+      {{in}}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      {{#spList}}
+      <select>
+        <option selected="selected">{{current}}</option>
+        {{#options}}
+        <option {{{link}}}>{{name}}</option>
+        {{/options}}
+      </select>
+      {{/spList}}
+    </td>
+    <td>
+      {{#phList}}
+      <select>
+        <option selected="selected">{{current}}</option>
+        {{#options}}
+        <option {{{link}}}>{{name}}</option>
+        {{/options}}
+      </select>
+      {{/phList}}
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <input id="SpellingFilter" type="text"/>
+    </td>
+    <td>
+      <input id="PhoneticFilter" type="text"/>
+      <a href="#ipaKeyboard" data-toggle="modal" id="IPAOpenKeyboard"
+         class="superscript" title="{{ipaOpenTitle}}">IPA</a>
+    </td>
+  </tr>
+  <tr id="FilterAddAll">
+    <td>{{filterFoundWords}}:<code id="FilterFoundMultiWords">x</code></td>
+    <td>{{{fTitle}}}{{{fAddAll}}}{{{fRefresh}}}{{{fClearAll}}}</td>
+  </tr>
+</table>

@@ -5,23 +5,30 @@
   @param $t Translator
   @param [$showFlags = false]
   @param [$dl = false]
-  @return regionList String Html
+  @return regionList
   Builds the RegionList for LanguageMenu.php
 */
 function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl = false){
+  $regionList = array(
+    'isDl'    => $dl
+  , 'regions' => array()
+  );
   $colorByFamily = $v->getStudy()->getColorByFamily();
-  $regionList = $dl ? '<dl class="regionList">' : '<ul class="regionList">';
   foreach($regions as $r){
-    $hasRegion = $v->hasRegion($r);
-    //The regions title:
-    $isMultiView = ($v->gpv()->isSelection() || $v->gpv()->isView('MapView'));
-    $isMapView   = $v->gpv()->isView('MapView');
-    $rName       = $r->getShortName();
-    $rTtip       = $r->getName();
-    $languages   = $r->getLanguages($v->gpv()->isView('LanguageView'));
+    $languages = $r->getLanguages($v->gpv()->isView('LanguageView'));
     if(count($languages) === 0)
       continue;
-    $checkbox = '';
+    //Basic region fields:
+    $region = array(
+      'selected'  => $v->hasRegion($r)
+    , 'name'      => $r->getShortName()
+    , 'ttip'      => $r->getName()
+    , 'languages' => array()
+    );
+    //Dunno where these belong:
+    $isMultiView = ($v->gpv()->isSelection() || $v->gpv()->isView('MapView'));
+    $isMapView   = $v->gpv()->isView('MapView');
+    //Building the checkbox:
     $icon = '';
     $ttip = '';
     $href = '';
@@ -41,57 +48,65 @@ function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl =
           $href = $v->addLanguages($languages)->link('','data-href');
           $ttip = $t->st('multimenu_tooltip_plus');
       }
-      $checkbox = "<a $href title='$ttip'><i class='$icon'></i></a>";
+      $region['checkbox'] = array(
+        'link' => $href
+      , 'ttip' => $ttip
+      , 'icon' => $icon
+      );
     }
     //Color if it's not done by Family:
-    $color = $colorByFamily ? '' : $r->getcolorStyle();
-    //The Region item itself:
-    $href = $hasRegion ? $v->delRegion($r)->link()
-                       : $v->addRegion($r)->link();
-    $triangle = $hasRegion ? 'icon-chevron-up rotate90' : 'icon-chevron-down';
-    $title = "$checkbox<a class='color-region' $href title='$rTtip'><i class='$triangle'></i>$rName</a>";
-    $regionList .= $dl ? "<dt $color>$title</dt>" : "<li>$title";
-    //Content inside the region:
-    if(!$hasRegion){
-      $regionList .= $dl ? '<dd class="languageList">' : '<ul class="languageList">';
+    if(!$colorByFamily)
+      $region['color'] = $r->getColorStyle();
+    //The Region link:
+    $region['link'] = $region['selected']
+                    ? $v->delRegion($r)->link()
+                    : $v->addRegion($r)->link();
+    //The triangle:
+    $region['triangle'] = $region['selected']
+                        ? 'icon-chevron-up rotate90'
+                        : 'icon-chevron-down';
+    //Languages for not selected Regions:
+    if(!$region['selected']){
       foreach($languages as $l){
-        $flag = $showFlags ? $l->getFlag() : '';
-        $sn   = $l->getShortName();
-        $ln   = $l->getLongName(false);
-        $hasL = $v->hasLanguage($l);
-        $icon = '';
+        $language = array(
+          'shortName' => $l->getShortName()
+        , 'longName'  => $l->getLongName(false)
+        , 'selected'  => $v->hasLanguage($l)
+        , 'link'      => $v->gpv()->setView('LanguageView')->setLanguage($l)->link()
+        );
+        if($showFlags)
+          $language['flag'] = $l->getFlag();
+        //Building the icon for a language:
         if($isMultiView){
-          $checked = $hasL ? 'icon-check' : 'icon-chkbox-custom';
-          if($hasL){
+          if($language['selected']){
             if($isMapView){
-              $ttip = "$ln\n".$t->st('multimenu_tooltip_del_map');
+              $ttip = $language['longName']."\n".$t->st('multimenu_tooltip_del_map');
             }else{
-              $ttip = "$ln\n".$t->st('multimenu_tooltip_del');
+              $ttip = $language['longName']."\n".$t->st('multimenu_tooltip_del');
             }
             $href = $v->delLanguage($l)->setUserCleaned()->link('','data-href');
           }else{
             if($isMapView){
-              $ttip = "$ln\n".$t->st('multimenu_tooltip_add_map');
+              $ttip = $language['longName']."\n".$t->st('multimenu_tooltip_add_map');
             }else{
-              $ttip = "$ln\n".$t->st('multimenu_tooltip_add');
+              $ttip = $language['longName']."\n".$t->st('multimenu_tooltip_add');
             }
             $href = $v->addLanguage($l)->link('','data-href');
           }
-          $icon = "<a title='$ttip' $href><i class='$checked'></i></a>";
+          $language['icon'] = array(
+            'ttip'    => $ttip
+          , 'link'    => $href
+          , 'checked' => $language['selected']
+                       ? 'icon-check'
+                       : 'icon-chkbox-custom'
+          );
         }
-        $goL = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
-        if($hasL){
-          $regionList .= "<li>$icon<a class='color-language selected' title='$ln' $goL>$flag$sn</a></li>";
-        }else{
-          $regionList .= "<li>$icon<a class='color-language' title='$ln' $goL>$flag$sn</a></li>";
-        }
+        array_push($region['languages'], $language);
       }
-      $regionList .= $dl ? '</dd>' : '</ul>';
     }
-    if(!$dl) $regionList .= '</li>';
+    array_push($regionList['regions'], $region);
   }
-  if($dl)
-    return $regionList.'</dl>';
-  return $regionList.'</ul>';
+//die(var_dump($regionList));
+  return $regionList;
 }
 ?>

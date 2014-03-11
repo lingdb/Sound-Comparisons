@@ -8,4 +8,18 @@ Result = Backbone.Model.extend({
       r.set({Update: u});
     });
   }
+, getFlag: function(){
+    var ret = '';
+    if(mId = this.get('MatchId')){
+      if(ts = window.Translation.translations){
+        _.each(ts, function(t){
+          if(t.TranslationId == mId){
+            var src = t.ImagePath;
+            ret = '<img src="../'+src+'">';
+          }
+        }, this);
+      }
+    }
+    return ret;
+  }
 });

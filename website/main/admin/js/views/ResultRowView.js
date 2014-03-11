@@ -7,22 +7,24 @@ ResultRowView = Backbone.View.extend({
     'click .copy-over': 'copyOver'
   }
 , initialize: function(){
-    this.btn = this.$('.saveButton');
-    var row  = this;
+    this.icon = '<i class="icon-hdd"></i>';
+    this.btn  = this.$('.saveButton');
+    var row   = this;
     this.$('.updateInput').keyup(function(){row.keystroke();});
     this.$('.saveButton').click(function(e){row.save(e);});
     var dv = new DescriptionView({el: this.$('.description')});
   }
 , save: function(e){
     e.preventDefault();
-    var b = this.btn.removeClass('btn-warning btn-success').addClass('btn-danger');
+    var icon = this.icon;
+    var b = this.btn.removeClass('btn-warning btn-success').addClass('btn-danger').html(icon+'Saving…');
     var u = this.$('.updateInput').val();
     this.model.update(u).done(function(){
-      b.removeClass('btn-danger btn-warning').addClass('btn-success');
+      b.removeClass('btn-danger btn-warning').addClass('btn-success').html(icon+'Saved OK');
     });
   }
 , keystroke: function(){
-    this.btn.removeClass('btn-success btn-danger').addClass('btn-warning')
+    this.btn.removeClass('btn-success btn-danger').addClass('btn-warning').html(this.icon+'Not saved');
   }
 , copyOver: function(){
     var original = this.$('.copy-over').parent().text();

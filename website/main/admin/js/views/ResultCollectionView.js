@@ -21,22 +21,27 @@ ResultCollectionView = Backbone.View.extend({
       var groupSize = this.model.getGroupSize();
       this.model.map(function(m){
         //Setup:
-        var d = m.get('Description');
-        var t = m.get('Translation');
+        var d        = m.get('Description')
+          , t        = m.get('Translation')
+          , flag     = m.getFlag()
+          , match    = m.get('Match')    || ''
+          , original = m.get('Original') || '';
+        console.log('match: '+ JSON.stringify(match));
         //Cosmetics:
         if(t.Translation === null) t.Translation = '';
-        if(m.get('Match')) hideCol2 = false;
+        if(match !== '') hideCol2 = false;
         //Building the row:
         var row = $('<tr>'
                 + '<td class="description" data-req="'+d.Req+'">'
                 + d.Description
                 + '</td>'
-                + '<td>'+m.get('Match')+'</td>'
-                + '<td>'+m.get('Original')+'<a class="btn pull-right copy-over"><i class="icon-arrow-right"></i></a></td>'
+                + '<td>'+match+'</td>'
+                + '<td>'+original+'<a class="btn pull-right copy-over"><i class="icon-arrow-right"></i></a></td>'
                 + '<td><form class="form-inline" '
                   + 'data-searchProvider="'+t.SearchProvider+'" '
                   + 'data-payload="'+t.Payload+'" '
                   + 'data-translationId="'+t.TranslationId+'">'
+                  + '<img src="../'+window.Translation.currentTranslation.get('ImagePath')+'">'
                   + '<input class="updateInput" type="text" value="'+t.Translation+'">'
                   + '<button type="buttin" class="btn saveButton"><i class="icon-hdd"></i>Save</button>'
                 + '</form></td></tr>').appendTo(el);

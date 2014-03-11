@@ -14,41 +14,34 @@ class Tabulator{
   public function wordHeadline($word){
     $v = $this->valueManager;
     $t = $v->getTranslator();
+    //Getting started:
+    $wordHeadline = array(
+      'name' => $word->getLongName()
+    );
+    if(!$wordHeadline['name'])
+      $wordHeadline['name'] = $word->getTranslation($v, true, false);
+    if(!$v->gpv()->isView('MapView'))
+      $wordHeadline['mapsLink'] = $word->getMapsLink($t);
     //Previous Word:
-    $prev = '';
     if($p = $word->getPrev($v)){
-      $href  = $v->setWord($p)->link();
-      $trans = $p->getTranslation($v, true, false);
-      $ttip  = '';
-      if($ln = $p->getLongName()) $ttip = "title='$ln'";
-      $prev  = $t->st('tabulator_word_prev');
-      $prev  = "<a id='prevLink' $href $ttip class='pull-left nounderline'>"
-             . "<div class='color-word inline'>$trans </div>← $prev</a>";
+      $wordHeadline['prev'] = array(
+        'link'  => $v->setWord($p)->link()
+      , 'ttip'  => $p->getLongName()
+      , 'trans' => $p->getTranslation($v, true, false)
+      , 'title' => $t->st('tabulator_word_prev')
+      );
     }
     //Next Word:
-    $next = '';
     if($n = $word->getNext($v)){
-      $href  = $v->setWord($n)->link();
-      $trans = $n->getTranslation($v, true, false);
-      $ttip  = '';
-      if($ln = $n->getLongName()) $ttip = "title='$ln'";
-      $next  = $t->st('tabulator_word_next');
-      $next  = "<a id='nextLink' $href $ttip class='pull-right nounderline'>"
-             . "$next →<div class='color-word inline'> $trans</div></a>";
+      $wordHeadline['next'] = array(
+        'link'  => $v->setWord($p)->link()
+      , 'ttip'  => $n->getLongName()
+      , 'trans' => $n->getTranslation($v, true, false)
+      , 'title' => $t->st('tabulator_word_next')
+      );
     }
-    //Content:
-    $mapsLink = $v->gpv()->isView('MapView') ? '' : $word->getMapsLink($t);
-    $name = $word->getLongName();
-    if(!$name) $name = $word->getTranslation($v, true, false);
-    $content = '<h1 class="color-word">'
-             . $name . $mapsLink
-             . '</h1>';
-    //Composition
-    return "<div class='row-fluid'>"
-         . "<div class='span3'>$prev</div>"
-         . "<div class='span6 centertext' id='tableHeader'>$content</div>"
-         . "<div class='span3'>$next</div>"
-         . "</div>";
+    //Done:
+    return $wordHeadline;
   }
   /***/
   public function tabluateWord($word){
@@ -62,8 +55,9 @@ class Tabulator{
         $maxLangCount = ($c > 6) ? 6 : $c;
     }
     //Building the table:
+    $wordHeadline        = $this->wordHeadline($word);
     $wordHeadlinePlayAll = $t->st('wordHeadline_playAll');
-    $table = $this->wordHeadline($word)
+    $table = Config::getMustache()->render('WordHeadline', $wordHeadline)
            . '<table id="singleWordTable" class="table table-bordered table-striped"><tbody>'
            . "<i class='icon-eject rotate90' id='wordHeadline_playAll' title='$wordHeadlinePlayAll'></i>";
     $colorFamily = $v->getStudy()->getColorByFamily();
@@ -89,6 +83,83 @@ class Tabulator{
             $cellCount = $maxLangCount;
             $rContent .= "</tr><tr>";
           }
+          $href = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
+          $sn   = $l->getShortName();
+          $ln   = $l->getLongName(false);
+          $link = "<a class='tableLink color-language' $href title='$ln'>$sn</a><br />";
+          $tr   = Transcription::getTranscriptionForWordLang($word, $l);
+          $spelling = '';
+          if($s = $tr->getAltSpelling($v))
+            $spelling = "<div class='altSpelling' >$s</div>";
+          $phonetic   = $tr->getPhonetic($v, true);
+          $rContent  .= "<td>$link$spelling$phonetic</td>";
+          $cellCount--;
+        }
+        for(;$cellCount > 0; $cellCount--)
+          $rContent .= "<td></td>";
+        $rContent   .= "</tr>";
+      }
+      $fName = $f->getName();
+      $color = $colorFamily ? ' style="background-color: #'.$f->getColor().';"' : '';
+      if($rSpanSum > 0)
+        $table .= "$row<th rowSpan='$rSpanSum'$color>$fName</th>$rContent";
+    }
+    $table .= '</tbody></table>';
+    echo $table;
+  }
+  /***/
+  public function _tabluateWord($word){
+    $v = $this->valueManager;
+    $t = $v->getTranslator();
+    //Calculating the maximum number of language cols:
+    $maxLangCount = 0;
+    foreach($v->getStudy()->getRegions() as $r){
+      $c = $r->getLanguageCount();
+      if($c > $maxLangCount)
+        $maxLangCount = ($c > 6) ? 6 : $c;
+    }
+    //Building the table:
+    $wordTable = array(
+      'wordHeadlinePlayAll' => $t->st('wordHeadline_playAll')
+    , 'wordHeadline'        => $this->wordHeadline($word)
+    , 'rows'                => array()
+    );
+    $colorFamily = $v->getStudy()->getColorByFamily();
+    foreach($v->getStudy()->getFamilies() as $fIx => $f){
+      $row = ($fIx !== 0) ? array('spaceRow' => true, 'cells' => array()) : array('cells' => array());
+      //The family cell:
+      $family = array(
+        'rowSpan' => 0
+      , 'name'    => $f->getName()
+      );
+      if($colorFamily)
+        $family['color'] = $f->getColor();
+      //Regions:
+      $rContent    = '';
+      $firstRegion = true;
+      foreach($f->getRegions() as $r){
+        if($firstRegion){
+          $firstRegion = false;
+        }else
+          $row['data'] = "<tr data-i='$fIx'>";
+        $languages = $r->getLanguages();
+        $region = array('name' => $r->getShortName());
+        //Calculating the rSpan for a region:
+        $rSpan = ceil(count($languages)/6);
+        if($rSpan == 0) $rSpan++;
+        $region['rowSpan'] = $rSpan;
+        $family['rowSpan'] += $rSpan;
+        //Color:
+        if(!$colorFamily)
+          $region['color'] = $r->getColor();
+        //Languages:
+        $cellCount = $maxLangCount;
+        foreach($languages as $l){
+          if($cellCount == 0){
+            $cellCount = $maxLangCount;
+            $rContent .= "</tr><tr>";
+          }
+          //FIXME WIP HERE
           $href = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
           $sn   = $l->getShortName();
           $ln   = $l->getLongName(false);

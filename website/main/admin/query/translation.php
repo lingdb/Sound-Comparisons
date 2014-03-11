@@ -28,6 +28,8 @@
   require_once 'providers/RegionsTranslationProvider.php';
   require_once 'providers/StudyTranslationProvider.php';
   require_once 'providers/StudyTitleTranslationProvider.php';
+  require_once 'providers/TranscrSuperscriptInfoTranslationProvider.php';
+  require_once 'providers/TranscrSuperscriptLenderLgsTranslationProvider.php';
   require_once 'providers/WordsTranslationProvider.php';
   chdir('..');
   require_once 'common.php';
@@ -51,6 +53,10 @@
   , new RegionsTranslationProvider('Trans_RegionGpNameLong',  $dbConnection)
   , new StudyTranslationProvider($dbConnection)
   , new StudyTitleTranslationProvider($dbConnection)
+  , new TranscrSuperscriptInfoTranslationProvider('Trans_Abbreviation',              $dbConnection)
+  , new TranscrSuperscriptInfoTranslationProvider('Trans_HoverText',                 $dbConnection)
+  , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_Abbreviation',         $dbConnection)
+  , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_FullNameForHoverText', $dbConnection)
   , new WordsTranslationProvider('Trans_FullRfcModernLg01',   $dbConnection)
   , new WordsTranslationProvider('Trans_LongerRfcModernLg01', $dbConnection)
   ) as $p) $providers[$p->getName()] = $p;
@@ -111,9 +117,11 @@
       Delivers a JSON object that maps names of providers to their offsets.
     */
     case 'offsets':
-      $ps = json_decode($_GET['Providers']);
+      $ps    = json_decode($_GET['Providers']);
       $study = $dbConnection->escape_string($_GET['Study']);
-      $tId = $dbConnection->escape_string($_GET['TranslationId']);
+      $tId   = 1;
+      if(array_key_exists('TranslationId', $_GET))
+        $tId = $dbConnection->escape_string($_GET['TranslationId']);
       $ret = array();
       foreach($ps as $p)
         $ret[$p] = $providers[$p]->offsets($tId, $study);
@@ -127,11 +135,11 @@
       Delivers a JSON object that maps names of providers to their pages.
     */
     case 'page':
-      $ps = json_decode($_GET['Providers']);
-      $study = $dbConnection->escape_string($_GET['Study']);
-      $tId = $dbConnection->escape_string($_GET['TranslationId']);
+      $ps     = json_decode($_GET['Providers']);
+      $study  = $dbConnection->escape_string($_GET['Study']);
+      $tId    = $dbConnection->escape_string($_GET['TranslationId']);
       $offset = $dbConnection->escape_string($_GET['Offset']);
-      $ret = array();
+      $ret    = array();
       foreach($ps as $p){
         $ret[$p] = $providers[$p]->page($tId, $study, $offset);
       }
@@ -143,22 +151,31 @@
     */
     case 'providers':
       $providerGroups = array(
-        'Families'            => '/^FamilyTranslationProvider$/'
-      , 'Languages'           => '/^LanguagesTranslationProvider-/'
-      , 'LanguageStatusTypes' => '/^LanguageStatusTypesTranslationProvider-/'
-      , 'MeaningGroups'       => '/^MeaningGroupsTranslationProvider$/'
-      , 'RegionLanguages'     => '/^RegionLanguagesTranslationProvider-/'
-      , 'Regions'             => '/^RegionsTranslationProvider-/'
-      , 'Static'              => '/^StaticTranslationProvider$/'
-      , 'Studies'             => '/^StudyTranslationProvider$/'
-      , 'StudyTitle'          => '/^StudyTitleTranslationProvider$/'
-      , 'Words'               => '/^WordsTranslationProvider-/'
+        'General'               => '/^StaticTranslationProvider$/'
+      , 'Studies'               => '/^StudyTranslationProvider$/'
+      , 'Study title'           => '/^StudyTitleTranslationProvider$/'
+      , 'Families'              => '/^FamilyTranslationProvider$/'
+      , 'Language status types' => '/^LanguageStatusTypesTranslationProvider-/'
+      , 'Meaning sets'          => '/^MeaningGroupsTranslationProvider$/'
+      , 'Words'                 => '/^WordsTranslationProvider-/'
+      , 'Regions'               => '/^RegionsTranslationProvider-/'
+      , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'
+      , 'Languages'             => '/^LanguagesTranslationProvider-/'
+      , 'Superscripts'          => '/^TranscrSuperscript/'
       );
       $ret = array();
       foreach($providerGroups as $group => $regex)
         $ret[$group] = __(array_keys($providers))->filter(function($k) use ($regex){
           return preg_match($regex, $k);
         });
+      //Adding non providers (underscore prefix):
+      $ret['_dependsOnStudy'] = array(
+        'Languages'        => true
+      , 'Region languages' => true
+      , 'Regions'          => true
+      , 'Words'            => true
+      );
+      //Done:
       echo json_encode($ret);
     break;
     /**

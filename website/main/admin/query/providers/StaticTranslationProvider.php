@@ -7,12 +7,13 @@
   class StaticTranslationProvider extends TranslationProvider{
     public function search($tId, $searchText){
       $ret = array();
-      $q = "SELECT Req, Trans FROM Page_StaticTranslation "
+      $q = "SELECT Req, Trans, TranslationId FROM Page_StaticTranslation "
          . "WHERE Trans LIKE '%$searchText%'";
       $set = $this->dbConnection->query($q);
       while($r = $set->fetch_row()){
         $payload = $r[0];
         $match   = $r[1];
+        $matchId = $r[2];
         $description = $this->getDescription($payload);
         $q = "SELECT Trans FROM Page_StaticTranslation "
            . "WHERE TranslationId = 1 AND Req = '$payload'";
@@ -23,6 +24,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId
@@ -44,7 +46,7 @@
       $db->query($q);
     }
     public function offsets($tId, $study){
-      $q = "SELECT COUNT(*) FROM Page_StaticTranslation";
+      $q = "SELECT COUNT(*) FROM Page_StaticTranslation WHERE TranslationId = 1";
       $r = $this->querySingleRow($q);
       return $this->offsetsFromCount(current($r));
     }
@@ -59,8 +61,8 @@
            . "WHERE TranslationId = $tId AND Req = '$payload'";
         $translation = $this->dbConnection->query($q)->fetch_row();
         array_push($ret, array(
-          'Description' => $r[1]
-        , 'Original'    => $original[0]
+          'Description' => $description
+        , 'Original'    => $r[1]
         , 'Translation' => array(
             'TranslationId'       => $tId
           , 'Translation'         => $translation[0]
