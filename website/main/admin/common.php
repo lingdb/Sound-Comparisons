@@ -1,11 +1,6 @@
 <?php
   require_once '../config.php';
-  Config::overwriteLogin(array(
-    'server' => null
-  , 'user'   => null
-  , 'passwd' => null
-  , 'db'     => null
-  ));
+  Config::setAdmin();
   $dbConnection = Config::getConnection();
   require_once 'validate.php';
   session_start();

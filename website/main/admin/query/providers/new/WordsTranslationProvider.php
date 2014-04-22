@@ -15,7 +15,7 @@
       $studies = $this->fetchRows($studies);
       //Search queries:
       $qs = array("SELECT $c, Study, "
-          . "CONCAT(IxElicitation, IxMorphologicalInstance) "
+          . "CONCAT(IxElicitation, IxMorphologicalInstance), $tId "
           . "FROM Page_DynamicTranslation_Words "
           . "WHERE TranslationId = $tId "
           . "AND Study = ANY(SELECT Name FROM Studies) "
@@ -24,7 +24,7 @@
         foreach($studies as $s){
           $s = $s[0];
           $q = "SELECT $origCol, '$s', "
-             . "CONCAT(IxElicitation, IxMorphologicalInstance) "
+             . "CONCAT(IxElicitation, IxMorphologicalInstance), TranslationId "
              . "FROM Words_$s "
              . "WHERE $origCol LIKE '%$searchText%'";
           array_push($qs, $q);
@@ -32,9 +32,10 @@
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $match = $r[0];
-        $study = $r[1];
-        $wId   = $r[2];
+        $match   = $r[0];
+        $study   = $r[1];
+        $wId     = $r[2];
+        $matchId = $r[3];
         $q = "SELECT $origCol "
            . "FROM Words_$study "
            . "WHERE CONCAT(IxElicitation, "
@@ -50,6 +51,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId

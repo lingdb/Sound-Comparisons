@@ -6,83 +6,48 @@
 */
 require_once 'extern/underscore.php';
 require_once 'database/Database.php';
+//Importing the Global class for Config to extend:
+require_once 'ConfigBase.php';
 //Making sure we've got a default timezone:
 date_default_timezone_set('UTC');
 /* A class to bundle all configuration issues for the website. */
-class Config {
-  /* Configuration: */
-  private static $server        = "localhost";
-  private static $user          = "root";
-  private static $passwd        = "1234";
-  private static $db            = "v4";
-  public  static $debug         = true;
-  public  static $flags_enabled = false;
-  public  static $soundPath     = "../sound";
-  public  static $downloadPath  = "export/download";
-  public  static $locale        = "en-US";
-  /* Accessible values: */
-  private static $dbConnection  = null;
-  private static $collator      = null;
-  private static $mustache      = null;
-  /* Getter functions to fetch config values: */
+class Config extends ConfigBase {
+  /* Login data for the database to use for the main parts of the site */
+  private static $mainDbLogin = array(
+    'server' => 'localhost' 
+  , 'user'   => 'root' 
+  , 'passwd' => '1234' 
+  , 'db'     => 'v4' 
+  );
+  /* Login data to use for the admin area, that will overwrite values in mainDbLogin */
+  private static $adminDbLogin = array();
+  // Public configuration:
+  public static $debug         = true;
+  public static $flags_enabled = false;
+  public static $soundPath     = '../sound';
+  public static $downloadPath  = 'export/download';
+  public static $locale        = 'en-US';
+  /***/
   public static function getConnection(){
     if(is_null(self::$dbConnection)){
-      self::$dbConnection = new mysqli(self::$server, self::$user, self::$passwd, self::$db);
-      self::$dbConnection->set_charset('utf8');
-      self::overwriteLogin(array('server' => '', 'user' => '', 'passwd' => '', 'db' => ''));
+      $dbConnection = new mysqli(
+        self::$mainDbLogin['server']
+      , self::$mainDbLogin['user']
+      , self::$mainDbLogin['passwd']
+      , self::$mainDbLogin['db']
+      );
+      $dbConnection->set_charset('utf8');
+      self::$mainDbLogin  = null;
+      self::$adminDbLogin = null;
+      self::$dbConnection = $dbConnection;
     }
     return self::$dbConnection;
   }
-  /* Necessary for Admin features: */
-  public static function overwriteLogin($login){
-    if(array_key_exists('server',$login) && is_string($login['server']))
-      self::$server = $login['server'];
-    if(array_key_exists('user',$login) && is_string($login['user']))
-      self::$user = $login['user'];
-    if(array_key_exists('passwd',$login) && is_string($login['passwd']))
-      self::$passwd = $login['passwd'];
-    if(array_key_exists('db',$login) && is_string($login['db']))
-      self::$db = $login['db'];
-  }
-  /*
-    This is the way that all parts of the website will use in the future to log their errors.
-    A possible improvement will be, to let this forward to a nice error page.
-  */
-  public static function error($msg){
-  //$rand = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'),0,5);
-    error_log($msg);
-    if(Config::$debug) die($msg);
-  }
-  /**
-    @return collator [Collator]
-    This method requires the php5-intl package.
-  */
-  public static function getCollator(){
-    if(self::$collator === false)
-      return null;
-    if(is_null(self::$collator)){
-      if(class_exists('\\Collator')){
-        self::$collator = new \Collator(self::$locale);
-      }else{
-        self::$collator = false;
-        return null;
-      }
-    }
-    return self::$collator;
-  }
   /***/
-  public static function getMustache(){
-    if(is_null(self::$mustache)){
-      require_once 'extern/mustache.php';
-      self::$mustache = new Mustache_Engine(array(
-        'charset' => 'UTF-8'
-      , 'loader'  => new Mustache_Loader_FilesystemLoader(
-          dirname(__FILE__).'/templates'
-        , array('extension' => 'html')
-        )
-      ));
-    }
-    return self::$mustache;
+  public static function setAdmin(){
+    foreach(self::$adminDbLogin as $k => $v)
+      self::$mainDbLogin[$k] = $v;
+    self::$debug = true; // In the admin area, errors lead to death.
   }
 }
 ?>

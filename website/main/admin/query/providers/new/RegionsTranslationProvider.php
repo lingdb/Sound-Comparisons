@@ -14,7 +14,7 @@
       $studies = $this->dbConnection->query($q);
       $studies = $this->fetchRows($studies);
       //Search queries:
-      $qs = array("SELECT $c, Study, RegionIdentifier "
+      $qs = array("SELECT $c, Study, RegionIdentifier, TranslationId "
           . "FROM Page_DynamicTranslation_Regions "
           . "WHERE $c LIKE '%$searchText%' "
           . "AND TranslationId = $tId");
@@ -22,7 +22,7 @@
         foreach($studies as $s){
           $s = $s[0];
           $q = "SELECT $origCol, '$s', "
-             . "CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
+             . "CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx), 1 "
              . "FROM Regions_$s "
              . "WHERE $origCol LIKE '%$searchText%'";
           array_push($qs, $q);
@@ -30,9 +30,10 @@
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $match = $r[0];
-        $study = $r[1];
-        $rId   = $r[2];
+        $match   = $r[0];
+        $study   = $r[1];
+        $rId     = $r[2];
+        $matchId = $r[3];
         $q = "SELECT $origCol "
            . "FROM Regions_$study "
            . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $rId";
@@ -46,6 +47,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId

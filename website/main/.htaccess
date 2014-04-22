@@ -4,6 +4,10 @@
 #AuthGroupFile /dev/null 
 #require valid-user
 
+# Disabling the annoying magic quotes (http://www.php.net/manual/en/security.magicquotes.disabling.php):
+php_flag magic_quotes_gpc Off
+
+# Rewriting of routes:
 RewriteEngine on
 Options +FollowSymlinks -MultiViews
 
@@ -22,7 +26,7 @@ RewriteCond %{QUERY_STRING} ^(hl=.+)$
 RewriteRule ^(.+)$ ?shortLink=$1&%1 [L]
 # If we've got a query, we redirect to root:
 RewriteCond %{QUERY_STRING} (.+)
-RewriteRule ^.+$ ?%1 [R]
+RewriteRule ^.+$ ?%1 [R,NE]
 
 # Rules to aid searching
 # FIXME figure out if searching is used/implemented/required!

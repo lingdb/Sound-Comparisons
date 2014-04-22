@@ -109,7 +109,7 @@
       $origCol = $tCol['origCol'];
       //Page query:
       $q = "SELECT $origCol, LanguageIx "
-         . "FROM RegionLanguages_$s LIMIT 30 OFFSET $offset";
+         . "FROM RegionLanguages_$study LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $lIx = $r[1];
         $q = "SELECT $c "

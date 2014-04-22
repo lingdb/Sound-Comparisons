@@ -34,8 +34,27 @@
     /**
       This will save the given update as the new translation with the help
       of a translationId and a payload.
+      This method was originally an abstract one,
+      but with the switch to the new table layout,
+      we can have an implementation for all TranslationProviders.
     */
-    public abstract function update($tId, $payload, $update);
+    public function update($tId, $payload, $update){
+      $db       = $this->dbConnection;
+      $tId      = $db->escape_string($tId);
+      $payload  = $db->escape_string($payload);
+      $update   = $db->escape_string($update);
+      $category = $this->getName();
+      $qs = array(
+        "DELETE FROM Page_DynamicTranslation "
+      . "WHERE TranslationId = $tId "
+      . "AND Category = '$category' "
+      . "AND Field = '$payload'"
+      , "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
+      . "VALUES ($tId, '$category', '$payload', '$update')"
+      );
+      foreach($qs as $q)
+        $db->query($q);
+    }
     /**
       The methods offsets and page are build to implement paging via search.
       I've made the experience, that the way the TranslationBySearch Feature
@@ -71,14 +90,22 @@
     public abstract function page($tId, $study, $offset);
     /**
       @param tId TranslationId to get rid of
-      Deletes all entries for a given TranslationId.
-      This method must not be column dependent,
-      and will be executed only for each class once
-      instead of each Provider instance.
+      Deletes all entries for a given TranslationId
+      in the Category of a certain provider.
     */
-    public abstract function deleteTranslation($tId);
+    public function deleteTranslation($tId){
+      $db       = $this->dbConnection;
+      $tId      = $db->escape_string($tId);
+      $category = $this->getName();
+      $q = "DELETE FROM Page_DynamicTranslation "
+         . "WHERE TranslationId = $tId "
+         . "AND Category = '$category'";
+      $db->query($q);
+    }
     // HELPER FUNCTIONS BELOW
-    /***/
+    /**
+      A helper function to fetch all rows from a query.
+    */
     public function fetchRows($set){
       if(is_string($set))
         $set = $this->dbConnection->query($set);
@@ -87,7 +114,10 @@
         array_push($rows, $r);
       return $rows;
     }
-    /***/
+    /**
+      A helper function to execute multiple queries,
+      and return all their results in a single array.
+    */
     public function runQueries($qs){
       if(is_string($qs))
         $qs = array($qs);
@@ -99,7 +129,10 @@
       }
       return $rows;
     }
-    /***/
+    /**
+      Translation field come with descriptions to aid work in the translation interface.
+      This method fetches such descriptions.
+    */
     public function getDescription($req){
       $q = "SELECT Description "
          . "FROM Page_StaticDescription "
@@ -109,11 +142,17 @@
         return array('Req' => $req, 'Description' => $r[0]);
       return array('Req' => $req, 'Description' => 'Description not found in database.');
     }
-    /***/
+    /**
+      A simple helper method that fetches a single row form a query.
+    */
     public function querySingleRow($q){
       return $this->dbConnection->query($q)->fetch_row();
     }
-    /***/
+    /**
+      A method to produce an array of offsets from a given count.
+      offsets are generated in steps of 30,
+      and this is required in the offsets methods of all TranslationProviders.
+    */
     public function offsetsFromCount($count){
       $offsets = array();
       for($offset = 0; $offset < $count; $offset += 30){
@@ -121,7 +160,9 @@
       }
       return $offsets;
     }
-    /***/
+    /**
+      Information, wether all translations should be searched.
+    */
     public function searchAllTranslations(){
       if(array_key_exists('searchAll', $_GET)){
         if($_GET['searchAll'] === 'true'){
@@ -130,33 +171,29 @@
       }
       return false;
     }
-  }
-  //Below added after switch to single table for dynamic translation:
-  protected function getSearchQuery($tId, $searchText){
-    $name = $this->getName();
-    return "SELECT Field, Trans "
-         . "FROM Page_DynamicTranslation "
-         . "WHERE Trans LIKE '%$searchText%' "
-         . "AND TranslationId = $tId "
-         . "AND Category = '$name'";
-  }
-  protected function getTransQuery($tId, $payload){
-    $name = $this->getName();
-    return "SELECT Trans FROM "
-         . "Page_DynamicTranslation "
-         . "WHERE Field = '$payload' "
-         . "AND TranslationId = $tId "
-         . "AND Category = '$name'";
-  }
-  protected function getDeleteQuery($tId, $payload){
-    $name = $this->getName();
-    return "DELETE FROM Page_DynamicTranslation "
-         . "WHERE TranslationId = $tId"
-         . "AND Category = '$name' "
-         . "AND Field = '$payload'";
-  }
-  protected function getDeleteAllQuery($tId){//FIXME maybe we can get rid of this function.
-    $name = $this->getName();
-    return "DELETE FROM Page_DynamicTranslation WHERE TranslationId = $tId AND Category = '$name'";
+    /**
+      Since all TranslationProviders have to search the Page_DynamicTranslation table,
+      we can use this function to build a query for that cause at a central place.
+    */
+    protected function translationSearchQuery($tId, $searchText){
+      $category = $this->getName();
+      return "SELECT Field, Trans, TranslationId "
+           . "FROM Page_DynamicTranslation "
+           . "WHERE TranslationId = $tId "
+           . "AND Category = '$category' "
+           . "AND Trans LIKE '%$searchText%'";
+    }
+    /**
+      All TranslationProviders get an easy way to fetch the Translation
+      for a given field and translationId by this.
+    */
+    protected function getTranslationQuery($field, $tId){
+      $category = $this->getName();
+      return "SELECT Trans "
+           . "FROM Page_DynamicTranslation "
+           . "WHERE TranslationId = $tId "
+           . "AND Category = '$category' "
+           . "AND Field = '$field'";
+    }
   }
 ?>

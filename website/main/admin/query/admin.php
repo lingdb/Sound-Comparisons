@@ -13,13 +13,8 @@
     case 'create':
       $username     = $dbConnection->escape_string($_POST['username']);
       $password     = md5($_POST['password']);
-      $mayTranslate = $dbConnection->escape_string($_POST['mayTranslate']);
-      $mayEdit      = $dbConnection->escape_string($_POST['mayEdit']);
-      /* Sanitizing permissions: */
-      if($mayTranslate != '1')
-        $mayTranslate = '0';
-      if($mayEdit != '1')
-        $mayEdit = '0';
+      $mayTranslate = ($_POST['mayTranslate'] === '1') ? '1' : '0';
+      $mayEdit      = ($_POST['mayEdit']      === '1') ? '1' : '0';
       /* Checking that username is not taken: */
       $q = "SELECT COUNT(*) FROM Edit_Users WHERE Login = '$username'";
       $r = $dbConnection->query($q)->fetch_row();
@@ -77,6 +72,41 @@
       $q = "DELETE FROM Edit_Users WHERE UserId = $userid";
       $dbConnection->query($q);
       echo "Deleted user: $userid";
+    break;
+    case 'export':
+      $export = array();
+      $q = 'SELECT UserId, Login, Hash, AccessEdit, AccessTranslate FROM Edit_Users';
+      $set = $dbConnection->query($q);
+      while($row = $set->fetch_assoc())
+        array_push($export, $row);
+      header("Pragma: public");
+      header("Expires: 0");
+      header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+      header("Content-Type: application/json; charset=utf-8");
+      header("Content-Disposition: attachment;filename=\"users.json\"");
+      header("Content-Transfer-Encoding: binary");
+      die(json_encode($export));
+    break;
+    case 'import':
+      if(count($_FILES) === 1){
+        $file = file_get_contents($_FILES['import']['tmp_name']);
+        $data = json_decode($file);
+        foreach($data as $user){
+          $UserId          = $dbConnection->escape_string($user->UserId);
+          $Login           = $dbConnection->escape_string($user->Login);
+          $Hash            = $dbConnection->escape_string($user->Hash);
+          $AccessEdit      = $dbConnection->escape_string($user->AccessEdit);
+          $AccessTranslate = $dbConnection->escape_string($user->AccessTranslate);
+          $q = "INSERT INTO Edit_Users(UserId, Login, Hash, AccessEdit, AccessTranslate) "
+             . "VALUES ($UserId, '$Login', '$Hash', $AccessEdit, $AccessTranslate) "
+             . "ON DUPLICATE KEY UPDATE Login='$Login', Hash='$Hash'"
+             . ", AccessEdit=$AccessEdit, AccessTranslate=$AccessTranslate";
+          $dbConnection->query($q);
+        }
+        header('LOCATION: ../index.php');
+      }else{
+        die('Sorry, you need to supply a file.');
+      }
     break;
     default: Config::error('Call to unsupported action.');
   }

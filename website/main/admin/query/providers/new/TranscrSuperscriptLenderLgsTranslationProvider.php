@@ -10,21 +10,22 @@
       $description = $tCol['description'];
       $origCol = $tCol['origCol'];
       //Search queries:
-      $qs = array("SELECT IsoCode, $c "
+      $qs = array("SELECT IsoCode, $c, TranslationId "
           . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
           . "WHERE $c LIKE '%$searchText%' "
           . "AND TranslationId = $tId");
       if($this->searchAllTranslations()){
         array_push($qs,
-          "SELECT IsoCode, $origCol "
+          "SELECT IsoCode, $origCol, 1 "
         . "FROM TranscrSuperscriptLenderLgs "
         . "WHERE $origCol LIKE '%$searchText%'"
         );
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $iso   = $r[0];
-        $match = $r[1];
+        $iso     = $r[0];
+        $match   = $r[1];
+        $matchId = $r[2];
         $q = "SELECT $origCol "
            . "FROM TranscrSuperscriptLenderLgs "
            . "WHERE IsoCode = '$iso'";
@@ -37,6 +38,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId
@@ -78,8 +80,8 @@
     }
     public function pageColumn($c, $tId, $study, $offset){
       //Setup
-      $ret  = array();
-      $tCol = $this->translateColumn($c);
+      $ret         = array();
+      $tCol        = $this->translateColumn($c);
       $description = $tCol['description'];
       $origCol     = $tCol['origCol'];
       //Page query:
@@ -87,10 +89,10 @@
          . "FROM TranscrSuperscriptLenderLgs LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $iso = $r[0];
-        $q = "SELECT $c "
-           . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-           . "WHERE TranslationId = $tId "
-           . "AND IsoCode = '$iso'";
+        $q   = "SELECT $c "
+             . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
+             . "WHERE TranslationId = $tId "
+             . "AND IsoCode = '$iso'";
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -117,6 +119,10 @@
         break;
       }
       return array('description' => $description, 'origCol' => $origCol);
+    }
+    public function deleteTranslation($tId){
+      $q = "DELETE FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs WHERE TranslationId = $tId";
+      $this->dbConnection->query($q);
     }
   }
 ?>

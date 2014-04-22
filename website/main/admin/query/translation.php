@@ -161,7 +161,8 @@
       , 'Regions'               => '/^RegionsTranslationProvider-/'
       , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'
       , 'Languages'             => '/^LanguagesTranslationProvider-/'
-      , 'Superscripts'          => '/^TranscrSuperscript/'
+      , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'
+      , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'
       );
       $ret = array();
       foreach($providerGroups as $group => $regex)

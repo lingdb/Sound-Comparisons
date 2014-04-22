@@ -7,12 +7,13 @@
   class StaticTranslationProvider extends TranslationProvider{
     public function search($tId, $searchText){
       $ret = array();
-      $q = "SELECT Req, Trans FROM Page_StaticTranslation "
+      $q = "SELECT Req, Trans, TranslationId FROM Page_StaticTranslation "
          . "WHERE Trans LIKE '%$searchText%'";
       $set = $this->dbConnection->query($q);
       while($r = $set->fetch_row()){
         $payload = $r[0];
         $match   = $r[1];
+        $matchId = $r[2];
         $description = $this->getDescription($payload);
         $q = "SELECT Trans FROM Page_StaticTranslation "
            . "WHERE TranslationId = 1 AND Req = '$payload'";
@@ -23,6 +24,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId

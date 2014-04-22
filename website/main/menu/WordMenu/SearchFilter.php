@@ -28,7 +28,7 @@ $id = ($spL = $v->gwo()->getSpLang()) ? $spL->getId() : -1;
 if($id !== -1){
   $href = $v->gwo()->setSpLang()->link('','data-href');
   $name = $v->gtm()->showName(true);
-  if($name !== $spName){
+  if($name !== $spList['current']){
     array_push($spList['options'], array(
       'link' => $href
     , 'name' => $name)

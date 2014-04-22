@@ -102,12 +102,12 @@
     public function pageColumn($c, $tId, $study, $offset){
       //Setup
       $ret = array();
-      $tCol = translateColumn($c);
+      $tCol = $this->translateColumn($c);
       $description = $tCol['description'];
       $origCol = $tCol['origCol'];
       //Page query:
       $q = "SELECT $origCol, CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
-         . "FROM Regions_$s LIMIT 30 OFFSET $offset";
+         . "FROM Regions_$study LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $q = "SELECT $c "
            . "FROM Page_DynamicTranslation_Regions "

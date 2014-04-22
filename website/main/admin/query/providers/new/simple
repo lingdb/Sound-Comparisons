@@ -1,0 +1,1 @@
+vim DynamicTranslationProvider.php FamilyTranslationProvider.php MeaningGroupsTranslationProvider.php StaticTranslationProvider.php StudyTitleTranslationProvider.php StudyTranslationProvider.php

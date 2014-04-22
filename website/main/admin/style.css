@@ -28,3 +28,6 @@ body {
 #BasicTranslation form>label {
   width: 15em;
 }
+#ResultCollectionView .saveButton {
+  width: 10em;
+}

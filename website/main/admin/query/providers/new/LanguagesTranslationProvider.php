@@ -1,6 +1,11 @@
 <?php
   /***/
   require_once "DynamicTranslationProvider.php";
+  /*
+    Mapping between tables Languages_$s, Page_DynamicTranslation:
+    CONCAT(Study,'-',LanguageIx) <-> Field
+    $c (column)                  <-> Trans
+  */
   class LanguagesTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){return 'Page_DynamicTranslation_Languages';}
     public function searchColumn($c, $tId, $searchText){
@@ -14,14 +19,14 @@
       $studies = $this->dbConnection->query($q);
       $studies = $this->fetchRows($studies);
       //Search queries:
-      $qs = array("SELECT $c, Study, LanguageIx "
+      $qs = array("SELECT $c, Study, LanguageIx, TranslationId "
           . "FROM Page_DynamicTranslation_Languages "
           . "WHERE TranslationId = $tId "
           . "AND $c LIKE '%$searchText%'");
       if($this->searchAllTranslations()){
         foreach($studies as $s){
           $s = $s[0];
-          $q = "SELECT $origCol, '$s', LanguageIx "
+          $q = "SELECT $origCol, '$s', LanguageIx, 1 "
              . "FROM Languages_$s "
              . "WHERE $origCol LIKE '%$searchText%'";
           array_push($qs, $q);
@@ -29,9 +34,10 @@
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $match = $r[0];
-        $study = $r[1];
-        $lIx   = $r[2];
+        $match   = $r[0];
+        $study   = $r[1];
+        $lIx     = $r[2];
+        $matchId = $r[3];
         $q = "SELECT $origCol "
            . "FROM Languages_$study "
            . "WHERE LanguageIx = $lIx";
@@ -45,6 +51,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId

@@ -1,12 +1,10 @@
-2014-04-17:
- - Building a better translation is the primary task today.
-   - A central dynamic translation table with very few columns that don't change would make things more robust.
-   - Providers for TranscrSuperscriptInfo, TranscrSuperscriptLenderLgs are missing!
- - Remember to dump the database!
- - Put db login specific things in a seperate file,
-   so that administration overhead becomes smaller.
-   Current config.php does many things that are not intended to happen there.
- - Give save buttons in tbs a fixed width
+2014-04-24:
+ - StudyTitleTranslationProvider rewrite might interfere with the dbimport procedure, as it magically works without the Studies as a basis, or something thelike.
+ - Figure out why I've introduced the deleteTranslation method in TranslationProvider, where it is called,
+   and what is broken now, that the DynamicTranslationProviders get different behaviour per column?
+ - Simple TranslationProviders don't care for their study at the moment,
+   but I've got the impression that they should.
+   I'll need to fix this asap.
 
 2014-03-11:
  - When switching to do more via .js:

@@ -10,19 +10,21 @@
       $description = $tCol['description'];
       $origCol = $tCol['origCol'];
       //Search queries:
-      $qs = array("SELECT Ix, $c FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
+      $qs = array("SELECT Ix, $c, TranslationId "
+          . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
           . "WHERE $c LIKE '%$searchText%' "
           . "AND TranslationId = $tId");
       if($this->searchAllTranslations()){
         array_push($qs,
-          "SELECT Ix, $origCol FROM TranscrSuperscriptInfo "
+          "SELECT Ix, $origCol, 1 FROM TranscrSuperscriptInfo "
         . "WHERE $origCol LIKE '%$searchText%'"
         );
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $iX    = $r[0];
-        $match = $r[1];
+        $iX      = $r[0];
+        $match   = $r[1];
+        $matchId = $r[2];
         $q = "SELECT $origCol "
            . "FROM TranscrSuperscriptInfo "
            . "WHERE Ix = $iX";
@@ -35,6 +37,7 @@
         array_push($ret, array(
           'Description' => $description
         , 'Match'       => $match
+        , 'MatchId'     => $matchId
         , 'Original'    => $original[0]
         , 'Translation' => array(
             'TranslationId'       => $tId
@@ -76,8 +79,8 @@
     }
     public function pageColumn($c, $tId, $study, $offset){
       //Setup
-      $ret  = array();
-      $tCol = $this->translateColumn($c);
+      $ret         = array();
+      $tCol        = $this->translateColumn($c);
       $description = $tCol['description'];
       $origCol     = $tCol['origCol'];
       //Page query:
@@ -85,10 +88,10 @@
          . "FROM TranscrSuperscriptInfo LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $Ix = $r[0];
-        $q = "SELECT $c "
-           . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
-           . "WHERE Ix = $Ix "
-           . "AND TranslationId = $tId";
+        $q  = "SELECT $c "
+            . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
+            . "WHERE Ix = $Ix "
+            . "AND TranslationId = $tId";
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -115,6 +118,10 @@
         break;
       }
       return array('description' => $description, 'origCol' => $origCol);
+    }
+    public function deleteTranslation($tId){
+      $q = 'DELETE FROM Page_DynamicTranslation_TranscrSuperscriptInfo WHERE TranslationId = '.$tId;
+      $this->dbConnection->query($q);
     }
   }
 ?>

@@ -27,6 +27,8 @@ if($v->gpv()->isView('WordView')){
 }else if($v->gpv()->isView('MapView')){
   $t        = $v->getTranslator();
   $headline = $tabulator->wordHeadline(current($v->getWords()));
+  $headline = Config::getMustache()->render('WordHeadline', $headline);
+  //Config::error(var_dump($headline));
   $viewAll  = $v->setLanguages($v->getStudy()->getLanguages())->link();
   $viewLast = $v->setLanguages()->link();
   $allSelected  = '';
