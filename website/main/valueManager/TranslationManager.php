@@ -80,9 +80,7 @@ abstract class TranslationManager extends SubManager{
       $key = $study->getKey();
       if(!isset($tid))
         $tid = $this->translationId;
-      $q = "SELECT Trans FROM Page_DynamicTranslation_StudyTitle "
-         . "WHERE StudyName = '$key' AND TranslationId = $tid";
-      if($r = Config::getConnection()->query($q)->fetch_row()){
+      if($r = $study->translate(array('tId' => $tid))){
         $p = $this->st('website_title_prefix');
         $r = $r[0];
         $s = $this->st('website_title_suffix');
@@ -92,21 +90,19 @@ abstract class TranslationManager extends SubManager{
       if($tid != $this->defaultTranslationId){
         return $this->getPageTitle($study, $this->defaultTranslationId);
       }
-      return $this->st('website_title_prefix');
     }
+    return $this->st('website_title_prefix');
   }
   /**
     @param $word Word
     @return String translation, null if no translation is found.
   */
   public function getWordTranslation($word){
-    $id  = $word->getId();
-    $sid = $this->gvm()->getStudy()->getKey();
-    $t   = $this->translationId;
-    $q   = "SELECT Trans_FullRfcModernLg01 FROM Page_DynamicTranslation_Words "
-         . "WHERE TranslationId = $t AND Study = '$sid' "
-         . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-    if($r = Config::getConnection()->query($q)->fetch_row())
+    $options = array(
+      'tId' => $this->translationId
+    , 'column' => 'FullRfcModernLg01'
+    );
+    if($r = $word->translate($options))
       return $r[0];
     return null;
   }
@@ -115,14 +111,12 @@ abstract class TranslationManager extends SubManager{
     @return String translation, null if no translation is found.
   */
   public function getWordLongTranslation($word){
-    $id  = $word->getId();
-    $sid = $this->gvm()->getStudy()->getKey();
-    $t   = $this->translationId;
-    $q   = "SELECT Trans_LongerRfcModernLg01 FROM Page_DynamicTranslation_Words "
-         . "WHERE TranslationId = $t AND Study = '$sid' "
-         . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $id";
-    if($r = Config::getConnection()->query($q)->fetch_row())
-      return ($r[0] === '') ? null : $r[0];
+    $options = array(
+      'tId' => $this->translationId
+    , 'column' => 'LongerRfcModernLg01'
+    );
+    if($r = $word->translate($options))
+      return $r[0];
     return null;
   }
   /**
@@ -130,7 +124,7 @@ abstract class TranslationManager extends SubManager{
       'ShortName', 'SpellingRfcLangName'
       , 'SpecificLanguageVarietyName'
       , 'RegionGpMemberLgNameLongInThisSubFamilyWebsite'
-    , and is null if no translation is found.
+    , and is an empty array if no translation is found.
     @param $language Language
     @return $translation String[]
   */
@@ -139,23 +133,21 @@ abstract class TranslationManager extends SubManager{
     $sid = $this->gvm()->getStudy()->getKey();
     $id  = $language->getId();
     $t   = $this->translationId;
-    $q   = "SELECT Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite"
-         . ", Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite "
-         . "FROM Page_DynamicTranslation_RegionLanguages "
-         . "WHERE TranslationId = $t "
-         . "AND Study = '$sid' "
-         . "AND LanguageIx = $id";
-    if($r = Config::getConnection()->query($q)->fetch_row()){
-      $ret['RegionGpMemberLgNameShortInThisSubFamilyWebsite'] = $r[0];
-      $ret['RegionGpMemberLgNameLongInThisSubFamilyWebsite']  = $r[1];
+    $field  = $sid.'-'.$id;
+    $prefix = 'RegionLanguagesTranslationProvider-RegionLanguages_-Trans_';
+    $cols   = array( 'RegionGpMemberLgNameShortInThisSubFamilyWebsite'
+                   , 'RegionGpMemberLgNameLongInThisSubFamilyWebsite');
+    foreach($cols as $col){
+      if($r = Translatable::getTrans($t, $prefix.$col, $field))
+        $ret[$col] = $r[0];
     }
-    $q   = "SELECT Trans_ShortName, Trans_SpellingRfcLangName, Trans_SpecificLanguageVarietyName "
-         . "FROM Page_DynamicTranslation_Languages "
-         . "WHERE TranslationId = $t AND LanguageIx = $id AND Study = '$sid'";
-    if($r = Config::getConnection()->query($q)->fetch_row()){
-      $ret['ShortName']                   = $r[0];
-      $ret['SpellingRfcLangName']         = $r[1];
-      $ret['SpecificLanguageVarietyName'] = $r[2];
+    foreach(array( 'ShortName'
+                 , 'SpellingRfcLangName'
+                 , 'SpecificLanguageVarietyName'
+    ) as $col){
+      $options = array('tId' => $this->translationId, 'column' => $col);
+      if($r = $language->translate($options))
+        $ret[$col] = $r[0];
     }
     return $ret;
   }
@@ -167,18 +159,22 @@ abstract class TranslationManager extends SubManager{
     @return $translation String[]
   */
   public function getLanguageStatusTypeTranslation($language){
-    $id = $language->getId();
-    $t  = $this->translationId;
-    $sk = $language->getStudy()->getKey();
-    $q  = "SELECT Trans_Status, Trans_Description, Trans_StatusTooltip "
-        . "FROM Page_DynamicTranslation_LanguageStatusTypes "
-        . "WHERE TranslationId = $t "
-        . "AND LanguageStatusType = "
-        . "(SELECT LanguageStatusType FROM Languages_$sk "
-        . "WHERE LanguageIx = $id)";
-    if($r = Config::getConnection()->query($q)->fetch_row()){
-      return $r;
+    $ret  = array();
+    $tId  = $this->translationId;
+    $cols = array('Status', 'StatusTooltip', 'Description');
+    $prefix = 'LanguageStatusTypesTranslationProvider-LanguageStatusTypes-Trans_';
+    $field  = $language->getLanguageStatusType();
+    if($field){
+      $field = $field[0];
+    }else return null;
+    $ok = false;
+    foreach($cols as $col){
+      if($r = Translatable::getTrans($tId, $prefix.$col, $field)){
+        $ok = true;
+        array_push($ret, $r[0]);
+      }else array_push($ret, '');
     }
+    if($ok) return $ret;
     return null;
   }
   /**
@@ -186,11 +182,8 @@ abstract class TranslationManager extends SubManager{
     @return $translation [String]
   */
   public function getMeaningGroupTranslation($meaningGroup){
-    $id = $meaningGroup->getId();
-    $t  = $this->translationId;
-    $q  = "SELECT Trans FROM Page_DynamicTranslation_MeaningGroups "
-        . "WHERE TranslationId = $t AND MeaningGroupIx = $id";
-    if($r = Config::getConnection()->query($q)->fetch_row())
+    $ops = array('tId' => $this->translationId);
+    if($r = $meaningGroup->translate($ops))
       return $r[0];
     return null;
   }
@@ -199,27 +192,24 @@ abstract class TranslationManager extends SubManager{
     @return $translation [String]
   */
   public function getRegionTranslation($region){
-    $id  = $region->getId();
-    $t   = $this->translationId;
-    $sid = $this->gvm()->getStudy()->getKey();
-    $q   = "SELECT Trans_RegionGpNameShort, Trans_RegionGpNameLong FROM Page_DynamicTranslation_Regions WHERE "
-         . "TranslationId = $t AND Study = '$sid' AND RegionIdentifier = '$id'";
-    if($r = Config::getConnection()->query($q)->fetch_row()){
-      return $r;
+    $tId  = $this->translationId;
+    $cols = array('RegionGpNameShort', 'RegionGpNameLong');
+    $ret  = array();
+    foreach($cols as $col){
+      $ops = array('tId' => $tId, 'column' => $col);
+      if($r = $region->translate($ops))
+        array_push($ret, $r[0]);
     }
-    return null;
+    return (count($ret) > 0) ? $ret : null;
   }
   /**
     @param $study Study
     @return $translation [String]
   */
   public function getStudyTranslation($study){
-    $id = $study->getKey();
-    $t  = $this->translationId;
-    $q  = "SELECT Trans FROM Page_DynamicTranslation_Studies WHERE TranslationId = $t AND Study = '$id'";
-    if($r = Config::getConnection()->query($q)->fetch_row()){
+    $ops  = array('tId' => $this->translationId);
+    if($r = $study->translate($ops))
       return $r[0];
-    }
     return null;
   }
   /**
@@ -227,13 +217,9 @@ abstract class TranslationManager extends SubManager{
     @return $translation [String]
   */
   public function getFamilyTranslation($family){
-    $id = $family->getId();
-    $t  = $this->translationId;
-    $q  = "SELECT Trans FROM Page_DynamicTranslation_Families "
-        . "WHERE CONCAT(StudyIx, FamilyIx) = $id AND TranslationId = $t";
-    if($r = Config::getConnection()->query($q)->fetch_row()){
+    $ops  = array('tId' => $this->translationId);
+    if($r = $family->translate($ops))
       return $r[0];
-    }
     return null;
   }
   /**
@@ -243,20 +229,27 @@ abstract class TranslationManager extends SubManager{
     @return $translation [$string]
   */
   public function getTranscrSuperscriptTranslation($ix){
-    $t = $this->translationId;
+    $tId = $this->translationId;
     if(is_numeric($ix)){
-      $q = "SELECT Trans_Abbreviation, Trans_HoverText "
-         . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
-         . "WHERE Ix = $ix AND TranslationId = $t";
-    }else if(strlen($ix) === 3){
-      $q = "SELECT Trans_Abbreviation, Trans_FullNameForHoverText "
-         . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-         . "WHERE IsoCode = '$ix' AND TranslationId = $t";
-    }else $q = '';
-    if($q !== ''){
-      if($r = Config::getConnection()->query($q)->fetch_row()){
-        return $r;
+      $prefix = 'TranscrSuperscriptInfoTranslationProvider-TranscrSuperscriptInfo-Trans_';
+      $cols   = array('Abbreviation', 'HoverText');
+      $ret    = array();
+      foreach($cols as $col){
+        if($r = Translatable::getTrans($tId, $prefix.$col, $ix)){
+          array_push($ret, $r[0]);
+        }else array_push($ret, '');
       }
+      return $ret;
+    }else if(strlen($ix) === 3){
+      $prefix = 'TranscrSuperscriptLenderLgsTranslationProvider-TranscrSuperscriptLenderLgs-Trans_';
+      $cols   = array('Abbreviation', 'FullNameForHoverText');
+      $ret    = array();
+      foreach($cols as $col){
+        if($r = Translatable::getTrans($tId, $prefix.$col, $ix)){
+          array_push($ret, $r[0]);
+        }else array_push($ret, '');
+      }
+      return $ret;
     }
     return null;
   }

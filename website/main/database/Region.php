@@ -1,5 +1,5 @@
 <?php
-require_once 'DBEntry.php';
+require_once 'Translatable.php';
 /**
   These constants provide names for the expected values of
   the RegionGpTypeIx field in the v4.Regions table:
@@ -10,7 +10,11 @@ define("REGIONTYPE_SPELLING", 2);
 /**
   The Region is an entry of the Region table in the database.
 */
-class Region extends DBEntry {
+class Region extends Translatable{
+  //Inherited from Translatable:
+  protected static function getTranslationPrefix(){
+    return 'RegionsTranslationProvider-Regions_-Trans_';
+  }
   /***/
   public function buildSelectQuery($fs){
     $sid = $this->getValueManager()->getStudy()->getId();

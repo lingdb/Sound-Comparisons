@@ -1,30 +1,36 @@
 <?php
   /***/
   require_once "DynamicTranslationProvider.php";
+  /*
+    Mapping between Words_$s and Page_DynamicTranslation:
+    CONCAT(Study,'-',IxElicitation,IxMorphologicalInstance) <-> Field
+    $c (column)                                             <-> Trans
+  */
   class WordsTranslationProvider extends DynamicTranslationProvider{
-    public function getTable(){ return 'Page_DynamicTranslation_Words';}
+    public function migrate(){
+      $category = $this->getName();
+      $column   = $this->getColumn();
+      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
+         . "SELECT TranslationId, '$category', CONCAT(Study,'-',IxElicitation,IxMorphologicalInstance), $column "
+         . "FROM Page_DynamicTranslation_Words";
+      $this->dbConnection->query($q);
+    }
+    public function getTable(){ return 'Words_';}
     public function searchColumn($c, $tId, $searchText){
       //Setup
-      $ret = array();
-      $tCol = $this->translateColumn($c);
+      $ret         = array();
+      $tCol        = $this->translateColumn($c);
       $description = $tCol['description'];
-      $origCol = $tCol['origCol'];
-      //We need all Studies to build the search queries:
-      $q = 'SELECT Name FROM Studies';
-      $studies = $this->dbConnection->query($q);
-      $studies = $this->fetchRows($studies);
+      $origCol     = $tCol['origCol'];
       //Search queries:
-      $qs = array("SELECT $c, Study, "
-          . "CONCAT(IxElicitation, IxMorphologicalInstance), $tId "
-          . "FROM Page_DynamicTranslation_Words "
-          . "WHERE TranslationId = $tId "
-          . "AND Study = ANY(SELECT Name FROM Studies) "
-          . "AND $c LIKE '%$searchText%'");
+      $qs = array($this->translationSearchQuery($tId, $searchText));
       if($this->searchAllTranslations()){
-        foreach($studies as $s){
+        //We need all Studies to build the search queries:
+        $q   = 'SELECT Name FROM Studies';
+        $set = $this->dbConnection->query($q);
+        foreach($this->fetchRows($set) as $s){
           $s = $s[0];
-          $q = "SELECT $origCol, '$s', "
-             . "CONCAT(IxElicitation, IxMorphologicalInstance), TranslationId "
+          $q = "SELECT CONCAT('$s-', IxElicitation, IxMorphologicalInstance), $origCol, 1 "
              . "FROM Words_$s "
              . "WHERE $origCol LIKE '%$searchText%'";
           array_push($qs, $q);
@@ -32,21 +38,18 @@
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $match   = $r[0];
-        $study   = $r[1];
-        $wId     = $r[2];
-        $matchId = $r[3];
+        $payload = $r[0];
+        $match   = $r[1];
+        $matchId = $r[2];
+        $parts   = explode('-', $payload);
+        $study   = $parts[0];
+        $wId     = $parts[1];
         $q = "SELECT $origCol "
            . "FROM Words_$study "
            . "WHERE CONCAT(IxElicitation, "
            . "IxMorphologicalInstance) = $wId";
         $original = $this->querySingleRow($q);
-        $q = "SELECT $c "
-           . "FROM Page_DynamicTranslation_Words "
-           . "WHERE TranslationId = $tId "
-           . "AND Study = '$study' "
-           . "AND CONCAT(IxElicitation, "
-           . "IxMorphologicalInstance) = $wId";
+        $q = $this->getTranslationQuery($payload, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -56,57 +59,12 @@
         , 'Translation' => array(
             'TranslationId'       => $tId
           , 'Translation'         => $translation[0]
-          , 'Payload'             => implode(',', array($study, $wId))
+          , 'Payload'             => $payload
           , 'TranslationProvider' => $this->getName()
           )
         ));
       }
       return $ret;
-    }
-    public function updateColumn($c, $tId, $payload, $update){
-      $db      = $this->dbConnection;
-      $payload = explode(',', $payload);
-      $study   = $db->escape_string($payload[0]);
-      $wId     = $db->escape_string($payload[1]);
-      $update  = $db->escape_string($update);
-      //Fetching IxElicitation and IxMorphologicalInstance
-      $q = "SELECT IxElicitation, IxMorphologicalInstance "
-         . "FROM Words_$study "
-         . "WHERE CONCAT(IxElicitation, "
-         . "IxMorphologicalInstance) = $wId";
-      $r   = $this->querySingleRow($q);
-      $ixe = $r[0];
-      $ixm = $r[1];
-      //Fetching current values:
-      $q = "SELECT Trans_FullRfcModernLg01, Trans_LongerRfcModernLg01 "
-         . "FROM Page_DynamicTranslation_Words "
-         . "WHERE Study = '$study' "
-         . "AND TranslationId = $tId "
-         . "AND CONCAT(IxElicitation, IxMorphologicalInstance) = $wId";
-      $rst = $db->query($q);
-      if($r = $rst->fetch_array()){
-        $rst = $r;
-      }else $rst = array(
-        'Trans_FullRfcModernLg01'   => ''
-      , 'Trans_LongerRfcModernLg01' => '');
-      //Performing the update:
-      $rst[$c] = $update;
-      $a = $rst['Trans_FullRfcModernLg01'];
-      $b = $rst['Trans_LongerRfcModernLg01'];
-      $qs  = array(
-        "DELETE FROM Page_DynamicTranslation_Words "
-      . "WHERE Study = '$study' "
-      . "AND TranslationId = $tId "
-      . "AND CONCAT(IxElicitation, "
-      . "IxMorphologicalInstance) = $wId"
-      , "INSERT INTO Page_DynamicTranslation_Words "
-      . "(TranslationId, Study, "
-      . "IxElicitation, IxMorphologicalInstance, "
-      . "Trans_FullRfcModernLg01, Trans_LongerRfcModernLg01) "
-      . "VALUES ($tId, '$study', $ixe, $ixm, '$a', '$b')"
-      );
-      foreach($qs as $q)
-        $db->query($q);
     }
     public function offsetsColumn($c, $tId, $study){
       $q = "SELECT COUNT(*) FROM Words_$study";
@@ -115,32 +73,24 @@
     }
     public function pageColumn($c, $tId, $study, $offset){
       //Setup
-      $ret = array();
-      $tCol = $this->translateColumn($c);
+      $ret         = array();
+      $tCol        = $this->translateColumn($c);
       $description = $tCol['description'];
-      $origCol = $tCol['origCol'];
-      //We need all Studies to build the search queries:
-      $q = 'SELECT Name FROM Studies';
-      $studies = $this->dbConnection->query($q);
-      $studies = $this->fetchRows($studies);
+      $origCol     = $tCol['origCol'];
       //Page query:
-      $q = "SELECT $origCol, CONCAT(IxElicitation, IxMorphologicalInstance) "
+      $q = "SELECT CONCAT('$study-', IxElicitation, IxMorphologicalInstance), $origCol "
          . "FROM Words_$study LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
-        $q = "SELECT $c "
-           . "FROM Page_DynamicTranslation_Words "
-           . "WHERE TranslationId = $tId "
-           . "AND Study = '$study' "
-           . "AND CONCAT(IxElicitation, "
-           . "IxMorphologicalInstance) = ".$r[1];
+        $payload = $r[0];
+        $q = $this->getTranslationQuery($payload, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
-        , 'Original'    => $r[0]
+        , 'Original'    => $r[1]
         , 'Translation' => array(
             'TranslationId'       => $tId
           , 'Translation'         => $translation[0]
-          , 'Payload'             => implode(',', array($study, $r[1]))
+          , 'Payload'             => $payload
           , 'TranslationProvider' => $this->getName()
           )
         ));
@@ -159,10 +109,6 @@
         break;
       }
       return array('description' => $description, 'origCol' => $origCol);
-    }
-    public function deleteTranslation($tId){
-      $q = "DELETE FROM Page_DynamicTranslation_Words WHERE TranslationId = $tId";
-      $this->dbConnection->query($q);
     }
   }
 ?>

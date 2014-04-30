@@ -49,8 +49,15 @@
       return preg_replace('/\\n/','<br>',$frd[0]);
     }
     /***/
-    public function getColumnDescription(){
+    public function getColumnDescription($column = null){
+      //Setup:
       if($this->column === null) return null;
+      if($column === null) $column = $this->column;
+      // Recursive cases:
+      if($this->column === 'ContributorCitationAuthor2'){
+        return $this->getColumnDescription('ContributorCitationAuthor1').' (2)';
+      }
+      // General edge case:
       $key = 'description_contributor_'.$this->column;
       return $this->getValueManager()->getTranslator()->st($key);
     }

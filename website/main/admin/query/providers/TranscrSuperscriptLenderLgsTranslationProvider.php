@@ -1,19 +1,29 @@
 <?php
   /***/
   require_once "DynamicTranslationProvider.php";
+  /*
+    Mapping between TranscSuperscriptLenderLgs and Page_DynamicTranslation:
+    IsoCode     <-> Field
+    $c (column) <-> Trans
+  */
   class TranscrSuperscriptLenderLgsTranslationProvider extends DynamicTranslationProvider{
-    public function getTable(){ return 'Page_DynamicTranslation_TranscrSuperscriptLenderLgs';}
+    public function migrate(){
+      $category = $this->getName();
+      $column   = $this->getColumn();
+      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
+         . "SELECT TranslationId, '$category', IsoCode, $column "
+         . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs";
+      $this->dbConnection->query($q);
+    }
+    public function getTable(){ return 'TranscrSuperscriptLenderLgs';}
     public function searchColumn($c, $tId, $searchText){
       //Setup
-      $ret = array();
-      $tCol = $this->translateColumn($c);
+      $ret         = array();
+      $tCol        = $this->translateColumn($c);
       $description = $tCol['description'];
-      $origCol = $tCol['origCol'];
+      $origCol     = $tCol['origCol'];
       //Search queries:
-      $qs = array("SELECT IsoCode, $c, TranslationId "
-          . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-          . "WHERE $c LIKE '%$searchText%' "
-          . "AND TranslationId = $tId");
+      $qs = array($this->translationSearchQuery($tId, $searchText));
       if($this->searchAllTranslations()){
         array_push($qs,
           "SELECT IsoCode, $origCol, 1 "
@@ -30,10 +40,7 @@
            . "FROM TranscrSuperscriptLenderLgs "
            . "WHERE IsoCode = '$iso'";
         $original = $this->querySingleRow($q);
-        $q = "SELECT $c "
-           . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-           . "WHERE IsoCode = '$iso' "
-           . "AND TranslationId = $tId";
+        $q = $this->getTranslationQuery($iso, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -49,29 +56,6 @@
         ));
       }
       return $ret;
-    }
-    public function updateColumn($c, $tId, $payload, $update){
-      $db     = $this->dbConnection;
-      $iso    = $db->escape_string($payload);
-      $update = $db->escape_string($update);
-      //Checking existence:
-      $q = "SELECT COUNT(*) "
-         . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-         . "WHERE IsoCode = '$iso' "
-         . "AND TranslationId = $tId";
-      $exists = $this->querySingleRow($q);
-      $exists = $exists[0] > 0;
-      //Saving translation:
-      if($exists){
-        $q = "UPDATE Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-           . "SET $c = '$update' "
-           . "WHERE IsoCode = '$iso' "
-           . "AND TranslationId = $tId";
-      }else{
-        $q = "INSERT INTO Page_DynamicTranslation_TranscrSuperscriptLenderLgs (TranslationId, IsoCode, $c) "
-           . "VALUES ($tId, '$iso', '$update')";
-      }
-      $db->query($q);
     }
     public function offsetsColumn($c, $tId, $study){
       $q = "SELECT COUNT(*) FROM TranscrSuperscriptLenderLgs";
@@ -89,10 +73,7 @@
          . "FROM TranscrSuperscriptLenderLgs LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $iso = $r[0];
-        $q   = "SELECT $c "
-             . "FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs "
-             . "WHERE TranslationId = $tId "
-             . "AND IsoCode = '$iso'";
+        $q   = $this->getTranslationQuery($iso, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -119,10 +100,6 @@
         break;
       }
       return array('description' => $description, 'origCol' => $origCol);
-    }
-    public function deleteTranslation($tId){
-      $q = "DELETE FROM Page_DynamicTranslation_TranscrSuperscriptLenderLgs WHERE TranslationId = $tId";
-      $this->dbConnection->query($q);
     }
   }
 ?>

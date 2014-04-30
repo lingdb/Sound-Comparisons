@@ -84,7 +84,7 @@ function tables_multiwordTableTransposed($v){
     $href  = $v->gpv()->setView('WordView')->setLanguages()->setWord($w)->link();
     $ttip  = ($ln = $w->getLongName()) ? " title='$ln'" : '';
     $ptip  = $t->st('tabulator_multi_playword');
-    $trans = $w->getTranslation($v, true, false);
+    $trans = $w->getWordTranslation($v, true, false);
     $maps  = $w->getMapsLink($t);
     echo "<td><a class='tableLink color-word' $href$ttip>$trans</a>"
        . "<a $mhref title='$mttip' class='remove'><i class='icon-remove-custom'></i></a>"

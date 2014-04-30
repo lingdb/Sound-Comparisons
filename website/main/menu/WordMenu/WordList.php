@@ -15,7 +15,7 @@ function WordMenuBuildWordList($words, $v, $t){
     $word = array(
       'selected' => $hasWord
     , 'cname'    => $w->getKey()
-    , 'trans'    => $w->getTranslation($v, true, false)
+    , 'trans'    => $w->getWordTranslation($v, true, false)
     , 'ttip'     => $w->getLongName()
     );
     //The icon:

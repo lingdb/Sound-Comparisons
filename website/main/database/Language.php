@@ -1,9 +1,13 @@
 <?php
-require_once 'DBEntry.php';
+require_once 'Translatable.php';
 /**
   Corresponds to an Entry from the Languages table.
 */
-class Language extends DBEntry{
+class Language extends Translatable{
+  //Inherited from Translatable:
+  protected static function getTranslationPrefix(){
+    return 'LanguagesTranslationProvider-Languages_-Trans_';
+  }
   /***/
   protected function buildSelectQuery($fs){
     $sid = $this->getValueManager()->getStudy()->getId();
@@ -14,6 +18,19 @@ class Language extends DBEntry{
   protected function findKey(){
     if($r = $this->fetchFields('ShortName')){
       $this->key = $r[0];
+      //Checking if we depend on LanguageStatusType:
+      $sid = $this->getValueManager()->getStudy()->getId();
+      $q   = "SELECT COUNT(ShortName) FROM Languages_$sid WHERE ShortName = '".$r[0]."'";
+      if($r = $this->fetchOneBy($q)){
+        if($r[0] > 1){
+          $r = $this->fetchFields('LanguageStatusType');
+          if(!empty($r[0]) && $r[0] !== '0'){
+            $q = "SELECT Status FROM LanguageStatusTypes WHERE LanguageStatusType = ".$r[0];
+            $type = $this->fetchOneBy($q)[0];
+            $this->key .= "<$type>";
+          }
+        }
+      }
     }else Config::error("database/Language.php: No name for Language: ".$this->id);
   }
   /**
@@ -103,8 +120,10 @@ class Language extends DBEntry{
   */
   public function getSpellingName(){
     if($t = $this->getValueManager()->getTranslator()->dt($this)){
-      $t = $t['SpellingRfcLangName'];
-      if($t != '') return $t;
+      if(array_key_exists('SpellingRfcLangName', $t)){
+        $t = $t['SpellingRfcLangName'];
+        if($t != '') return $t;
+      }
     }
     if($r = $this->fetchFields('SpellingRfcLangName')){
       if($r[0]) return $r[0];
@@ -636,15 +655,38 @@ class LanguageFromKey extends Language{
   public function __construct($v, $key){
     $this->setup($v);
     $this->key = $key;
-    $this->id = null;
+    $this->id  = null;
+    if(preg_match('/^([^<]+)(<(.*)>)?$/', $key, $matches)){
+      $sId  = $v->gsm()->getStudy()->getId();
+      $name = $matches[1];
+      $qs   = array();
+      if(count($matches) === 4){
+        //Got a LanguageStatusType
+        $type = $matches[3];
+        array_push($qs,
+          "SELECT L.LanguageIx "
+        . "FROM Languages_$sId AS L "
+        . "JOIN LanguageStatusTypes AS T USING (LanguageStatusType) "
+        . "WHERE T.Status = '$type' "
+        . "AND L.ShortName = '$name'");
+      }else{
+        //No LanguageStatusType given.
     $qs = array(
-        "SELECT LanguageIx FROM RegionLanguages WHERE RegionGpMemberLgNameLongInThisSubFamilyWebsite LIKE '$key'"
-      , "SELECT LanguageIx FROM RegionLanguages WHERE RegionGpMemberLgNameShortInThisSubFamilyWebsite LIKE '$key'"
-      , "SELECT LanguageIx FROM Languages WHERE ShortName LIKE '$key'"
+        "SELECT LanguageIx FROM RegionLanguages_$sId "
+      . "WHERE RegionGpMemberLgNameLongInThisSubFamilyWebsite LIKE '$name'"
+      , "SELECT LanguageIx FROM RegionLanguages_$sId "
+      . "WHERE RegionGpMemberLgNameShortInThisSubFamilyWebsite LIKE '$name'"
+      , "SELECT LanguageIx FROM Languages_$sId WHERE ShortName LIKE '$name'"
     );
-    foreach($qs as $q){
-      if($r = $this->fetchOneBy($q))
-        $this->id = $r[0];
+      }
+      foreach($qs as $q){
+        if($r = $this->fetchOneBy($q)){
+          $this->id = $r[0];
+          break;
+        }
+      }
+    }else{
+      Config::error("Could not parse LanguageKey: $key");
     }
     if($this->id == null)
       Config::error("No Id found for LanguageKey: $key");

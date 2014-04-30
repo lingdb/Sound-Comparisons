@@ -1,9 +1,13 @@
 <?php
-require_once 'DBEntry.php';
+require_once 'Translatable.php';
 /**
   A Word is a DBEntry from one of the Words_$studyName tables.
 */
-class Word extends DBEntry{
+class Word extends Translatable{
+  //Inherited from Translatable:
+  protected static function getTranslationPrefix(){
+    return 'WordsTranslationProvider-Words_-Trans_';
+  }
   protected $sid; //StudyId of the Study a Word belongs do.
   /**
     @param $field String The name of the field that is to be fetched.
@@ -79,8 +83,8 @@ class Word extends DBEntry{
     If $break is true, multiple translations of the same 'rank' will be imploded with '<br />',
     otherwise they will be imploded with ', '.
   */
-  public function getTranslation($v, $useSpLang = false, $break = true){
-    Stopwatch::start('Word:getTranslation');
+  public function getWordTranslation($v, $useSpLang = false, $break = true){
+    Stopwatch::start('Word:getWordTranslation');
     if(!$v) $v = $this->getValueManager();
     if($useSpLang) // The case to use the SpellingLanguage.
       $l = $v->gwo()->getSpLang();
@@ -113,12 +117,12 @@ class Word extends DBEntry{
       $ret = implode($glue, array_unique($translations));
       //Done:
       if($ret != ''){
-        Stopwatch::stop('Word:getTranslation');
+        Stopwatch::stop('Word:getWordTranslation');
         return $ret;
       }
     }
     /*Fallback on fail*/
-    Stopwatch::stop('Word:getTranslation');
+    Stopwatch::stop('Word:getWordTranslation');
     return $this->getModernName();
   }
   /**
@@ -240,8 +244,8 @@ class Word extends DBEntry{
   */
   public static function compareOnTranslation($x, $y){
     $v  = $x->getValueManager();
-    $tx = $x->getTranslation($v, true);
-    $ty = $y->getTranslation($v, true);
+    $tx = $x->getWordTranslation($v, true);
+    $ty = $y->getWordTranslation($v, true);
     //Checking if we've got php5-intl:
     if($c = Config::getCollator()){
       return $c->compare($tx,$ty);

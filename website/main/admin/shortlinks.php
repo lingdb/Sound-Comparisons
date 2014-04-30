@@ -9,7 +9,7 @@ if(!session_validate($dbConnection))
 if(!session_mayTranslate($dbConnection))
   header('LOCATION: index.php');
 //Inserting/Updating of possible shortlinks:
-if($_POST['name']){
+if(array_key_exists('name', $_POST)){
   $name = $dbConnection->escape_string($_POST['name']);
   $url  = ($_POST['url']) ? $dbConnection->escape_string($_POST['url']) : '';
   if(empty($url)){

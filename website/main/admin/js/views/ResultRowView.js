@@ -13,6 +13,10 @@ ResultRowView = Backbone.View.extend({
     this.$('.updateInput').keyup(function(){row.keystroke();});
     this.$('.saveButton').click(function(e){row.save(e);});
     var dv = new DescriptionView({el: this.$('.description')});
+    //Put grey background for inputs iff match is empty:
+    if(this.$('.copy-over').parent().text() == ''){
+      this.$('.updateInput').css('background-color', '#F5F5F5');
+    }
   }
 , save: function(e){
     e.preventDefault();

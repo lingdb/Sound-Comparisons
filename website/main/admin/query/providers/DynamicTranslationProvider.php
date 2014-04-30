@@ -27,11 +27,6 @@
     public function search($tId, $searchText){
       return $this->searchColumn($this->getColumn(), $tId, $searchText);
     }
-    /*An update function depending on the Column allowes to supply updates focussing on single cells.*/
-    public abstract function updateColumn($c, $tId, $payload, $update);
-    public function update($tId, $payload, $update){
-      return $this->updateColumn($this->getColumn(), $tId, $payload, $update);
-    }
     /*An offset function depending on a Column.*/
     public abstract function offsetsColumn($c, $tId, $study);
     public function offsets($tId, $study){

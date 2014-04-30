@@ -4,15 +4,25 @@
     facilities for the table Page_DynamicTranslation_Families.
   */
   require_once "TranslationProvider.php";
+  /*
+    Mapping between tables Families, Page_DynamicTranslation:
+    CONCAT(StudyIx, FamilyIx) <-> Field
+    FamilyNm                  <-> Trans
+  */
   class FamilyTranslationProvider extends TranslationProvider{
+    public function migrate(){
+      $category = $this->getName();
+      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
+         . "SELECT DISTINCT TranslationId, '$category', CONCAT(StudyIx, FamilyIx), Trans "
+         . "FROM Page_DynamicTranslation_Families";
+      $this->dbConnection->query($q);
+    }
     public function search($tId, $searchText){
       //Setup:
       $ret = array();
       $description = $this->getDescription('dt_families_trans');
       //Search queries:
-      $qs = array('SELECT CONCAT(StudyIx, FamilyIx), Trans, TranslationId '
-          . 'FROM Page_DynamicTranslation_Families '
-          . "WHERE Trans LIKE '%$searchText%' AND TranslationId = $tId");
+      $qs = array($this->translationSearchQuery($tId, $searchText));
       if($this->searchAllTranslations()){
         array_push($qs,
           'SELECT CONCAT(StudyIx, FamilyIx), FamilyNm, 1 '
@@ -25,9 +35,7 @@
         $q = 'SELECT FamilyNm FROM Families '
            . "WHERE CONCAT(StudyIx, FamilyIx) = $payload";
         $original = $this->dbConnection->query($q)->fetch_row();
-        $q = 'SELECT Trans FROM Page_DynamicTranslation_Families '
-           . "WHERE TranslationId = $tId "
-           . "AND CONCAT(StudyIx, FamilyIx) = $payload";
+        $q = $this->getTranslationQuery($payload, $tId);
         $translation = $this->dbConnection->query($q)->fetch_row();
         array_push($ret, array(
           'Description' => $description
@@ -44,20 +52,6 @@
       }
       return $ret;
     }
-    public function update($tId, $payload, $update){
-      $db      = $this->dbConnection;
-      $payload = $db->escape_string($payload);
-      $update  = $db->escape_string($update);
-      $qs = array(
-        "DELETE FROM Page_DynamicTranslation_Families "
-      . "WHERE CONCAT(StudyIx, FamilyIx) = $payload AND TranslationId = $tId"
-      , "INSERT INTO Page_DynamicTranslation_Families(TranslationId, StudyIx, FamilyIx, Trans) "
-      . "SELECT $tId, StudyIx, FamilyIx, '$update' FROM Families "
-      . "WHERE CONCAT(StudyIx, FamilyIx) = $payload"
-      );
-      foreach($qs as $q)
-        $db->query($q);
-    }
     public function offsets($tId, $study){
       $q = "SELECT COUNT(*) FROM Families";
       $r = $this->querySingleRow($q);
@@ -71,10 +65,7 @@
       $q = "SELECT CONCAT(StudyIx, FamilyIx), FamilyNm "
          . "FROM Families LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
-        $q = "SELECT Trans "
-           . "FROM Page_DynamicTranslation_Families "
-           . "WHERE TranslationId = $tId "
-           . "AND CONCAT(StudyIx, FamilyIx) = ".$r[0];
+        $q = $this->getTranslationQuery($r[0], $tId);
         $translation = $this->dbConnection->query($q)->fetch_row();
         array_push($ret, array(
           'Description' => $description
@@ -88,10 +79,6 @@
         ));
       }
       return $ret;
-    }
-    public function deleteTranslation($tId){
-      $q = "DELETE FROM Page_DynamicTranslation_Families WHERE TranslationId = $tId";
-      $this->dbConnection->query($q);
     }
   }
 ?>

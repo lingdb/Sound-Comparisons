@@ -1,9 +1,29 @@
 <?php
-require_once 'DBEntry.php';
+require_once 'Translatable.php';
 /**
   A MeaningGroup corresponds to an Entry from the MeaningGroups table.
 */
-class MeaningGroup extends DBEntry{
+class MeaningGroup extends Translatable{
+  //Inherited from Translatable:
+  protected static function getTranslationPrefix(){
+    return 'MeaningGroupsTranslationProvider';
+  }
+  /**
+    Inherited from Translatable:
+    Required option fields:
+    tId, id
+  */
+  public static function getTranslation($options){
+    return Translatable::getTrans($options['tId'], $this::getTranslationPrefix(), $options['id']);
+  }
+  /**
+    Inherited from Translatable:
+    Required option fields:
+    tId
+  */
+  public function translate($options){
+    return Translatable::getTrans($options['tId'], $this::getTranslationPrefix(), $this->id);
+  }
   /**
     @return $name String
     Returns the Name of the MeaningGroup.

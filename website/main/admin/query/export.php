@@ -70,66 +70,14 @@
     , function($s){return "INSERT IGNORE INTO Page_StaticTranslation VALUES $s;\n";}
     )
   , new Table(
-      'SELECT TranslationId, StudyIx, FamilyIx, Trans FROM Page_DynamicTranslation_Families'
-    , function($r) use ($esc){return '('.$r[0].','.$r[1].','.$r[2].','.$esc($r[3]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Families VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, LanguageStatusType, Trans_Status, Trans_Description, Trans_StatusTooltip FROM Page_DynamicTranslation_LanguageStatusTypes'
-    , function($r) use ($esc){return '('.$r[0].','.$r[1].','.$esc($r[2]).','.$esc($r[3]).','.$esc($r[4]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_LanguageStatusTypes VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, Study, Trans_ShortName, Trans_SpellingRfcLangName, Trans_SpecificLanguageVarietyName, LanguageIx FROM Page_DynamicTranslation_Languages'
-    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).','.$esc($r[3]).','.$esc($r[4]).','.$r[5].')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Languages VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, Trans, MeaningGroupIx FROM Page_DynamicTranslation_MeaningGroups'
-    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_MeaningGroups VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, Study, LanguageIx, Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite, Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite FROM Page_DynamicTranslation_RegionLanguages'
-    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].','.$esc($r[3]).','.$esc($r[4]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_RegionLanguages VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, Study, RegionIdentifier, Trans_RegionGpNameShort, Trans_RegionGpNameLong FROM Page_DynamicTranslation_Regions'
-    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].','.$esc($r[3]).','.$esc($r[4]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Regions VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, Study, Trans FROM Page_DynamicTranslation_Studies'
-    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Studies VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, Trans, StudyName FROM Page_DynamicTranslation_StudyTitle'
-    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_StudyTitle VALUES $s;\n";}
-    )
-  , new Table(
-      'SELECT TranslationId, Study, IxElicitation, IxMorphologicalInstance, Trans_FullRfcModernLg01 '
-      . 'FROM Page_DynamicTranslation_Words'
-    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$r[2].','.$r[3].','.$esc($r[4]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Words VALUES $s;\n";}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation_Words("
-                        . "TranslationId, Study, IxElicitation, IxMorphologicalInstance, Trans_FullRfcModernLg01) "
-                        . "VALUES $s;\n";}
+      'SELECT TranslationId, Category, Field, Trans, Time FROM Page_DynamicTranslation'
+    , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).','.$esc($r[3]).','.$esc($r[4]).')';}
+    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation VALUES $s;\n";}
     )
   );
   /* The dumping of tables */
   echo "SET AUTOCOMMIT=0;\nSET FOREIGN_KEY_CHECKS=0;\n";
-  foreach(array('Page_DynamicTranslation_Families'
-               ,'Page_DynamicTranslation_LanguageStatusTypes'
-               ,'Page_DynamicTranslation_Languages'
-               ,'Page_DynamicTranslation_MeaningGroups'
-               ,'Page_DynamicTranslation_RegionLanguages'
-               ,'Page_DynamicTranslation_Regions'
-               ,'Page_DynamicTranslation_Studies'
-               ,'Page_DynamicTranslation_StudyTitle'
-               ,'Page_DynamicTranslation_Words'
+  foreach(array('Page_DynamicTranslation'
                ,'Page_StaticDescription'
                ,'Page_StaticTranslation'
                ,'Page_Translations') as $t)

@@ -2,7 +2,7 @@
   {{#prev}}
   <div class="span3">
     <a id="prevLink" {{{link}}} title="{{ttip}}" class="pull-left nounderline">
-    <div class="color-word inline">{{trans}} </div>← {{title}}</a>
+    <div class="color-word inline">{{trans}}{{#ttip}}…{{/ttip}} </div>← {{title}}</a>
   </div>
   {{/prev}}
   <div class="span6 centertext" id="tableHeader">
@@ -13,7 +13,7 @@
   {{#next}}
   <div class="span3">
     <a id="nextLink" {{{link}}} title="{{ttip}}" class="pull-right nounderline">
-      {{title}} →<div class="color-word inline"> {{trans}}</div>
+      {{title}} →<div class="color-word inline"> {{trans}}{{#ttip}}…{{/ttip}}</div>
     </a>
   </div>
   {{/next}}

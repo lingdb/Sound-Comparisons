@@ -1,10 +1,11 @@
+2014-04-30:
+ - Remember to incorporate translations into next update.
+ - The search all translations feature is currently implemented as nonsense.
+   I should change this.
+
 2014-04-24:
- - StudyTitleTranslationProvider rewrite might interfere with the dbimport procedure, as it magically works without the Studies as a basis, or something thelike.
- - Figure out why I've introduced the deleteTranslation method in TranslationProvider, where it is called,
-   and what is broken now, that the DynamicTranslationProviders get different behaviour per column?
  - Simple TranslationProviders don't care for their study at the moment,
    but I've got the impression that they should.
-   I'll need to fix this asap.
 
 2014-03-11:
  - When switching to do more via .js:
@@ -14,7 +15,6 @@
    - This is the chance to keep the map from zooming in many times
    - Also the map should remember it's location when switching words
    - We can also proxy to other clld sites, so that the .js can do happy/wild things
-   = this is currently underway in the experiment branch
  - Make sure views are recreated when another Study is added
    - It appears that this was one of the problems encountered with Romance
    - Make sure we've got better error reporting here.
@@ -59,17 +59,9 @@
    so that php can still generate pages.
 
 2013-11-07:
- - Allow html or something thelike of about pages
+ - Allow html or something thelike for about pages
  - Add in a home button (before 'view by')
    - Build something to allow for paul to add content
-
-2013-09-19:
- - Learn about Zotero
-
-2013-09-13:
- - Move 'view by' with tabs in topmenu to the middle.
-   - This is no easy task (thinking of smaller screens and the hell of horizontal alignment)
-   - I could try and do this with .js, but that wouldn't be a nice solution.
 
 2013-09-11:
  - It appears in mapview, that if 'my selection' equals 'all languages',
@@ -91,20 +83,14 @@ From myself:
 Using 'My Selection' in mapView removes all languages from the map
   where it should switch to the last selection
 
-Füge spezielle Fehlerseiten hinzu.
-
 The Language Set collapse/expand box doesn't behave correctly.
  - It deletes selected languages somehow, and I don't know where/how o.O
  - Maybe it does so in Init functions of the PageView…
 
 Storing of mySelection in Mapview and in TopMenu between views
- - this will need a good solution
- - Keep word between wordview and mapview
+ - this can be incorporated once the main site runs with .js
 
 -- Long term notes:
- - Think about splitting off all queries into the database dir, so that it's easier to grasp them all.
-   - Introduce a general dbaccess class that handles all issues not handled by any of the other classes.
-     This will also come in handy once another db with a different layout is included.
  - Think about a smaller/faster/better vm client os than XUbuntu
    - This way Paul would have a nicer time working with it
    - This could already use github to pull stuff from

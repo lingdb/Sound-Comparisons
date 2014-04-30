@@ -243,7 +243,7 @@ class Transcription extends DBTable{
       if(strlen($s2) > 0) $altSpelling = $proto.$s2;
       if(strlen($s1) > 0) $altSpelling = $proto.$s1;
       if(isset($altSpelling)){
-        $wTrans = $this->word->getTranslation($v, true, false);
+        $wTrans = $this->word->getWordTranslation($v, true, false);
         if($altSpelling != $wTrans){
           Stopwatch::stop('Transcription:getAltSpelling');
           return $altSpelling;
@@ -271,7 +271,7 @@ class Transcription extends DBTable{
     Stopwatch::start('Transcription:toJSON');
     $v = $this->word->getValueManager();
     //Translation:
-    $translation = $this->word->getTranslation($v);
+    $translation = $this->word->getWordTranslation($v);
     //Language:
     $langName = $this->language->getShortName(false);
     $langName = '"' . $langName . '"';

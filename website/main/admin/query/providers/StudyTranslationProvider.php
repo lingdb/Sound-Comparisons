@@ -2,15 +2,19 @@
   /***/
   require_once "TranslationProvider.php";
   class StudyTranslationProvider extends TranslationProvider{
+    public function migrate(){
+      $category = $this->getName();
+      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
+         . "SELECT TranslationId, '$category', Study, Trans "
+         . "FROM Page_DynamicTranslation_Studies";
+      $this->dbConnection->query($q);
+    }
     public function search($tId, $searchText){
       //Setup:
       $ret = array();
       $description = $this->getDescription('dt_studies_trans');
       //Search queries:
-      $qs = array("SELECT Study, Trans, TranslationId "
-          . "FROM Page_DynamicTranslation_Studies "
-          . "WHERE Trans LIKE '%$searchText%' "
-          . "AND TranslationId = $tId");
+      $qs = array($this->translationSearchQuery($tId, $searchText));
       if($this->searchAllTranslations()){
         array_push($qs,
           "SELECT Name, Name, 1 FROM Studies "
@@ -21,10 +25,7 @@
         $payload = $r[0]; // Also the original :)
         $match   = $r[1];
         $matchId = $r[2];
-        $q = "SELECT Trans "
-           . "FROM Page_DynamicTranslation_Studies "
-           . "WHERE Study = '$payload' "
-           . "AND TranslationId = $tId";
+        $q = $this->getTranslationQuery($payload, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -41,21 +42,6 @@
       }
       return $ret;
     }
-    public function update($tId, $payload, $update){
-      $db      = $this->dbConnection;
-      $payload = $db->escape_string($payload);
-      $update  = $db->escape_string($update);
-      $qs = array(
-        "DELETE FROM Page_DynamicTranslation_Studies "
-      . "WHERE TranslationId = $tId "
-      . "AND Study = '$payload'"
-      , "INSERT INTO Page_DynamicTranslation_Studies "
-      . "(TranslationId, Study, Trans) "
-      . "VALUES ($tId, '$payload', '$update')"
-      );
-      foreach($qs as $q)
-        $db->query($q);
-    }
     public function offsets($tId, $study){
       $q = "SELECT COUNT(DISTINCT Name) FROM Studies";
       $r = $this->querySingleRow($q);
@@ -69,10 +55,7 @@
       $q = "SELECT DISTINCT Name FROM Studies LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $payload = $r[0]; // Also the original :)
-        $q = "SELECT Trans "
-           . "FROM Page_DynamicTranslation_Studies "
-           . "WHERE Study = '$payload' "
-           . "AND TranslationId = $tId";
+        $q = $this->getTranslationQuery($payload, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -86,10 +69,6 @@
         ));
       }
       return $ret;
-    }
-    public function deleteTranslation($tId){
-      $q = "DELETE FROM Page_DynamicTranslation_Studies WHERE TranslationId = $tId";
-      $this->dbConnection->query($q);
     }
   }
 ?>

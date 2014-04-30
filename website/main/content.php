@@ -14,7 +14,7 @@ echo "<div id='contentArea'$s class='span8'>";
 $tabulator = new Tabulator($v);
 if($v->gpv()->isView('WordView')){
   if($words = $v->getWords()){
-    $tabulator->tabluateWord(current($words));
+    $tabulator->tabulateWord(current($words));
   }else{
     Config::error("Got no single word to display. (PageView)");
   }

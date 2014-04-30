@@ -8,14 +8,14 @@
     {{#spaceRow}}
     <tr><td class="spaceRow" colspan="6"></td></tr>
     {{/spaceRow}}
-    <tr {{{data}}}>
+    <tr {{#data-i}}data-i="{{{data-i}}}"{{/data-i}}>
       {{#cells}}
       {{^isLanguageCell}}
       <th rowspan="{{rowSpan}}" style="background-color: #{{color}};">{{name}}</th>
       {{/isLanguageCell}}
       {{#isLanguageCell}}
       <td>
-        <a class="tableLink color-language" {{{link}}} title="{{longName}}">{{shortName}}</a>
+        <a class="tableLink color-language" {{{link}}} title="{{longName}}">{{{shortName}}}</a>
         <br />
         {{#spelling}}
         <div class="altSpelling">{{spelling}}</div>

@@ -5,6 +5,9 @@
   */
   require_once "TranslationProvider.php";
   class StaticTranslationProvider extends TranslationProvider{
+    public function migrate(){
+      //Static Translation doesn't need migration.
+    }
     public function search($tId, $searchText){
       $ret = array();
       $q = "SELECT Req, Trans, TranslationId FROM Page_StaticTranslation "
@@ -72,10 +75,6 @@
         ));
       }
       return $ret;
-    }
-    public function deleteTranslation($tId){
-      $q = "DELETE FROM Page_StaticTranslation WHERE TranslationId = $tId";
-      $this->dbConnection->query($q);
     }
   }
 ?>

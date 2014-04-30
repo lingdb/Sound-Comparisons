@@ -44,7 +44,7 @@ function tables_multiwordTable($v){
     $href  = $v->gpv()->setView('WordView')->setLanguages()->setWord($w)->link();
     $ttip  = ($ln = $w->getLongName()) ? " title='$ln'" : '';
     $ptip  = $t->st('tabulator_multi_playword');
-    $trans = $w->getTranslation($v, true, false);
+    $trans = $w->getWordTranslation($v, true, false);
     $maps  = $w->getMapsLink($t);
     echo "<th>"
        . "<a $dhref title='$dttip' class='remove'><i class='icon-remove-custom'></i></a>"

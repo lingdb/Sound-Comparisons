@@ -1,28 +1,36 @@
 <?php
   /***/
   require_once "DynamicTranslationProvider.php";
+  /*
+    Mapping between tables Regions_$s and Page_DynamicTranslation:
+    CONCAT(Study,'-',StudyIx,FamilyIx,SubFamilyIx,RegionGpIx) <-> Field
+    $c (column)                                               <-> Trans
+  */
   class RegionsTranslationProvider extends DynamicTranslationProvider{
-    public function getTable(){return 'Page_DynamicTranslation_Regions';}
+    public function migrate(){
+      $category = $this->getName();
+      $column   = $this->getColumn();
+      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
+         . "SELECT TranslationId, '$category', CONCAT(Study, '-', RegionIdentifier), $column "
+         . "FROM Page_DynamicTranslation_Regions";
+      $this->dbConnection->query($q);
+    }
+    public function getTable(){return 'Regions_';}
     public function searchColumn($c, $tId, $searchText){
       //Setup
-      $ret = array();
-      $tCol = $this->translateColumn($c);
+      $ret         = array();
+      $tCol        = $this->translateColumn($c);
       $description = $tCol['description'];
-      $origCol = $tCol['origCol'];
-      //We need all Studies to build the search queries:
-      $q = 'SELECT Name FROM Studies';
-      $studies = $this->dbConnection->query($q);
-      $studies = $this->fetchRows($studies);
+      $origCol     = $tCol['origCol'];
       //Search queries:
-      $qs = array("SELECT $c, Study, RegionIdentifier, TranslationId "
-          . "FROM Page_DynamicTranslation_Regions "
-          . "WHERE $c LIKE '%$searchText%' "
-          . "AND TranslationId = $tId");
+      $qs = array($this->translationSearchQuery($tId, $searchText));
       if($this->searchAllTranslations()){
-        foreach($studies as $s){
+        //We need all Studies to build the search queries:
+        $q   = 'SELECT Name FROM Studies';
+        $set = $this->dbConnection->query($q);
+        foreach($this->fetchRows($set) as $s){
           $s = $s[0];
-          $q = "SELECT $origCol, '$s', "
-             . "CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx), 1 "
+          $q = "SELECT CONCAT('$s-', StudyIx, FamilyIx, SubFamilyIx, RegionGpIx), $origCol, 1"
              . "FROM Regions_$s "
              . "WHERE $origCol LIKE '%$searchText%'";
           array_push($qs, $q);
@@ -30,19 +38,17 @@
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $match   = $r[0];
-        $study   = $r[1];
-        $rId     = $r[2];
-        $matchId = $r[3];
+        $payload = $r[0];
+        $match   = $r[1];
+        $matchId = $r[2];
+        $parts   = explode('-', $payload);
+        $study   = $parts[0];
+        $rId     = $parts[1];
         $q = "SELECT $origCol "
            . "FROM Regions_$study "
            . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $rId";
         $original = $this->querySingleRow($q);
-        $q = "SELECT $c "
-           . "FROM Page_DynamicTranslation_Regions "
-           . "WHERE TranslationId = $tId "
-           . "AND Study = '$study' "
-           . "AND RegionIdentifier = $rId";
+        $q = $this->getTranslationQUery($payload, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -59,41 +65,6 @@
       }
       return $ret;
     }
-    public function updateColumn($c, $tId, $payload, $update){
-      $db      = $this->dbConnection;
-      $payload = explode(',', $payload);
-      $study   = $db->escape_string($payload[0]);
-      $rId     = $db->escape_string($payload[1]);
-      $update  = $db->escape_string($update);
-      $q = "SELECT Trans_RegionGpNameShort, "
-         . "Trans_RegionGpNameLong "
-         . "FROM Page_DynamicTranslation_Regions "
-         . "WHERE TranslationId = $tId "
-         . "AND Study = '$study' "
-         . "AND RegionIdentifier = $rId";
-      $rst = $db->query($q);
-      if($r = $rst->fetch_array()){
-        $rst = $r;
-      }else $rst = array(
-        'Trans_RegionGpNameShort' => ''
-      , 'Trans_RegionGpNameLong'  => ''
-      );
-      $rst[$c] = $update;
-      $a  = $rst['Trans_RegionGpNameShort'];
-      $b  = $rst['Trans_RegionGpNameLong'];
-      $qs = array(
-        "DELETE FROM Page_DynamicTranslation_Regions "
-      . "WHERE TranslationId = $tId "
-      . "AND Study = '$study' "
-      . "AND RegionIdentifier = $rId"
-      , "INSERT INTO Page_DynamicTranslation_Regions "
-      . "(TranslationId, Study, RegionIdentifier, "
-      . "Trans_RegionGpNameShort, Trans_RegionGpNameLong) "
-      . "VALUES ($tId, '$study', $rId, '$a', '$b')"
-      );
-      foreach($qs as $q)
-        $db->query($q);
-    }
     public function offsetsColumn($c, $tId, $study){
       $q = "SELECT COUNT(*) FROM Regions_$study";
       $r = $this->querySingleRow($q);
@@ -101,19 +72,16 @@
     }
     public function pageColumn($c, $tId, $study, $offset){
       //Setup
-      $ret = array();
+      $ret  = array();
       $tCol = $this->translateColumn($c);
       $description = $tCol['description'];
-      $origCol = $tCol['origCol'];
+      $origCol     = $tCol['origCol'];
       //Page query:
       $q = "SELECT $origCol, CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
          . "FROM Regions_$study LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
-        $q = "SELECT $c "
-           . "FROM Page_DynamicTranslation_Regions "
-           . "WHERE TranslationId = $tId "
-           . "AND Study = '$study' "
-           . "AND RegionIdentifier = ".$r[1];
+        $payload = implode('-', array($study, $r[1]));
+        $q = $this->getTranslationQuery($payload, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -121,7 +89,7 @@
         , 'Translation' => array(
             'TranslationId'       => $tId
           , 'Translation'         => $translation[0]
-          , 'Payload'             => implode(',', array($study, $r[1]))
+          , 'Payload'             => $payload
           , 'TranslationProvider' => $this->getName()
           )
         ));
@@ -140,10 +108,6 @@
         break;
       }
       return array('description' => $description, 'origCol' => $origCol);
-    }
-    public function deleteTranslation($tId){
-      $q = "DELETE FROM Page_DynamicTranslation_Regions WHERE TranslationId = $tId";
-      $this->dbConnection->query($q);
     }
   }
 ?>

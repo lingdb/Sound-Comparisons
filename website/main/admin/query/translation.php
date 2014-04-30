@@ -88,7 +88,7 @@
         ."(TranslationName, BrowserMatch, ImagePath, RfcLanguage, Active)"
         ." VALUES ('$translationName', '$browserMatch', '$imagePath', $rfcLanguage, $active)";
       $dbConnection->query($query);
-      echo $dbConnection->insert_id();
+      echo $dbConnection->insert_id;
     break;
     /**
       @param TranslationId
@@ -99,15 +99,12 @@
       //Prevent deletion on default language:
       if($translationId == '1')
         Config::error('FAIL: Cannot delete Translation 1.');
-      //Delete translation in all providers:
-      $ps = array(); // deleteTranslation will only be executed once per class.
-      foreach($providers as $p)
-        $ps[get_class($p)] = $p;
-      foreach($ps as $p)
-        $p->deleteTranslation($translationId);
-      //Delete entry itself:
-      $query = "DELETE FROM Page_Translations WHERE TranslationId = $translationId";
-      $dbConnection->query($query);
+      foreach(array(
+        "DELETE FROM Page_DynamicTranslation WHERE TranslationId = $translationId"
+      , "DELETE FROM Page_StaticTranslation  WHERE TranslationId = $translationId"
+      , "DELETE FROM Page_Translations       WHERE TranslationId = $translationId"
+      ) as $q)
+        $dbConnection->query($q);
       echo 'OK';
     break;
     /**
@@ -160,9 +157,10 @@
       , 'Words'                 => '/^WordsTranslationProvider-/'
       , 'Regions'               => '/^RegionsTranslationProvider-/'
       , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'
-      , 'Languages'             => '/^LanguagesTranslationProvider-/'
+      , 'Languages'             => '/^LanguagesTranslationProvider-.*(Short|Variety)Name$/'
       , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'
       , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'
+      , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'
       );
       $ret = array();
       foreach($providerGroups as $group => $regex)
@@ -171,10 +169,11 @@
         });
       //Adding non providers (underscore prefix):
       $ret['_dependsOnStudy'] = array(
-        'Languages'        => true
-      , 'Region languages' => true
-      , 'Regions'          => true
-      , 'Words'            => true
+        'Languages'          => true
+      , 'Region languages'   => true
+      , 'Regions'            => true
+      , 'Spelling languages' => true
+      , 'Words'              => true
       );
       //Done:
       echo json_encode($ret);

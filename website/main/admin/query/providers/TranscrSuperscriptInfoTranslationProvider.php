@@ -1,19 +1,29 @@
 <?php
   /***/
   require_once "DynamicTranslationProvider.php";
+  /*
+    Mapping between tables TranscrSuperscriptInfo and Page_DynamicTranslation:
+    Ix          <-> Field
+    $c (column) <-> Trans
+  */
   class TranscrSuperscriptInfoTranslationProvider extends DynamicTranslationProvider{
-    public function getTable(){ return 'Page_DynamicTranslation_TranscrSuperscriptInfo';}
+    public function migrate(){
+      $category = $this->getName();
+      $column   = $this->getColumn();
+      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
+         . "SELECT TranslationId, '$category', Ix, $column "
+         . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo";
+      $this->dbConnection->query($q);
+    }
+    public function getTable(){ return 'TranscrSuperscriptInfo';}
     public function searchColumn($c, $tId, $searchText){
       //Setup
-      $ret = array();
-      $tCol = $this->translateColumn($c);
+      $ret         = array();
+      $tCol        = $this->translateColumn($c);
       $description = $tCol['description'];
-      $origCol = $tCol['origCol'];
+      $origCol     = $tCol['origCol'];
       //Search queries:
-      $qs = array("SELECT Ix, $c, TranslationId "
-          . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
-          . "WHERE $c LIKE '%$searchText%' "
-          . "AND TranslationId = $tId");
+      $qs = array($this->translationSearchQuery($tId, $searchText));
       if($this->searchAllTranslations()){
         array_push($qs,
           "SELECT Ix, $origCol, 1 FROM TranscrSuperscriptInfo "
@@ -22,17 +32,14 @@
       }
       //Search results:
       foreach($this->runQueries($qs) as $r){
-        $iX      = $r[0];
+        $Ix      = $r[0];
         $match   = $r[1];
         $matchId = $r[2];
         $q = "SELECT $origCol "
            . "FROM TranscrSuperscriptInfo "
-           . "WHERE Ix = $iX";
+           . "WHERE Ix = $Ix";
         $original = $this->querySingleRow($q);
-        $q = "SELECT Trans_Abbreviation "
-           . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
-           . "WHERE TranslationId = $tId "
-           . "AND Ix = $tId";
+        $q = $this->getTranslationQuery($Ix, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -48,29 +55,6 @@
         ));
       }
       return $ret;
-    }
-    public function updateColumn($c, $tId, $payload, $update){
-      $db     = $this->dbConnection;
-      $Ix     = $db->escape_string($payload);
-      $update = $db->escape_string($update);
-      //Checking existence:
-      $q = "SELECT COUNT(*) "
-         . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
-         . "WHERE TranslationId = $tId "
-         . "AND Ix = $Ix";
-      $exists = $this->querySingleRow($q);
-      $exists = $exists[0] > 0;
-      //Saving translation:
-      if($exists){
-        $q = "UPDATE Page_DynamicTranslation_TranscrSuperscriptInfo "
-           . "SET Trans_Abbreviation = '$update' "
-           . "WHERE TranslationId = $tId "
-           . "AND Ix = $Ix";
-      }else{
-        $q = "INSERT INTO Page_DynamicTranslation_TranscrSuperscriptInfo (TranslationId, Ix, $c) "
-           . "VALUES ($tId, $Ix, '$update')";
-      }
-      $db->query($q);
     }
     public function offsetsColumn($c, $tId, $study){
       $q = "SELECT COUNT(*) FROM TranscrSuperscriptInfo";
@@ -88,10 +72,7 @@
          . "FROM TranscrSuperscriptInfo LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
         $Ix = $r[0];
-        $q  = "SELECT $c "
-            . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo "
-            . "WHERE Ix = $Ix "
-            . "AND TranslationId = $tId";
+        $q  = $this->getTranslationQuery($Ix, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
@@ -118,10 +99,6 @@
         break;
       }
       return array('description' => $description, 'origCol' => $origCol);
-    }
-    public function deleteTranslation($tId){
-      $q = 'DELETE FROM Page_DynamicTranslation_TranscrSuperscriptInfo WHERE TranslationId = '.$tId;
-      $this->dbConnection->query($q);
     }
   }
 ?>

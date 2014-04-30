@@ -1,7 +1,27 @@
 <?php
-require_once 'DBEntry.php';
+require_once 'Translatable.php';
 /***/
-class Family extends DBEntry{
+class Family extends Translatable{
+  //Inherited from Translatable:
+  protected static function getTranslationPrefix(){
+    return 'FamilyTranslationProvider';
+  }
+  /**
+    Inherited from Translatable:
+    Required option fields:
+    tId, id as CONCAT(StudyIx,FamilyIx)
+  */
+  public static function getTranslation($options){
+    return Translatable::getTrans($options['tId'], Family::getTranslationPrefix(), $options['id']);
+  }
+  /**
+    Inherited from Translatable:
+    Required option fields:
+    tId
+  */
+  public function translate($options){
+    return Translatable::getTrans($options['tId'], Family::getTranslationPrefix(), $this->id);
+  }
   /***/
   public function getName(){
     if($name = $this->v->getTranslator()->dt($this))

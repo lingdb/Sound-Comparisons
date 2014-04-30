@@ -19,7 +19,7 @@ class Tabulator{
       'name' => $word->getLongName()
     );
     if(!$wordHeadline['name'])
-      $wordHeadline['name'] = $word->getTranslation($v, true, false);
+      $wordHeadline['name'] = $word->getWordTranslation($v, true, false);
     if(!$v->gpv()->isView('MapView'))
       $wordHeadline['mapsLink'] = $word->getMapsLink($t);
     //Previous Word:
@@ -27,7 +27,7 @@ class Tabulator{
       $wordHeadline['prev'] = array(
         'link'  => $v->setWord($p)->link()
       , 'ttip'  => $p->getLongName()
-      , 'trans' => $p->getTranslation($v, true, false)
+      , 'trans' => $p->getWordTranslation($v, true, false)
       , 'title' => $t->st('tabulator_word_prev')
       );
     }
@@ -36,7 +36,7 @@ class Tabulator{
       $wordHeadline['next'] = array(
         'link'  => $v->setWord($p)->link()
       , 'ttip'  => $n->getLongName()
-      , 'trans' => $n->getTranslation($v, true, false)
+      , 'trans' => $n->getWordTranslation($v, true, false)
       , 'title' => $t->st('tabulator_word_next')
       );
     }
@@ -44,71 +44,7 @@ class Tabulator{
     return $wordHeadline;
   }
   /***/
-  public function tabluateWord($word){
-    $v    = $this->valueManager;
-    $t    = $v->getTranslator();
-    //Calculating the maximum number of language cols:
-    $maxLangCount = 0;
-    foreach($v->getStudy()->getRegions() as $r){
-      $c = $r->getLanguageCount();
-      if($c > $maxLangCount)
-        $maxLangCount = ($c > 6) ? 6 : $c;
-    }
-    //Building the table:
-    $wordHeadline        = $this->wordHeadline($word);
-    $wordHeadlinePlayAll = $t->st('wordHeadline_playAll');
-    $table = Config::getMustache()->render('WordHeadline', $wordHeadline)
-           . '<table id="singleWordTable" class="table table-bordered table-striped"><tbody>'
-           . "<i class='icon-eject rotate90' id='wordHeadline_playAll' title='$wordHeadlinePlayAll'></i>";
-    $colorFamily = $v->getStudy()->getColorByFamily();
-    foreach($v->getStudy()->getFamilies() as $fIx => $f){
-      $row = ($fIx !== 0) ? '<tr><td class="spaceRow" colspan="6"></td></tr><tr>' : '<tr>';
-      $rContent    = '';
-      $rSpanSum    = 0;
-      $firstRegion = true;
-      foreach($f->getRegions() as $r){
-        if($firstRegion){
-          $firstRegion = false;
-        }else
-          $rContent .= "<tr data-i='$fIx'>";
-        $languages   = $r->getLanguages();
-        $rSpan       = ceil(count($languages)/6);
-        if($rSpan   == 0) $rSpan++;
-        $rSpanSum   += $rSpan;
-        $color       = $colorFamily ? '' : ' style="background-color: #'.$r->getColor().';"';
-        $rContent   .= "<th rowspan='$rSpan'$color>".$r->getShortName().'</th>';
-        $cellCount   = $maxLangCount;
-        foreach($languages as $l){
-          if($cellCount == 0){
-            $cellCount = $maxLangCount;
-            $rContent .= "</tr><tr>";
-          }
-          $href = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
-          $sn   = $l->getShortName();
-          $ln   = $l->getLongName(false);
-          $link = "<a class='tableLink color-language' $href title='$ln'>$sn</a><br />";
-          $tr   = Transcription::getTranscriptionForWordLang($word, $l);
-          $spelling = '';
-          if($s = $tr->getAltSpelling($v))
-            $spelling = "<div class='altSpelling' >$s</div>";
-          $phonetic   = $tr->getPhonetic($v, true);
-          $rContent  .= "<td>$link$spelling$phonetic</td>";
-          $cellCount--;
-        }
-        for(;$cellCount > 0; $cellCount--)
-          $rContent .= "<td></td>";
-        $rContent   .= "</tr>";
-      }
-      $fName = $f->getName();
-      $color = $colorFamily ? ' style="background-color: #'.$f->getColor().';"' : '';
-      if($rSpanSum > 0)
-        $table .= "$row<th rowSpan='$rSpanSum'$color>$fName</th>$rContent";
-    }
-    $table .= '</tbody></table>';
-    echo $table;
-  }
-  /***/
-  public function _tabluateWord($word){
+  public function tabulateWord($word){
     $v = $this->valueManager;
     $t = $v->getTranslator();
     //Calculating the maximum number of language cols:
@@ -126,7 +62,6 @@ class Tabulator{
     );
     $colorFamily = $v->getStudy()->getColorByFamily();
     foreach($v->getStudy()->getFamilies() as $fIx => $f){
-      $row = ($fIx !== 0) ? array('spaceRow' => true, 'cells' => array()) : array('cells' => array());
       //The family cell:
       $family = array(
         'rowSpan' => 0
@@ -135,54 +70,70 @@ class Tabulator{
       if($colorFamily)
         $family['color'] = $f->getColor();
       //Regions:
-      $rContent    = '';
+      $regions     = array();
       $firstRegion = true;
       foreach($f->getRegions() as $r){
         if($firstRegion){
           $firstRegion = false;
-        }else
-          $row['data'] = "<tr data-i='$fIx'>";
+        }else{
+          $row['data-i'] = $fIx;
+        }
         $languages = $r->getLanguages();
-        $region = array('name' => $r->getShortName());
+        $region    = array('name' => $r->getShortName());
         //Calculating the rSpan for a region:
         $rSpan = ceil(count($languages)/6);
         if($rSpan == 0) $rSpan++;
-        $region['rowSpan'] = $rSpan;
+        $region['rowSpan']  = $rSpan;
         $family['rowSpan'] += $rSpan;
         //Color:
         if(!$colorFamily)
           $region['color'] = $r->getColor();
         //Languages:
         $cellCount = $maxLangCount;
+        $lss       = array(); // [[LanguageCells]]
+        $ls        = array();
         foreach($languages as $l){
           if($cellCount == 0){
+            array_push($lss, $ls);
+            $ls        = array();
             $cellCount = $maxLangCount;
-            $rContent .= "</tr><tr>";
           }
-          //FIXME WIP HERE
-          $href = $v->gpv()->setView('LanguageView')->setLanguage($l)->link();
-          $sn   = $l->getShortName();
-          $ln   = $l->getLongName(false);
-          $link = "<a class='tableLink color-language' $href title='$ln'>$sn</a><br />";
-          $tr   = Transcription::getTranscriptionForWordLang($word, $l);
-          $spelling = '';
+          $cell = array(
+            'isLanguageCell' => true
+          , 'link'           => $v->gpv()->setView('LanguageView')->setLanguage($l)->link()
+          , 'shortName'      => $l->getShortName()
+          , 'longName'       => $l->getLongName(false)
+          );
+          $tr = Transcription::getTranscriptionForWordLang($word, $l);
           if($s = $tr->getAltSpelling($v))
-            $spelling = "<div class='altSpelling' >$s</div>";
-          $phonetic   = $tr->getPhonetic($v, true);
-          $rContent  .= "<td>$link$spelling$phonetic</td>";
+            $cell['spelling'] = $s;
+          $cell['phonetic']   = $tr->getPhonetic($v, true);
+          array_push($ls, $cell);
           $cellCount--;
         }
         for(;$cellCount > 0; $cellCount--)
-          $rContent .= "<td></td>";
-        $rContent   .= "</tr>";
+          array_push($ls, array('isLanguageCell' => true));
+        array_push($lss, $ls);
+        //Filling $regions with generated rows:
+        for($i = 0; $i < count($lss); $i++){
+          $x = $lss[$i];
+          if($i === 0)
+            array_unshift($x, $region);
+          array_push($regions, $x);
+        }
       }
-      $fName = $f->getName();
-      $color = $colorFamily ? ' style="background-color: #'.$f->getColor().';"' : '';
-      if($rSpanSum > 0)
-        $table .= "$row<th rowSpan='$rSpanSum'$color>$fName</th>$rContent";
+      //Adding to the rows:
+      $row = ($fIx !== 0) ? array('spaceRow' => true, 'cells' => array()) : array('cells' => array());
+      for($i = 0; $i < count($regions); $i++){
+        $cs  = $regions[$i];
+        if($i === 0)
+          array_unshift($cs, $family);
+        $row['cells'] = $cs;
+        array_push($wordTable['rows'], $row);
+        $row = array('cells' => array());
+      }
     }
-    $table .= '</tbody></table>';
-    echo $table;
+    echo Config::getMustache()->render('WordTable', $wordTable);
   }
   /**
     @param transposed [Bool = false] - will cause the table to display transposed.
@@ -284,10 +235,11 @@ class Tabulator{
       $tr     = Transcription::getTranscriptionForWordLang($w, $language);
       if(!$tr->exists()) continue;
       $href   = $v->gpv()->setView('WordView')->setLanguages(array())->setWord($w)->link();
-      $trans  = $w->getTranslation($v, true, false);
+      $trans  = $w->getWordTranslation($v, true, false);
       $ttip   = $w->getLongName();
       $ttip   = (is_null($ttip)) ? '' : " title='$ttip'";
-      $entry .= "<a class='tableLink color-word' $href$ttip>$trans</a><br />";
+      $dots   = ($ttip !== '') ? '…' : '';
+      $entry .= "<a class='tableLink color-word' $href$ttip>$trans$dots</a><br />";
       if($spelling = $tr->getAltSpelling($v))
         $entry .= "<div class='altSpelling' >".$spelling.'</div>';
       $entry .= $tr->getPhonetic($v, true).'</td>';
