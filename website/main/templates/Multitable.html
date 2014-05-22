@@ -1,0 +1,91 @@
+<table id="multitable" class="table table-bordered table-striped">
+  <thead>
+    {{#displayMGs}}
+      <tr>
+        <th></th><th></th><th></th>
+        {{#meaningGroups}}
+          <th class="mg" colspan="{{span}}">{{name}}</th>
+        {{/meaningGroups}}
+      </tr>
+    {{/displayMGs}}
+    <tr>
+      <th></th>
+      <th>{{deleteAll}}
+        <a {{{clearWordsLink}}} class="color-word">{{clearWordsText}}<i class="icon-arrow-right"></i></a>
+      </th>
+      <th></th>
+      {{#words}}
+        {{#isFake}}
+        <th class="color-word">{{trans}}</th>
+        {{/isFake}}
+        {{^isFake}}
+        <th>
+          <a {{{deleteLink}}} title="{{deleteTtip}}" class="remove"><i class="icon-remove-custom"></i></a>
+          <a class="tableLink color-word" {{{link}}} title="{{ttip}}">{{trans}}</a>
+        </th>
+        {{/isFake}}
+      {{/words}}
+    </tr>
+    <tr>
+      <th></th>
+      <th>{{deleteAll}}
+        <a {{{clearLanguagesLink}}} class="color-language">{{clearLanguagesText}}<i class="icon-arrow-down"></i></a>
+      </th>
+      <th>
+        <a {{{transposeLink}}}><img src="img/transpose.png" title="{{transposeTtip}}" /></a>
+      </th>
+      {{#words}}
+        {{#isFake}}
+        <th class="icons"></th>
+        {{/isFake}}
+        {{^isFake}}
+        <th class="icons">{{{map}}}
+          <i class="icon-eject rotate180 multitablePlayNs" title="{{playTtip}}"></i>
+        </th>
+        {{/isFake}}
+      {{/words}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#regions}}
+    {{#clearRow}}
+    <tr><td colspan="{{colspan}}" class="spaceRow"></td></tr>
+    {{/clearRow}}
+    <tr>
+      {{^isFake}}
+      <td class="regionCell color-region" rowspan="{{rspan}}" {{{rColor}}}>{{name}}</td>
+      {{/isFake}}
+      {{#languages}}
+        {{^first}}
+        </tr><tr>
+        {{/first}}
+        {{#isFake}}
+        <td class="languageCell color-language" colspan="3">{{shortName}}</td>
+        {{/isFake}}
+        {{^isFake}}
+        <td class="languageCell">
+          <a class="tableLink color-language" {{{link}}} title="{{languageTtip}}">{{{shortName}}}</a>
+          <a {{{deleteLink}}} title="{{deleteTtip}}" class="remove"><i class="icon-remove-custom"></i></a>
+        </td>
+        <td>
+          <i class="icon-eject rotate90 multitablePlayWe" title="{{playTtip}}"></i>
+        </td>
+        {{/isFake}}
+        {{#transcriptions}}
+        {{#isFake}}
+        <td class="transcription"{{#colspan}} colspan="{{colspan}}"{{/colspan}}>{{fake}}</td>
+        {{/isFake}}
+        {{^isFake}}
+        <td class="transcription">
+          {{#spelling}}
+          <div class="altSpelling">{{spelling}}</div>
+          {{/spelling}}
+          {{{phonetic}}}
+        </td>
+        {{/isFake}}
+        {{/transcriptions}}
+      {{/languages}}
+    </tr>
+    {{/regions}}
+  </tbody>
+</table>

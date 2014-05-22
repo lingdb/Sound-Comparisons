@@ -34,7 +34,7 @@ class Tabulator{
     //Next Word:
     if($n = $word->getNext($v)){
       $wordHeadline['next'] = array(
-        'link'  => $v->setWord($p)->link()
+        'link'  => $v->setWord($n)->link()
       , 'ttip'  => $n->getLongName()
       , 'trans' => $n->getWordTranslation($v, true, false)
       , 'title' => $t->st('tabulator_word_next')

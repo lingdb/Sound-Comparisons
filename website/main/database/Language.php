@@ -26,7 +26,7 @@ class Language extends Translatable{
           $r = $this->fetchFields('LanguageStatusType');
           if(!empty($r[0]) && $r[0] !== '0'){
             $q = "SELECT Status FROM LanguageStatusTypes WHERE LanguageStatusType = ".$r[0];
-            $type = $this->fetchOneBy($q)[0];
+            $type = current($this->fetchOneBy($q));
             $this->key .= "<$type>";
           }
         }
