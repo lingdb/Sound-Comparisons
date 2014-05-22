@@ -1,5 +1,7 @@
+2014-05-22:
+ - Transform database/Language to be usable with Mustache
+
 2014-04-30:
- - Remember to incorporate translations into next update.
  - The search all translations feature is currently implemented as nonsense.
    I should change this.
 

@@ -1,0 +1,48 @@
+<div class='row-fluid'>
+  {{#prev}}
+  <div class='span3'>
+    <a id='prevLink' {{{link}}} class='pull-left nounderline'>
+    <div class='color-language inline'>{{trans}} </div>← {{title}}</a>
+  </div>
+  {{/prev}}
+  <div class='span6'>
+    <h3 class='color-language noborders centertext'>{{{longName}}}</h3>
+  </div>
+  {{#next}}
+  <div class='span3'>
+    <a id='nextLink' {{{link}}} class='pull-right nounderline'>{{title}} →
+    <div class='color-language inline'> {{trans}}</div></a>
+  </div>
+  {{/next}}
+</div>
+<div class='row-fluid'>
+  <div class='span3'>
+    <i class='icon-eject rotate90' id='language_playAll' title='{{playAll}}'></i>
+  </div>
+  <div id='languageHeadline' class='span6'>{{{links}}}</div>
+  {{#hasContributors}}
+  <div class='span3'>
+    <div id="contributorGroup" class="pull-right btn-group">
+      <button class="btn btn-mini btn-info dropdown-toggle" data-toggle="dropdown" title="{{contributorTooltip}}">
+        <img src="img/people.png">
+        <span class="caret"></span>
+      </button>
+      <table class="dropdown-menu table-hover table-condensed">
+        {{#contributors}}
+        <tr>
+          <th class='text-right'>{{cdesc}}:</th>
+          <td>
+            <a {{{link}}} class='pull-left'>{{name}}{{info}}</a>
+          </td>
+        </tr>
+        {{/contributors}}
+      </table>
+    </div>
+  </div>
+  {{/hasContributors}}
+</div>
+<table class='languageHeadlineParent'>
+  <tbody id='languageDescription'>
+    {{{description}}}
+  </tbody>
+</table>

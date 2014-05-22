@@ -1,0 +1,21 @@
+{{#languageHeadline}}
+{{> LanguageHeadline}}
+{{/languageHeadline}}
+<table id="languageTable" class="table table-bordered table-striped">
+  <tbody>
+    {{#rows}}
+    <tr>
+      {{#transcriptions}}
+        <td class='transcription'>
+          <a class='tableLink color-word' {{{link}}} title="{{ttip}}">{{trans}}{{#ttip}}…{{/ttip}}</a>
+          <br />
+          {{#spelling}}
+          <div class='altSpelling'>{{spelling}}</div>
+          {{/spelling}}
+          {{{phonetic}}}
+        </td>
+      {{/transcriptions}}
+    </tr>
+    {{/rows}}
+  </tbody>
+</table>

@@ -153,99 +153,77 @@ class Tabulator{
     $v = $this->valueManager;
     $t = $v->getTranslator();
     //Basic information:
-    $longName = $language->getLongName();
-    $links = $language->getLinks($t);
-    $desc  = $language->getDescription($t);
+    $headline = array(
+      'longName'    => $language->getLongName()
+    , 'links'       => $language->getLinks($t)
+    , 'description' => $language->getDescription($t)
+    , 'playAll'     => $t->st('language_playAll')
+    );
     //Previous Language:
-    $prev  = $t->st('tabulator_language_prev');
-    $lang  = $language->getPrev($v);
-    $href  = $v->setLanguage($lang)->link();
-    $trans = $lang->getShortName(false);
-    $prev  = "<a id='prevLink' $href class='pull-left nounderline'>"
-           . "<div class='color-language inline'>$trans </div>← $prev</a>";
+    $prev = array('title' => $t->st('tabulator_language_prev'));
+    $lang = $language->getPrev($v);
+    $prev['link']  = $v->setLanguage($lang)->link();
+    $prev['trans'] = $lang->getShortName(false);
+    $headline['prev'] = $prev;
     //Next Language:
-    $next  = $t->st('tabulator_language_next');
-    $lang  = $language->getNext($v);
-    $href  = $v->setLanguage($lang)->link();
-    $trans = $lang->getShortName(false);
-    $next  = "<a id='nextLink' $href class='pull-right nounderline'>$next →"
-           . "<div class='color-language inline'> $trans</div></a>";
+    $next = array('title' => $t->st('tabulator_language_next'));
+    $lang = $language->getNext($v);
+    $next['link']  = $v->setLanguage($lang)->link();
+    $next['trans'] = $lang->getShortName(false);
+    $headline['next'] = $next;
     //Contributors:
-    $contributors = '';
+    $contributors = array();
     $_v = $v->gpv()->setView('whoAreWe');
     foreach($language->getContributors() as $c){
+      $cont = array(
+        'cdesc' => $c->getColumnDescription()
+      , 'link'  => $_v->link('', 'href', '#'.$c->getInitials())
+      , 'name'  => $c->getName()
+      );
       $cdesc = $c->getColumnDescription();
       $year  = $c->year;
       $pages = $c->pages;
       $name  = $c->getName();
       $link  = $_v->link('', 'href', '#'.$c->getInitials());
       if($year && $pages){
-        $info = "($year : $pages)";
+        $cont['info'] = "($year : $pages)";
       }else if($year || $pages){
-        $info = "($year$pages)";
-      } else $info = '';
-      $contributors .= "<tr><th class='text-right'>$cdesc:</th><td>"
-                     . "<a $link class='pull-left'>$name$info</a>"
-                     . "</td></tr>";
+        $cont['info'] = "($year$pages)";
+      } else $cont['info'] = '';
+      array_push($contributors, $cont);
     }
-    $ttip = $t->st('tooltip_contributor_list');
-    if($contributors !== '')
-      $contributors = '<div id="contributorGroup" class="pull-right btn-group">'
-                    . '<button class="btn btn-mini btn-info dropdown-toggle" data-toggle="dropdown" title="'.$ttip.'">'
-                    . '<img src="img/people.png">'
-                    . '<span class="caret"></span>'
-                    . '</button>'
-                    . '<table class="dropdown-menu table-hover table-condensed">'
-                    . $contributors
-                    . '</table></div>';
-    //Composition:
-    $languagePlayAll = $t->st('language_playAll');
-    return "<div class='row-fluid'>"
-         . "<div class='span3'>$prev</div>"
-         . "<div class='span6'><h3 class='color-language noborders centertext'>$longName</h3></div>"
-         . "<div class='span3'>$next</div>"
-         . "</div>"
-         . "<div class='row-fluid'>"
-         . "<div class='span3'>"
-         . "<i class='icon-eject rotate90' id='language_playAll' title='$languagePlayAll'></i>"
-         . "</div>"
-         . "<div id='languageHeadline' class='span6'>$links</div>"
-         . "<div class='span3'>$contributors</div>"
-         . "</div>"
-         . "<table class='languageHeadlineParent'>"
-         . "<tbody id='languageDescription'>$desc</tbody></table>";
+    $headline['contributorTooltip'] = $t->st('tooltip_contributor_list');
+    $headline['hasContributors']    = count($contributors) > 0;
+    $headline['contributors']       = $contributors;
+    //Done:
+    return $headline;
   }
-  /**
-   * @param $language Language
-   * */
   public function languageTable($language){
     $v = $this->valueManager;
     $t = $v->getTranslator();
-    echo $this->languageHeadline($language);
-    echo '<table id="languageTable" class="table table-bordered table-striped"><tbody><tr>';
-    $width  = 6;
-    $wCount = 0;
+    $table = array(
+      'languageHeadline' => $this->languageHeadline($language)
+    );
+    //Constructing transcriptions:
+    $transcriptions = array();
     foreach($v->getStudy()->getWords($v) as $w){
-      if($wCount === $width){
-        echo '</tr><tr>';
-        $wCount = 0;
-      }
-      $wCount ++;
-      $entry  = "<td class='transcription'>";
-      $tr     = Transcription::getTranscriptionForWordLang($w, $language);
+      $tr = Transcription::getTranscriptionForWordLang($w, $language);
       if(!$tr->exists()) continue;
-      $href   = $v->gpv()->setView('WordView')->setLanguages(array())->setWord($w)->link();
-      $trans  = $w->getWordTranslation($v, true, false);
-      $ttip   = $w->getLongName();
-      $ttip   = (is_null($ttip)) ? '' : " title='$ttip'";
-      $dots   = ($ttip !== '') ? '…' : '';
-      $entry .= "<a class='tableLink color-word' $href$ttip>$trans$dots</a><br />";
-      if($spelling = $tr->getAltSpelling($v))
-        $entry .= "<div class='altSpelling' >".$spelling.'</div>';
-      $entry .= $tr->getPhonetic($v, true).'</td>';
-      echo $entry;
+      array_push($transcriptions, array(
+        'link'     => $v->gpv()->setView('WordView')->setLanguages(array())->setWord($w)->link()
+      , 'ttip'     => $w->getLongName()
+      , 'trans'    => $w->getWordTranslation($v, true, false)
+      , 'spelling' => $tr->getAltSpelling($v)
+      , 'phonetic' => $tr->getPhonetic($v, true)
+      ));
     }
-    echo "</tr></tbody></table>";
+    //Filling the rows by 6:
+    $rows = array();
+    foreach(array_chunk($transcriptions, 6) as $ts){
+      array_push($rows, array('transcriptions' => $ts));
+    }
+    $table['rows'] = $rows;
+    echo Config::getMustache()->render('LanguageTable', $table);
   }
   /**
     @return json String - JSON encoded information to show on the map.
