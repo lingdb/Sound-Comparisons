@@ -14,7 +14,7 @@ Options +FollowSymlinks -MultiViews
 RewriteBase /shk/main/
 
 # Rule to ignore subdirectories that are necessary:
-RewriteRule ^(admin|css|export|img|js|sound|templates).* - [L]
+RewriteRule ^(admin|css|export|img|js|query|sound|templates).* - [L]
 # Rule to match usual requests:
 RewriteCond %{QUERY_STRING} (.+)
 RewriteRule ^$ - [L]
