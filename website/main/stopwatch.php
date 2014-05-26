@@ -37,14 +37,14 @@ class Stopwatch {
     //Sorting times:
     asort(self::$timed, SORT_NUMERIC);
     //Presentation:
-    $rows = '';
+    $ret = array('rows' => array());
     foreach(self::$timed as $label => $duration){
-      $duration = round($duration, 4).'s';
-      $rows .= "<tr><td>$label</td><td>$duration</td></tr>";
+      $ret['rows'][] = array(
+        'label'    => $label
+      , 'duration' => round($duration, 4)
+      );
     }
-    return '<table class="table table-bordered table-condensed table-striped"><thead>'
-         . '<tr><th>Label:</th><th>Duration:</th></tr>'
-         . "</thead><tbody>$rows</tbody></table>";
+    return $ret;
   }
 }
 ?>

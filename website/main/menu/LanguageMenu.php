@@ -83,7 +83,5 @@ if($study = $v->getStudy()){
     $regions = LanguageMenuBuildRegionList($study->getRegions(), $v, $t, $showFlags, true);
     $languageMenu['RegionList'] = Config::getMustache()->render('RegionList', $regions);
   }
-  //languageMenu finish:
-  echo Config::getMustache()->render('LanguageMenu', $languageMenu);
 }
 ?>

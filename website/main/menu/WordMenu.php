@@ -75,6 +75,4 @@ if($v->gwo()->isLogical()){
 }else{
   $wordMenu['wordList'] = WordMenuBuildWordList($study->getWords(), $v, $t);
 }
-//wordmenu finish:
-echo Config::getMustache()->render('WordMenu', $wordMenu);
 ?>

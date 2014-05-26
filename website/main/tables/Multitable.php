@@ -145,6 +145,6 @@ function tables_multiwordTable($v){
   }
   //Table complete:
   $table['regions'] = $rgs;
-  echo Config::getMustache()->render('Multitable', $table);
+  return $table;
 }
 ?>

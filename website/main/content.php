@@ -8,68 +8,55 @@ if(!isset($valueManager)){
   $valueManager = RedirectingValueManager::getInstance();
 }
 $v = $valueManager;
+$t = $v->getTranslator();
 //Building the content:
-$s = $valueManager->gpv()->isView('MapView') ? ' style="bottom:2em;"' : '';
-echo "<div id='contentArea'$s class='span8'>";
+$content = array(
+  'isWordView'            => $v->gpv()->isView('WordView')
+, 'isLanguageView'        => $v->gpv()->isView('LanguageView')
+, 'isMapView'             => $v->gpv()->isView('MapView')
+, 'isMultiView'           => $v->gpv()->isView('MultiView')
+, 'isMultiViewTransposed' => $v->gpv()->isView('MultiTransposed')
+, 'isWhoAreWeView'        => $v->gpv()->isView('WhoAreWeView')
+);
 $tabulator = new Tabulator($v);
-if($v->gpv()->isView('WordView')){
+if($content['isWordView']){
   if($words = $v->getWords()){
-    $tabulator->tabulateWord(current($words));
+    $content['WordTable'] = $tabulator->tabulateWord(current($words));
   }else{
     Config::error("Got no single word to display. (PageView)");
   }
-}else if($v->gpv()->isView('LanguageView')){
+}else if($content['isLanguageView']){
   if($ls = $v->getLanguages()){
-      $tabulator->languageTable(current($ls));
+      $content['LanguageTable'] = $tabulator->languageTable(current($ls));
   }else{
     Config::error("Got no single language to display. (PageView)");
   }
-}else if($v->gpv()->isView('MapView')){
-  $t        = $v->getTranslator();
-  $headline = $tabulator->wordHeadline(current($v->getWords()));
-  $headline = Config::getMustache()->render('WordHeadline', $headline);
-  //Config::error(var_dump($headline));
-  $viewAll  = $v->setLanguages($v->getStudy()->getLanguages())->link();
-  $viewLast = $v->setLanguages()->link();
-  $allSelected  = '';
-  $lastSelected = '';
-  if($v->hasAllLanguages()){
-    $allSelected  = ' class="selected"';
-  }else{
-    $lastSelected = ' class="selected"';
-  }
-  $mapsMenuToggleShow = $t->st('maps_menu_toggleShow');
-  $mapsMenuViewAll    = $t->st('maps_menu_viewAll');
-  $mapsMenuViewLast   = $t->st('maps_menu_viewLast');
-  $mapsMenuCenterMap  = $t->st('maps_menu_centerMap');
-  $mapsMenuCoreRegion = $t->st('maps_menu_viewCoreRegion');
-  $mapsMenuPlayNs     = $t->st('maps_menu_playNs');
-  $mapsMenuPlaySn     = $t->st('maps_menu_playSn');
-  $mapsMenuPlayWe     = $t->st('maps_menu_playWe');
-  $mapsMenuPlayEw     = $t->st('maps_menu_playEw');
-  $mapsMenu = "<div id='map_menu_toggle'>$mapsMenuToggleShow: "
-            . "<a id='map_menu_viewAll' $viewAll$allSelected>$mapsMenuViewAll</a> | "
-            . "<a id='map_menu_viewLast' $viewLast$lastSelected>$mapsMenuViewLast</a>"
-            . "</div>"
-            . "<div id='map_zoom_options'>"
-            . "<a id='map_menu_zoomCenter'>$mapsMenuCenterMap</a> | "
-            . "<a class='selected' id='map_menu_zoomCoreRegion'>$mapsMenuCoreRegion</a>"
-            . "</div>";
-  $mapsData = $tabulator->mapsData();
-  echo $headline
-     . "<div id='map_menu'>$mapsMenu</div>"
-     . "<div id='map_canvas'></div>"
-     . "<div id='map_data'>$mapsData</div>"
-     . "<div id='map_play_directions'>"
-       . "<i data-direction='ns' title='$mapsMenuPlayNs' class='icon-eject rotate180'></i>"
-       . "<i data-direction='sn' title='$mapsMenuPlaySn' class='icon-eject'></i>"
-       . "<i data-direction='we' title='$mapsMenuPlayWe' class='icon-eject rotate90'></i>"
-       . "<i data-direction='ew' title='$mapsMenuPlayEw' class='icon-eject rotate270'></i>"
-     . "</div>";
-}else if($v->gpv()->isSelection()){
-  $tabulator->multiwordTable($v->gpv()->isView('MultiTransposed'));
+}else if($content['isMapView']){
+  $t = $v->getTranslator();
+  $mapView = array(
+    'WordHeadline' => $tabulator->wordHeadline(current($v->getWords()))
+  , 'viewAll'  => $v->setLanguages($v->getStudy()->getLanguages())->link()
+  , 'viewLast' => $v->setLanguages()->link()
+  , 'allSelected' => $v->hasAllLanguages()
+  , 'mapsMenuToggleShow' => $t->st('maps_menu_toggleShow')
+  , 'mapsMenuViewAll'    => $t->st('maps_menu_viewAll')
+  , 'mapsMenuViewLast'   => $t->st('maps_menu_viewLast')
+  , 'mapsMenuCenterMap'  => $t->st('maps_menu_centerMap')
+  , 'mapsMenuCoreRegion' => $t->st('maps_menu_viewCoreRegion')
+  , 'mapsMenuPlayNs'     => $t->st('maps_menu_playNs')
+  , 'mapsMenuPlaySn'     => $t->st('maps_menu_playSn')
+  , 'mapsMenuPlayWe'     => $t->st('maps_menu_playWe')
+  , 'mapsMenuPlayEw'     => $t->st('maps_menu_playEw')
+  , 'mapsData' => $tabulator->mapsData()
+  );
+  $mapView['lastSelected'] = !$mapView['allSelected'];
+  $content['MapView'] = $mapView;
+}else if($content['isMultiView']){
+  $content['Multitable'] = tables_multiwordTable($v);
+}else if($content['isMultiViewTransposed']){
+  $content['MultitableTransposed'] = tables_multiwordTableTransposed($v);
 }else if($v->gpv()->isView('WhoAreWeView')){
-  include 'about/contributors.php';
+  require_once 'about/contributors.php';
+  $content['contributors'] = $conts;
 }
-echo "</div>";
 ?>

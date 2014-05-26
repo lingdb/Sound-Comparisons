@@ -24,7 +24,7 @@
       {{^isFake}}
       <th class="languageCell">
         <a {{{deleteLanguageLink}}} title="{{deleteLanguageTtip}}" class="remove"><i class="icon-remove-custom"></i></a>
-        <a class="tableLink color-language" {{{link}}} title="{{ttip}}">{{shortName}}</a><br />
+        <a class="tableLink color-language" {{{link}}} title="{{ttip}}">{{{shortName}}}</a><br />
       </th>
       {{/isFake}}
       {{/languages}}
@@ -58,6 +58,16 @@
       <td class="regionCell color-region" rowspan="{{rSpan}}">{{name}}</td>
       {{/meaningGroup}}
       {{#words}}
+      {{#fake}}
+      {{#isLogical}}
+      <td></td>
+      {{/isLogical}}
+      <td class="color-word">
+        {{trans}}
+      </td>
+      <td></td>
+      {{/fake}}
+      {{^fake}}
       <td>
         <a class="tableLink color-word" {{{link}}} title="{{ttip}}">{{trans}}</a>
         <a {{{deleteWordLink}}} title="{{deleteWordTtip}}" class="remove"><i class="icon-remove-custom"></i></a>
@@ -65,6 +75,7 @@
       <td class="icons">{{{maps}}}
         <i class="icon-eject rotate90 multitablePlayWe" title="{{playTtip}}"></i>
       </td>
+      {{/fake}}
       {{#transcriptions}}
       <td class="transcription">
         {{fake}}

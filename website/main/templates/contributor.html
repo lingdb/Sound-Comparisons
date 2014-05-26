@@ -1,0 +1,19 @@
+<div id="{{initials}}" class="well contributor">
+  <h3>{{name}}<a href="#{{initials}}" class="anchor"> &para;</a>:</h3>
+  <div class="row-fluid">
+    <div class="span1"><img src="{{{img}}}" class="img-rounded avatar"></div>
+    <div class="offset1 span11">
+      <dl class="dl-horizontal">
+        {{# email}}
+        <dt>Email</dt><dd>{{email}}</dd>
+        {{/ email}}
+        {{# website}}
+        <dt>Website</dt><dd><a href="{{{website}}}" target="_blank">{{{website}}}</a></dd>
+        {{/ website}}
+        {{# role}}
+        <dt>About</dt><dd>{{role}}</dd>
+        {{/ role}}
+      </dl>
+    </div>
+  </div>
+</div>

@@ -68,5 +68,18 @@ abstract class ConfigBase {
     }
     return self::$mustache;
   }
+  /***/
+  public static function getTemplateInfo(){
+    $ret   = array();
+    $sums  = `md5sum templates/*.html`;
+    $lines = explode("\n", $sums);
+    foreach($lines as $l){
+      $x = explode('  ', $l);
+      if(count($x) !== 2)
+        continue;
+      $ret[$x[0]] = $x[1];
+    }
+    return json_encode($ret);
+  }
 }
 ?>

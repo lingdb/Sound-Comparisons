@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+  {{# head}}
+  {{> head}}
+  {{/ head}}
+  <body>
+    {{# TopMenu}}
+    {{> TopMenu}}
+    {{/ TopMenu}}
+    <div class="container-fluid">
+      <a class="hidelink btn"
+         data-name="hidelink_left" data-target="#leftMenu"
+         title="{{hidelinkLeft}}">
+        <i class="icon-chevron-left"></i>
+      </a>
+      <a class="hidelink btn"
+         data-name="hidelink_right" data-target="#rightMenu"
+         title="{{hidelinkRight}}" style="right: 5px;">
+        <i class="icon-chevron-right"></i>
+      </a>
+      <div class="mycontent myflow row-fluid">
+        {{# LanguageMenu}}
+        {{> LanguageMenu}}
+        {{/ LanguageMenu}}
+        {{# content}}
+        {{> content}}
+        {{/ content}}
+        {{# WordMenu}}
+        {{> WordMenu}}
+        {{/ WordMenu}}
+      </div>
+    </div>
+    <div id="saveLocation" {{{saveLocation}}}></div>
+    {{# ipaKeyboard}}
+    {{> ipaKeyboard}}
+    {{/ ipaKeyboard}}
+    {{# stopwatch}}
+    {{> stopwatch}}
+    {{/ stopwatch}}
+  </body>
+</html>

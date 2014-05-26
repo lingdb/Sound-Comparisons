@@ -124,6 +124,4 @@
   );
   //Cleanup:
   unset($sid, $studies, $pv, $hovers, $names, $mapView, $singleView, $languageView, $multiView, $multiViewT, $otherTranslations);
-  //Action:
-  echo Config::getMustache()->render('TopMenu', $topmenu);
 ?>

@@ -11,41 +11,53 @@
   $dbConnection = Config::getConnection();
   require_once 'shortlink.php';
   $valueManager = RedirectingValuemanager::getInstance();
-?><!DOCTYPE HTML><html><?php
-    require 'head.php';
-  ?><body><?php
-      require_once 'menu/TopMenu.php';
-    ?><div class="container-fluid"><?php
-        $hideleft  = ' title="'.$valueManager->getTranslator()->st('hidelink_left').'"';
-        $hideright = ' title="'.$valueManager->getTranslator()->st('hidelink_right').'"';
-      ?><a class="hidelink btn" data-name="hidelink_left" data-target="#leftMenu"<?php echo $hideleft;?>>
-        <i class="icon-chevron-left"></i>
-      </a>
-      <a class="hidelink btn" style="right: 5px;" data-name="hidelink_right" data-target="#rightMenu"<?php echo $hideright;?>>
-        <i class="icon-chevron-right"></i>
-      </a>
-      <div class="mycontent myflow row-fluid"><?php
-        Stopwatch::start('menu/LanguageMenu.php');
-        require_once 'menu/LanguageMenu.php';
-        Stopwatch::stop('menu/LanguageMenu.php');
-        Stopwatch::start('content.php');
-        require_once 'content.php';
-        Stopwatch::stop('content.php');
-        Stopwatch::start('menu/WordMenu.php');
-        require_once 'menu/WordMenu.php';
-        Stopwatch::stop('menu/WordMenu.php');
-      ?></div>
-    </div>
-    <div id='saveLocation' <?php
-      echo $valueManager->link();
-    ?> ></div>
-    <?php
-      require_once 'ipaKeyboard.php';
-      echo Stopwatch::stats();
-    ?>
-  </body>
-</html><?php
-  $endTime = microtime(true);
-  echo "<!-- Page generated in ".round(($endTime - $startTime), 4)."s -->";
-  echo "<!-- ".$valueManager->show(false)." -->";
+  $index = array(
+    'hidelinkLeft'  => $valueManager->getTranslator()->st('hidelink_left')
+  , 'hidelinkRight' => $valueManager->getTranslator()->st('hidelink_right')
+  );
+  //Building the head:
+  require_once 'head.php';
+  $index['head'] = $head;
+  unset($head);
+  //Building the TopMenu:
+  require_once 'menu/TopMenu.php';
+  $index['TopMenu'] = $topmenu;
+  unset($topmenu);
+  //Building the LanguageMenu:
+  require_once 'menu/LanguageMenu.php';
+  $index['LanguageMenu'] = $languageMenu;
+  unset($languageMenu);
+  //Building the content:
+  require_once 'content.php';
+  $index['content'] = $content;
+  unset($content);
+  //Building the WordMenu:
+  require_once 'menu/WordMenu.php';
+  $index['WordMenu'] = $wordMenu;
+  unset($wordMenu);
+  //Building the keyboard:
+  require_once 'ipaKeyboard.php';
+  $index['ipaKeyboard'] = $ipa;
+  unset($ipa);
+  //The saveLocation:
+  $index['saveLocation'] = $valueManager->link();
+  //The stopwatch:
+  $index['stopwatch'] = Stopwatch::stats();
+  //Processing the Content-type:
+  $headers = getallheaders();
+  $cType = $headers['Accept'];
+  switch($cType){
+    case (preg_match('/application\/json/i', $cType) ? true : false):
+      header('Content-type: application/json');
+      echo json_encode($index);
+    break;
+    case (preg_match('/text\/html/i', $cType) ? true : false):
+    default:
+      //Rendering:
+      echo Config::getMustache()->render('index', $index);
+      //Done :)
+      $endTime = microtime(true);
+      echo "<!-- Page generated in ".round(($endTime - $startTime), 4)."s -->";
+      echo "<!-- ".$valueManager->show(false)." -->";
+  }
 ?>

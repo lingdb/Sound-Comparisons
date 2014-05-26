@@ -1,6 +1,9 @@
+2014-05-26:
+ - Remember to export Users together with translations,
+   every time I supply an update that concerns the db!
+
 2014-05-22:
  - Transform database/Language to be usable with Mustache
- - Push master
 
 2014-04-30:
  - The search all translations feature is currently implemented as nonsense.

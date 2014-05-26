@@ -133,18 +133,7 @@ class Tabulator{
         $row = array('cells' => array());
       }
     }
-    echo Config::getMustache()->render('WordTable', $wordTable);
-  }
-  /**
-    @param transposed [Bool = false] - will cause the table to display transposed.
-  */
-  function multiwordTable($transposed = false){
-    $v = $this->valueManager;
-    if(!$transposed){
-      tables_multiwordTable($v);
-    }else{
-      tables_multiwordTableTransposed($v);
-    }
+    return $wordTable;
   }
   /**
     @param $language Language
@@ -223,7 +212,7 @@ class Tabulator{
       array_push($rows, array('transcriptions' => $ts));
     }
     $table['rows'] = $rows;
-    echo Config::getMustache()->render('LanguageTable', $table);
+    return $table;
   }
   /**
     @return json String - JSON encoded information to show on the map.
