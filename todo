@@ -1,3 +1,9 @@
+2014-06-06:
+ - Different .js parts can now be adjusted to the new LinkInterceptor/PartView style
+   - This concerns parts that draw information from the first load,
+     like soundPlays, or MapView aswell as URL parsing.
+ - Also later on the partial views can be replaced with a client side model.
+
 2014-05-26:
  - Remember to export Users together with translations,
    every time I supply an update that concerns the db!
@@ -42,7 +48,7 @@
    this could increase performance by a leap.
 
 2014-02-27:
- - Ask Paul which fields he'd like to be in .csv exports.
+ - Ask Paul which fields he'd like to have in .csv exports.
 
 2014-02-20:
  - Make filtering in wordlist faster if possible

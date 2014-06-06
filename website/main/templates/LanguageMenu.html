@@ -13,8 +13,8 @@
         {{/checkbox}}
         <a class="color-family" {{{link}}}>{{name}}</a>
       </dt>
-      <dd>{{{RegionList}}}</dd>
+      <dd>{{#RegionList}}{{> RegionList}}{{/RegionList}}</dd>
     </dl>
   {{/families}}
-  {{{RegionList}}}
+  {{#RegionList}}{{> RegionList}}{{/RegionList}}
 </div>

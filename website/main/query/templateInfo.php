@@ -7,7 +7,7 @@
     $x = explode('  ', $l);
     if(count($x) !== 2)
       continue;
-    $info[$x[0]] = $x[1];
+    $info[$x[1]] = $x[0];
   }
   echo json_encode($info);
 ?>

@@ -106,7 +106,6 @@ function LanguageMenuBuildRegionList($regions, $v, $t, $showFlags = false, $dl =
     }
     array_push($regionList['regions'], $region);
   }
-//die(var_dump($regionList));
   return $regionList;
 }
 ?>

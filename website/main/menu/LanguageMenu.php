@@ -72,7 +72,7 @@ if($study = $v->getStudy()){
       //The RegionList:
       if(!$hasF){
         $regions = LanguageMenuBuildRegionList($f->getRegions(), $v, $t, $showFlags);
-        $family['RegionList'] = Config::getMustache()->render('RegionList', $regions);
+        $family['RegionList'] = $regions;
       }
       $regions = $hasF ? '' : LanguageMenuBuildRegionList($f->getRegions(), $v, $t, $showFlags);
       //Adding the family:
@@ -81,7 +81,7 @@ if($study = $v->getStudy()){
     $languageMenu['families'] = $families;
   }else{
     $regions = LanguageMenuBuildRegionList($study->getRegions(), $v, $t, $showFlags, true);
-    $languageMenu['RegionList'] = Config::getMustache()->render('RegionList', $regions);
+    $languageMenu['RegionList'] = $regions;
   }
 }
 ?>

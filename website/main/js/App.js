@@ -1,8 +1,10 @@
 $(function(){
   //Building the App singleton:
   window.App = {
-    studyWatcher:    new StudyWatcher()
+    linkInterceptor: new LinkInterceptor()
+  , studyWatcher:    new StudyWatcher()
   , soundPlayOption: new SoundPlayOption()
+  , templateStorage: new TemplateStorage()
   , viewWatcher:     new ViewWatcher()
   , views: {}
   };
@@ -25,4 +27,19 @@ $(function(){
     });
   }
   window.App.views.wordlistFilter = new WordlistFilter();
+  window.App.views.loadingBar = new LoadingBar({el: $('.loadingBar')});
+  window.App.views.parts = {
+    topMenuView: new TopMenuView({
+      model: window.App.templateStorage
+    })
+  , languageMenuView: new LanguageMenuView({
+      model: window.App.templateStorage
+    })
+  , wordMenuView: new WordMenuView({
+      model: window.App.templateStorage
+    })
+  , contentView: new ContentView({
+      model: window.App.templateStorage
+    })
+  };
 });

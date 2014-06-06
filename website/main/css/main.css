@@ -293,3 +293,13 @@ dd.languageList {
 #ipaKeyboard > .modal-body {
   max-height: none;
 }
+/* Loadingbar: */
+.loadingBar {
+  background-color: #4380C1;
+  position:        absolute;
+  left:                 0px;
+  top:                  0px;
+  width:                0px;
+  height:               5px;
+  z-index:               23;
+}
