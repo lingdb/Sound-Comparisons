@@ -18,7 +18,9 @@ if(typeof(google) !== 'undefined'){
     , notAddedWos:   0
     }
   , initialize: function(){
-      this.set($.parseJSON($('div#map_data').text()));
+      var txt = $('div#map_data').text();
+      if(txt === '') return; // Abort
+      this.set($.parseJSON(txt));
       this.initRegionBounds();
       //Building WordOverlays:
       var wos = _.map(

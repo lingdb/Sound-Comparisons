@@ -15,19 +15,44 @@ LinkInterceptor = Backbone.Model.extend({
   }
 , findLinks: function(tgt){
     var interceptor = this;
+    //Typical links:
     tgt.find('a[href]').each(function(){
-      var link = $(this), href = link.attr('href');
-      //Consider only links that start with get parameters and are for the current site:
-      if(!/^\?/.test(href)) return;
-      //On Click prevent usual behaviour, and intercept:
-      link.click(function(e){
-        //Only intercept if someone cares:
-        if(!interceptor.hasListeners()) return;
-        //No once expects the spanish interception!
-        e.preventDefault();
-        interceptor.set({url: href});
-      });
+      var lnk = $(this);
+      lnk.click(interceptor.linkProcessor(lnk.attr('href')));
     });
+    //Special links:
+    tgt.find('[data-href]').each(function(){
+      var lnk = $(this);
+      lnk.click(interceptor.linkProcessor(lnk.attr('data-href')));
+    });
+    //Select links:
+    tgt.find('#wordlistfilter select').change(function(){
+      var href = $('option:selected', this).attr('data-href');
+      (interceptor.linkProcessor(href))();
+    });
+
+  }
+/*
+  @param href target to navigate to.
+  @return function to call to trigger navigation.
+*/
+, linkProcessor: function(href){
+    //Consider only links that start with get parameters and are for the current site:
+    if(!/^\?/.test(href)) return;
+    //On Click prevent usual behaviour, and intercept:
+    var interceptor = this;
+    return function(e){
+      //Only intercept if someone cares:
+      if(!interceptor.hasListeners()) return;
+      //No once expects the spanish interception!
+      if(e) e.preventDefault();
+      //Logging if possible:
+      window.App.logger.logLink(href);
+      //Updating the PageWatcher:
+      window.App.pageWatcher.update(href);
+      //Setting the url, so that event listeners fire.
+      interceptor.set({url: href});
+    };
   }
 , hasListeners: function(){
     if(!this._events) return false;

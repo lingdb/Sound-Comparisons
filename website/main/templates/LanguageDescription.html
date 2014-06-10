@@ -1,0 +1,19 @@
+<table class="languageHeadlineParent">
+  <tbody id="languageDescription">
+    {{#rows}}
+    <tr><td>
+      {{desc}}
+      {{#link}}
+      <a href='{{{link}}}' target='_blank'>
+        {{#img}}
+        <img src='{{{img}}}' />
+        {{/img}}
+        {{text}}
+      </a>
+      {{/link}}
+      {{afterLink}}
+    </td></tr>
+    {{/rows}}
+    {{{description}}}
+  </tbody>
+</table>

@@ -1,3 +1,11 @@
+2014-06-10:
+ - Make sure playSequences be working everywhere on the page.
+   - I've got the impression, that PlaySequenceView has some bugs.
+ - Once we've got an equal to the ValueManager in JavaScript,
+   something that might also build on top of the PageWatcher,
+   we want this thing to log the events that the PageWatcher currently does,
+   because there is information hidden to the PageWatcher.
+
 2014-06-06:
  - Different .js parts can now be adjusted to the new LinkInterceptor/PartView style
    - This concerns parts that draw information from the first load,

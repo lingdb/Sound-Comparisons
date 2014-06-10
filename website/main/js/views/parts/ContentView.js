@@ -10,5 +10,11 @@ ContentView = PartView.extend({
 , replaceEl: function(){
     this.$el = $('#contentArea');
     this.el  = this.$el.get(0);
+    return function(){
+      window.App.views.singleLanguageView.initialize();
+      window.App.views.playSequenceView.initialize();
+      window.App.map.initialize();
+      window.App.views.mapView.initialize();
+    };
   }
 });

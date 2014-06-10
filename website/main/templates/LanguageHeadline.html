@@ -19,7 +19,11 @@
   <div class="span3">
     <i class="icon-eject rotate90" id="language_playAll" title="{{playAll}}"></i>
   </div>
-  <div id="languageHeadline" class="span6">{{{links}}}</div>
+  <div id="languageHeadline" class="span6">
+    {{#LanguageLinks}}
+    {{>LanguageLinks}}
+    {{/LanguageLinks}}
+  </div>
   {{#hasContributors}}
   <div class="span3">
     <div id="contributorGroup" class="pull-right btn-group">
@@ -41,8 +45,6 @@
   </div>
   {{/hasContributors}}
 </div>
-<table class="languageHeadlineParent">
-  <tbody id="languageDescription">
-    {{{description}}}
-  </tbody>
-</table>
+{{#LanguageDescription}}
+{{>LanguageDescription}}
+{{/LanguageDescription}}

@@ -20,9 +20,16 @@ AudioLogic = Backbone.View.extend({
       It will be used by the PlaySequence as a callback.
     */
     this.playFinished = null;
+    /**
+      playCounts will be used for logging, and is a map 'src' -> count.
+    */
+    this.playCounts = {};
     //Adaptation from the former initAudio():
-    var t = this;
-    $('.audio').each(function(i){
+    this.findAudio();
+  }
+, findAudio: function(target){
+    var t   = this, tgt = target || $('body');
+    tgt.find('.audio').each(function(i){
       var a = $('audio', this).get(0);
       $(this).on('click mouseover mouseout touchstart', function(e){
         switch(e.type){
@@ -146,12 +153,13 @@ AudioLogic = Backbone.View.extend({
   Logs the event of playing a sound with GoogleAnalytics
 */
 , log: function(audio){
-    if(!_gaq) return;
     var src = $('source', audio).attr('src');
     var r   = /.*sound\/(.*)\.(ogg|mp3)/;
     if(r.test(src)){
       src = r.exec(src)[1];
-      _gaq.push(['_trackEvent', 'Transcription', 'Hoverplay', src]);
+      var count = (this.playCounts[src] || 0) + 1;
+      this.playCounts[src] = count;
+      window.App.logger.logEvent('AudioLogic', 'play', src, count);
     }
   }
 });

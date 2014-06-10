@@ -363,12 +363,12 @@ class Language extends Translatable{
   */
   public function getMapsLink($t){
     $ll = $this->getLocation();
-    if(!$ll)
-      return '';
-    $tooltip = $t->st('tooltip_languages_link_mapview');
-    $v = $this->getValueManager();
-    $href = 'http://maps.google.com/maps?z=12&q='.implode(',', $ll);
-    return "<a href='$href' target='_blank'><img class='favicon' src='img/langmap.png' title='$tooltip' /></a>";
+    if(!$ll) return array();
+    return array(
+      'ttip' => $t->st('tooltip_languages_link_mapview')
+    , 'href' => 'http://maps.google.com/maps?z=12&q='.implode(',', $ll)
+    , 'img'  => 'img/langmap.png'
+    );
   }
   /**
     @param $t Translator
@@ -387,11 +387,14 @@ class Language extends Translatable{
          . "AND ISOCode = '$iso' "
          . "AND WikipediaLinkPart = '$wpart'";
       if($r = $this->fetchOneBy($q))
-        return "<a href='".$r[0]."' target='_blank'>"
-             . "<img class='favicon favicon-bordered' "
-             . "src='http://en.wikipedia.org/favicon.ico' title='$tooltip' /></a>";
+        return array(array(
+          'ttip'  => $tooltip
+        , 'img'   => 'http://en.wikipedia.org/favicon.ico'
+        , 'class' => 'favicon favicon-bordered'
+        , 'href'  => $r[0]
+        ));
     }
-    return '';
+    return array();
   }
   /**
     @param $t Translator
@@ -399,27 +402,37 @@ class Language extends Translatable{
     Works similar to the wikipedia one.
   */
   public function getVariousLinks($t){
-    $ret = '';
     $sid = $this->getValueManager()->getStudy()->getId();
     $id = $this->id;
     $q = "SELECT ISOCode FROM Languages_$sid "
        . "WHERE LanguageIx = $id AND ISOCode != ''";
     if($r = $this->fetchOneBy($q)){
       $iso = $r[0];
-      //Enthnologue:
-      $tooltip = $t->st('tooltip_languages_link_ethnologue');
-      $ret = "$ret<a href='http://www.ethnologue.com/show_language.asp?code=$iso' target='_blank'><img class='favicon' src='http://www.ethnologue.com/favicon.ico' title='$tooltip' /></a>";
-      //Glottolog:
-      $tooltip = $t->st('tooltip_languages_link_glottolog');
-      $ret = "$ret<a href='http://www.glottolog.org/resource/languoid/iso/$iso' target='_blank'><img class='favicon' src='img/extern/glottolog.png' title='$tooltip'/></a>";
-      //Multitree:
-      $tooltip = $t->st('tooltip_languages_link_multitree');
-      $ret = "$ret<a href='http://multitree.org/codes/$iso.html' target='_blank'><img class='favicon' src='http://multitree.org/images/favicon.ico' title='$tooltip'/></a>";
-      //LLMap:
-      $tooltip = $t->st('tooltip_languages_link_llmap');
-      $ret = "$ret<a href='http://www.llmap.org/maps/by-code/$iso.html' target='_blank'><img style='width:36px;' class='favicon' src='img/extern/llmap.png' title='$tooltip'/></a>";
+      return array(
+        array(
+          'href'  => "http://www.ethnologue.com/show_language.asp?code=$iso"
+        , 'img'   => 'http://www.ethnologue.com/favicon.ico'
+        , 'ttip'  => $t->st('tooltip_languages_link_ethnologue')
+        )
+      , array(
+          'href'  => "http://www.glottolog.org/resource/languoid/iso/$iso"
+        , 'img'   => 'img/extern/glottolog.png'
+        , 'ttip'  => $t->st('tooltip_languages_link_glottolog')
+        )
+      , array(
+          'href'  => "http://multitree.org/codes/$iso.html"
+        , 'img'   => 'http://multitree.org/images/favicon.ico'
+        , 'ttip'  => $t->st('tooltip_languages_link_multitree')
+        )
+      , array(
+          'href'  => "http://www.llmap.org/maps/by-code/$iso.html"
+        , 'style' => 'width: 36px;'
+        , 'img'   => 'img/extern/llmap.png'
+        , 'ttip'  => $t->st('tooltip_languages_link_llmap')
+        )
+      );
     }
-    return $ret;
+    return array();
   }
   /**
     @param $t Translator
@@ -429,11 +442,13 @@ class Language extends Translatable{
     and adds the play image afterwards.
   */
   public function getLinks($t){
-    return '<div id="languageInfo">'
-      . $this->getMapsLink($t)
-      . $this->getWikipediaLink($t)
-      . $this->getVariousLinks($t)
-      . '</div>';
+    return array(
+      'links' => array_merge(
+        $this->getVariousLinks($t)
+      , $this->getWikipediaLink($t)
+      , $this->getMapsLink($t)
+      )
+    );
   }
   /**
     @param $t Translator
@@ -441,7 +456,7 @@ class Language extends Translatable{
   */
   public function getDescription($t){
     Stopwatch::start('Language:getDescription');
-    $desc = '';
+    $rows = array();
     if($r = $this->fetchAssoc(
           'Tooltip'
         , 'SpecificLanguageVarietyName'
@@ -456,52 +471,58 @@ class Language extends Translatable{
         , 'ExternalWeblink')
       ){
       //Description lines:
-      $description = $r['Tooltip'];
-      if($description != '')
-        $desc .= "<tr><td>$description</td></tr>";
+      if($r['Tooltip']){
+        array_push($rows, array(
+          'desc' => $r['Tooltip']
+        ));
+      }
       //Historical Period
       if($r['HistoricalPeriod'] != ''){
-        $hPeriod = $r['HistoricalPeriod'];
-        $wikiLink = '';
-        if($r['HistoricalPeriodWikipediaString'] != '')
-          $wikiLink = "<a href='http://en.wikipedia.org/wiki/".$r['HistoricalPeriodWikipediaString']."' target='_blank'><img src='http://en.wikipedia.org/favicon.ico' /></a>";
-        $desc .= "<tr><td>".$t->st('language_description_historical').": $hPeriod$wikiLink</td></tr>";
+        array_push($rows, array(
+          'desc' => $t->st('language_description_historical').': '.$r['HistoricalPeriod']
+        , 'link' => 'http://en.wikipedia.org/wiki/'.$r['HistoricalPeriodWikipediaString']
+        , 'img'  => 'http://en.wikipedia.org/favicon.ico'
+        ));
       }
       //Region
-      $nCity = $r['NearestCity'];
-      $sRegion = $r['StateRegion'];
-      if($nCity != ''){
-        if($sRegion != '')
-          $nCity = "$nCity ($sRegion)";
-      }else{
-        $nCity = $sRegion;
+      if($r['NearestCity'] != '' || $r['StateRegion'] != ''){
+        $cty = ($r['NearestCity'] != '' && $r['StateRegion'] != '')
+             ? $r['NearestCity'].' ('.$r['StateRegion'].')' : $r['StateRegion'];
+        array_push($rows, array(
+          'desc' => $t->st('language_description_region').': '.$cty
+        ));
       }
-      if($nCity != '')
-        $desc .= "<tr><td>".$t->st('language_description_region').": $nCity</td></tr>";
       //Locality
       if($r['PreciseLocality'] != ''){
         $pLocality = $r['PreciseLocality'];
-        $pNatSpelling = '';
-        if($r['PreciseLocalityNationalSpelling'] != '')
-          $pNatSpelling = ' (='.$r['PreciseLocalityNationalSpelling'].')';
-        $desc .= "<tr><td>".$t->st('language_description_preciselocality').": $pLocality$pNatSpelling</td></tr>";
+        $pNatSpelling = ($r['PreciseLocalityNationalSpelling'] != '')
+                      ? ' (='.$r['PreciseLocalityNationalSpelling'].')' : '';
+        array_push($rows, array(
+          'desc' => $t->st('language_description_preciselocality').": $pLocality$pNatSpelling"
+        ));
       }
       //External Weblink
       if($r['ExternalWeblink'] != ''){
-        $link = $r['ExternalWeblink'];
-        $desc .= "<tr><td>".$t->st('language_description_externalweblink').": <a href='$link' target='_blank'>$link</a></td></tr>";
+        array_push($rows, array(
+          'desc' => $t->st('language_description_externalweblink').': '
+        , 'link' => $r['ExternalWeblink']
+        , 'text' => $r['ExternalWeblink']
+        ));
       }
       //WebsiteSubgroup
       if($r['WebsiteSubgroupName'] != ''){
-        $subgroupName = $r['WebsiteSubgroupName'];
-        $wikiLink = '';
-        if($r['WebsiteSubgroupWikipediaString'] != '')
-          $wikiLink = '<a href="http://en.wikipedia.org/wiki/'.$r['WebsiteSubgroupWikipediaString'].'" target="_blank"><img src="http://en.wikipedia.org/favicon.ico" /></a>';
-        $desc .= "<tr><td>".$t->st('language_description_subgroup').": $wikiLink$subgroupName</td></tr>";
+        array_push($rows, array(
+          'desc'      => $t->st('language_description_subgroup').': '
+        , 'link'      => ($r['WebsiteSubgroupWikipediaString'] != '')
+                       ? 'http://en.wikipedia.org/wiki/'.$r['WebsiteSubgroupWikipediaString']
+                       : null
+        , 'img'       => 'http://en.wikipedia.org/favicon.ico'
+        , 'afterLink' => $r['WebsiteSubgroupName']
+        ));
       }
     }
     Stopwatch::stop('Language:getDescription');
-    return $desc;
+    return array('rows' => $rows);
   }
   /**
     @return $familyIx FamilyIx from v4.Languages table

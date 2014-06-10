@@ -143,10 +143,10 @@ class Tabulator{
     $t = $v->getTranslator();
     //Basic information:
     $headline = array(
-      'longName'    => $language->getLongName()
-    , 'links'       => $language->getLinks($t)
-    , 'description' => $language->getDescription($t)
-    , 'playAll'     => $t->st('language_playAll')
+      'longName'            => $language->getLongName()
+    , 'LanguageLinks'       => $language->getLinks($t)
+    , 'LanguageDescription' => $language->getDescription($t)
+    , 'playAll'             => $t->st('language_playAll')
     );
     //Previous Language:
     $prev = array('title' => $t->st('tabulator_language_prev'));

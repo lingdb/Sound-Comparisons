@@ -11,6 +11,7 @@ if(typeof(google) != 'undefined'){
     }
   , initialize: function(){
       this.div = document.getElementById("map_canvas");
+      if(this.div === null) return; // Abort
       this.map = new google.maps.Map(this.div, this.model.get('mapOptions'));
       this.render();
       //SoundControlView:
