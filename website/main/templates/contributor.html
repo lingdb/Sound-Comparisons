@@ -5,13 +5,13 @@
     <div class="offset1 span11">
       <dl class="dl-horizontal">
         {{# email}}
-        <dt>Email</dt><dd>{{email}}</dd>
+        <dt>Email</dt><dd>{{.}}</dd>
         {{/ email}}
         {{# website}}
-        <dt>Website</dt><dd><a href="{{{website}}}" target="_blank">{{{website}}}</a></dd>
+        <dt>Website</dt><dd><a href="{{{.}}}" target="_blank">{{{.}}}</a></dd>
         {{/ website}}
         {{# role}}
-        <dt>About</dt><dd>{{role}}</dd>
+        <dt>About</dt><dd>{{.}}</dd>
         {{/ role}}
       </dl>
     </div>
