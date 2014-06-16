@@ -43,7 +43,6 @@ TemplateStorage = Backbone.Model.extend({
       var ps = {};
       _.each(info, function(i){ps[i.name] = i.content});
       storage.set({ready: true, partials: ps});
-      console.log('TemplateStorage is ready.');
     });
   }
 //Loads a template object from localStorage
