@@ -9,6 +9,7 @@
 LinkInterceptor = Backbone.Model.extend({
   defaults: {
     url: null // Changes everytime a link is clicked. Can be used to listen to LinkInterceptor.
+  , fragment: '' // Should be appended to the url, will have a leading '#' if not ''.
   }
 , initialize: function(){
     this.findLinks($('body'));
@@ -39,6 +40,12 @@ LinkInterceptor = Backbone.Model.extend({
 , linkProcessor: function(href){
     //Consider only links that start with get parameters and are for the current site:
     if(!/^\?/.test(href)) return;
+    //Split the href into url and fragment:
+    var parts = href.match(/^(\?[^#]*)(#?.*)/), frag = '';
+    if(parts.length === 3){//We have a fragment.
+      href = parts[1];
+      frag = parts[2];
+    }
     //On Click prevent usual behaviour, and intercept:
     var interceptor = this;
     return function(e){
@@ -49,9 +56,9 @@ LinkInterceptor = Backbone.Model.extend({
       //Logging if possible:
       window.App.logger.logLink(href);
       //Updating the PageWatcher:
-      window.App.pageWatcher.update(href);
+      window.App.pageWatcher.update(href+frag);
       //Setting the url, so that event listeners fire.
-      interceptor.set({url: href});
+      interceptor.set({url: href, fragment: frag});
     };
   }
 , hasListeners: function(){

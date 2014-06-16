@@ -12,8 +12,10 @@ PartView = Backbone.View.extend({
     var url  = 'query/sitePart'
              + interceptor.get('url')
              + '&part=' + this.part
+             + interceptor.get('fragment')
       , view = this;
     window.App.loadingBar.addLoaded();
+    console.log('PartView:update with url:\t'+url);
     $.getJSON(url, function(data){
       window.App.loadingBar.addLoaded();
       view.render(data);
