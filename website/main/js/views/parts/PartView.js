@@ -18,7 +18,7 @@ PartView = Backbone.View.extend({
       window.App.loadingBar.addLoaded();
       view.render(data);
     }).fail(function(e){
-      console.log('Failed in PartView:' + e);
+      console.log('Failed in PartView:' + JSON.stringify(e));
       window.App.loadingBar.addLoaded();
     });
   }
