@@ -15,10 +15,9 @@ PartView = Backbone.View.extend({
              + interceptor.get('fragment')
       , view = this;
     window.App.loadingBar.addLoaded();
-    console.log('PartView:update with url:\t'+url);
     $.getJSON(url, function(data){
-      window.App.loadingBar.addLoaded();
       view.render(data);
+      window.App.loadingBar.addLoaded();
     }).fail(function(e){
       console.log('Failed in PartView:' + JSON.stringify(e));
       window.App.loadingBar.addLoaded();

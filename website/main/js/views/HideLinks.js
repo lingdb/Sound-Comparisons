@@ -7,11 +7,14 @@ HideLinks = Backbone.View.extend({
       view.click($(this));
     }).each(function(){
       var t   = $(this)
-        , key = t.data('name');
+        , key = t.attr('data-name');
       view.links[key] = t;
     });
     this.loadStates();
     this.render();
+    this.model.on('change:pageView', function(){
+      window.App.loadingBar.onFinish(this.render, this);
+    }, this);
   }
 , toggleChevron: function(t){
     if(t.hasClass('icon-chevron-right')){
@@ -58,18 +61,18 @@ HideLinks = Backbone.View.extend({
     }, this);
   }
 , storageKey: function(id){
-    var view = this.model.get('view')
+    var view = this.model.get('pageView');
     return 'HideLinks_toggle_'+view+'_'+id;
   }
 , render: function(){
-    //Making sure, all are hidden on certain views:
-    var view = this.model.get('view')
-    if(view === 'whoAreWe'){
-      _.each(this.links, function(l, name){
-        var key = this.storageKey(name);
-        if(!localStorage[key])
-          l.trigger('click');
-      }, this);
-    }
+    //Making sure, all are hidden or shown, depending on view:
+    var pv    = this.model.get('pageView')
+      , hasPv = pv === 'whoAreWe';
+    _.each(this.links, function(l, name){
+      var key = this.storageKey(name);
+      if((!localStorage[key] && hasPv)||(localStorage[key] && !hasPv)){
+        l.trigger('click');
+      }
+    }, this);
   }
 });

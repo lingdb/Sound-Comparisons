@@ -56,7 +56,7 @@ LinkInterceptor = Backbone.Model.extend({
       //Logging if possible:
       window.App.logger.logLink(href);
       //Updating the PageWatcher:
-      window.App.pageWatcher.update(href+frag);
+      window.App.pageWatcher.update(href, frag);
       //Setting the url, so that event listeners fire.
       interceptor.set({url: href, fragment: frag});
     };

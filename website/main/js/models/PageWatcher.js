@@ -23,9 +23,9 @@ PageWatcher = Backbone.Model.extend({
     //but it's not that detailed in the beginning.
     this.parseHref($('#saveLocation').attr('href'));
   }
-, update: function(href){
+, update: function(href, fragment){
     if(typeof(window.history) !== 'object') return;
-    window.history.pushState('', 'On site navigation', href);
+    window.history.pushState('', 'On site navigation', href+fragment);
     this.parseHref(href);
   }
 , parseHref: function(href){

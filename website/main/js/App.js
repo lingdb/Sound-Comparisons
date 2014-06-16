@@ -13,7 +13,7 @@ $(function(){
   , views: {}
   };
   window.App.views.hideLinks = new HideLinks({
-    el: null, model: window.App.viewWatcher});
+    el: null, model: window.App.pageWatcher});
   window.App.views.ipaKeyboardView = new IPAKeyboardView({
     el: $('#ipaKeyboard')});
   window.App.views.soundPlayOptionView = new SoundPlayOptionView({
@@ -46,4 +46,7 @@ $(function(){
   };
   window.App.views.playSequenceView = new PlaySequenceView();
   window.App.views.singleLanguageView = new SingleLanguageView();
+  window.App.views.whoAreWeView = new WhoAreWeView({
+    model: window.App.pageWatcher
+  });
 });

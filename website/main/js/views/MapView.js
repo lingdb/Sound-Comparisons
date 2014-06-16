@@ -48,6 +48,7 @@ if(typeof(google) != 'undefined'){
   , adjustCanvasSize: function(){
       var canvas = $('#map_canvas')
         , offset = canvas.offset();
+      if(canvas.length === 0) return;
       canvas.css('height', window.innerHeight - offset.top - 1 + 'px');
       google.maps.event.trigger(this.map, "resize");
     }
