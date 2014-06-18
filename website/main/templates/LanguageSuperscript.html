@@ -1,0 +1,8 @@
+{{#isSuper}}
+{{target}}
+<div class="{{#target}}superscript{{/target}}{{^target}}superscriptStandalone{{/target}}"
+     title="{{ttip}}">
+  {{superscript}}
+</div>
+{{/isSuper}}
+{{^isSuper}}{{.}}{{/isSuper}}

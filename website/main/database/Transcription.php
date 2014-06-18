@@ -151,44 +151,34 @@ class Transcription extends DBTable{
     $supInfo   = $this->getSuperscriptInfo();
     $ret       = array();
     foreach($phonetics as $i => $phonetic){
-      //Historical:
-      $h = '';
-      if($this->getLanguage()->isHistorical())
-        $h = '*';
-      //Not cognate:
-      $sInf = '';
-      if(array_key_exists($i, $supInfo)){
-        if($s = $supInfo[$i]){
-          $sInf    = $s[0];
-          $tooltip = $s[1];
-          $sInf    = "<div class='superscript' title='$tooltip'>$sInf</div>";
-        }
-      }
       //Source files:
       $srcs = $sources[$i];
-      //File missing:
-      $fm = '';
-      if(count($srcs) == 0){
-        $fm = ' fileMissing';
-        if($phonetic === 'PLAY'){
-          $phonetic = '--';
-          $success  = false;
+      //Current phonetic:
+      $p = array(
+        'historical'  => $this->getLanguage()->isHistorical()
+      , 'fileMissing' => count($srcs) === 0
+      , 'phonetic'    => ($phonetic === 'PLAY') ? '--' : $phonetic
+      , 'srcs'        => json_encode($srcs)
+      , 'hasTrans'    => $this->language->hasTranscriptions()
+      );
+      //Not cognate:
+      if(array_key_exists($i, $supInfo)){
+        if($s = $supInfo[$i]){
+          $p['notCognate'] = array(
+            'sInf' => $s[0]
+          , 'ttip' => $s[1]
+          );
         }
       }
-      //We like JSON:
-      $srcs = json_encode($srcs);
-      //Complete:
-      $subscript = '';
+      //Subscript:
       if(count($phonetics) > 1 && Transcription::soundFileIsLex($srcs)){
-        $ttip = $t->st('tooltip_subscript_differentVariants');
-        $subscript = '<div class="subscript" title="'.$ttip.'">'.($i+1).'</div>';
+        $p['subscript'] = array(
+          'ttip'      => $t->st('tooltip_subscript_differentVariants')
+        , 'subscript' => $i + 1
+        );
       }
-      $phonetic = "<div class='transcription$fm'>$phonetic</div>";
-      if($this->language->hasTranscriptions()){
-        $phonetic = "[$phonetic]";
-      }else $phonetic = "|$phonetic|";
-      $audio = "<audio data-onDemand='$srcs' preload='auto' autobuffer=''></audio>";
-      array_push($ret, "<div class='audio'>$h$phonetic$subscript$sInf$audio</div>");
+      //Done:
+      array_push($ret, $p);
     }
     Stopwatch::stop('Transcription:getPhonetics');
     return $ret;
@@ -202,11 +192,15 @@ class Transcription extends DBTable{
     If the break parameter is true, and more than one phonetic is generated, phonetics will be seperated by <br />.
     $success will be false if neither a soundfile nor phonetics are available.
   */
-  public function getPhonetic($v = null, $break = false, $success = true){
+  public function getPhonetic($v = null, $break = false, &$success = true){
     $ps = $this->getPhonetics($v);
     $success = (count($ps) == 0);
-    $glue = $break ? '<br>' : '';
-    return implode($glue, $ps);
+    if($break && count($ps) > 1){
+      for($i = 0; $i < count($ps) - 1; $i++){
+        $ps[$i]['break'] = true;
+      }
+    }
+    return $ps;
   }
   /**
     @return $word Word

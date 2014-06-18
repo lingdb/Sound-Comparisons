@@ -2,10 +2,14 @@
   {{#words}}
   <li{{#selected}} class="selected"{{/selected}}>
     <div class="p50 color-word" data-canonicalName="{{cname}}">
-      {{{icon}}}
+      {{#icon}}
+      <a title="{{ttip}}" {{{link}}}><i class="{{icon}}"></i></a>
+      {{/icon}}
       <a class="color-word wordLinkModernName" title="{{ttip}}" {{{link}}}>{{trans}}{{#ttip}}…{{/ttip}}</a>
-      {{{subscript}}}
-    </div><div class="p50">{{{phonetic}}}</div>
+      {{#subscript}}
+      <div class="subscript" title="{{ttip}}">{{subscript}}</div>
+      {{/subscript}}
+    </div><div class="p50">{{#phonetic}}{{> Phonetics}}{{/phonetic}}</div>
   </li>
   {{/words}}
 </ul>

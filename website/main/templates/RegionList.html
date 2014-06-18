@@ -15,7 +15,7 @@
         <a title="{{ttip}}" {{{link}}}><i class="{{checked}}"></i></a>
       {{/icon}}
       <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}" {{{link}}}>
-        {{{flag}}}{{{shortName}}}
+        {{{flag}}}{{#shortName}}{{> LanguageSuperscript}}{{/shortName}}
       </a>
       </li>
     {{/languages}}
@@ -40,7 +40,7 @@
           <a title="{{ttip}}" {{{link}}}><i class="{{checked}}"></i></a>
         {{/icon}}
         <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}" {{{link}}}>
-          {{{flag}}}{{{shortName}}}
+          {{{flag}}}{{#shortName}}{{> LanguageSuperscript}}{{/shortName}}
         </a>
         </li>
       {{/languages}}

@@ -70,13 +70,10 @@ if($v->gpv()->isSelection()){
   $searchFilter = array_merge($searchFilter, array(
     'filterFoundWords' => $t->st('menu_words_filterFoundWords')
   , 'fTitle'           => $t->st('menu_words_filterTitleMultiWords').':'
-  , 'fAddAll'          => '<i class="icon-plus" id="FilterAddMultiWords" title="'
-                        . $t->st('menu_words_filterAddMultiWords').'"></i>'
-  , 'fRefresh'         => '<i class="icon-repeat" id="FilterRefreshMultiWords" title="'
-                        . $t->st('menu_words_filterRefreshMultiWords').'"></i>'
-  , 'fClearAll'        => '<i class="icon-remove" title="'
-                        . $t->st('menu_words_filterClearAllWords')
-                        . '" '.$v->setWords()->link('','data-href').'></i>'
+  , 'fAddAll'          => $t->st('menu_words_filterAddMultiWords')
+  , 'fRefresh'         => $t->st('menu_words_filterRefreshMultiWords')
+  , 'fClearAll'        => $t->st('menu_words_filterClearAllWords')
+  , 'fClearAllLink'    => $v->setWords()->link('','data-href')
   ));
 }
 //Done:

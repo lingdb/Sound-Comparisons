@@ -7,7 +7,10 @@
   {{/prev}}
   <div class="span6 centertext" id="tableHeader">
     <h1 class="color-word">
-      {{name}}{{{mapsLink}}}
+      {{name}}
+      {{#mapsLink}}
+      {{> WordMapsLink}}
+      {{/mapsLink}}
     </h1>
   </div>
   {{#next}}

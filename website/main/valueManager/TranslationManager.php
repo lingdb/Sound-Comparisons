@@ -274,8 +274,8 @@ abstract class TranslationManager extends SubManager{
   public function showFlag(){
     $query = 'SELECT ImagePath FROM Page_Translations WHERE TranslationId = '.$this->translationId;
     if($r = Config::getConnection()->query($query)->fetch_assoc())
-      return "<img class='flag' src='".$r['ImagePath']."' />";
-    return '';
+      return $r['ImagePath'];
+    return null;
   }
   /**
     @param [$useRfcLanguage = false] Bool

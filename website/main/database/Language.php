@@ -137,13 +137,14 @@ class Language extends Translatable{
     or may be used as 'stand alone' if $target is null.
   */
   public function getSuperscript($target = null){
-    $s = '';
+    $s    = '';
     $ttip = '';
-    $sid = $this->getValueManager()->getStudy()->getId();
-    $id = $this->id;
-    $q = "SELECT Status, StatusTooltip FROM LanguageStatusTypes "
-       . "WHERE LanguageStatusType = (SELECT LanguageStatusType FROM Languages_$sid WHERE LanguageIx = $id) "
-       . "AND Status IS NOT NULL AND StatusTooltip IS NOT NULL";
+    $sid  = $this->getValueManager()->getStudy()->getId();
+    $id   = $this->id;
+    $q    = "SELECT Status, StatusTooltip FROM LanguageStatusTypes "
+          . "WHERE LanguageStatusType = (SELECT LanguageStatusType "
+          . "FROM Languages_$sid WHERE LanguageIx = $id) "
+          . "AND Status IS NOT NULL AND StatusTooltip IS NOT NULL";
     if($r = $this->fetchOneBy($q)){
       $s    = $r[0];
       $ttip = $r[1];
@@ -154,12 +155,12 @@ class Language extends Translatable{
       }
       $ttip = $trans[2];
     }
-    if($target === null){
-      $s = "<div class='superscriptStandalone' title=\"$ttip\">$s</div>";
-    }else{
-      $s = "$target<div class='superscript' title=\"$ttip\">$s</div>";
-    }
-    return $s;
+    return array(
+      'target'      => $target
+    , 'ttip'        => $ttip
+    , 'superscript' => $s
+    , 'isSuper'     => true
+    );
   }
   /**
     @return [$languageStatusType] String

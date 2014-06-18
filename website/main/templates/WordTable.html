@@ -15,12 +15,14 @@
       {{/isLanguageCell}}
       {{#isLanguageCell}}
       <td>
-        <a class="tableLink color-language" {{{link}}} title="{{longName}}">{{{shortName}}}</a>
+        <a class="tableLink color-language" {{{link}}} title="{{longName}}">{{#shortName}}{{> LanguageSuperscropt}}{{/shortName}}</a>
         <br />
         {{#spelling}}
         <div class="altSpelling">{{.}}</div>
         {{/spelling}}
-        {{{phonetic}}}
+        {{#phonetic}}
+        {{> Phonetics}}
+        {{/phonetic}}
       </td>
       {{/isLanguageCell}}
       {{/cells}}

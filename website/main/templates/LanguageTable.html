@@ -12,7 +12,9 @@
           {{#spelling}}
           <div class="altSpelling">{{spelling}}</div>
           {{/spelling}}
-          {{{phonetic}}}
+          {{#phonetic}}
+          {{> Phonetics}}
+          {{/phonetic}}
         </td>
       {{/transcriptions}}
     </tr>

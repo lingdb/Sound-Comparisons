@@ -20,12 +20,11 @@ function WordMenuBuildWordList($words, $v, $t){
     );
     //The icon:
     if($multi){
-      $icon = $hasWord ? 'icon-check' : 'icon-chkbox-custom';
-      $ttip = $hasWord ? $t->st('multimenu_tooltip_del')
-                       : $t->st('multimenu_tooltip_add');
-      $href = $hasWord ? $v->delWord($w)->link()
-                       : $v->addWord($w)->link();
-      $word['icon'] = "<a title='$ttip' $href><i class='$icon'></i></a>";
+      $word['icon'] = array(
+        'ttip' => $hasWord ? $t->st('multimenu_tooltip_del') : $t->st('multimenu_tooltip_add')
+      , 'link' => $hasWord ? $v->delWord($w)->link() : $v->addWord($w)->link()
+      , 'icon' => $hasWord ? 'icon-check' : 'icon-chkbox-custom'
+      );
     }
     //The link:
     $word['link'] = $v->gpv()->isView('MapView')
@@ -38,10 +37,12 @@ function WordMenuBuildWordList($words, $v, $t){
       $phonetics = $tr->getPhonetics($v);
     }
     foreach($phonetics as $i => $phonetic){
-      $subscript = '';
+      $subscript = null;
       if(count($phonetics) > 1){
-        $ttip = $t->st('tooltip_subscript_differentVariants');
-        $subscript = '<div class="subscript" title="'.$ttip.'">'.($i+1).'</div>';
+        $subscript = array(
+          'ttip'      => $t->st('tooltip_subscript_differentVariants')
+        , 'subscript' => $i + 1
+        );
       }
       array_push($wordList['words'], array_merge($word, array(
         'subscript' => $subscript

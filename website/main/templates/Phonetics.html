@@ -1,0 +1,18 @@
+<div class='audio'>
+  {{#historical}}*{{/historical}}
+  {{#hasTrans}}[{{/hasTrans}}
+  {{^hasTrans}}|{{/hasTrans}}
+  <div class='transcription{{#fileMissing}} fileMissing{{/fileMissing}}'>
+    {{phonetic}}
+  </div>
+  {{#hasTrans}}]{{/hasTrans}}
+  {{^hasTrans}}|{{/hasTrans}}
+  {{#subscript}}
+  <div class="subscript" title="{{$ttip}}">{{subscript}}</div>
+  {{/subscript}}
+  {{#notCognate}}
+  <div class='superscript' title='{{ttip}}'>{{sInf}}</div>
+  {{/notCognate}}
+  <audio data-onDemand='{{{srcs}}}' preload='auto' autobuffer=''></audio>
+</div>
+{{#break}}<br>{{/break}}

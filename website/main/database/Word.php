@@ -221,10 +221,10 @@ class Word extends Translatable{
     depending on the current Translation.
   */
   public function getMapsLink($t){
-    $tooltip = $t->st("tooltip_words_link_mapview");
-    $v = $this->getValueManager();
-    $href = $v->gpv()->setView('MapView')->setWord($this)->link();
-    return "<a $href><img class='favicon' src='img/maps.png' title='$tooltip' /></a>";
+    return array(
+      'link' => $this->getValueManager()->gpv()->setView('MapView')->setWord($this)->link()
+    , 'ttip' => $t->st("tooltip_words_link_mapview")
+    );
   }
   /**
     @param $x Word

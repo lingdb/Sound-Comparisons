@@ -39,7 +39,7 @@
         <th class="icons"></th>
         {{/isFake}}
         {{^isFake}}
-        <th class="icons">{{{map}}}
+        <th class="icons">{{#map}}{{> WordMapsLink}}{{/map}}
           <i class="icon-eject rotate180 multitablePlayNs" title="{{playTtip}}"></i>
         </th>
         {{/isFake}}
@@ -64,7 +64,7 @@
         {{/isFake}}
         {{^isFake}}
         <td class="languageCell">
-          <a class="tableLink color-language" {{{link}}} title="{{languageTtip}}">{{{shortName}}}</a>
+          <a class="tableLink color-language" {{{link}}} title="{{languageTtip}}">{{#shortName}}{{> LanguageSuperscript}}{{/shortName}}</a>
           <a {{{deleteLink}}} title="{{deleteTtip}}" class="remove"><i class="icon-remove-custom"></i></a>
         </td>
         <td>
@@ -80,7 +80,9 @@
           {{#spelling}}
           <div class="altSpelling">{{.}}</div>
           {{/spelling}}
-          {{{phonetic}}}
+          {{#phonetic}}
+          {{> Phonetics}}
+          {{/phonetic}}
         </td>
         {{/isFake}}
         {{/transcriptions}}

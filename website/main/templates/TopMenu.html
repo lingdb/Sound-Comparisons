@@ -55,11 +55,11 @@
         <a class="dropdown-toggle topLink"
            data-toggle="dropdown">
            <i class="icon-dropdown-custom"></i>
-           {{{currentFlag}}}
+           {{#currentFlag}}<img class="flag" src="{{.}}">{{/currentFlag}}
            </a>
         <ul class="dropdown-menu">
           {{#otherTranslations}}
-          <li><a {{{link}}}>{{{flag}}}{{name}}</a></li>
+          <li><a {{{link}}}>{{#flag}}<img class="flag" src="{{.}}">{{/flag}}{{name}}</a></li>
           {{/otherTranslations}}
         </ul>
       </li>
