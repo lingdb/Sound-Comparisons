@@ -1,15 +1,16 @@
 $(function(){
   //Building the App singleton:
   window.App = {
-    linkInterceptor: new LinkInterceptor()
-  , loadingBar:      new LoadingBar()
-  , logger:          new Logger()
-  , map:             new Map()
-  , pageWatcher:     new PageWatcher()
-  , studyWatcher:    new StudyWatcher()
-  , soundPlayOption: new SoundPlayOption()
-  , templateStorage: new TemplateStorage()
-  , viewWatcher:     new ViewWatcher()
+    linkInterceptor:    new LinkInterceptor()
+  , loadingBar:         new LoadingBar()
+  , logger:             new Logger()
+  , map:                new Map()
+  , pageWatcher:        new PageWatcher()
+  , studyWatcher:       new StudyWatcher()
+  , soundPlayOption:    new SoundPlayOption()
+  , templateStorage:    new TemplateStorage()
+  , translationStorage: new TranslationStorage()
+  , viewWatcher:        new ViewWatcher()
   , views: {}
   };
   window.App.views.hideLinks = new HideLinks({

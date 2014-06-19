@@ -51,6 +51,7 @@
       . "AND Field = '$payload'"
       , "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
       . "VALUES ($tId, '$category', '$payload', '$update')"
+      , "UPDATE Page_Translations SET lastChangeDynamic = CURRENT_TIMESTAMP() WHERE TranslationId = $tId"
       );
       foreach($qs as $q)
         $db->query($q);

@@ -68,5 +68,19 @@ abstract class ConfigBase {
     }
     return self::$mustache;
   }
+  /***/
+  public static function setResponse($code){
+    if(function_exists('http_response_code')){
+      http_response_code($code); // Bad request
+    }else{
+      if($code === 400){
+        header('HTTP/ 400 Bad Request');
+      }else header('HTTP/ '.$code);
+    }
+  }
+  /***/
+  public static function setResponseJSON(){
+    header('Content-type: application/json');
+  }
 }
 ?>

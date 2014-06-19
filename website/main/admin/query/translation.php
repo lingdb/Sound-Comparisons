@@ -223,8 +223,8 @@
     */
     case 'update':
       $translationId = $dbConnection->escape_string($_GET['TranslationId']);
-      $payload = $_GET['Payload'];
-      $update = $_GET['Update'];
+      $payload  = $_GET['Payload'];
+      $update   = $_GET['Update'];
       $provider = $_GET['TranslationProvider'];
       if(array_key_exists($provider, $providers)){
         $p = $providers[$provider];

@@ -8,13 +8,10 @@ chdir('..');
 require_once 'config.php';
 require_once 'stopwatch.php';
 require_once 'valueManager/RedirectingValueManager.php';
-if(!array_key_exists('part', $_GET)){
-  Config::error('The part is missing - I cannot work like this.');
-}
 $dbConnection = Config::getConnection();
 $valueManager = RedirectingValuemanager::getInstance();
 //Real work:
-header('Content-type: application/json');
+Config::setResponseJSON();
 switch($_GET['part']){
   case 'TopMenu':
     require_once 'menu/TopMenu.php';
@@ -32,5 +29,12 @@ switch($_GET['part']){
     require_once 'content.php';
     echo json_encode($content);
   break;
+  default:
+    Config::setResponse(400);
+    echo json_encode(array(
+      'msg'  => '"part" variable must be specified, '
+              . 'carrying one of the part values.'
+    , 'part' => array('TopMenu','LanguageMenu','WordMenu','content')
+    ));
 }
 ?>

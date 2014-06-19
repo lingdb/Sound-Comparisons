@@ -65,6 +65,12 @@ class Transcription extends DBTable{
   }
   /***/
   public static function soundFileIsLex($file){
+    if(is_array($file)){
+      foreach($file as $f)
+        if(Transcription::soundFileIsLex($f))
+          return true;
+      return false;
+    }
     return preg_match('/_lex/', $file);
   }
   /**
@@ -231,7 +237,7 @@ class Transcription extends DBTable{
       //If the language-name Starts with 'Proto-',
       //we should put a * in front of the altSpelling.
       $proto = '';
-      if(preg_match('/^Proto-/', $this->language->getShortName()))
+      if(preg_match('/^Proto-/', $this->language->getShortName(false)))
         $proto = '*';
       //Returning
       if(strlen($s2) > 0) $altSpelling = $proto.$s2;

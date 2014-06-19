@@ -43,10 +43,13 @@
       $db      = $this->dbConnection;
       $payload = $db->escape_string($payload);
       $update  = $db->escape_string($update);
-      $q = "DELETE FROM Page_StaticTranslation WHERE Req = '$payload' AND TranslationId = $tId";
-      $db->query($q);
-      $q = "INSERT INTO Page_StaticTranslation(TranslationId, Req, Trans) VALUES ($tId, '$payload', '$update')";
-      $db->query($q);
+      $qs = array(
+        "DELETE FROM Page_StaticTranslation WHERE Req = '$payload' AND TranslationId = $tId"
+      , "INSERT INTO Page_StaticTranslation(TranslationId, Req, Trans) VALUES ($tId, '$payload', '$update')"
+      , "UPDATE Page_Translations SET lastChangeStatic = CURRENT_TIMESTAMP() WHERE TranslationId = $tId"
+      );
+      foreach($qs as $q)
+        $db->query($q);
     }
     public function offsets($tId, $study){
       $q = "SELECT COUNT(*) FROM Page_StaticTranslation WHERE TranslationId = 1";
