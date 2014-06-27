@@ -48,6 +48,10 @@ PageWatcher = Backbone.Model.extend({
     //Saving:
     this.set(params);
   }
+, getLocation: function(){
+    var href = window.location.href;
+    return '?' + href.split('?')[1];
+  }
 //Logs the complete page as events.
 , log: function(){
     _.each(this.attributes, function(v, k){

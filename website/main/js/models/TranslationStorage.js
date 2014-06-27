@@ -34,13 +34,13 @@ TranslationStorage = Backbone.Model.extend({
     var storage = this;
     //Step 1:
     $.getJSON('query/translations', {action: 'summary'}).done(function(summary){
-      storage.set({'summary': summary, ready: true});//Maybe premature true?
+      storage.set({'summary': summary, ready: true}); // Maybe premature true?
       var sTimes = storage.get('staticTimes'),  _sTimes = {}
         , dTimes = storage.get('dynamicTimes'), _dTimes = {};
       _.each(summary, function(translation){
         var tId = translation.TranslationId
-          , cS = translation.lastChangeStatic
-          , cD = translation.lastChangeDynamic;
+          , cS  = translation.lastChangeStatic
+          , cD  = translation.lastChangeDynamic;
         //Step 2:
         if(sTimes[tId] != cS){ // Inequality is enough; we don't know from the future.
           $.getJSON('query/translations', {action: 'static', translationId: tId}).done(function(elems){

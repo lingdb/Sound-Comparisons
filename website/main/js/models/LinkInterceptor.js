@@ -65,4 +65,9 @@ LinkInterceptor = Backbone.Model.extend({
     if(!this._events) return false;
     return _.keys(this._events).length > 0;
   }
+, navigate: function(href){
+    var call = this.linkProcessor(href);
+    if(_.isFunction(call)) call();
+    return this;
+  }
 });

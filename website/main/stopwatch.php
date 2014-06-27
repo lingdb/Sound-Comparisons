@@ -29,7 +29,7 @@ class Stopwatch {
   }
   /***/
   public static function stats(){
-    if(!Config::$debug) return '';
+    if(!Config::$debug) return null;
     //Stopping everything:
     foreach(self::$running as $k => $v){
       self::stop($k);

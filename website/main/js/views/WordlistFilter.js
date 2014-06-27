@@ -8,6 +8,21 @@ WordlistFilter = Backbone.View.extend({
   , selectedId: 'wordlistfilter_selectedId'
   }
 , initialize: function(){
+    //We need to make sure, WordlistFilter is reinitialized each navigation.
+    window.App.loadingBar.onFinish(function(){
+      this.reinitialize();
+      //Return true to be called each time:
+      return true;
+    }, this);
+    //Besides the initial setup above, we proxy to reinitialize:
+    this.reinitialize();
+  }
+/*
+  This fullfills the works of initialize, but may also be called later on.
+  The point is, that almost everything related to initialization may change,
+  as parts of the page will be replaced on navigation.
+*/
+, reinitialize: function(){
     //Checking if former inputs can be found:
     if(window.App.studyWatcher.studyChanged() || window.App.viewWatcher.viewChanged()){
       this.clearStorage();
@@ -145,9 +160,14 @@ WordlistFilter = Backbone.View.extend({
     var input = $('#PhoneticFilter').val();
     this.setStorage('#FilterPhonetic', '#PhoneticFilter', input);
     var elems = $('ul.wordList .p50:nth-child(2)').map(function(i, e){
-      var s = $(e).text();
-      s = s.match(/\[(.*)\]/)[1];
-      return {text: s, target: $(e).closest('li')};
+      var element = $(e)
+      var string  = element.text()
+        , matches = string.match(/\s*\[\s*([^\s]*)\s*\]\s*/);
+      if(matches.length <= 1){
+        console.log('WordlistFilter.phoneticFilter() could not find any matches for string:\n\t'+string);
+        return null;
+      }
+      return {text: matches[1], target: element.closest('li')};
     });
     this.filter(elems, this.enhanceIPA(input));
     if(this.hasLanguageTable){
@@ -169,7 +189,7 @@ WordlistFilter = Backbone.View.extend({
       Now the words have to be injected into the window.location:
       And if keep !== true, they'll overwrite the current words.
     */
-    var url = $('div#saveLocation').attr('href');
+    var url = window.App.pageWatcher.getLocation();
     if(url.search('words=') > 0){
       if(keep === true)
         url = url.replace('words=', newWords);
@@ -178,6 +198,6 @@ WordlistFilter = Backbone.View.extend({
     }else // We add the whole variable if no words are selected.
       url += '&' + newWords.substring(0, newWords.length - 1);
     //Changing to the new page:
-    window.location = url;
+    window.App.linkInterceptor.navigate(url);
   }
 });

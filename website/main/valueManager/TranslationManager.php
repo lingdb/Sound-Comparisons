@@ -82,7 +82,7 @@ abstract class TranslationManager extends SubManager{
         $tid = $this->translationId;
       if($r = $study->translate(array('tId' => $tid))){
         $p = $this->st('website_title_prefix');
-        $r = $r[0];
+        $r = $r[1];
         $s = $this->st('website_title_suffix');
         return "$p $r $s";
       }
@@ -159,14 +159,12 @@ abstract class TranslationManager extends SubManager{
     @return $translation String[]
   */
   public function getLanguageStatusTypeTranslation($language){
-    $ret  = array();
-    $tId  = $this->translationId;
-    $cols = array('Status', 'StatusTooltip', 'Description');
+    $ret    = array();
+    $tId    = $this->translationId;
+    $cols   = array('Status', 'StatusTooltip', 'Description');
     $prefix = 'LanguageStatusTypesTranslationProvider-LanguageStatusTypes-Trans_';
     $field  = $language->getLanguageStatusType();
-    if($field){
-      $field = $field[0];
-    }else return null;
+    if($field === null) return null;
     $ok = false;
     foreach($cols as $col){
       if($r = Translatable::getTrans($tId, $prefix.$col, $field)){

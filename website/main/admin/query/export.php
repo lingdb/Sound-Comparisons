@@ -57,22 +57,22 @@
         $rl  = is_null($r[5]) ? 'NULL' : $r[5];
         return "($tid,$tn,$bm,$ip,$a,$rl)";
       }
-    , function($s){return "INSERT IGNORE INTO Page_Translations VALUES $s;\n";}
+    , function($s){return "INSERT IGNORE INTO Page_Translations(TranslationId, TranslationName, BrowserMatch, ImagePath, Active, RfcLanguage) VALUES $s;\n";}
     )
   , new Table(
       'SELECT Req, Description FROM Page_StaticDescription'
     , function($r) use ($esc){return '('.$esc($r[0]).','.$esc($r[1]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_StaticDescription VALUES $s;\n";}
+    , function($s){return "INSERT IGNORE INTO Page_StaticDescription(Req, Description) VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Req, Trans, IsHtml FROM Page_StaticTranslation'
     , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).','.$r[3].')';}
-    , function($s){return "INSERT IGNORE INTO Page_StaticTranslation VALUES $s;\n";}
+    , function($s){return "INSERT IGNORE INTO Page_StaticTranslation(TranslationId, Req, Trans, IsHtml) VALUES $s;\n";}
     )
   , new Table(
       'SELECT TranslationId, Category, Field, Trans, Time FROM Page_DynamicTranslation'
     , function($r) use ($esc){return '('.$r[0].','.$esc($r[1]).','.$esc($r[2]).','.$esc($r[3]).','.$esc($r[4]).')';}
-    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation VALUES $s;\n";}
+    , function($s){return "INSERT IGNORE INTO Page_DynamicTranslation(TranslationId, Category, Field, Trans, Time) VALUES $s;\n";}
     )
   );
   /* The dumping of tables */

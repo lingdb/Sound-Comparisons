@@ -8,8 +8,15 @@ require_once 'MeaningGroups.php';
 */
 class StudyBase extends Translatable{
   //Inherited from Translatable:
+  /*
+    Inherited from Translatable:
+    Instead of a single Prefix, this returns an array of two prefixes.
+  */
   protected static function getTranslationPrefix(){
-    return 'StudyTitleTranslationProvider';
+    return array(
+      'StudyTranslationProvider'
+    , 'StudyTitleTranslationProvider'
+    );
   }
   /**
     Inherited from Translatable:
@@ -21,8 +28,16 @@ class StudyBase extends Translatable{
     $field = array_key_exists('id', $options)
            ? $options['id']
            : RedirectingValueManager::getInstance()->gsm()->getStudy()->getId();
-    $category = StudyBase::getTranslationPrefix();
-    return Translatable::getTrans($options['tId'], $category, $field);
+    $translations = array();
+    foreach(StudyBase::getTranslationPrefix() as $category){
+      $row = Translatable::getTrans($options['tId'], $category, $field);
+      if($row){
+        array_push($translations, $row[0]);
+      }else{
+        array_push($translations, null);
+      }
+    }
+    return $translations;
   }
   /**
     Inherited from Translatable:

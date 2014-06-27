@@ -1,3 +1,9 @@
+2014-06-27:
+ - Rewrite export/import for translations
+   - I'd like deltas/non clashing updates better than SQL scripts that replace things we want to keep.
+ - It would be feasable to use AppCache for templates, JavaScript, CSS files.
+   - Instead we're currently using localStorage here.
+
 2014-06-10:
  - Make sure playSequences be working everywhere on the page.
    - I've got the impression, that PlaySequenceView has some bugs.
@@ -10,14 +16,6 @@
  - Different .js parts can now be adjusted to the new LinkInterceptor/PartView style
    - This concerns parts that draw information from the first load,
      like soundPlays, or MapView aswell as URL parsing.
- - Also later on the partial views can be replaced with a client side model.
-
-2014-05-26:
- - Remember to export Users together with translations,
-   every time I supply an update that concerns the db!
-
-2014-05-22:
- - Transform database/Language to be usable with Mustache
 
 2014-04-30:
  - The search all translations feature is currently implemented as nonsense.
@@ -46,8 +44,6 @@
    hhvm:       Times (min, avg, max): 0.7163, 2.7047795918367, 6.4519
    It appears that hhvm is a better choice than php,
    but the database still makes for much slowdown.
- - Prepared statements offer inherent problems with dynamic tables.
-   This is sad, because I'd like to use them.
  - With the stopwatch I found out,
    that about 3.4s (< 50%) are used on sorting words for
    http://127.0.0.1/shk/main/?study=Mapudungun&languages=Huilliche%20%28Lagos%29&pageView=languageView&hl=en&wo_order=alphabetical&wo_phLang=Ancestral%20Mapudungun
@@ -57,9 +53,6 @@
 
 2014-02-27:
  - Ask Paul which fields he'd like to have in .csv exports.
-
-2014-02-20:
- - Make filtering in wordlist faster if possible
 
 2014-02-13:
  - Up to ~1.6s are spent on a call of Study:getWords,

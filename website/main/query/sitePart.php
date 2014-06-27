@@ -29,6 +29,10 @@ switch($_GET['part']){
     require_once 'content.php';
     echo json_encode($content);
   break;
+  case 'head':
+    require_once 'head.php';
+    echo json_encode($head);
+  break;
   default:
     Config::setResponse(400);
     echo json_encode(array(

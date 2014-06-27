@@ -138,18 +138,19 @@
            . 'WebsiteSubgroupWikipediaString, '  // 12
            . 'HistoricalPeriod, '                // 13
            . 'HistoricalPeriodWikipediaString, ' // 14
-           . 'StateRegion, '                     // 15
-           . 'NearestCity, '                     // 16
-           . 'PreciseLocality, '                 // 17
-           . 'PreciseLocalityNationalSpelling, ' // 18
-           . 'ExternalWeblink, '                 // 19
-           . 'FilePathPart, '                    // 20
-           . 'Flag, '                            // 21
+           . 'EthnicGroup, '                     // 15
+           . 'StateRegion, '                     // 16
+           . 'NearestCity, '                     // 17
+           . 'PreciseLocality, '                 // 18
+           . 'PreciseLocalityNationalSpelling, ' // 19
+           . 'ExternalWeblink, '                 // 20
+           . 'FilePathPart, '                    // 21
+           . 'Flag, '                            // 22
            . 'RfcLanguage, '
            . 'Latitude, '
            . 'Longtitude, '
-           . 'ISOCode, '                         // 25
-           . 'WikipediaLinkPart, '               // 26
+           . 'ISOCode, '                         // 26
+           . 'WikipediaLinkPart, '               // 27
            . 'ContributorSpokenBy, '
            . 'ContributorRecordedBy1, '
            . 'ContributorRecordedBy2, '
@@ -158,11 +159,11 @@
            . 'ContributorReconstructionBy, '
            . 'ContributorCitationAuthor1, '
            . 'Citation1Year, '
-           . 'Citation1Pages, '                  // 35
+           . 'Citation1Pages, '                  // 36
            . 'ContributorCitationAuthor2, '
            . 'Citation2Year, '
-           . 'Citation2Pages) VALUES '           // 38
-           . mkTuples($csv, array(3,7,8,9,11,12,13,14,15,16,17,18,19,20,21,25,26,35,38));
+           . 'Citation2Pages) VALUES '           // 39
+           . mkTuples($csv, array(3,7,8,9,11,12,13,14,15,16,17,18,19,20,21,22,26,27,36,39));
         array_push($queries, 'DELETE FROM Languages_'.$matches[1], $q);
       break;
       case (preg_match('/^LanguageStatusTypes\.txt$/', $fname, $matches) ? true : false):

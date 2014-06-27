@@ -10,10 +10,10 @@
     <td id="PhoneticTitle">
       {{phonetics}}
       <div class="audio">
-        [<div class="transcription">fəˈnɛtɪks</div>]
+        [<div class="transcription">{{fonetics}}</div>]
         <audio autobuffer="" preload="auto">
-          <source src="{{soundPath}}/fonetiks.ogg"></source>
-          <source src="{{soundPath}}/fonetiks.mp3"></source>
+          <source src="{{soundPath}}/{{soundFile}}.ogg"></source>
+          <source src="{{soundPath}}/{{soundFile}}.mp3"></source>
         </audio>
       </div>
       {{in}}
@@ -53,10 +53,13 @@
   </tr>
   <tr id="FilterAddAll">
     <td>{{filterFoundWords}}:<code id="FilterFoundMultiWords">x</code></td>
-    <td>{{{fTitle}}}
+    <td>
+      {{#fTitle}}
+      {{{fTitle}}}:
       <i class="icon-plus" id="FilterAddMultiWords" title="{{fAddAll}}"></i>
       <i class="icon-repeat" id="FilterRefreshMultiWords" title="{{fRefresh}}"></i>
       <i class="icon-remove" title="{{fClearAll}}" {{{fClearAllLink}}}></i>
+      {{/fTitle}}
     </td>
   </tr>
 </table>

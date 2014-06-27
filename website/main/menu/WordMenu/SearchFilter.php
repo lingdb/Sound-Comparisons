@@ -8,14 +8,17 @@
 function WordMenuBuildSearchFilter($v, $t){
 $study        = $v->getStudy();
 $searchFilter = array(
-  'sfby'         => $t->st('menu_words_filter_head')
-, 'spelling'     => $t->st('menu_words_filterspelling')
-, 'phonetics'    => $t->st('menu_words_filterphonetics')
-, 'soundPath'    => Config::$soundPath
-, 'psTarget'     => $t->st('menu_words_filter_regex_link')
-, 'psHover'      => $t->st('menu_words_filter_regex_hover')
-, 'in'           => $t->st('menu_words_filter_spphin')
-, 'ipaOpenTitle' => $t->st('menu_words_open_ipaKeyboard')
+  'sfby'             => $t->st('menu_words_filter_head')
+, 'spelling'         => $t->st('menu_words_filterspelling')
+, 'phonetics'        => $t->st('menu_words_filterphonetics')
+, 'soundPath'        => Config::$soundPath
+, 'soundFile'        => $t->st('menu_words_filter_fonetics_file')
+, 'fonetics'         => $t->st('menu_words_filter_fonetics')
+, 'psTarget'         => $t->st('menu_words_filter_regex_link')
+, 'psHover'          => $t->st('menu_words_filter_regex_hover')
+, 'in'               => $t->st('menu_words_filter_spphin')
+, 'ipaOpenTitle'     => $t->st('menu_words_open_ipaKeyboard')
+, 'filterFoundWords' => $t->st('menu_words_filterFoundWords')
 );
 //Filling spList:
 $spList = array(
@@ -68,8 +71,7 @@ $searchFilter['phList'] = $phList;
 //The addAll/clearAll buttons:
 if($v->gpv()->isSelection()){
   $searchFilter = array_merge($searchFilter, array(
-    'filterFoundWords' => $t->st('menu_words_filterFoundWords')
-  , 'fTitle'           => $t->st('menu_words_filterTitleMultiWords').':'
+    'fTitle'           => $t->st('menu_words_filterTitleMultiWords')
   , 'fAddAll'          => $t->st('menu_words_filterAddMultiWords')
   , 'fRefresh'         => $t->st('menu_words_filterRefreshMultiWords')
   , 'fClearAll'        => $t->st('menu_words_filterClearAllWords')

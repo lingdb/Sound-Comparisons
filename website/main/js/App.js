@@ -44,6 +44,10 @@ $(function(){
   , contentView: new ContentView({
       model: window.App.templateStorage
     })
+  , headView: new HeadView({
+      el: $('head')
+    , model: window.App.templateStorage
+    })
   };
   window.App.views.playSequenceView = new PlaySequenceView();
   window.App.views.singleLanguageView = new SingleLanguageView();
