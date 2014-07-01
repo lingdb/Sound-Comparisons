@@ -30,6 +30,15 @@ PlaySequence.prototype.play = function(){
   var t = this;
   window.App.views.audioLogic.setPlayFinished(function(){ t._play(); });
   this._play();
+  //Stopping on spacebar:
+  var stop = function(e){
+    var key = e.keyCode ? e.keyCode : e.which;
+    if(key === 80 && t.playing){
+      t.togglePlay();
+      $(window).unbind('keyup', stop);
+    }else return;
+  };
+  $(window).keyup(stop);
 };
 /**
   The internal play function for PlaySequence.

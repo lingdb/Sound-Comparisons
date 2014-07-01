@@ -1,5 +1,5 @@
 RewriteEngine on
-Options +FollowSymlinks -MultiViews
+Options +FollowSymlinks
 
 RewriteBase /shk/main/export
 

@@ -85,10 +85,14 @@
     )
   );
   //Downloads:
-  $topmenu['csvLink']  = $v->link('export/csv');
-  $topmenu['csvTitle'] = $t->st('topmenu_download_csv');
-  $topmenu['sndLink']  = $v->link('export/soundfiles');
-  $topmenu['sndTitle'] = $t->st('topmenu_download_zip');
+  $topmenu['csvLink']    = $v->link('export/csv');
+  $topmenu['csvTitle']   = $t->st('topmenu_download_csv');
+  $topmenu['sndLink']    = $v->link('export/soundfiles');
+  $topmenu['sndTitle']   = $t->st('topmenu_download_zip');
+  $topmenu['cogTitle']   = $t->st('topmenu_download_cogTitle');
+  $topmenu['wordByWord'] = $t->st('topmenu_download_wordByWord');
+  $topmenu['format']     = $t->st('topmenu_download_format');
+  $topmenu['formats']    = array('mp3','ogg');
   //Languages:
   $topmenu['currentFlag'] = $t->showFlag();
   $otherTranslations = array();

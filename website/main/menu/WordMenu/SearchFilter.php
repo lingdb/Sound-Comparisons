@@ -6,7 +6,7 @@
   Builds the search/filter block for WordMenu.php
 */
 function WordMenuBuildSearchFilter($v, $t){
-$study        = $v->getStudy();
+$study = $v->getStudy();
 $searchFilter = array(
   'sfby'             => $t->st('menu_words_filter_head')
 , 'spelling'         => $t->st('menu_words_filterspelling')

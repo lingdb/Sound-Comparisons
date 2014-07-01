@@ -4,14 +4,24 @@ abstract class DBTable{
   /***/
   protected function fetchOneBy($q, $f = null){
     if($f === null)
-      $f = function($set){return $set->fetch_row();};
+      $f = function($set){
+        if(!$set){
+          Config::error('No set given in DBTable:fetchOneBy()', true);
+        }
+        return $set->fetch_row();
+      };
     $set = Config::getConnection()->query($q);
     return $f($set);
   }
   /***/
   protected function fetchAllBy($q, $f = null){
     if($f === null)
-      $f  = function($set){return $set->fetch_row();};
+      $f  = function($set){
+        if(!$set){
+          Config::error('No set given in DBTable:fetchAllBy()', true);
+        }
+        return $set->fetch_row();
+      };
     $rows = array();
     $set  = Config::getConnection()->query($q);
     for($i = 0; $i < $set->num_rows; $i++)

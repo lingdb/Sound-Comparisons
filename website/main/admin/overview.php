@@ -62,27 +62,56 @@
       require 'userEditTable.php';
   ?></tbody>
   </table>
-  <legend>Export/Import users:</legend>
-  <form class="form-horizontal">
-    <div class="control-group">
-      <label class="control-label" for="export">Download users.json file:</label>
-      <div class="controls">
-        <a class="btn" href="query/admin.php?action=export">Export</a>
-      </div>
+  <div class="row-fluid">
+    <div class="span6">
+      <legend>Export/Import users:</legend>
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="export">Download users.json file:</label>
+          <div class="controls">
+            <a class="btn" href="query/admin.php?action=export">Export</a>
+          </div>
+        </div>
+      </form>
+      <form class="form-horizontal" action="query/admin.php?action=import" method="post" enctype="multipart/form-data">
+        <div class="control-group">
+          <label class="control-label" for="import">users.json file to upload:</label>
+          <div class="controls">
+            <input name="import" type="file" required/>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Ready for import?</label>
+          <div class="controls">
+            <button type="submit" class="btn">Import</button>
+          </div>
+        </div>
+      </form>
     </div>
-  </form>
-  <form class="form-horizontal" action="query/admin.php?action=import" method="post" enctype="multipart/form-data">
-    <div class="control-group">
-      <label class="control-label" for="import">users.json file to upload:</label>
-      <div class="controls">
-        <input name="import" type="file" required/>
-      </div>
+    <div class="span6">
+      <legend>Export/Import translations:</legend>
+      <form class="form-horizontal">
+        <div class="control-group">
+          <label class="control-label" for="export">Download translations file:</label>
+          <div class="controls">
+            <a class="btn" href="query/export.php">Export</a>
+          </div>
+        </div>
+      </form>
+      <form class="form-horizontal" action="query/import.php" method="post" enctype="multipart/form-data">
+        <div class="control-group">
+          <label class="control-label" for="import">Translations file to upload:</label>
+          <div class="controls">
+            <input name="import" type="file" required/>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Ready for import?</label>
+          <div class="controls">
+            <button type="submit" class="btn">Import</button>
+          </div>
+        </div>
+      </form>
     </div>
-    <div class="control-group">
-      <label class="control-label">Ready for import?</label>
-      <div class="controls">
-        <button type="submit" class="btn">Import</button>
-      </div>
-    </div>
-  </form>
+  </div>
 <?php } ?>

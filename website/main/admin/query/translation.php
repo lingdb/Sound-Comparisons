@@ -157,7 +157,8 @@
       , 'Words'                 => '/^WordsTranslationProvider-/'
       , 'Regions'               => '/^RegionsTranslationProvider-/'
       , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'
-      , 'Languages'             => '/^LanguagesTranslationProvider-.*(Short|Variety)Name$/'
+//FIXME This Group may be removed anyway, together with its translations.
+//    , 'Languages'             => '/^LanguagesTranslationProvider-.*(Short|Variety)Name$/'
       , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'
       , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'
       , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'

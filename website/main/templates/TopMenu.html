@@ -27,33 +27,53 @@
     </ul>
   </div>
   <div class="navbar-inner span8">
-  <ul class="nav nav-tabs">
-    <div class="brand">{{pageViewTitle}}</div>
-    {{#pageViews}}
-    <li {{#active}}class="active"{{/active}}>
-      <a {{{link}}} {{^active}}class="topLink"{{/active}} title="{{title}}">
-      {{#img}}<img class="pvImg" src="img/{{img}}">{{/img}}
-      {{{content}}}
+    <ul class="nav nav-tabs">
+      <div class="brand">{{pageViewTitle}}</div>
+      {{#pageViews}}
+      <li {{#active}}class="active"{{/active}}>
+        <a {{{link}}} {{^active}}class="topLink"{{/active}} title="{{title}}">
+        {{#img}}<img class="pvImg" src="img/{{img}}">{{/img}}
+        {{{content}}}
+        </a>
+      </li>
+      {{/pageViews}}
+    </ul>
+    <span id="topmenuDownloads" class="nav input-append btn-group">
+      <div class="btn btn-mini disabled">
+        <i class="icon-download-alt"></i>
+      </div>
+      <a {{{csvLink}}} class="btn btn-mini" title="{{csvTitle}}">
+        <img src="img/DownloadTranscriptions.png" style="height: 18px;">
       </a>
-    </li>
-    {{/pageViews}}
-  </ul>
-  <span id="topmenuDownloads" class="nav input-append">
-    <a {{{csvLink}}} class="btn btn-mini" title="{{csvTitle}}">
-      <i class="icon-download-alt"></i>
-      <img src="img/DownloadTranscriptions.png" style="height: 18px;">
-    </a>
-    <a {{{sndLink}}} target="_blank" class="btn btn-mini" title="{{sndTitle}}">
-      <i class="icon-download-alt"></i>
-      <i class="icon-volume-up"></i>
-    </a>
-  </span>
+      <a {{{sndLink}}} target="_blank" class="btn btn-mini soundFile" title="{{sndTitle}}">
+        <i class="icon-volume-up"></i>
+      </a>
+      <a class="btn btn-mini btn-dropdown" data-toggle="dropdown" href="#" title="{{cogTitle}}">
+        <i class="icon-cog"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li>
+          <label class="checkbox">
+            <input type="checkbox" value="" id="wordByWordCheckbox">
+            {{wordByWord}}
+          </label>
+        </li>
+        <li class="divider"></li>
+        <li>
+          {{format}}
+          {{#formats}}
+          <label class="radio">
+            <input type="radio" name="wordByWordFormat" value="{{.}}">{{.}}
+          </label>
+          {{/formats}}
+        </li>
+      </ul>
+    </span>
   </div>
   <div class="navbar-inner span2">
     <ul id="topmenuSiteLang" class="nav">
       <li>
-        <a class="dropdown-toggle topLink"
-           data-toggle="dropdown">
+        <a class="dropdown-toggle topLink" data-toggle="dropdown">
            <i class="icon-dropdown-custom"></i>
            {{#currentFlag}}<img class="flag" src="{{.}}">{{/currentFlag}}
            </a>

@@ -1,8 +1,19 @@
-2014-06-27:
- - Rewrite export/import for translations
-   - I'd like deltas/non clashing updates better than SQL scripts that replace things we want to keep.
- - It would be feasable to use AppCache for templates, JavaScript, CSS files.
-   - Instead we're currently using localStorage here.
+2014-07-04:
+ - Can we remove parts of the language table that are translated?
+
+2014-07-03:
+ - October is a deadline for when we want the site to run without bugs
+ - HideButtons for SideMenues appear to break the page layout
+   - Map and 1L view for example
+ - A function to search/find missing translations that need to be filled in
+ - Display study that a translation originates from along with the search results
+   - Remember the case of Knochen/Bein in Germanic vs. Knochen in the rest of studies.
+ - Maybe we can get rid of the admin/query/migrate script and the providers' migrate methods?
+
+2014-07-02:
+ - Push out a new update, to supply Scott, Hans-Jörg and Paul with new, working versions of the site.
+   - Remember the dump.
+ - WordMenuList needs a scrollBar again
 
 2014-06-10:
  - Make sure playSequences be working everywhere on the page.
@@ -33,9 +44,6 @@
    - This is the chance to keep the map from zooming in many times
    - Also the map should remember it's location when switching words
    - We can also proxy to other clld sites, so that the .js can do happy/wild things
- - Make sure views are recreated when another Study is added
-   - It appears that this was one of the problems encountered with Romance
-   - Make sure we've got better error reporting here.
  - Superscripts after Transcriptions appear to be buggy (look at Slavic)
 
 2014-03-06:
@@ -64,12 +72,6 @@
  - Show lexeme numbers >1 as subscripts for Transcriptions and Words
  - Contributors on page for translations would be nice
    - But we need a way of building this
-
-2013-11-12:
- - Build the Website as a dynamic .js application,
-   so that many changes happen faster.
-   Try to share templates between the App and the Serverside,
-   so that php can still generate pages.
 
 2013-11-07:
  - Allow html or something thelike for about pages
@@ -102,9 +104,3 @@ The Language Set collapse/expand box doesn't behave correctly.
 
 Storing of mySelection in Mapview and in TopMenu between views
  - this can be incorporated once the main site runs with .js
-
--- Long term notes:
- - Think about a smaller/faster/better vm client os than XUbuntu
-   - This way Paul would have a nicer time working with it
-   - This could already use github to pull stuff from
-   - I should base this on debian testing/stable

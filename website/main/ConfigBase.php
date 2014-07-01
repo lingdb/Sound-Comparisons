@@ -32,8 +32,17 @@ abstract class ConfigBase {
     This is the way that all parts of the website will use in the future to log their errors.
     A possible improvement will be, to let this forward to a nice error page.
   */
-  public static function error($msg){
-  //$rand = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz'),0,5);
+  public static function error($msg, $trace = false){
+    if($trace){
+      $stack = array($msg);
+      foreach(debug_backtrace() as $t){
+        $file = array_key_exists('file', $t)     ? $t['file']     : '';
+        $line = array_key_exists('line', $t)     ? $t['line']     : '';
+        $func = array_key_exists('function', $t) ? $t['function'] : '';
+        array_push($stack, "$file:$line $func");
+      }
+      $msg = implode("\n", $stack);
+    }
     error_log($msg);
     if(Config::$debug) die($msg);
   }
@@ -72,15 +81,17 @@ abstract class ConfigBase {
   public static function setResponse($code){
     if(function_exists('http_response_code')){
       http_response_code($code); // Bad request
-    }else{
-      if($code === 400){
+    }else switch($code){
+      case 400:
         header('HTTP/ 400 Bad Request');
-      }else header('HTTP/ '.$code);
+      break;
+      default:
+        header('HTTP/ '.$code);
     }
   }
   /***/
   public static function setResponseJSON(){
-    header('Content-type: application/json');
+    header('Content-type: application/json; charset=utf-8');
   }
 }
 ?>

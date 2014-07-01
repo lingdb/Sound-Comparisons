@@ -11,12 +11,18 @@
 if(!isset($valueManager)){
   chdir('..');
   require_once 'config.php';
+  require_once 'stopwatch.php';
   require_once 'valueManager/RedirectingValueManager.php';
   $dbConnection = Config::getConnection();
   $valueManager = RedirectingValueManager::getInstance();
 }
 $v = $valueManager;
 $path = Config::$downloadPath;
+//Dealing with filetypes:
+$formats = array('.mp3');
+if(isset($_GET['format']) && preg_match('/^[[:alnum:]]{3,4}$/', $_GET['format'])){
+  $formats = array('.'.$_GET['format']);
+}
 //0.: Deleting files older than one hour
 $q = "SELECT FileName FROM Export_Soundfiles WHERE "
    . "Creation <= DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 HOUR)";
@@ -56,7 +62,7 @@ foreach($languages as $language){
     $t = Transcription::getTranscriptionForWordLang($word, $language);
     //2.1.: Adding the SoundFiles from the Transcriptions to the .zip
     //We only add .mp3 because of smaller filesize, and compression not finishing otherwise.
-    foreach($t->getSoundFiles(array('.mp3')) as $sf){
+    foreach($t->getSoundFiles($formats) as $sf){
       foreach($sf as $f)
         $zip->addFile($f, basename($f));
     }

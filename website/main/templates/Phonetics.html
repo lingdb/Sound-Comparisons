@@ -15,4 +15,14 @@
   {{/notCognate}}
   <audio data-onDemand='{{{srcs}}}' preload="auto" autobuffer=""></audio>
 </div>
+{{#_srcs}}
+<div class="subscript wordByWord soundFile" style="display: none;">
+  <a href="export/singleSoundFile?file={{.}}" target="_blank">↓</a>
+</div>
+{{/_srcs}}
+{{#identifier}}
+<div class="subscript wordByWord" style="display: none;">
+  <a href="export/singleTextFile?word={{word}}&language={{language}}&study={{study}}&n={{n}}" target="_blank">↧</a>
+</div>
+{{/identifier}}
 {{#break}}<br>{{/break}}

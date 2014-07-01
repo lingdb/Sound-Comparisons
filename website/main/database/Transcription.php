@@ -159,13 +159,25 @@ class Transcription extends DBTable{
     foreach($phonetics as $i => $phonetic){
       //Source files:
       $srcs = $sources[$i];
+      $_srcs = array();
+      foreach($srcs as $s){
+        $_s = preg_replace('/ogg$/','mp3', $s);
+        array_push($_srcs, substr($_s, strlen(Config::$soundPath)));
+      }
       //Current phonetic:
       $p = array(
         'historical'  => $this->getLanguage()->isHistorical()
       , 'fileMissing' => count($srcs) === 0
       , 'phonetic'    => ($phonetic === 'PLAY') ? '--' : $phonetic
       , 'srcs'        => json_encode($srcs)
+      , '_srcs'       => $_srcs
       , 'hasTrans'    => $this->language->hasTranscriptions()
+      , 'identifier'  => array(
+          'word'      => $this->word->getId()
+        , 'language'  => $this->language->getId()
+        , 'study'     => $this->sid
+        , 'n'         => $i
+        )
       );
       //Not cognate:
       if(array_key_exists($i, $supInfo)){

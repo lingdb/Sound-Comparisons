@@ -83,13 +83,26 @@
             <div class="controls">
               <select name="referenceLanguage" id="Translations_RfcLanguage">
                 <option class="default" selected="selected" value="null">none</option><?php
-                  $query = 'SELECT ShortName, LanguageIx FROM Languages '
-                         . 'WHERE LanguageIx = ANY (SELECT RfcLanguage FROM RfcLanguages)';
-                  $set = $dbConnection->query($query);
+                  /*
+                    Since we don't have a RfcLanguages nor a Languages view anymore,
+                    this is going to be a little more complicated:
+                    We need to iterate all Languages_<study> tables,
+                    and select all RfcLanguages from them.
+                  */
+                  //Fetching all studies:
+                  $set = $dbConnection->query('SELECT Name FROM Studies');
                   while($r = $set->fetch_row()){
-                    $id = $r[1];
-                    $shortName = $r[0];
-                    echo "<option value='$id'>$shortName</option>";
+                    $study = $r[0];
+                    $q = "SELECT ShortName, LanguageIx FROM Languages_$study "
+                       . "WHERE LanguageIx = ANY ("
+                       . "SELECT DISTINCT RfcLanguage FROM Languages_$study "
+                       . "WHERE RfcLanguage IS NOT NULL)";
+                    $set = $dbConnection->query($q);
+                    while($r = $set->fetch_row()){
+                      $id = $r[1];
+                      $shortName = $r[0];
+                      echo "<option value='$id'>$shortName</option>";
+                    }
                   }
               ?></select>
             </div>
@@ -119,9 +132,6 @@
           <button id="Translations_TranslateSearch" class="btn" type="button"
             title="Enter a string to translate and magic will happen."
             ><i class="icon-search"></i>Translation by search</button>
-          <button id="Translations_Export" class="btn" type="button"
-            title="Get an .sql script to insert static and dynamic translations."
-            ><i class="icon-download-alt"></i>Export all translations</button>
         </form>
       </div>
       <div id="BasicTranslation" class="hide">

@@ -48,7 +48,7 @@
            . "FROM Regions_$study "
            . "WHERE CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) = $rId";
         $original = $this->querySingleRow($q);
-        $q = $this->getTranslationQUery($payload, $tId);
+        $q = $this->getTranslationQuery($payload, $tId);
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description

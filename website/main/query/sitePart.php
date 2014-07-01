@@ -12,6 +12,9 @@ $dbConnection = Config::getConnection();
 $valueManager = RedirectingValuemanager::getInstance();
 //Real work:
 Config::setResponseJSON();
+if(!array_key_exists('part',$_GET)){
+  $_GET['part'] = '';
+}
 switch($_GET['part']){
   case 'TopMenu':
     require_once 'menu/TopMenu.php';

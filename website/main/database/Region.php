@@ -128,6 +128,7 @@ class Region extends Translatable{
 }
 /**
   Adds a constructor to Region that allowes to create Regions from a ValueManager and a key.
+  The Region always depends on a selected study.
 */
 class RegionFromKey extends Region{
   /**
@@ -137,8 +138,10 @@ class RegionFromKey extends Region{
   public function __construct($v, $key){
     $this->setup($v);
     $this->key = $key;
+    //Finding the RegionId:
+    $sId = $v->gsm()->getStudy()->getId();
     $q = "SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
-       . "FROM Regions "
+       . "FROM Regions_$sId "
        . "WHERE RegionGpNameLong LIKE '$key' "
        . "OR RegionGpNameShort LIKE '$key'";
     if($r = Config::getConnection()->query($q)->fetch_row())

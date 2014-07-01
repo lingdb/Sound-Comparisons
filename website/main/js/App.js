@@ -1,7 +1,8 @@
 $(function(){
   //Building the App singleton:
   window.App = {
-    linkInterceptor:    new LinkInterceptor()
+    downloadOptions:    new DownloadOptions()
+  , linkInterceptor:    new LinkInterceptor()
   , loadingBar:         new LoadingBar()
   , logger:             new Logger()
   , map:                new Map()
@@ -13,6 +14,9 @@ $(function(){
   , viewWatcher:        new ViewWatcher()
   , views: {}
   };
+  window.App.views.downloadOptionView = new DownloadOptionView({
+    el: $('body'), model: window.App.downloadOptions
+  });
   window.App.views.hideLinks = new HideLinks({
     el: null, model: window.App.pageWatcher});
   window.App.views.ipaKeyboardView = new IPAKeyboardView({

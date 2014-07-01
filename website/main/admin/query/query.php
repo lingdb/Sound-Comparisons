@@ -39,7 +39,7 @@
         because the procedure 'createTablesAndRecreateViews' aborts
         if the study already exists, to avoid recreating the views without need.
       */
-      $dbConnection->query("CALL createTablesAndRecreateViews('$name')");
+      $dbConnection->query("CALL createTables('$name')");
       //Inserting the new Study:
       $q = "INSERT INTO Studies(StudyIx, FamilyIx, SubFamilyIx, Name) "
          . "VALUES ($studyix, $familyix, $subfamilyix, '$name')";

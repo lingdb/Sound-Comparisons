@@ -299,14 +299,29 @@ class Language extends Translatable{
   public function getStudy(){
     //Usual studyselection:
     $id = $this->id;
-    $q1 = "SELECT S.Name FROM Studies as S JOIN RegionLanguages as RL USING (StudyIx, FamilyIx, SubFamilyIx) "
-        . "WHERE RL.LanguageIx = $id LIMIT 1";
-    /* Experience with Romance showed, that sometimes StudyIx, FamilyIx are enough: */
-    $q2 = "SELECT S.Name FROM Studies as S JOIN RegionLanguages as RL USING (StudyIx, FamilyIx) "
-        . "WHERE RL.LanguageIx = $id LIMIT 1";
-    foreach(array($q1, $q2) as $q){
-      if($r = $this->fetchOneBy($q))
-        return new StudyFromKey($this->v, $r[0]);
+    $q  = "SELECT Name, StudyIx, FamilyIx, SubFamilyIx FROM Studies";
+    $sRows = $this->fetchAllBy($q);
+    //Building queries:
+    $q1s = array(); $q2s = array();
+    foreach($sRows as $sRow){
+      $name = $sRow[0];
+      $sIx  = $sRow[1];
+      $fIx  = $sRow[2];
+      $sFix = $sRow[3];
+      array_push($q1s, "SELECT COUNT(*), '$name' FROM RegionLanguages_$name "
+                     . "WHERE StudyIx = $sIx AND FamilyIx = $fIx "
+                     . "AND SubFamilyIx = $sFix AND LanguageIx = $id");
+      array_push($q2s, "SELECT COUNT(*), '$name' FROM RegionLanguages_$name "
+                     . "WHERE StudyIx = $sIx AND FamilyIx = $fIx "
+                     . "AND LanguageIx = $id");
+    }
+    //Searching the matching study:
+    foreach(array_merge($q1s, $q2s) as $q){
+      if($r = $this->fetchOneBy($q)){
+        if($r[0] > 0){
+          return new StudyFromKey($this->v, $r[1]);
+        }
+      }
     }
     /*
       Fallback on selecting Study as prefix of id:
@@ -472,6 +487,8 @@ class Language extends Translatable{
       }else if($trans = $t->getLanguageStatusTypeTranslation($this)){
         array_push($trans, $lst);
         $lst = $trans;
+      }else{
+        $lst = null;
       }
     }
     //Helper function to test array fields:
@@ -480,7 +497,6 @@ class Language extends Translatable{
         if($arr[$key] != '')
           return true;
       }
-      $arr[$key] = '';
       return false;
     };
     //Language information to build the description:
@@ -535,7 +551,7 @@ class Language extends Translatable{
         $cty = ($test($r, 'NearestCity') && $test($r, 'StateRegion'))
              ?  $r['NearestCity'].' ('.$r['StateRegion'].')'
              :  $r['StateRegion'];
-        $str = isset($lst) ? $lst[2] : $t->st('language_description_region');
+        $str = $lst ? $lst[2] : $t->st('language_description_region');
         $str.= ': '.$cty;
         array_push($rows, array('desc' => $str));
         if(isset($lst)) $lst = null;

@@ -18,7 +18,6 @@ WithSelectedTranslationView = Backbone.View.extend({
 , events: {
     'click #Translations_Translate':       'clickTranslate'
   , 'click #Translations_TranslateSearch': 'clickSearch'
-  , 'click #Translations_Export':          'clickExport'
   }
 , clickTranslate: function(){
     this.basicInput.show();
@@ -29,8 +28,5 @@ WithSelectedTranslationView = Backbone.View.extend({
     this.searchInput.show();
     this.basicInput.hide();
     this.bInpMirror.hide();
-  }
-, clickExport: function(){
-    window.open('query/export.php', '_blank');
   }
 });

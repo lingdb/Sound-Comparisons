@@ -62,6 +62,9 @@ TranslationStorage = Backbone.Model.extend({
         _dTimes[tId] = cD;
       }, storage);
       storage.set({staticTimes: _sTimes, dynamicTimes: _dTimes});
+    }).fail(function(){
+      window.App.linkInterceptor.set({enabled: false});
+      console.log('Could not fetch translation summary from host -> LinkInterceptor disabled.');
     });
   }
 , load: function(){

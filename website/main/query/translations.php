@@ -6,13 +6,17 @@
   and may be used to generate different presentations of the site.
 */
 //Setup:
-chdir('..');
-require_once 'config.php';
-require_once 'valueManager/RedirectingValueManager.php';
+require_once '../config.php';
+require_once '../valueManager/RedirectingValueManager.php';
 $dbConnection = Config::getConnection();
 $valueManager = RedirectingValuemanager::getInstance();
 //Actual work:
 Config::setResponseJSON();
+//Defaulting our action:
+if(!array_key_exists('action',$_GET)){
+  $_GET['action'] = '';
+}
+//Acting depeding on action:
 switch($_GET['action']){
   case 'dynamic':
     if(array_key_exists('translationId', $_GET)){

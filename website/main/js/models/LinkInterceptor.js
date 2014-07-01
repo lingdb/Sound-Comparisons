@@ -10,6 +10,7 @@ LinkInterceptor = Backbone.Model.extend({
   defaults: {
     url: null // Changes everytime a link is clicked. Can be used to listen to LinkInterceptor.
   , fragment: '' // Should be appended to the url, will have a leading '#' if not ''.
+  , enabled: true // Will be switched to false once something crucial fails.
   }
 , initialize: function(){
     this.findLinks($('body'));
@@ -49,8 +50,11 @@ LinkInterceptor = Backbone.Model.extend({
     //On Click prevent usual behaviour, and intercept:
     var interceptor = this;
     return function(e){
-      //Only intercept if someone cares:
-      if(!interceptor.hasListeners()) return;
+      //Only intercept if enabled, and there are listeners:
+      if(!interceptor.get('enabled') || !interceptor.hasListeners()){
+        window.location.href = href; // This is necessary for data-href cases
+        return;
+      }
       //No once expects the spanish interception!
       if(e) e.preventDefault();
       //Logging if possible:

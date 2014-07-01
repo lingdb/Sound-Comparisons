@@ -121,6 +121,7 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topmenuSiteLang a.topLink {padding-left: 0px;}
 #topmenuDownloads {float: right; margin-right: 0px; margin-top: 7px;}
 #topmenuDownloads a.topLink {padding-right: 0px;}
+#topmenuDownloads ul.dropdown-menu>li {padding-left: 1em;}
 #topmenuSoundOptions {padding-top: 2px;}
 #topmenuAbout {float: right; margin-right: 0px;}
 #topmenuAbout a.topLink {height: 30px; padding-top: 5px; padding-right: 0px;}
@@ -296,7 +297,7 @@ dd.languageList {
 /* Loadingbar: */
 .loadingBar {
   background-color: #4380C1;
-  position:        absolute;
+  position:           fixed;
   left:                 0px;
   top:                  0px;
   width:                0px;

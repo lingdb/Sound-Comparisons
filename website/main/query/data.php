@@ -1,4 +1,11 @@
 <?php
+//Setup:
+chdir('..');
+require_once 'config.php';
+require_once 'stopwatch.php';
+require_once 'valueManager/RedirectingValueManager.php';
+$dbConnection = Config::getConnection();
+$valueManager = RedirectingValuemanager::getInstance();
 /*
   For the site to do as much as possible in the browser, it's crucial to have a data representation in JSON,
   so that we can use and manipulate stuff in JavaScript with ease.
@@ -20,5 +27,30 @@
       - A list of Words per Study
       - A list of Transcriptions per pair of Word and Language
 */
-
+if(!array_key_exists('study',$_GET)){
+  /*
+    Provide a list of all studies,
+    but normally it'll probably be simpler to parse the studies from the page initially.
+  */
+  $studies = array();
+  $set = $dbConnection->query('SELECT Name FROM Studies');
+  while($r = $set->fetch_assoc()){
+    array_push($studies, $r['Name']);
+  }
+  echo json_encode(array(
+    'studies' => $studies
+  , 'description' => 'Give one of the studies as get parameter study.'
+  ));
+}else{
+  //Provide complete data for a single study:
+  $n = $dbConnection->escape_string($_GET['study']);
+  $q = "SELECT StudyIx, FamilyIx, SubFamilyIx, Name, "
+     . "DefaultTopLeftLat, DefaultTopLeftLon, DefaultBottomRightLat, DefaultBottomRightLon, "
+     . "ColorByFamily, SecondRfcLg FROM Studies WHERE Name = '$n'";
+  $study = $dbConnection->query($q)->fetch_assoc();
+  if(!$study){
+    die('Could not fetch the required study, sorry.');
+  }
+  echo json_encode($study);
+}
 ?>

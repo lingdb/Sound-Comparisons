@@ -161,15 +161,6 @@ abstract class ValueManager{
     return $attr.'="'.$target.$getStr.$anchor.'"';
   }
   /**
-    An attribute added to links to determine the kind of pageView
-    that the link will load.
-    This is meant to lead to a changed link-behaviour with the help of javascript.
-    @return $load String
-  */
-  public function load(){
-    return 'load="'.$this->gpv()->getType().'"';
-  }
-  /**
     Changes the translator to the given TranslationId.
     Makes the ValueManager forget about known spelling-/phonetic-languages.
     Therefore the InitValueManager can infer spelling-/phonetic by RfcLanguage of

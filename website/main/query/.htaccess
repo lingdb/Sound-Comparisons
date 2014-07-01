@@ -1,15 +1,9 @@
-#AuthName "Restricted Area" 
-#AuthType Basic 
-#AuthUserFile /var/www/shk/main/.htpasswd
-#AuthGroupFile /dev/null 
-#require valid-user
-
 # Disabling the annoying magic quotes (http://www.php.net/manual/en/security.magicquotes.disabling.php):
 php_flag magic_quotes_gpc Off
 
 # Rewriting of routes:
 RewriteEngine on
-Options +FollowSymlinks -MultiViews
+Options +FollowSymlinks
 
 RewriteBase /shk/main/query/
 

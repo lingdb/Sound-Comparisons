@@ -28,7 +28,7 @@ ResultRowView = Backbone.View.extend({
     });
   }
 , keystroke: function(){
-    this.btn.removeClass('btn-success btn-danger').addClass('btn-warning').html(this.icon+'Not saved');
+    this.btn.removeClass('btn-success btn-danger').addClass('btn-warning').html(this.icon+'Save me?');
   }
 , copyOver: function(){
     var original = this.$('.copy-over').parent().text();

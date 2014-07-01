@@ -120,5 +120,4 @@ class InitWordOrderManager extends WordOrderManager{
     return 'WordOrderManager';
   }
 }
-
 ?>

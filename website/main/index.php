@@ -45,6 +45,9 @@
   $index['stopwatch'] = Stopwatch::stats();
   //Processing the Content-type:
   $headers = getallheaders();
+  if(!array_key_exists('Accept', $headers)){
+    $headers['Accept'] = 'text/html';
+  }
   $cType = $headers['Accept'];
   switch($cType){
     case (preg_match('/application\/json/i', $cType) ? true : false):

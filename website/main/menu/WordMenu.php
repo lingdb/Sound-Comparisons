@@ -19,6 +19,11 @@ if(!isset($valueManager)){
 $v = $valueManager;
 $t = $v->getTranslator();
 $study = $v->getStudy();
+/*
+  We need to call gpv, so that the otherwise lazily parsed pageView
+  will be placed in generated links.
+*/
+$v->gpv();
 //Starting to build it:
 $wordMenu = array(
   'title'        => $t->st('menu_words_words')
