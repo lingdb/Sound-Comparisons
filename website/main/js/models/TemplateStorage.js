@@ -52,14 +52,14 @@ TemplateStorage = Backbone.Model.extend({
 , load: function(name){
     var key = 'tmpl_'+name;
     if(key in localStorage)
-      return $.parseJSON(localStorage[key]);
+      return $.parseJSON(LZString.decompressFromBase64(localStorage[key]));
     return null;
   }
 //Stores a template object in localStorage.
 , store: function(tmpl){
     if('content' in tmpl){
       var key = 'tmpl_'+tmpl.name;
-      localStorage[key] = JSON.stringify(tmpl);
+      localStorage[key] = LZString.compressToBase64(JSON.stringify(tmpl));
     }
   }
 /**

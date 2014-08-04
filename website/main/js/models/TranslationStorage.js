@@ -70,7 +70,7 @@ TranslationStorage = Backbone.Model.extend({
 , load: function(){
     var data = localStorage['TranslationStorage'];
     if(!data) return;
-    var d = $.parseJSON(data);
+    var d = $.parseJSON(LZString.decompressFromBase64(data));
     if(!_.isObject(d)) return;
     this.set($.extend(d, {ready: true}));
     this.trigger('change:dynamics');
@@ -79,7 +79,7 @@ TranslationStorage = Backbone.Model.extend({
     var params = _.clone(this.saveFields);
     params.unshift(this.attributes);
     var data = _.pick.apply(_, params);
-    localStorage['TranslationStorage'] = JSON.stringify(data);
+    localStorage['TranslationStorage'] = LZString.compressToBase64(JSON.stringify(data));
   }
 , mkNToTMap: function(){
     var map = {};
