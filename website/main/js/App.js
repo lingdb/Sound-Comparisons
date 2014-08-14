@@ -1,7 +1,8 @@
 $(function(){
   //Building the App singleton:
   window.App = {
-    downloadOptions:    new DownloadOptions()
+    dataStorage:        new DataStorage()
+  , downloadOptions:    new DownloadOptions()
   , linkInterceptor:    new LinkInterceptor()
   , loadingBar:         new LoadingBar()
   , logger:             new Logger()

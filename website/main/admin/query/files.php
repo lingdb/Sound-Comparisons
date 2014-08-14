@@ -254,13 +254,17 @@
       break;
     }
   }
+  //Logging the import:
+  $uid = $dbConnection->escape_string(session_getUid());
+  $logging = "INSERT INTO Edit_Imports (Who) VALUES ($uid);"
   //Executing queries:
-  $q = 'SET AUTOCOMMIT=0;'
-     . 'SET FOREIGN_KEY_CHECKS=0;'
-     . implode(";",$queries).';'
-     . 'SET FOREIGN_KEY_CHECKS=1;'
-     . 'COMMIT;'
-     . 'SET AUTOCOMMIT=1;';
+  $q   = 'SET AUTOCOMMIT=0;'
+       . 'SET FOREIGN_KEY_CHECKS=0;'
+       . implode(";",$queries).';'
+       . $logging
+       . 'SET FOREIGN_KEY_CHECKS=1;'
+       . 'COMMIT;'
+       . 'SET AUTOCOMMIT=1;';
 //echo $q;
 //file_put_contents("/tmp/fimport.debug", $q);
   Config::getConnection()->multi_query($q);

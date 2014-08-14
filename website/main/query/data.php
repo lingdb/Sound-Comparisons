@@ -60,7 +60,7 @@ function soundPaths($sId, $t){
       - A list of Transcriptions per pair of Word and Language
       - Defaults for the Study
 */
-if(!array_key_exists('study',$_GET)){
+if(array_key_exists('global',$_GET)){
   /*
     Provide a list of all studies,
     but normally it'll probably be simpler to parse the studies from the page initially.
@@ -85,7 +85,7 @@ if(!array_key_exists('study',$_GET)){
     'studies' => $studies
   , 'global'  => $global
   ));
-}else{
+}else if(array_key_exists('study',$_GET)){
   $ret = array(
     'study'               => null
   , 'families'            => array()
@@ -180,5 +180,13 @@ if(!array_key_exists('study',$_GET)){
   $ret['defaults']['excludeMap'] = fetchAll($q);
   //Done:
   echo json_encode($ret);
+}else{
+  $q = 'SELECT UNIX_TIMESTAMP(Time) FROM Edit_Imports ORDER BY TIME DESC LIMIT 1';
+  $time = current(current(fetchAll($q)));
+  echo json_encode(array(
+    'lastUpdate'  => $time
+  , 'Description' => 'Add a global parameter to fetch global data, '
+                   . 'and add a study parameter to fetch a study.'
+  ));
 }
 ?>
