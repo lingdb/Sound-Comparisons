@@ -28,6 +28,16 @@ DataStorage = Backbone.Model.extend({
       });
     });
   }
+/**
+  Makes the DataStorage listen to the StudyWatcher,
+  to trigger loading a different study.
+*/
+, listenStudy: function(){
+    var sw = window.App.studyWatcher;
+    sw.on('change:study', function(){
+      this.loadStudy(sw.get('study'));
+    }, this);
+  }
   /* We track the age of all fetched data,
      so that we can delete them beginning with the oldest, if necessary.
   */
@@ -58,6 +68,7 @@ DataStorage = Backbone.Model.extend({
       var key = "Study_"+study
         , s   = this.load("Study_"+study);
       if(s && s.timestamp < timestamp){
+        console.log('DataStorage.collectGarbadge() outdated: '+study);
         delete localStorage[key];
         collected = true;
       }
@@ -67,6 +78,7 @@ DataStorage = Backbone.Model.extend({
     _.each(studies, function(study){
       var key = "Study_"+study;
       if(key in localStorage){
+        console.log('DataStorage.collectGarbadge() unused: '+study);
         delete localStorage[key];
         collected = true;
       }

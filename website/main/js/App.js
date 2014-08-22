@@ -15,6 +15,9 @@ $(function(){
   , viewWatcher:        new ViewWatcher()
   , views: {}
   };
+  //Listening between models:
+  window.App.dataStorage.listenStudy();
+  //Creating views:
   window.App.views.downloadOptionView = new DownloadOptionView({
     el: $('body'), model: window.App.downloadOptions
   });
