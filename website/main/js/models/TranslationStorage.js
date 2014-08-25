@@ -150,4 +150,9 @@ TranslationStorage = Backbone.Model.extend({
     this.set({translationId: tId});
     return tId;
   }
+//Static translations:
+, translateStatic: function(req){
+    var tId = this.getTranslationId();
+    return this.get('statics')[tId][req];
+  }
 });
