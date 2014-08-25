@@ -9,8 +9,11 @@ TranslationStorage = Backbone.Model.extend({
   , nToTMap:      {}    // BrowserMatch  -> Translation
   , cToDMap:      {}    // TranslationId -> Category -> [dynamics]
   , fToDMap:      {}    // TranslationId -> Field    -> [dynamics]
+  , translationId: null
   }
 , initialize: function(){
+    //Saving translationId on change:
+    this.on('change:translationId', this.saveTranslationId, this);
     //Holding attributes up to date:
     this.on('change:summary',  this.mkNToTMap, this);
     this.on('change:dynamics', this.mkCToDMap, this);
@@ -122,5 +125,29 @@ TranslationStorage = Backbone.Model.extend({
       map[tId] = fMap;
     }, this)
     this.set({fToDMap: map});
+  }
+, saveTranslationId: function(){
+    localStorage['translationId'] = this.get('translationId');
+  }
+, getTranslationId: function(){
+    var tId = this.get('translationId');
+    if(tId !== null) return tId;
+    //Is the translationId known from localStorage?
+    if('translationId' in localStorage){
+      tId = localStorage['translationId'];
+    }else{
+      //Finding the translationId via browser language:
+      var lang = navigator.language || navigator.userLanguage
+        , summary = _.find(this.get('summary'), function(s){
+          var index = lang.indexOf(s.BrowserMatch);
+          return index >= 0
+        }, this);
+      if(summary) tId = summary.TranslationId;
+    }
+    //Defaulting translationId:
+    if(tId === null) tId = 1;
+    //Setting the translationId, and returning:
+    this.set({translationId: tId});
+    return tId;
   }
 });
