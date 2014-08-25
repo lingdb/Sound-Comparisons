@@ -9,6 +9,7 @@ $(function(){
   , map:                new Map()
   , pageWatcher:        new PageWatcher()
   , studyWatcher:       new StudyWatcher()
+  , study:              new Study()
   , soundPlayOption:    new SoundPlayOption()
   , templateStorage:    new TemplateStorage()
   , translationStorage: new TranslationStorage()
@@ -16,7 +17,10 @@ $(function(){
   , views: {}
   };
   //Listening between models:
-  window.App.dataStorage.listenStudy();
+  window.App.studyWatcher.on('change:study', window.App.dataStorage.loadStudy, window.App.dataStorage);
+  window.App.dataStorage.on('change:study', window.App.study.update, window.App.study);
+  //Necessary calls to complete setup
+  window.App.study.update();
   //Creating views:
   window.App.views.downloadOptionView = new DownloadOptionView({
     el: $('body'), model: window.App.downloadOptions

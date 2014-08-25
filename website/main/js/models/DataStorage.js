@@ -19,8 +19,8 @@ DataStorage = Backbone.Model.extend({
     //Fetching initial data from target:
     var t = this;
     $.getJSON(this.get('target')).done(function(data){
-      console.log("Got target data: "+JSON.stringify(data));
       delete data['Description'];
+      console.log("Got target data: "+JSON.stringify(data));
       t.set(data);
       t.loadGlobal().done(function(){
         var study = App.studyWatcher.get('study');
@@ -28,18 +28,9 @@ DataStorage = Backbone.Model.extend({
       });
     });
   }
-/**
-  Makes the DataStorage listen to the StudyWatcher,
-  to trigger loading a different study.
-*/
-, listenStudy: function(){
-    var sw = window.App.studyWatcher;
-    sw.on('change:study', function(){
-      this.loadStudy(sw.get('study'));
-    }, this);
-  }
   /* We track the age of all fetched data,
      so that we can delete them beginning with the oldest, if necessary.
+     FIXME even tough I like this piece of code, I gotta get rid of it.
   */
 , time: Date.now || function(){
     return +new Date;
@@ -147,7 +138,8 @@ DataStorage = Backbone.Model.extend({
     return promise;
   }
 , loadStudy: function(name){
-    var key   = "Study_"+name
+    var name  = window.App.studyWatcher.get('study')
+      , key   = "Study_"+name
       , study = this.load(key)
       , timestamp = this.get('lastUpdate');
     if(!study || study.timestamp < timestamp){
@@ -157,7 +149,7 @@ DataStorage = Backbone.Model.extend({
         t.set({study: data});
       });
     }else{
-      this.set({study: study}, {silent: true});
+      this.set({study: study});
     }
   }
 });
