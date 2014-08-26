@@ -3,6 +3,7 @@ $(function(){
   window.App = {
     dataStorage:        new DataStorage()
   , downloadOptions:    new DownloadOptions()
+  , familyCollection:   new FamilyCollection()
   , linkInterceptor:    new LinkInterceptor()
   , loadingBar:         new LoadingBar()
   , logger:             new Logger()
@@ -17,53 +18,52 @@ $(function(){
   , views: {}
   };
   //Listening between models:
-  window.App.studyWatcher.on('change:study', window.App.dataStorage.loadStudy, window.App.dataStorage);
-  window.App.dataStorage.on('change:study', window.App.study.update, window.App.study);
-  //Necessary calls to complete setup
-  window.App.study.update();
+  App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
+  App.dataStorage.on('change:study', App.study.update, App.study);
+  App.dataStorage.on('change:study', App.familyCollection.update, App.familyCollection);
   //Creating views:
-  window.App.views.downloadOptionView = new DownloadOptionView({
-    el: $('body'), model: window.App.downloadOptions
+  App.views.downloadOptionView = new DownloadOptionView({
+    el: $('body'), model: App.downloadOptions
   });
-  window.App.views.hideLinks = new HideLinks({
-    el: null, model: window.App.pageWatcher});
-  window.App.views.ipaKeyboardView = new IPAKeyboardView({
+  App.views.hideLinks = new HideLinks({
+    el: null, model: App.pageWatcher});
+  App.views.ipaKeyboardView = new IPAKeyboardView({
     el: $('#ipaKeyboard')});
-  window.App.views.soundPlayOptionView = new SoundPlayOptionView({
+  App.views.soundPlayOptionView = new SoundPlayOptionView({
     el: $('#topmenuSoundOptions')
-  , model: window.App.soundPlayOption
+  , model: App.soundPlayOption
   });
-  window.App.views.audioLogic = new AudioLogic();
-  window.App.views.mapView = new MapView({
+  App.views.audioLogic = new AudioLogic();
+  App.views.mapView = new MapView({
     el: $('#contentArea')
-  , model: window.App.map
+  , model: App.map
   });
-  window.App.views.wordlistFilter = new WordlistFilter();
-  window.App.views.loadingBar = new LoadingBarView({
+  App.views.wordlistFilter = new WordlistFilter();
+  App.views.loadingBar = new LoadingBarView({
     el: $('.loadingBar')
-  , model: window.App.loadingBar
+  , model: App.loadingBar
   });
-  window.App.views.parts = {
+  App.views.parts = {
     topMenuView: new TopMenuView({
-      model: window.App.templateStorage
+      model: App.templateStorage
     })
   , languageMenuView: new LanguageMenuView({
-      model: window.App.templateStorage
+      model: App.templateStorage
     })
   , wordMenuView: new WordMenuView({
-      model: window.App.templateStorage
+      model: App.templateStorage
     })
   , contentView: new ContentView({
-      model: window.App.templateStorage
+      model: App.templateStorage
     })
   , headView: new HeadView({
       el: $('head')
-    , model: window.App.templateStorage
+    , model: App.templateStorage
     })
   };
-  window.App.views.playSequenceView = new PlaySequenceView();
-  window.App.views.singleLanguageView = new SingleLanguageView();
-  window.App.views.whoAreWeView = new WhoAreWeView({
-    model: window.App.pageWatcher
+  App.views.playSequenceView = new PlaySequenceView();
+  App.views.singleLanguageView = new SingleLanguageView();
+  App.views.whoAreWeView = new WhoAreWeView({
+    model: App.pageWatcher
   });
 });

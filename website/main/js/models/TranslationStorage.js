@@ -164,6 +164,10 @@ TranslationStorage = Backbone.Model.extend({
     }
     //Defaulting translationId:
     if(tId === null) tId = this.defaultTranslationId();
+    //Making sure tId is a number:
+    if(typeof(tId) === 'string'){
+      tId = parseInt(tId);
+    }
     //Setting the translationId, and returning:
     this.set({translationId: tId});
     return tId;
