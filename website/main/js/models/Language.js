@@ -1,0 +1,3 @@
+/***/
+Language = Backbone.Model.extend({
+});

@@ -1,28 +1,29 @@
 $(function(){
   //Building the App singleton:
   window.App = {
-    dataStorage:        new DataStorage()
-  , downloadOptions:    new DownloadOptions()
-  , familyCollection:   new FamilyCollection()
-  , linkInterceptor:    new LinkInterceptor()
-  , loadingBar:         new LoadingBar()
-  , logger:             new Logger()
-  , map:                new Map()
-  , pageWatcher:        new PageWatcher()
-  , regionCollection:   new RegionCollection()
-  , studyWatcher:       new StudyWatcher()
-  , study:              new Study()
-  , soundPlayOption:    new SoundPlayOption()
-  , templateStorage:    new TemplateStorage()
-  , translationStorage: new TranslationStorage()
-  , viewWatcher:        new ViewWatcher()
+    dataStorage:              new DataStorage()
+  , downloadOptions:          new DownloadOptions()
+  , familyCollection:         new FamilyCollection()
+  , languageCollection:       new LanguageCollection()
+  , linkInterceptor:          new LinkInterceptor()
+  , loadingBar:               new LoadingBar()
+  , logger:                   new Logger()
+  , map:                      new Map()
+  , pageWatcher:              new PageWatcher()
+  , regionCollection:         new RegionCollection()
+  , regionLanguageCollection: new RegionLanguageCollection()
+  , studyWatcher:             new StudyWatcher()
+  , study:                    new Study()
+  , soundPlayOption:          new SoundPlayOption()
+  , templateStorage:          new TemplateStorage()
+  , translationStorage:       new TranslationStorage()
+  , viewWatcher:              new ViewWatcher()
   , views: {}
   };
   //Listening between models:
   App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
-  App.dataStorage.on('change:study', App.study.update, App.study);
-  App.dataStorage.on('change:study', App.familyCollection.update, App.familyCollection);
-  App.dataStorage.on('change:study', App.regionCollection.update, App.regionCollection);
+  _.each(['study','familyCollection','languageCollection','regionCollection','regionLanguageCollection']
+    , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
   //Creating views:
   App.views.downloadOptionView = new DownloadOptionView({
     el: $('body'), model: App.downloadOptions
