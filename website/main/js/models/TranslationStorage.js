@@ -126,9 +126,27 @@ TranslationStorage = Backbone.Model.extend({
     }, this)
     this.set({fToDMap: map});
   }
+/**
+  function to produce the default TranslationId
+  for all occurences, to enable easy changing,
+  and have it as a nice constant.
+*/
+, defaultTranslationId: function(){return 1;}
+/**
+  Saving the current TranslationId to localStorage:
+*/
 , saveTranslationId: function(){
     localStorage['translationId'] = this.get('translationId');
   }
+/**
+  Figuring out the TranslationId of a client,
+  works in multiple steps:
+  0.: If we already figured out the TranslationId,
+      we use the one given with this model.
+  1.: If TranslationId is known from localStorage, we use that.
+  2.: We see if the browser language matches a particular translation summary.
+  3.: We fall back to the defaultTranslationId.
+*/
 , getTranslationId: function(){
     var tId = this.get('translationId');
     if(tId !== null) return tId;
@@ -145,19 +163,48 @@ TranslationStorage = Backbone.Model.extend({
       if(summary) tId = summary.TranslationId;
     }
     //Defaulting translationId:
-    if(tId === null) tId = 1;
+    if(tId === null) tId = this.defaultTranslationId();
     //Setting the translationId, and returning:
     this.set({translationId: tId});
     return tId;
+  }
+/**
+  Returns an array of TranslationIds that can be tried to try
+  and get a translation for something.
+  Usually this will be [tId, defaultTid].
+*/
+, getTranslationIds: function(){
+    return _.unique([this.getTranslationId(), this.defaultTranslationId()]);
   }
 //Static translations:
 , translateStatic: function(req){
     var tId  = this.getTranslationId()
       , data = this.get('statics')[tId];
     //Fallback of tId to 1, iff necessary:
-    if(!(req in data) && tId !== 1){
+    if(!(req in data) && tId !== this.defaultTranslationId()){
       data = this.get('statics')[1];
     }
     return data[req];
+  }
+//Dynamic translations:
+, translateDynamic: function(category, field, fallback){
+    var tIds = this.getTranslationIds()
+      , data = this.get('cToDMap');
+    for(var i = 0; i < tIds.length; i++){
+      var currentMap = data[tIds[i]];
+      if(category in currentMap){
+        var ts = _.chain(currentMap[category]).where({Field: field}).pluck('Trans').value();
+        if(ts.length > 0){
+          if(ts.length === 1)
+            return ts[0];
+          return ts;
+        }
+      }
+    }
+    //Translation not found:
+    console.log('Could not find translation:\n'+JSON.stringify({
+      tIds: tIds, category: category, field: field
+    }));
+    return fallback;
   }
 });
