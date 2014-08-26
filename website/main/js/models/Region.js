@@ -3,6 +3,8 @@ Region = Backbone.Model.extend({
   initialize: function(){
     //Field for memoization of this regions family:
     this._family = null;
+    //Field for memoization of this regions languages:
+    this._languages = null;
   }
   /**
     Generates the RegionId as used troughout the database.
@@ -56,15 +58,26 @@ Region = Backbone.Model.extend({
   }
   /**
     Returns the Family that the current Region belongs to.
-    The field _family is used for memoization
+    The field _family is used for memoization.
   */
 , getFamily: function(){
-    if(this._family)
-      return this._family;
-    var regionId = this.getId()
-    this._family = App.familyCollection.find(function(f){
-      return regionId.indexOf(f.getId()) === 0;
-    });
+    if(this._family === null){
+      var regionId = this.getId()
+      //_family becomes undefined, if not found:
+      this._family = App.familyCollection.find(function(f){
+        return regionId.indexOf(f.getId()) === 0;
+      });
+    }
     return this._family;
+  }
+  /**
+    Returns the languages that belong to the current Region.
+    The field _languages is used for memoization.
+  */
+, getLanguages: function(){
+    if(this._languages === null){
+      this._languages = App.regionLanguageCollection.findLanguages(this);
+    }
+    return this._languages;
   }
 });
