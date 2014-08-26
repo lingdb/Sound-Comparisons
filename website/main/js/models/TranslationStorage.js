@@ -152,7 +152,12 @@ TranslationStorage = Backbone.Model.extend({
   }
 //Static translations:
 , translateStatic: function(req){
-    var tId = this.getTranslationId();
-    return this.get('statics')[tId][req];
+    var tId  = this.getTranslationId()
+      , data = this.get('statics')[tId];
+    //Fallback of tId to 1, iff necessary:
+    if(!(req in data) && tId !== 1){
+      data = this.get('statics')[1];
+    }
+    return data[req];
   }
 });
