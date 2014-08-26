@@ -28,8 +28,10 @@ TemplateStorage = Backbone.Model.extend({
   and the render method can be invoked.
 */
 , process: function(info){
-    var fetches = [];
+    //Fetching missing templates, loading others:
+    var fetches = [], keepSet = {};
     _.each(info, function(i){
+      keepSet['tmpl_'+i.name] = true;
       var current = this.load(i.name);
       if(current && current.hash === i.hash){
         i.content = current.content;
@@ -40,6 +42,14 @@ TemplateStorage = Backbone.Model.extend({
         }));
       }
     }, this);
+    //Cleaning up templates that no longer exist:
+    _.each(_.keys(localStorage), function(k){
+      if(k.match(/^tmpl_/) !== null && !(k in keepSet)){
+        console.log('Template no longer required: '+k);
+        delete localStorage[k];
+      }
+    }, this);
+    //Saving templates:
     var storage = this;
     $.when.apply($, fetches).done(function(){
       _.each(info, storage.store, storage);
