@@ -9,6 +9,7 @@ $(function(){
   , logger:             new Logger()
   , map:                new Map()
   , pageWatcher:        new PageWatcher()
+  , regionCollection:   new RegionCollection()
   , studyWatcher:       new StudyWatcher()
   , study:              new Study()
   , soundPlayOption:    new SoundPlayOption()
@@ -21,6 +22,7 @@ $(function(){
   App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
   App.dataStorage.on('change:study', App.study.update, App.study);
   App.dataStorage.on('change:study', App.familyCollection.update, App.familyCollection);
+  App.dataStorage.on('change:study', App.regionCollection.update, App.regionCollection);
   //Creating views:
   App.views.downloadOptionView = new DownloadOptionView({
     el: $('body'), model: App.downloadOptions

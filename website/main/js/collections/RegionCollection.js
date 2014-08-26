@@ -1,6 +1,6 @@
 /***/
-FamilyCollection = Backbone.Collection.extend({
-  model: Family
+RegionCollection = Backbone.Collection.extend({
+  model: Region
   /**
     The update method is connected by the App,
     to listen on change:study of the window.App.dataStorage.
@@ -8,9 +8,9 @@ FamilyCollection = Backbone.Collection.extend({
 , update: function(){
     var ds   = window.App.dataStorage
       , data = ds.get('study');
-    if(data && 'families' in data){
-      console.log('FamilyCollection.update()');
-      this.reset(data.families);
+    if(data && 'regions' in data){
+      console.log('RegionCollection.update()');
+      this.reset(data.regions);
     }
   }
 });
