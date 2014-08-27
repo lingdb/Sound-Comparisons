@@ -5,6 +5,8 @@ Language = Backbone.Model.extend({
     this._rfcLanguage = null; // null -> not tried, undefined -> not found.
     //Field for memoization of languages that have this language as rfcLanguage:
     this._rfcLanguages = null;
+    //Field for memoization of regions that have that include this language:
+    this._regions = null;
   }
   /**
     Returns the RfcLanguage for the current Language.
@@ -40,7 +42,24 @@ Language = Backbone.Model.extend({
     var rls = this.getRfcLanguages();
     return rls.length > 0;
   }
-//FIXME relation with region
+  /**
+    Returns a Collection of Regions that this Language is contained in.
+  */
+, getRegions: function(){
+    if(this._regions === null){
+      this._regions = App.regionLanguageCollection.findRegions(this);
+    }
+    return this._regions;
+  }
+  /**
+    Returns the first region that this language is contained in, or null.
+  */
+, getRegion: function(){
+    var ms = this.getRegions().models;
+    if(ms.length > 0)
+      return ms[0];
+    return null;
+  }
 //FIXME relation with family
 //FIXME name
 //FIXME superscript

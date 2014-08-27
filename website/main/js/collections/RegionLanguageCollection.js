@@ -28,10 +28,31 @@ RegionLanguageCollection = Backbone.Collection.extend({
       }
     });
     //Searching the languages:
-    var langs = this.filter(function(l){
+    var langs = App.languageCollection.filter(function(l){
       var lIx = l.get('LanguageIx');
       return lIx in lSet;
     });
     return new LanguageCollection(langs);
+  }
+  /**
+    Finds all Regions that belong to a given Language,
+    via the n:m relationship given by the RegionLanguages.
+  */
+, findRegions: function(language){
+    var languageId = language.get('LanguageIx')
+      , rSet       = {}; // RegionId -> Bool
+    //Filling the rSet:
+    this.each(function(rl){
+      var lId = rl.get('LanguageIx');
+      if(lId === languageId){
+        rSet[rl.getRegionId()] = true;
+      }
+    });
+    //Searching the regions:
+    var regions = App.regionCollection.filter(function(r){
+      var rId = r.getId();
+      return rId in rSet;
+    });
+    return new RegionCollection(regions);
   }
 });
