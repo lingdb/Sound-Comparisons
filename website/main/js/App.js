@@ -19,10 +19,11 @@ $(function(){
   , translationStorage:       new TranslationStorage()
   , viewWatcher:              new ViewWatcher()
   , views: {}
+  , wordCollection:           new WordCollection()
   };
   //Listening between models:
   App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
-  _.each(['study','familyCollection','languageCollection','regionCollection','regionLanguageCollection']
+  _.each(['study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','wordCollection']
     , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
   //Creating views:
   App.views.downloadOptionView = new DownloadOptionView({
