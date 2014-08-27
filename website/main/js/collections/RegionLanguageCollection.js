@@ -1,6 +1,16 @@
 /***/
 RegionLanguageCollection = Backbone.Collection.extend({
   model: RegionLanguage
+  /***/
+, comparator: function(a, b){
+    var as = a.sortValues()
+      , bs = b.sortValues();
+    if(as[0] > bs[0]) return -1;
+    if(as[0] < bs[0]) return  1;
+    if(as[1] > bs[1]) return -1;
+    if(as[1] < bs[1]) return  1;
+    return 0;
+  }
   /**
     The update method is connected by the App,
     to listen on change:study of the window.App.dataStorage.

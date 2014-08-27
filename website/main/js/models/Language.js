@@ -9,6 +9,9 @@ Language = Backbone.Model.extend({
     this._regions = null;
     //Field for memoization of the family that this language belongs to:
     this._family = null;
+    //Fields for memoization of the next and prev languages:
+    this._next = null;
+    this._prev = null;
   }
   /**
     Returns the RfcLanguage for the current Language.
@@ -71,9 +74,56 @@ Language = Backbone.Model.extend({
     }
     return this._family;
   }
+  /**
+    Fetches the next or previous Neighbour of this language,
+    according to LanguageIx inside the first Region of a language.
+  */
+, getNeighbour: function(next){
+    //Function to fetch the neighbour element of an array:
+    var getN = function(elems, index){
+      var delta = next ? 1 : -1
+        , count = elems.length;
+      //Addition of count so that index >= 0
+      index = (index + delta + count) % count;
+      return elems[index];
+    };
+    //Find index of RegionLanguage in models:
+    var index  = 0
+      , models = App.regionLanguageCollection.models
+      , langId = this.get('LanguageIx');
+    for(var i = 0; i < models.length; i++){
+      if(models[i].get('LanguageIx') === langId){
+        index = i;
+        break;
+      }
+    }
+    //Find Language belonging to neighbour RegionLanguage:
+    var neighbour = getN(models, index)
+      , targetId  = neighbour.get('LanguageIx');
+    return App.languageCollection.findWhere({LanguageIx: targetId});
+  }
+  /**
+    Fetches the next Neighbour of this language by the means of getNeighbour.
+  */
+, getNext: function(){
+    if(this._next === null){
+      this._next = this.getNeighbour(true);
+      this._next._prev = this;
+    }
+    return this._next;
+  }
+  /**
+    Fetches the previous Neighbour of this language by the means of getNeighbour.
+  */
+, getPrev: function(){
+    if(this._prev === null){
+      this._prev = this.getNeighbour(false);
+      this._prev._next = this;
+    }
+    return this._prev;
+  }
 //FIXME name
 //FIXME superscript
-//FIXME implement getNeighbour o.O
 //FIXME implement getContributors
 //FIXME implement further missing methods as I discover the need for them
 });
