@@ -73,4 +73,7 @@ Language = Backbone.Model.extend({
   }
 //FIXME name
 //FIXME superscript
+//FIXME implement getNeighbour o.O
+//FIXME implement getContributors
+//FIXME implement further missing methods as I discover the need for them
 });
