@@ -3,6 +3,8 @@ Family = Backbone.Model.extend({
   initialize: function(){
     //Field for memoization of this familys regions:
     this._regions = null;
+    //Field for memoization of this familys languages:
+    this._languages = null;
   }
   /**
     Generates the FamilyId as used throughout the database.
@@ -30,6 +32,9 @@ Family = Backbone.Model.extend({
       , field    = this.get('FamilyNm');
     return window.App.translationStorage.translateDynamic(category, field, field);
   }
+  /**
+    Returns a collection of all regions that belong to this family.
+  */
 , getRegions: function(){
     if(!this._regions){
       var familyId = this.getId()
@@ -39,5 +44,20 @@ Family = Backbone.Model.extend({
       this._regions = new RegionCollection(regions);
     }
     return this._regions;
+  }
+  /**
+    Returns a collection of all languages that belong to this family.
+  */
+, getLanguages: function(){
+    if(this._languages === null){
+      var lSet = {}; // LanguageId -> Language
+      this.getRegions().each(function(r){
+        r.getLanguages().each(function(l){
+          lSet[l.getId()] = l;
+        });
+      });
+      this._languages = new LanguageCollection(_.values(lSet));
+    }
+    return this._languages;
   }
 });
