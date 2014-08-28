@@ -12,6 +12,8 @@ Language = Backbone.Model.extend({
     //Fields for memoization of the next and prev languages:
     this._next = null;
     this._prev = null;
+    //Field for memoization of the RegionLanguage for this language:
+    this._regionLanguage = null;
   }
   /**
     Returns the RfcLanguage for the current Language.
@@ -46,6 +48,19 @@ Language = Backbone.Model.extend({
 , isRfcLanguage: function(){
     var rls = this.getRfcLanguages();
     return rls.length > 0;
+  }
+  /**
+    Returns the RegionLanguage that this Language belongs to.
+  */
+, getRegionLanguage: function(){
+    if(this._regionLanguage === null){
+      var lId = this.get('LanguageIx');
+      this._regionLanguage = App.regionLanguageCollection.findWhere({LanguageIx: lId});
+      if(this._regionLanguage){
+        this._regionLanguage._language = this;
+      }
+    }
+    return this._regionLanguage;
   }
   /**
     Returns a Collection of Regions that this Language is contained in.
@@ -97,10 +112,8 @@ Language = Backbone.Model.extend({
         break;
       }
     }
-    //Find Language belonging to neighbour RegionLanguage:
-    var neighbour = getN(models, index)
-      , targetId  = neighbour.get('LanguageIx');
-    return App.languageCollection.findWhere({LanguageIx: targetId});
+    //Return Language belonging to neighbour RegionLanguage:
+    return getN(models, index).getLanguage();
   }
   /**
     Fetches the next Neighbour of this language by the means of getNeighbour.
@@ -122,8 +135,55 @@ Language = Backbone.Model.extend({
     }
     return this._prev;
   }
-//FIXME name
+  /**
+    Helper method to produce the category necessary to fetch the dynamic translation.
+  */
+, getCategory: function(suffix){
+    return 'LanguagesTranslationProvider-Languages_-Trans_'+suffix;
+  }
+  /**
+    Helper method to produce the field necessary to fetch the dynamic translation.
+  */
+, getField: function(){
+    return ''+App.study.get('Name')+'-'+this.get('LanguageIx');
+  }
+  /**
+    Returns the short name of the current language in the current translation.
+  */
+, getShortName: function(){
+    var field    = this.getField()
+      , suffixes = [ 'RegionGpMemberLgNameShortInThisSubFamilyWebsite'
+                   , 'RegionGpMemberLgNameLongInThisSubFamilyWebsite'
+                   , 'ShortName' ];
+    for(var i = 0; i < suffixes.length; i++){
+      var category = this.getCategory(suffixes[i])
+        , trans    = App.translationStorage.translateDynamic(category, field, null);
+      if(trans !== null)
+        return trans;
+    }
+    return this.get('ShortName');
+  }
+  /**
+    Returns the long name of the current language in the current translation.
+    If no long name is found, this function falls back to getShortName.
+  */
+, getLongName: function(){
+    var category = this.getCategory('RegionGpMemberLgNameLongInThisSubFamilyWebsite')
+      , field    = this.getField()
+      , trans    = App.translationStorage.translateDynamic(category, field, null);
+    if(trans === null){
+      var rl = this.getRegionLanguage();
+      if(rl){
+        trans = this.getRegionLanguage().get('RegionGpMemberLgNameLongInThisSubFamilyWebsite');
+      }else{
+        console.log('Language.getLongName(): no RegionLanguage for LanguageIx: '+this.get('LanguageIx'));
+      }
+      if(!trans || trans === ''){
+        trans = this.getShortName();
+      }
+    }
+    return trans;
+  }
 //FIXME superscript
 //FIXME implement getContributors
-//FIXME implement further missing methods as I discover the need for them
 });
