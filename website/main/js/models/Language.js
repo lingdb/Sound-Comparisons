@@ -14,6 +14,8 @@ Language = Backbone.Model.extend({
     this._prev = null;
     //Field for memoization of the RegionLanguage for this language:
     this._regionLanguage = null;
+    //Field for memoization of the LanguageStatusType for this language:
+    this._languageStatusType = null;
   }
   /**
     Returns the RfcLanguage for the current Language.
@@ -184,6 +186,31 @@ Language = Backbone.Model.extend({
     }
     return trans;
   }
-//FIXME superscript
-//FIXME implement getContributors
+  /**
+    Returns the LanguageStatusType connected with this Language.
+  */
+, getLanguageStatusType: function(){
+    if(this._languageStatusType === null){
+      var query = {LanguageStatusType: this.get('LanguageStatusType')};
+      this._languageStatusType = App.languageStatusTypeCollection.findWhere(query);
+    }
+    return this._languageStatusType;
+  }
+  /**
+    Returns the Superscript for this Language, with fields in the current translation.
+    The target attribute can be speficied as a parameter, and will default to null.
+  */
+, getSuperscript: function(target){
+    var lst = this.getLanguageStatusType();
+    return {
+      target: target || null
+    , ttip: lst.getStatusTooltip()
+    , superscript: lst.getStatus()
+    , isSuper: true
+    };
+  }
+  /***/
+, getContributors: function(){
+    //FIXME IMPLEMENT!
+  }
 });

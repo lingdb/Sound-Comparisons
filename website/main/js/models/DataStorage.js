@@ -96,14 +96,11 @@ DataStorage = Backbone.Model.extend({
     }while(saved !== true);
   }
 , saveGlobal: function(){
-    var data = this.get('global');
-    console.log('DataStorage.saveGlobal()');
-    this.save('global', data);
+    this.save('global', this.get('global'));
   }
 , saveStudy: function(){
     var data = this.get('study')
       , name = "Study_"+data.study.Name;
-    console.log('DataStorage.saveStudy(): '+data.study.Name);
     this.save(name, data);
   }
 /**
@@ -132,7 +129,7 @@ DataStorage = Backbone.Model.extend({
         promise.reject(f);
       });
     }else{
-      this.set({global: current}, {silent: true});
+      this.set({global: current});
       promise.resolve();
     }
     return promise;

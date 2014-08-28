@@ -30,7 +30,7 @@ Family = Backbone.Model.extend({
 , getName: function(){
     var category = 'FamilyTranslationProvider'
       , field    = this.get('FamilyNm');
-    return window.App.translationStorage.translateDynamic(category, field, field);
+    return App.translationStorage.translateDynamic(category, field, field);
   }
   /**
     Returns a collection of all regions that belong to this family.
