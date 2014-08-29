@@ -1,7 +1,8 @@
 $(function(){
   //Building the App singleton:
   window.App = {
-    dataStorage: new DataStorage()
+    contributorCollection: new ContributorCollection()
+  , dataStorage: new DataStorage()
   , downloadOptions: new DownloadOptions()
   , familyCollection: new FamilyCollection()
   , languageCollection: new LanguageCollection()
@@ -23,7 +24,7 @@ $(function(){
   , wordCollection: new WordCollection()
   };
   //Listening for changing global data:
-  _.each(['languageStatusTypeCollection'], function(l){
+  _.each(['contributorCollection','languageStatusTypeCollection'], function(l){
     this.dataStorage.on('change:global', this[l].update, this[l]);
   }, App);
   //Listening for changing studies:

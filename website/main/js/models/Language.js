@@ -16,6 +16,8 @@ Language = Backbone.Model.extend({
     this._regionLanguage = null;
     //Field for memoization of the LanguageStatusType for this language:
     this._languageStatusType = null;
+    //Field for memoization of contributors:
+    this._contributors = null;
   }
   /**
     Returns the RfcLanguage for the current Language.
@@ -209,8 +211,48 @@ Language = Backbone.Model.extend({
     , isSuper: true
     };
   }
-  /***/
+  /**
+    Returns an array of all possible fields in the Object returned by getContributors.
+    Field are in the order they should be displayed in.
+  */
+, getContributorFields: function(){
+    return [ 'ContributorSpokenBy'
+           , 'ContributorRecordedBy1'
+           , 'ContributorRecordedBy2'
+           , 'ContributorSoundEditingBy'
+           , 'ContributorPhoneticTranscriptionBy'
+           , 'ContributorReconstructionBy'
+           , 'ContributorCitationAuthor1'
+           , 'ContributorCitationAuthor2'];
+  }
+  /**
+    Returns the Contributors that worked on this language.
+    If the Contributor is a CitationAuthor, a Year and Pages field may be added.
+  */
 , getContributors: function(){
-    //FIXME IMPLEMENT!
+    if(this._contributors === null){
+      var idFMap = {}; // cId -> field
+      _.each(this.getContributorFields(), function(f){
+        var cId = this.get(f);
+        if(cId && cId !== '')
+          idFMap[cId] = f;
+      }, this);
+      //Finding contributors:
+      this._contributors = {}; // Field -> Contributor
+      App.contributorCollection.each(function(c){
+        var cId = c.get('ContributorIx');
+        if(cId in idFMap){
+          var field = idFMap[cId];
+          if(ms = field.match(/CitationAuthor([12])$/)){
+            var n   = ms[1]
+              , add = { Year:  this.get('Citation'+n+'Year')
+                      , Pages: this.get('Citation'+n+'Pages')};
+            c = new Contributor($.extend(c.attributes, add));
+          }
+          this._contributors[field] = c;
+        }
+      }, this);
+    }
+    return this._contributors;
   }
 });
