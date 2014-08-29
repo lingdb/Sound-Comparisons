@@ -1,0 +1,3 @@
+/***/
+Transcription = Backbone.Model.extend({
+});

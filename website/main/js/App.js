@@ -19,6 +19,7 @@ $(function(){
   , study: new Study()
   , soundPlayOption: new SoundPlayOption()
   , templateStorage: new TemplateStorage()
+  , transcriptionMap: new TranscriptionMap()
   , translationStorage: new TranslationStorage()
   , viewWatcher: new ViewWatcher()
   , views: {}
@@ -30,7 +31,7 @@ $(function(){
   }, App);
   //Listening for changing studies:
   App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
-  _.each(['study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','wordCollection']
+  _.each(['study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
     , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
   //Creating views:
   App.views.downloadOptionView = new DownloadOptionView({
