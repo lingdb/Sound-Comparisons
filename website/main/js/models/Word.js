@@ -1,9 +1,13 @@
 /***/
 Word = Backbone.Model.extend({
+  initialize: function(){
+    //Field for memoization of the MeaningGroup this Word belongs to.
+    this._meaningGroup = null;
+  }
   /**
     Returns the Id for a Word, which is the concatenation of IxElicitation and IxMorphologicalInstance.
   */
-  getId: function(){
+, getId: function(){
     var ixE = this.get('IxElicitation')
         ixM = this.get('IxMorphologicalInstance');
     return ''+ixE+ixM;
@@ -50,7 +54,16 @@ Word = Backbone.Model.extend({
 , getProtoName: function(){
     return this.get('FullRfcProtoLg01');
   }
-//FIXME implement language dependant translation
+  /**
+    Returns the MeaningGroup that this word belongs in.
+  */
+, getMeaningGroup: function(){
+    if(this._meaningGroup === null){
+      var query = {MeaningGroupIx: this.get('MeaningGroupIx')};
+      this._meaningGroup = App.meaningGroupCollection.findWhere(query);
+    }
+    return this._meaningGroup;
+  }
 //FIXME implement fetching of Neighbours
-//FIXME implement MeaningGroups, and relation to them
+//FIXME implement language dependant translation
 });
