@@ -20,13 +20,14 @@ $(function(){
   , soundPlayOption: new SoundPlayOption()
   , templateStorage: new TemplateStorage()
   , transcriptionMap: new TranscriptionMap()
+  , transcriptionSuperscriptCollection: new TranscriptionSuperscriptCollection()
   , translationStorage: new TranslationStorage()
   , viewWatcher: new ViewWatcher()
   , views: {}
   , wordCollection: new WordCollection()
   };
   //Listening for changing global data:
-  _.each(['contributorCollection','languageStatusTypeCollection','meaningGroupCollection'], function(l){
+  _.each(['contributorCollection','languageStatusTypeCollection','meaningGroupCollection','transcriptionSuperscriptCollection'], function(l){
     this.dataStorage.on('change:global', this[l].update, this[l]);
   }, App);
   //Listening for changing studies:
