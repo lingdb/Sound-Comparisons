@@ -255,4 +255,10 @@ Language = Backbone.Model.extend({
     }
     return this._contributors;
   }
+  /**
+    Proxy method for TranscriptionMap
+  */
+, getTranscription: function(word){
+    return App.transcriptionMap.getTranscription(this, word);
+  }
 });

@@ -64,6 +64,12 @@ Word = Backbone.Model.extend({
     }
     return this._meaningGroup;
   }
+  /**
+    Proxy method for TranscriptionMap
+  */
+, getTranscription: function(language){
+    return App.transcriptionMap.getTranscription(language, this);
+  }
 //FIXME implement fetching of Neighbours
 //FIXME implement language dependant translation
 });
