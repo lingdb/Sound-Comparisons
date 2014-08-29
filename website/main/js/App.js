@@ -11,6 +11,7 @@ $(function(){
   , loadingBar: new LoadingBar()
   , logger: new Logger()
   , map: new Map()
+  , meaningGroupCollection: new MeaningGroupCollection()
   , pageWatcher: new PageWatcher()
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
@@ -24,7 +25,7 @@ $(function(){
   , wordCollection: new WordCollection()
   };
   //Listening for changing global data:
-  _.each(['contributorCollection','languageStatusTypeCollection'], function(l){
+  _.each(['contributorCollection','languageStatusTypeCollection','meaningGroupCollection'], function(l){
     this.dataStorage.on('change:global', this[l].update, this[l]);
   }, App);
   //Listening for changing studies:
