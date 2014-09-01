@@ -3,6 +3,9 @@ TemplateStorage = Backbone.Model.extend({
     ready:    false // true iff partials and render method are ready.
   , partials: null  // PartialName -> Content
   }
+  /**
+    initialize accounts for 1 segment of App.setupBar
+  */
 , initialize: function(){
     var storage = this;
     $.getJSON('query/templateInfo').done(function(info){
@@ -18,6 +21,9 @@ TemplateStorage = Backbone.Model.extend({
     }).fail(function(){
       window.App.linkInterceptor.set({enabled: false});
       console.log('Could not fetch templateInfo from host -> LinkInterceptor disabled.');
+    }).always(function(){
+      console.log('TemplateStorage done with setup.');
+      window.App.setupBar.addLoaded();
     });
   }
 /**

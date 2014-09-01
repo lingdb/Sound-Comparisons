@@ -15,6 +15,7 @@ $(function(){
   , pageWatcher: new PageWatcher()
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
+  , setupBar: new LoadingBar({segments: 4})
   , studyWatcher: new StudyWatcher()
   , study: new Study()
   , soundPlayOption: new SoundPlayOption()
@@ -55,6 +56,10 @@ $(function(){
   App.views.loadingBar = new LoadingBarView({
     el: $('.loadingBar')
   , model: App.loadingBar
+  });
+  App.views.setupBar = new SetupBarView({
+    el: $('#appSetup')
+  , model: App.setupBar
   });
   App.views.parts = {
     topMenuView: new TopMenuView({

@@ -12,6 +12,9 @@ DataStorage = Backbone.Model.extend({
   , study: null
   , target: 'query/data'
   }
+  /**
+    initialize accounts for 3 segments of App.setupBar
+  */
 , initialize: function(){
     //Self dependant events:
     this.on('change:global', this.saveGlobal, this);
@@ -21,11 +24,22 @@ DataStorage = Backbone.Model.extend({
     $.getJSON(this.get('target')).done(function(data){
       delete data['Description'];
       console.log("Got target data: "+JSON.stringify(data));
+      window.App.setupBar.addLoaded();
       t.set(data);
       t.loadGlobal().done(function(){
         var study = App.studyWatcher.get('study');
-        t.loadStudy(study);
+        window.App.setupBar.addLoaded();
+        t.loadStudy(study).always(function(){
+          console.log('DataStorage.loadstudy() done with setup.');
+          window.App.setupBar.addLoaded();
+        });
+      }).fail(function(){
+        console.log('DataStorage.loadGlobal() done with setup.');
+        window.App.setupBar.addLoaded(2);
       });
+    }).fail(function(){
+      console.log('DataStorage done with setup.');
+      window.App.setupBar.addLoaded(3);
     });
   }
   /* We track the age of all fetched data,
@@ -135,18 +149,24 @@ DataStorage = Backbone.Model.extend({
     return promise;
   }
 , loadStudy: function(name){
-    var name  = window.App.studyWatcher.get('study')
-      , key   = "Study_"+name
-      , study = this.load(key)
-      , timestamp = this.get('lastUpdate');
+    var name      = window.App.studyWatcher.get('study')
+      , key       = "Study_"+name
+      , study     = this.load(key)
+      , timestamp = this.get('lastUpdate')
+      , promise   = $.Deferred();
     if(!study || study.timestamp < timestamp){
       var t = this;
       $.getJSON(this.get('target'), {study: name}).done(function(data){
         data.timestamp = timestamp;
         t.set({study: data});
+        promise.resolve();
+      }).fail(function(f){
+        promise.reject(f);
       });
     }else{
       this.set({study: study});
+      promise.resolve();
     }
+    return promise;
   }
 });
