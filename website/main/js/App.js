@@ -61,24 +61,6 @@ $(function(){
     el: $('#appSetup')
   , model: App.setupBar
   });
-  App.views.parts = {
-    topMenuView: new TopMenuView({
-      model: App.templateStorage
-    })
-  , languageMenuView: new LanguageMenuView({
-      model: App.templateStorage
-    })
-  , wordMenuView: new WordMenuView({
-      model: App.templateStorage
-    })
-  , contentView: new ContentView({
-      model: App.templateStorage
-    })
-  , headView: new HeadView({
-      el: $('head')
-    , model: App.templateStorage
-    })
-  };
   App.views.playSequenceView = new PlaySequenceView();
   App.views.singleLanguageView = new SingleLanguageView();
   App.views.whoAreWeView = new WhoAreWeView({
