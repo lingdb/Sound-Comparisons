@@ -2,7 +2,7 @@ PlaySequenceView = Backbone.View.extend({
   initialize: function(){
     //Looking for the current pageView:
     var regex    = /.*pageView=([^&]*).*/;
-    var pageView = regex.exec($('div#saveLocation').attr('href'))[1];
+    var pageView = (href = $('div#saveLocation').attr('href')) ? regex.exec(href)[1] : '';
     //mapView and singleLanguageView ship their own solutions,
     //we care for the rest:
     switch(pageView){

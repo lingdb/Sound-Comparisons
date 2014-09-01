@@ -29,6 +29,10 @@ PageWatcher = Backbone.Model.extend({
     this.parseHref(href);
   }
 , parseHref: function(href){
+    if(href === null || typeof(href) === 'undefined'){
+      console.log('PageWatcher.parseHref() called with empty href.');
+      return;
+    }
     //Parsing parameters:
     var params = {};
     _.each(href.split('?')[1].split('&'), function(p){

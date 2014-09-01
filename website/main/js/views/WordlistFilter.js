@@ -69,6 +69,8 @@ WordlistFilter = Backbone.View.extend({
   }
   //Extends the input string so that it matches IPA Symbols.
 , enhanceIPA: function(input){
+    if(input === null || typeof(input) === 'undefined' || input === '')
+      return input;
     var vMust  = 'iyɨʉɯuɪʏʊeøɘɵɤoəɛœɜɞʌɔæɐaɶɑɒɚɝ'; // All from vowels section
     var vMay   = '˥˦˧˨˩↓↑↗↘̋́̄̀̏᷈᷅᷄̂̌ˈˌːˑ̆|‖.‿̃˔̟̹̜̠̝˕˞̞̰̤̥̈̽';           // All from tone
     var cMain  = 'pbtdʈɖɟɟkɡqɢʔmɱnɳɲŋɴʙrʀⱱɾɽɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦɬɮʋɹɻjɰlɭʎʟɫ'; // All from consonants main
@@ -125,8 +127,10 @@ WordlistFilter = Backbone.View.extend({
 //The magic filter function:
 , filter: function(set, input){
     //General rewriting of input:
-    input = input.replace(/^#/, '^');
-    input = input.replace(/#$/, '$');
+    if(typeof(input) === 'string'){
+      input = input.replace(/^#/, '^');
+      input = input.replace(/#$/, '$');
+    }
     //Filtering the set against the input:
     $(set).each(function(i, e){
       var word = e.text.toLowerCase();
@@ -141,7 +145,7 @@ WordlistFilter = Backbone.View.extend({
     $('#PhoneticFilter').val('');
     $('#FilterPhonetic').removeClass('selected');
     $('#FilterSpelling').addClass('selected');
-    var input = $('#SpellingFilter').val().toLowerCase();
+    var input = (v = $('#SpellingFilter').val()) ? v.toLowerCase() : '';
     this.setStorage('#FilterSpelling', '#SpellingFilter', input);
     var elems = $('ul.wordList .color-word').map(function(i, e){
       return {text: $(e).text(), target: $(e).closest('li')};
