@@ -1,0 +1,44 @@
+<div class="loadingBar"></div>
+{{# TopMenu}}
+{{> TopMenu}}
+{{/ TopMenu}}
+<div class="container-fluid">
+  <a class="hidelink btn"
+     data-name="hidelink_left" data-target="#leftMenu"
+     title="{{hidelinkLeft}}">
+    <i class="icon-chevron-left"></i>
+  </a>
+  <a class="hidelink btn"
+     data-name="hidelink_right" data-target="#rightMenu"
+     title="{{hidelinkRight}}" style="right: 5px;">
+    <i class="icon-chevron-right"></i>
+  </a>
+  <div class="mycontent myflow row-fluid">
+    {{# LanguageMenu}}
+    {{> LanguageMenu}}
+    {{/ LanguageMenu}}
+    {{# content}}
+    {{> content}}
+    {{/ content}}
+    {{# WordMenu}}
+    {{> WordMenu}}
+    {{/ WordMenu}}
+  </div>
+</div>
+<div id="appSetup" class="row-fluid">
+  <div class="span4 offset4 well">
+    <h3>Loading…</h3>
+    <div class="progress progress-striped active">
+      <div class="bar" style="width: 1%;"></div>
+    </div>
+  </div>
+</div>
+{{# saveLocation}}
+<div id="saveLocation" {{{.}}}></div>
+{{/ saveLocation}}
+{{# ipaKeyboard}}
+{{> ipaKeyboard}}
+{{/ ipaKeyboard}}
+{{# stopwatch}}
+{{> stopwatch}}
+{{/ stopwatch}}
