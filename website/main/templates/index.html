@@ -39,7 +39,9 @@
         </div>
       </div>
     </div>
-    <div id="saveLocation" {{{saveLocation}}}></div>
+    {{# saveLocation}}
+    <div id="saveLocation" {{{.}}}></div>
+    {{/ saveLocation}}
     {{# ipaKeyboard}}
     {{> ipaKeyboard}}
     {{/ ipaKeyboard}}
