@@ -27,6 +27,8 @@ SetupBarView = Backbone.View.extend({
     delete window.App.views['setupBar'];
     //No longer listen to events from model:
     this.model.off(null, null, this);
+    //Trigger renderer to render it's first time.
+    App.views.renderer.render();
     //Making sure this callback only works once:
     return false;
   }
