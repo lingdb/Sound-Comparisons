@@ -88,9 +88,11 @@ TemplateStorage = Backbone.Model.extend({
     var ps = this.get('partials');
     if(ps === null || typeof(ps) === 'undefined'){
       console.log('TemplateStorage.render() called before partials were ready :(');
+      return null;
     }
     if(!(name in ps)){
       console.log('TemplateStorage.render():\nMissing partial: '+name+'\nin keys: '+_.keys(ps));
+      return null;
     }
     return Mustache.render(ps[name], view, ps);
   }

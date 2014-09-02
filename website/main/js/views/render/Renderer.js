@@ -22,12 +22,10 @@ Renderer = Backbone.View.extend({
     App.loadingBar.addSegment(this.model.length + 2);
   }
 , render: function(){
-    console.log('Renderer.render()');
     //First segment of the renderer:
     App.loadingBar.addLoaded();
     //Gather render objects from views:
     var os = _.map(this.model, function(v){return v.render();});
-    console.log(os); // FIXME DEBUG
     //Merge view objects into one:
     var data = $.extend.apply($, os);
     //Render body content:

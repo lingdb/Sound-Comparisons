@@ -14,6 +14,7 @@ $(function(){
   , meaningGroupCollection: new MeaningGroupCollection()
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
+  , router: new Router()
   , setupBar: new LoadingBar({segments: 4})
   , studyWatcher: new StudyWatcher()
   , study: new Study()
@@ -63,4 +64,6 @@ $(function(){
   App.views.renderer = new Renderer({el: $('body')});
   App.views.singleLanguageView = new SingleLanguageView();
   App.views.whoAreWeView = new WhoAreWeView();
+  //Starting the routing:
+  Backbone.history.start();
 });
