@@ -24,15 +24,9 @@ Study = Backbone.Model.extend({
   /**
     Returns an array of the names of all other studies.
   */
-, getOtherNames: function(){
-    var studies = App.dataStorage.get('global').studies
-      , current = this.get('Name')
-      , names   = [];
-    _.each(studies, function(n){
-      if(n === current) return;
-      names.push(this.getName(n));
-    }, this);
-    return names;
+, getAllNames: function(){
+    var studies = App.dataStorage.get('global').studies;
+    return _.map(studies, function(n){return this.getName(n);}, this);
   }
   /**
     Returns the title for the current study in the current translation.
