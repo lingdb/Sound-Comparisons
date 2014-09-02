@@ -188,19 +188,21 @@ TranslationStorage = Backbone.Model.extend({
 , translateStatic: function(req){
     var type = typeof(req);
     if(type === 'object'){
+      if(_.isArray(req)){
+        return _.map(req, this.translateStatic, this);
+      }
       _.each(req, function(v,k){
         req[k] = this.translateStatic(v);
       }, this);
       return req;
-    }else if(type === 'string'){
-      var tId  = this.getTranslationId()
-        , data = this.get('statics')[tId];
-      //Fallback of tId to 1, iff necessary:
-      if(!(req in data) && tId !== this.defaultTranslationId()){
-        data = this.get('statics')[1];
-      }
-      return data[req];
     }
+    var tId  = this.getTranslationId()
+      , data = this.get('statics')[tId];
+    //Fallback of tId to 1, iff necessary:
+    if(!(req in data) && tId !== this.defaultTranslationId()){
+      data = this.get('statics')[1];
+    }
+    return data[req];
   }
 //Dynamic translations:
 , translateDynamic: function(category, field, fallback){
@@ -228,10 +230,29 @@ TranslationStorage = Backbone.Model.extend({
   /**
     Method to produce the path to the flag for the current translation.
   */
-, getFlag: function(){
-    var tId     = this.getTranslationId()
-      , summary = this.get('summary');
+, getFlag: function(tId){
+    tId = tId || this.getTranslationId();
+    var summary = this.get('summary');
     return summary[tId].ImagePath;
-
+  }
+  /***/
+, getName: function(tId){
+    tId = tId || this.getTranslationId();
+    var summary = this.get('summary');
+    return summary[tId].TranslationName;
+  }
+  /**
+    Returns all translationIds that are not the current or the one passed as parameter.
+  */
+, getOthers: function(tId){
+    tId = tId || this.getTranslationId();
+    var ret = [];
+    _.each(_.keys(this.get('summary')), function(t){
+      if(typeof(t) === 'string')
+        t = parseInt(t);
+      if(t !== tId)
+        ret.push(t);
+    }, this);
+    return ret;
   }
 });
