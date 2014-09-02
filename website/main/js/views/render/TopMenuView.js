@@ -6,15 +6,16 @@ TopMenuView = Backbone.View.extend({
   initialize: function(){
     //Setting callbacks to update model:
     App.translationStorage.on('change:translationId', function(){
+      this.updateEntries();
       this.updatePageViews();
       this.updateStatic();
       this.updateStudy();
+      this.updateTranslations();
     }, this);
     App.study.on('change:Name', this.updateStudy, this);
     //FIXME add missing callbacks
     this.model = {
       formats: ['mp3','ogg']
-    , currentFlag: function(){return App.translationStorage.getFlag();}
     };
   }
   /**
@@ -48,7 +49,7 @@ TopMenuView = Backbone.View.extend({
     data.studies = _.map(App.study.getAllNames(), function(n){
       return {
         currentStudy: n === data.currentStudyName
-      , link: '#FIXME' // FIXME implement link building
+      , link: 'href="#FIXME"' // FIXME implement link building
       , studyName: n
       };
     }, this);
@@ -79,7 +80,7 @@ TopMenuView = Backbone.View.extend({
     };
     var t = this, produce = function(pageView, key){
       var data = {
-        link:    '#FIXME' // FIXME implement link building
+        link:    'href="#FIXME"' // FIXME implement link building
       , content: t.tColor(key, names[key])
       , title:   hovers[key]
       , img:     images[key]};
@@ -95,6 +96,36 @@ TopMenuView = Backbone.View.extend({
     , produce(null, 'lw')
     , produce(null, 'wl')
     ]});
+  }
+  /***/
+, updateTranslations: function(){
+    this.setModel({
+      currentFlag: App.translationStorage.getFlag()
+    , otherTranslations: _.map(App.translationStorage.getOthers(), function(tId){
+        return {
+          link: 'href="#FIXME"' // FIXME implement link building
+        , flag: this.getFlag(tId)
+        , name: this.getName(tId)
+        };
+      }, App.translationStorage)
+    });
+  }
+  /***/
+, updateEntries: function(){
+    var entries = App.translationStorage.translateStatic([
+      { link:  'topmenu_about_furtherinfo_href'
+      , about: 'topmenu_about_furtherinfo'}
+    , { link:  'topmenu_about_research_href'
+      , about: 'topmenu_about_research'}
+    , { link:  'topmenu_about_contact_href'
+      , about: 'topmenu_about_contact'}
+    ]);
+    _.each(entries, function(e){e.link = 'href="'+e.link+'"';});
+    entries.unshift({
+      link:  'href="#FIXME"' // FIXME implement link building
+    , about: App.translationStorage.translateStatic('topmenu_about_whoarewe') 
+    });
+    this.setModel({aboutEntries: entries});
   }
   /***/
 , render: function(){
