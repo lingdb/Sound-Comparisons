@@ -7,7 +7,8 @@
 */
 WhoAreWeView = Backbone.View.extend({
   initialize: function(){
-    this.model.on('change:pageView', this.render, this);
+  //FIXME substitute this for something!
+  //this.model.on('change:pageView', this.render, this);
   }
 , render: function(){
     var pv = this.model.get('pageView');

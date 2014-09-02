@@ -12,7 +12,6 @@ $(function(){
   , logger: new Logger()
   , map: new Map()
   , meaningGroupCollection: new MeaningGroupCollection()
-  , pageWatcher: new PageWatcher()
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
   , setupBar: new LoadingBar({segments: 4})
@@ -39,8 +38,7 @@ $(function(){
   App.views.downloadOptionView = new DownloadOptionView({
     el: $('body'), model: App.downloadOptions
   });
-  App.views.hideLinks = new HideLinks({
-    el: null, model: App.pageWatcher});
+  App.views.hideLinks = new HideLinks();
   App.views.ipaKeyboardView = new IPAKeyboardView({
     el: $('#ipaKeyboard')});
   App.views.soundPlayOptionView = new SoundPlayOptionView({
@@ -64,7 +62,5 @@ $(function(){
   App.views.playSequenceView = new PlaySequenceView();
   App.views.renderer = new Renderer({el: $('body')});
   App.views.singleLanguageView = new SingleLanguageView();
-  App.views.whoAreWeView = new WhoAreWeView({
-    model: App.pageWatcher
-  });
+  App.views.whoAreWeView = new WhoAreWeView();
 });

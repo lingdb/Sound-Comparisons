@@ -12,9 +12,10 @@ HideLinks = Backbone.View.extend({
     });
     this.loadStates();
     this.render();
-    this.model.on('change:pageView', function(){
-      window.App.loadingBar.onFinish(this.render, this);
-    }, this);
+  // FIXME this needs work
+  //this.model.on('change:pageView', function(){
+  //  window.App.loadingBar.onFinish(this.render, this);
+  //}, this);
   }
 , toggleChevron: function(t){
     if(t.hasClass('icon-chevron-right')){
@@ -61,12 +62,12 @@ HideLinks = Backbone.View.extend({
     }, this);
   }
 , storageKey: function(id){
-    var view = this.model.get('pageView');
+    var view = ''; // FIXME this used to depend on PageWatcher, but needs substitution.
     return 'HideLinks_toggle_'+view+'_'+id;
   }
 , render: function(){
     //Making sure, all are hidden or shown, depending on view:
-    var pv    = this.model.get('pageView')
+    var pv    = '' // FIXME do something clever here. // this.model.get('pageView')
       , hasPv = pv === 'whoAreWe';
     _.each(this.links, function(l, name){
       var key = this.storageKey(name);
