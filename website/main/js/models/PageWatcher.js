@@ -22,6 +22,7 @@ PageWatcher = Backbone.Model.extend({
     //Could aswell use window.location.href,
     //but it's not that detailed in the beginning.
     this.parseHref($('#saveLocation').attr('href'));
+    //FIXME this should parse default values from global.
   }
 , update: function(href, fragment){
     if(typeof(window.history) !== 'object') return;
