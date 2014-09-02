@@ -206,9 +206,11 @@ TranslationStorage = Backbone.Model.extend({
       }
     }
     //Translation not found:
-    console.log('Could not find translation:\n'+JSON.stringify({
-      tIds: tIds, category: category, field: field
-    }));
+    if(tIds.length > 1){//Only log if we tried more than tId = 1
+      console.log('Could not find translation:\n'+JSON.stringify({
+        tIds: tIds, category: category, field: field
+      }));
+    }
     return fallback;
   }
 });
