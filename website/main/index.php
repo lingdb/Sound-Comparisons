@@ -19,6 +19,8 @@
   require_once 'head.php';
   $index['head'] = $head;
   unset($head);
+  //Making sure we get our appSetup:
+  $index['appSetup'] = true;
 ////Building the TopMenu:
 //require_once 'menu/TopMenu.php';
 //$index['TopMenu'] = $topmenu;

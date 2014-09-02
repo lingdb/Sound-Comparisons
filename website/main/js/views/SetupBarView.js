@@ -21,14 +21,10 @@ SetupBarView = Backbone.View.extend({
     Function to be called once the model finishes.
   */
 , finish: function(){
-    //Removing the setup bar from the page:
-    var el = this.$el.fadeOut({complete: function(){el.remove();}});
     //Removing the SetupBarView from the App:
     delete window.App.views['setupBar'];
     //No longer listen to events from model:
     this.model.off(null, null, this);
-    //Trigger renderer to render it's first time.
-    App.views.renderer.render();
     //Making sure this callback only works once:
     return false;
   }
