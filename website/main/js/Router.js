@@ -18,7 +18,18 @@ Router = Backbone.Router.extend({
   , ":study/wordsXlanguages/:words/:languages/*config": "wordLanguageViewConfig"
     //Route for missing implementations of links:
   , "FIXME":                                            "missingRoute"
+  , "FIXME/*infos":                                     "missingRoute"
     //Catch all route:
   , "*actions":                                         "defaultRoute"
+  }
+, initialize: function(){
+    //The Router looks for missing routes itself:
+    this.on('route:missingRoute', function(infos){
+      if(infos){
+        console.log('Router found missing route with infos: '+infos);
+      }else{
+        console.log('Router found missing route.');
+      }
+    }, this);
   }
 });

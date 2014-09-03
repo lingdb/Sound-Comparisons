@@ -49,7 +49,7 @@ TopMenuView = Backbone.View.extend({
     data.studies = _.map(App.study.getAllNames(), function(n){
       return {
         currentStudy: n === data.currentStudyName
-      , link: 'href="#FIXME"' // FIXME implement link building
+      , link: 'href="#FIXME/TopMenuView:updateStudy"' // FIXME implement link building
       , studyName: n
       };
     }, this);
@@ -80,7 +80,7 @@ TopMenuView = Backbone.View.extend({
     };
     var t = this, produce = function(pageView, key){
       var data = {
-        link:    'href="#FIXME"' // FIXME implement link building
+        link:    'href="#FIXME/TopMenuView:updatePageViews"' // FIXME implement link building
       , content: t.tColor(key, names[key])
       , title:   hovers[key]
       , img:     images[key]};
@@ -103,7 +103,7 @@ TopMenuView = Backbone.View.extend({
       currentFlag: App.translationStorage.getFlag()
     , otherTranslations: _.map(App.translationStorage.getOthers(), function(tId){
         return {
-          link: 'href="#FIXME"' // FIXME implement link building
+          link: 'href="#FIXME/TopMenuView:updateTranslations"' // FIXME implement link building
         , flag: this.getFlag(tId)
         , name: this.getName(tId)
         };
@@ -122,7 +122,7 @@ TopMenuView = Backbone.View.extend({
     ]);
     _.each(entries, function(e){e.link = 'href="'+e.link+'"';});
     entries.unshift({
-      link:  'href="#FIXME"' // FIXME implement link building
+      link:  'href="#FIXME/TopMenuView:updateEntries"' // FIXME implement link building
     , about: App.translationStorage.translateStatic('topmenu_about_whoarewe') 
     });
     this.setModel({aboutEntries: entries});
