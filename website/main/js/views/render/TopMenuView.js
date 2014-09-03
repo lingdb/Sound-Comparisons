@@ -129,7 +129,8 @@ TopMenuView = Backbone.View.extend({
   }
   /***/
 , render: function(){
-    return {TopMenu: this.model};
+    console.log('TopMenuView.render()');
+    this.$el.html(App.templateStorage.render('TopMenu', {TopMenu: this.model}));
   }
   /**
     Helper method to color strings for updatePageViews.

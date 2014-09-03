@@ -25,6 +25,8 @@ SetupBarView = Backbone.View.extend({
     delete window.App.views['setupBar'];
     //No longer listen to events from model:
     this.model.off(null, null, this);
+    //Remove the el from the document:
+    this.$el.remove();
     //Making sure this callback only works once:
     return false;
   }
