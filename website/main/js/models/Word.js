@@ -9,7 +9,7 @@ Word = Backbone.Model.extend({
   */
 , getId: function(){
     var ixE = this.get('IxElicitation')
-        ixM = this.get('IxMorphologicalInstance');
+      , ixM = this.get('IxMorphologicalInstance');
     return ''+ixE+ixM;
   }
   /**

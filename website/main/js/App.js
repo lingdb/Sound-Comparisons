@@ -3,6 +3,7 @@ $(function(){
   window.App = {
     contributorCollection: new ContributorCollection()
   , dataStorage: new DataStorage()
+  , defaults: new Defaults()
   , downloadOptions: new DownloadOptions()
   , familyCollection: new FamilyCollection()
   , languageCollection: new LanguageCollection()
@@ -33,7 +34,7 @@ $(function(){
   }, App);
   //Listening for changing studies:
   App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
-  _.each(['study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
+  _.each(['defaults','study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
     , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
   //Creating views:
   App.views.downloadOptionView = new DownloadOptionView({
