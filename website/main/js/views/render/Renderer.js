@@ -12,6 +12,7 @@ Renderer = Backbone.View.extend({
     //Views managed by the Renderer:
     this.model = [
       new TopMenuView({el: this.$('#topMenu')})
+    , new LanguageMenuView({el: this.$('#leftMenu')})
       //FIXME add more views here.
     ];
     //Each model has a segment in the loadingBar, and Renderer itself has two:

@@ -1,5 +1,5 @@
 /**
-  The TopMenuView will be used by the Renderer, and won't have an el.
+  The TopMenuView will be used by the Renderer.
   The TopMenuView will set it's own model to handle and smartly update it's render data.
 */
 TopMenuView = Backbone.View.extend({
@@ -26,7 +26,6 @@ TopMenuView = Backbone.View.extend({
   }
   /***/
 , updateStatic: function(){
-    console.log('TopMenuView.updateStatic()');
     var staticT = App.translationStorage.translateStatic({
       logoTitle:       'website_logo_hover'
     , pageViewTitle:   'topmenu_views'
