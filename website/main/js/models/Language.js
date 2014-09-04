@@ -19,6 +19,8 @@ Language = Backbone.Model.extend({
     //Field for memoization of contributors:
     this._contributors = null;
   }
+  /***/
+, getId: function(){return this.get('LanguageIx');}
   /**
     Returns the RfcLanguage for the current Language.
     The field _rfcLanguage is used for memoization.

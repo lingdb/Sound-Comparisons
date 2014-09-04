@@ -1,5 +1,5 @@
 /***/
-RegionCollection = Backbone.Collection.extend({
+RegionCollection = Selection.extend({
   model: Region
   /**
     The update method is connected by the App,
