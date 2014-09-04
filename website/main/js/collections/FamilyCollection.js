@@ -39,16 +39,14 @@ FamilyCollection = Backbone.Collection.extend({
     Predicate to check selection of a family.
   */
 , isSelected: function(family){
-    var fId = family.getId();
-    return fId in this.selected;
+    return family.getId() in this.selected;
   }
   /**
     Adds a family to the selection.
     Returns self for chaining.
   */
 , select: function(family){
-    var fId = family.getId();
-    this.selected[fId] = family;
+    this.selected[family.getId()] = family;
     return this;
   }
   /**
@@ -56,8 +54,7 @@ FamilyCollection = Backbone.Collection.extend({
     Returns self for chaining.
   */
 , unselect: function(family){
-    var fId = family.getId();
-    delete this.selected[fId];
+    delete this.selected[family.getId()];
     return this;
   }
 });
