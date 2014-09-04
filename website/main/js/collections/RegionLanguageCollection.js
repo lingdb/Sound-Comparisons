@@ -39,8 +39,7 @@ RegionLanguageCollection = Backbone.Collection.extend({
     });
     //Searching the languages:
     var langs = App.languageCollection.filter(function(l){
-      var lIx = l.get('LanguageIx');
-      return lIx in lSet;
+      return l.getId() in lSet;
     });
     return new LanguageCollection(langs);
   }
@@ -49,7 +48,7 @@ RegionLanguageCollection = Backbone.Collection.extend({
     via the n:m relationship given by the RegionLanguages.
   */
 , findRegions: function(language){
-    var languageId = language.get('LanguageIx')
+    var languageId = language.getId()
       , rSet       = {}; // RegionId -> Bool
     //Filling the rSet:
     this.each(function(rl){
