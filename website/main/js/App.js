@@ -48,7 +48,8 @@ $(function(){
     el: $('#contentArea')
   , model: App.map
   });
-  App.views.wordlistFilter = new WordlistFilter();
+//FIXME enable/rebuild later on
+//App.views.wordlistFilter = new WordlistFilter();
   App.views.loadingBar = new LoadingBarView({
     el: $('.loadingBar')
   , model: App.loadingBar
