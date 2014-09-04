@@ -1,6 +1,18 @@
 /***/
 FamilyCollection = Backbone.Collection.extend({
   model: Family
+  /***/
+, initialize: function(){
+    //The FamilyCollection tracks selected families.
+    this.selected = {}; // FamilyId -> Family
+    //Defaulting to all as selected:
+    this.on('reset', function(){
+      this.selected = {};
+      this.each(function(f){
+        this.selected[f.getId()] = f;
+      }, this);
+    }, this);
+  }
   /**
     The update method is connected by the App,
     to listen on change:study of the window.App.dataStorage.
@@ -12,5 +24,13 @@ FamilyCollection = Backbone.Collection.extend({
       console.log('FamilyCollection.update()');
       this.reset(data.families);
     }
+  }
+  /**
+    Runs the given iterator[ and context] over all currently selected families.
+  */
+, forSelected: function(iterator, context){
+    _.each(this.selected, function(v, k){
+      iterator.call(context, v, k);
+    }, this);
   }
 });
