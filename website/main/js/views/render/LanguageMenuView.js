@@ -7,10 +7,17 @@ LanguageMenuView = Backbone.View.extend({
     //Setting callbacks to update model:
     App.translationStorage.on('change:translationId', function(){
       this.updateStatic();
+      this.updateTree();
     }, this);
-    //FIXME add missing callbacks.
+    App.study.on('change', this.updateTree, this);
+    App.familyCollection.on('reset', this.updateTree, this);
+    App.regionCollection.on('reset', this.updateTree, this);
+    App.languageCollection.on('reset', this.updateTree, this);
     //Initial model:
-    this.model = {};
+    this.model = {
+      collapseHref: 'href="#FIXME/implement links for adding regions"'
+    , expandHref:   'href="#FIXME/implement links for removing regions"'
+    };
   }
   /***/
 , updateStatic: function(){
@@ -23,6 +30,10 @@ LanguageMenuView = Backbone.View.extend({
     staticT.languageSets += ':';
     this.setModel(staticT);
   }
+  /**
+    Builds the complete tree of [families ->] regions -> languages
+  */
+, updateTree: function(){}
 , render: function(){
     console.log('LanguageMenuView.render()');
     this.$el.html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));

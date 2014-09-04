@@ -38,4 +38,10 @@ Study = Backbone.Model.extend({
       , field    = this.get('Name');
     return window.App.translationStorage.translateDynamic(category, field, field);
   }
+  /**
+    Predicate to tell if the families colors should be used for coloring.
+  */
+, getColorByFamily: function(){
+    return parseInt(this.get('ColorByFamily')) === 1;
+  }
 });

@@ -12,6 +12,7 @@ $(function(){
   , logger: new Logger()
   , map: new Map()
   , meaningGroupCollection: new MeaningGroupCollection()
+  , pageState: new PageState()
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
   , router: new Router()
@@ -23,7 +24,6 @@ $(function(){
   , transcriptionMap: new TranscriptionMap()
   , transcriptionSuperscriptCollection: new TranscriptionSuperscriptCollection()
   , translationStorage: new TranslationStorage()
-  , viewWatcher: new ViewWatcher()
   , views: {}
   , wordCollection: new WordCollection()
   };
