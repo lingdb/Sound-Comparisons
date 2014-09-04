@@ -42,17 +42,23 @@ LanguageCollection = Backbone.Collection.extend({
   }
   /**
     Method to tell if multiple languages are selected.
+    It works on both, collections and arrays.
     Returns {'all','some','none'}
   */
 , areSelected: function(ls){
-    var all = true, none = true;
-    _.each(ls, function(l){
-      if(this.isSelected(l)){
-        none = false;
-      }else{
-        all = false;
-      }
-    }, this);
+    var all = true, none = true
+      , iterator = function(l){
+          if(this.isSelected(l)){
+            none = false;
+          }else{
+            all = false;
+          }
+        };
+    if(_.isArray(ls)){
+      _.each(ls, iterator, this);
+    }else{
+      ls.each(iterator, this);
+    }
     if(all) return 'all';
     if(none) return 'none';
     return 'some';
