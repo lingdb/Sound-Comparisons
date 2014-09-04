@@ -4,7 +4,6 @@ $(function(){
     contributorCollection: new ContributorCollection()
   , dataStorage: new DataStorage()
   , defaults: new Defaults()
-  , downloadOptions: new DownloadOptions()
   , familyCollection: new FamilyCollection()
   , languageCollection: new LanguageCollection()
   , languageStatusTypeCollection: new LanguageStatusTypeCollection()
@@ -37,9 +36,6 @@ $(function(){
   _.each(['defaults','study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
     , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
   //Creating views:
-  App.views.downloadOptionView = new DownloadOptionView({
-    el: $('body'), model: App.downloadOptions
-  });
   App.views.hideLinks = new HideLinks();
   App.views.ipaKeyboardView = new IPAKeyboardView({
     el: $('#ipaKeyboard')});

@@ -1,3 +1,8 @@
+2014-09-04:
+ - Gotta fix the Download options in the TopMenu.
+   - Both, models/DownloadOptioasn.js and views/DownloadOptionView.js aren't in use right now.
+   - TopMenuView should take care of this.
+
 2014-07-04:
  - Can we remove parts of the language table that are translated?
 
