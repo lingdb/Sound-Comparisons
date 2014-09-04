@@ -27,10 +27,37 @@ FamilyCollection = Backbone.Collection.extend({
   }
   /**
     Runs the given iterator[ and context] over all currently selected families.
+    Returns self for chaining.
   */
 , forSelected: function(iterator, context){
     _.each(this.selected, function(v, k){
       iterator.call(context, v, k);
     }, this);
+    return this;
+  }
+  /**
+    Predicate to check selection of a family.
+  */
+, isSelected: function(family){
+    var fId = family.getId();
+    return fId in this.selected;
+  }
+  /**
+    Adds a family to the selection.
+    Returns self for chaining.
+  */
+, select: function(family){
+    var fId = family.getId();
+    this.selected[fId] = family;
+    return this;
+  }
+  /**
+    Removes a family from the selection.
+    Returns self for chaining.
+  */
+, unselect: function(family){
+    var fId = family.getId();
+    delete this.selected[fId];
+    return this;
   }
 });
