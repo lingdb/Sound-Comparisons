@@ -1,7 +1,6 @@
-{{#wordHeadline}}
 {{> WordHeadline}}
-{{/wordHeadline}}
 <table id="singleWordTable" class="table table-bordered table-striped">
+  {{# WordTable}}
   <tbody>
     <i class="icon-eject rotate90" id="wordHeadline_playAll" title="{{wordHeadlinePlayAll}}"></i>
     {{#rows}}
@@ -29,4 +28,5 @@
     </tr>
     {{/rows}}
   </tbody>
+  {{/ WordTable}}
 </table>

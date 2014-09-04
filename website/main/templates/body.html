@@ -12,15 +12,28 @@
     <i class="icon-chevron-right"></i>
   </a>
   <div class="mycontent myflow row-fluid">
-    {{# LanguageMenu}}
     {{> LanguageMenu}}
-    {{/ LanguageMenu}}
-    {{# content}}
-    {{> content}}
-    {{/ content}}
-    {{# WordMenu}}
+    <div id="contentArea"{{#isMapView}} style="bottom:2em;"{{/isMapView}} class="span8">
+      <div id="wordTableContainer" class="hide">
+        {{> WordTable}}
+      </div>
+      <div id="languageTableContainer" class="hide">
+        {{> LanguageTable}}
+      </div>
+      <div id="mapViewContainer" class="hide">
+        {{> MapView}}
+      </div>
+      <div id="multitableContainer" class="hide">
+        {{> Multitable}}
+      </div>
+      <div id="multitableTransposedContainer" class="hide">
+        {{> MultitableTransposed}}
+      </div>
+      <div id="contributors" class="hide">
+        {{> contributors}}
+      </div>
+    </div>
     {{> WordMenu}}
-    {{/ WordMenu}}
   </div>
 </div>
 {{# appSetup}}
