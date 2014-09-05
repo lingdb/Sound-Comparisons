@@ -17,8 +17,18 @@ Renderer = Backbone.View.extend({
     ];
     //Each model has a segment in the loadingBar, and Renderer itself has two:
     App.loadingBar.addSegment(this.model.length + 2);
+    //Memoization wether models have been activated:
+    this._activated = false;
   }
 , render: function(){
+    //Activation:
+    if(this._activated === false){
+      _.each(this.model, function(m){
+        if(typeof(m.activate) === 'function')
+          m.activate();
+      }, this);
+      this._activated = true;
+    }
     //First segment of the renderer:
     App.loadingBar.addLoaded();
     //Render dependant views:

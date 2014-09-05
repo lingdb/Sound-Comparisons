@@ -21,6 +21,9 @@ RegionLanguageCollection = Backbone.Collection.extend({
     if(data && 'regionLanguages' in data){
       console.log('RegionLanguageCollection.update()');
       this.reset(data.regionLanguages);
+      //Resetting memoization fields of regions and languages:
+      App.regionCollection.each(function(r){r._languages = null;});
+      App.languageCollection.each(function(l){l._regions = null;});
     }
   }
   /**

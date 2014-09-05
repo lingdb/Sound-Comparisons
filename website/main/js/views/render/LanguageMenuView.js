@@ -4,20 +4,29 @@
 */
 LanguageMenuView = Backbone.View.extend({
   initialize: function(){
+    //Initial model:
+    this.model = {
+      collapseHref: 'href="#FIXME/implement links for adding regions"'
+    , expandHref:   'href="#FIXME/implement links for removing regions"'
+    };
+  }
+  /**
+    Function to activate update methods, and run them the first time.
+    This will be called by the Renderer.
+  */
+, activate: function(){
     //Setting callbacks to update model:
     App.translationStorage.on('change:translationId', function(){
       this.updateStatic();
       this.updateTree();
     }, this);
     App.study.on('change', this.updateTree, this);
-    App.familyCollection.on('reset', this.updateTree, this);
-    App.regionCollection.on('reset', this.updateTree, this);
-    App.languageCollection.on('reset', this.updateTree, this);
-    //Initial model:
-    this.model = {
-      collapseHref: 'href="#FIXME/implement links for adding regions"'
-    , expandHref:   'href="#FIXME/implement links for removing regions"'
-    };
+    _.each(['familyCollection','regionCollection','regionLanguageCollection','languageCollection'], function(c){
+      App[c].on('reset', this.updateTree, this);
+    }, this);
+    //Calling updates:
+    this.updateStatic();
+    this.updateTree();
   }
   /***/
 , updateStatic: function(){
@@ -34,6 +43,7 @@ LanguageMenuView = Backbone.View.extend({
     Builds the complete tree of [families ->] regions -> languages
   */
 , updateTree: function(){
+    console.log('LanguageMenuView.updateTree()');
     if(App.study.getColorByFamily()){
       var families = [];
       App.familyCollection.each(function(f){
@@ -80,14 +90,17 @@ LanguageMenuView = Backbone.View.extend({
     Helperfunction for updateTree that builds a RegionList for a given collection of regions.
   */
 , buildRegionTree: function(regions){
+    console.log('LanguageMenuView.buildRegionTree()'); // FIXME DEBUG
     var regionList = {
       isDl: !App.study.getColorByFamily()
     , regions: []
     };
     regions.each(function(r){
       var languages = r.getLanguages();
-      if(languages.length === 0)
+      if(languages.length === 0){
+        console.log('Found region with no languages.');
         return;
+      }
       var isMultiView = false // FIXME implement
         , isMapView   = false // FIXME implement
         , region      = {

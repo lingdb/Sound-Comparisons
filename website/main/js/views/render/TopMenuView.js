@@ -4,19 +4,27 @@
 */
 TopMenuView = Backbone.View.extend({
   initialize: function(){
-    //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', function(){
+    this.model = {
+      formats: ['mp3','ogg']
+    };
+  }
+  /**
+    Function to activate update methods, and run them the first time.
+    This will be called by the Renderer.
+  */
+, activate: function(){
+    var updateAll = function(){
       this.updateEntries();
       this.updatePageViews();
       this.updateStatic();
       this.updateStudy();
       this.updateTranslations();
-    }, this);
+    }
+    //Setting callbacks to update model:
+    App.translationStorage.on('change:translationId', updateAll, this);
     App.study.on('change:Name', this.updateStudy, this);
-    //FIXME add missing callbacks
-    this.model = {
-      formats: ['mp3','ogg']
-    };
+    //Calling updates the first time:
+    updateAll.call(this);
   }
   /**
     Overwrites the current model with the given one performing a deep merge.
