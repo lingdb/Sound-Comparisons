@@ -7,7 +7,7 @@
     {{/checkbox}}
     <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
   </dt>
-  {{^selected}}
+  {{#selected}}
   <dd class="languageList">
     {{#languages}}
       <li>
@@ -32,7 +32,7 @@
     <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
     {{/checkbox}}
     <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
-    {{^selected}}
+    {{#selected}}
     <ul class="languageList">
       {{#languages}}
         <li>
