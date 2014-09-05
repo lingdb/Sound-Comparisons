@@ -79,6 +79,7 @@ if(array_key_exists('global',$_GET)){
   , 'transcrSuperscriptInfo'      => fetchAll('SELECT * FROM TranscrSuperscriptInfo')
   , 'transcrSuperscriptLenderLgs' => fetchAll('SELECT * FROM TranscrSuperscriptLenderLgs')
   , 'wikipediaLinks'              => fetchAll('SELECT * FROM WikipediaLinks')
+  , 'soundPath'                   => Config::$soundPath
   );
   //Done:
   echo json_encode(array(
