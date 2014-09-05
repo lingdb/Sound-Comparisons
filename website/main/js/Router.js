@@ -10,7 +10,7 @@ Router = Backbone.Router.extend({
   , ":study/language/:language":                        "languageView"
   , ":study/languagesXwords/:languages/:words":         "languageWordView"
   , ":study/wordsXlanguages/:words/:languages":         "wordLanguageView"
-    //pageView routes with config info:
+    //pageView routes with config info (config routes):
   , ":study/map/:word/:languages/*config":              "mapViewConfig"
   , ":study/word/:word/*config":                        "wordViewConfig"
   , ":study/language/:language/*config":                "languageViewConfig"
@@ -31,5 +31,25 @@ Router = Backbone.Router.extend({
         console.log('Router found missing route.');
       }
     }, this);
+    /**
+      The Router acts as a proxy in that it processes all config routes,
+      and afterwards triggers the basic routes.
+    */
+    var configRoutes = ["mapView", "wordView", "languageView", "languageWordView", "wordLanguageView"];
+    _.each(configRoutes, function(r){
+      this.on('route:'+r+'Config', function(){
+        //Process configuration:
+        this.configure(_.last(arguments));
+        //Triger non config route:
+        this.trigger(r, _.take(arguments, arguments.length - 1));
+      }, this);
+    }, this);
+  }
+  /**
+    This method shall modify different page settings that can be conveyed via the config routes.
+  */
+, configure: function(config){
+    console.log('Router.configure()');
+    //FIXME implement
   }
 });
