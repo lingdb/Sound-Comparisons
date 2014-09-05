@@ -1,5 +1,7 @@
 <div class="loadingBar"></div>
-{{> TopMenu}}
+<div class="navbar myflow row-fluid" id="topMenu">
+  {{> TopMenu}}
+</div>
 <div class="container-fluid">
   <a class="hidelink btn"
      data-name="hidelink_left" data-target="#leftMenu"
@@ -12,7 +14,9 @@
     <i class="icon-chevron-right"></i>
   </a>
   <div class="mycontent myflow row-fluid">
-    {{> LanguageMenu}}
+    <div class="span2 well" id="leftMenu">
+      {{> LanguageMenu}}
+    </div>
     <div id="contentArea"{{#isMapView}} style="bottom:2em;"{{/isMapView}} class="span8">
       <div id="wordTableContainer" class="hide">
         {{> WordTable}}
@@ -33,7 +37,9 @@
         {{> contributors}}
       </div>
     </div>
-    {{> WordMenu}}
+    <div id="rightMenu" class="span2 well">
+      {{> WordMenu}}
+    </div>
   </div>
 </div>
 {{# appSetup}}
