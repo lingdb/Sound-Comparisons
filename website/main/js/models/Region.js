@@ -35,16 +35,18 @@ Region = Backbone.Model.extend({
   */
 , getShortName: function(){
     var category = this.getCategory('RegionGpNameShort')
-      , field    = this.getField();
-    return App.translationStorage.translateDynamic(category, field, field);
+      , field    = this.getField()
+      , fallback = this.get('RegionGpNameShort');
+    return App.translationStorage.translateDynamic(category, field, fallback);
   }
   /**
     Returns the longName for the current region in the current translation.
   */
 , getLongName: function(){
     var category = this.getCategory('RegionGpNameLong')
-      , field    = this.getField();
-    return App.translationStorage.translateDynamic(category, field, field);
+      , field    = this.getField()
+      , fallback = this.get('RegionGpNameLong');
+    return App.translationStorage.translateDynamic(category, field, fallback);
   }
   /**
     Returns a color string in the form of /#{[0-9a-fA-F]}6/, or null.
