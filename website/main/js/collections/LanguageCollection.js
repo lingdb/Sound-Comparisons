@@ -36,4 +36,9 @@ LanguageCollection = Selection.extend({
     if(none) return 'none';
     return 'some';
   }
+, getDefaultPhoneticLanguage: function(){
+    return this.find(function(l){
+      return l.isDefaultPhoneticLanguage() || null;
+    });
+  }
 });

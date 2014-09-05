@@ -7,6 +7,17 @@
 PageState = Backbone.Model.extend({
   defaults: {
     wordOrder: 'alphabetical'
+  , spLang: null
+  , phLang: null
+  }
+  /**
+    Sets up callbacks to manipulate PageState when necessary.
+  */
+, activate: function(){
+    //{sp,ph}Lang need resetting sometimes:
+    var reset = function(){this.set({spLang: null, phLang: null})};
+    App.study.on('change', reset, this);
+    App.translationStorage.on('change:translationId', reset, this);
   }
 //Managing the wordOrder:
   /**
@@ -32,5 +43,32 @@ PageState = Backbone.Model.extend({
   */
 , wordOrderSetAlphabetical: function(){
     this.set({wordOrder: 'alphabetical'});
+  }
+//Managing {sp,ph}Lang:
+  /**
+    Returns the current spellingLanguage
+  */
+, getSpLang: function(){
+    var spl = this.get('spLang');
+    if(spl === null){
+      spl = App.translationStorage.getRfcLanguage();
+      this.attributes.spLang = spl;
+    }
+    return spl;
+  }
+  /**
+    Returns the current phoneticLanguage
+  */
+, getPhLang: function(){
+    var phl = this.get('phLang');
+    if(phl === null){
+      if(spl = this.getSpLang()){
+        phl = spl;
+      }else{
+        phl = App.languageCollection.getDefaultPhoneticLanguage();
+      }
+      this.attributes.phLang = phl;
+    }
+    return phl;
   }
 });

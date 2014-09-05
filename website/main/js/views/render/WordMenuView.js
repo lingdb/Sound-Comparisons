@@ -5,11 +5,17 @@
 WordMenuView = Backbone.View.extend({
   initialize: function(){
     //Setting the initial model:
-    this.model = {};
+    this.model = {
+      searchFilter: {
+        fClearAllLink: 'data-href="#FIXME/implement removing all words"'
+      }
+    };
   }
 , activate: function(){
     //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', this.updateStatic, this);
+    App.translationStorage.on('change:translationId', function(){
+      this.updateStatic();
+    }, this);
     App.pageState.on('change:wordOrder', this.updateSortBy, this);
     //Calling updates:
     App.views.renderer.callUpdates(this);
@@ -33,11 +39,20 @@ WordMenuView = Backbone.View.extend({
       , in:               'menu_words_filter_spphin'
       , ipaOpenTitle:     'menu_words_open_ipaKeyboard'
       , filterFoundWords: 'menu_words_filterFoundWords'
-      //FIXME WIP
-      //, soundPath:        => Config::$soundPath
+      , fTitle:           'menu_words_filterTitleMultiWords'
+      , fAddAll:          'menu_words_filterAddMultiWords'
+      , fRefresh:         'menu_words_filterRefreshMultiWords'
+      , fClearAll:        'menu_words_filterClearAllWords'
       }
     });
     this.setModel(staticT);
+  }
+, updateSoundPath: function(){
+    this.setModel({
+      searchFilter: {
+        soundPath: App.dataStorage.get('global').global.soundPath
+      }
+    });
   }
 , updateSortBy: function(){
     var data = {
@@ -46,6 +61,17 @@ WordMenuView = Backbone.View.extend({
     data.link = data.isLogical ? 'href="#FIXME/implement setting word order to alphabetical"'
                                : 'href="#FIXME/implement setting word order to logical"';
     this.setModel({sortBy: data});
+  }
+  /**
+    Since big parts of the searchFilter are already done by updateStatic,
+    this method has a focus on building the {sp,ph}List entries.
+    FIXME install update callbacks on activation, for both translation change, and changing langs.
+  */
+, updateSearchFilter: function(){
+    var data = {spList: {}, phList: {}};
+    //FIXME WIP
+    //Use App.pageState.get{Sp,Ph}Lang
+    this.setModel({searchFilter: data});
   }
 , render: function(){
     console.log('WordMenuView.render()');

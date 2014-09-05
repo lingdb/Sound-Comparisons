@@ -263,4 +263,8 @@ Language = Backbone.Model.extend({
 , getTranscription: function(word){
     return App.transcriptionMap.getTranscription(this, word);
   }
+, isDefaultPhoneticLanguage: function(){
+    var isOrt = this.get('IsOrthographyHasNoTranscriptions');
+    return parseInt(isOrt) === 0;
+  }
 });

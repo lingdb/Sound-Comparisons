@@ -35,6 +35,8 @@ $(function(){
   App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
   _.each(['defaults','study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
     , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
+  //Setting up callbacks for PageState:
+  App.pageState.activate();
   //Creating views:
   App.views.hideLinks = new HideLinks();
   App.views.ipaKeyboardView = new IPAKeyboardView({

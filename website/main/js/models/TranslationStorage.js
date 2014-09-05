@@ -255,4 +255,12 @@ TranslationStorage = Backbone.Model.extend({
     }, this);
     return ret;
   }
+  /**
+    Returns the RfcLanguage for the current translationId, or null.
+  */
+, getRfcLanguage: function(){
+    var tId   = this.getTranslationId()
+      , query = {LanguageIx: this.get('summary')[tId].RfcLanguage};
+    return App.languageCollection.where(query) || null;
+  }
 });
