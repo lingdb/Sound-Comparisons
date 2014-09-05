@@ -1,12 +1,12 @@
 /***/
-MeaningGroupCollection = Backbone.Collection.extend({
+MeaningGroupCollection = Selection.extend({
   model: MeaningGroup
   /**
     Custom comparator to make sure MeaningGroups are sorted by MeaningGroupIx
   */
 , comparator: function(a, b){
-    var x = a.get('MeaningGroupIx')
-      , y = b.get('MeaningGroupIx')
+    var x = a.getId()
+      , y = b.getId()
     if(x > y) return -1;
     if(x < y) return  1;
     return 0;
