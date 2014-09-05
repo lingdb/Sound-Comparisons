@@ -23,10 +23,14 @@ Renderer = Backbone.View.extend({
 , render: function(){
     //Activation:
     if(this._activated === false){
+      //Installing update methods of contained views:
       _.each(this.model, function(m){
         if(typeof(m.activate) === 'function')
           m.activate();
       }, this);
+      //Rerender on changing templates:
+      App.templateStorage.on('change:partials', this.render, this);
+      //Renderer is activated now:
       this._activated = true;
     }
     //First segment of the renderer:
@@ -35,5 +39,15 @@ Renderer = Backbone.View.extend({
     _.each(this.model, function(v){return v.render();}, this);
     //Second segment of the renderer:
     App.loadingBar.addLoaded();
+  }
+  /**
+    Calls all methods that match /^update/ on the given Backbone.View.
+  */
+, callUpdates: function(v){
+    _.each(_.keys(v.__proto__), function(k){
+      if(k.match(/^update/) !== null){
+        v[k].call(v);
+      }
+    }, this);
   }
 });

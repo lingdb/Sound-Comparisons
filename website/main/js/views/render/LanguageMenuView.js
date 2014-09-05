@@ -17,16 +17,14 @@ LanguageMenuView = Backbone.View.extend({
 , activate: function(){
     //Setting callbacks to update model:
     App.translationStorage.on('change:translationId', function(){
-      this.updateStatic();
-      this.updateTree();
+      App.views.renderer.callUpdates(this);
     }, this);
     App.study.on('change', this.updateTree, this);
     _.each(['familyCollection','regionCollection','regionLanguageCollection','languageCollection'], function(c){
       App[c].on('reset', this.updateTree, this);
     }, this);
     //Calling updates:
-    this.updateStatic();
-    this.updateTree();
+    App.views.renderer.callUpdates(this);
   }
   /***/
 , updateStatic: function(){

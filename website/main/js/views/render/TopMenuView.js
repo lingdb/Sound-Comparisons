@@ -13,18 +13,13 @@ TopMenuView = Backbone.View.extend({
     This will be called by the Renderer.
   */
 , activate: function(){
-    var updateAll = function(){
-      this.updateEntries();
-      this.updatePageViews();
-      this.updateStatic();
-      this.updateStudy();
-      this.updateTranslations();
-    }
     //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', updateAll, this);
+    App.translationStorage.on('change:translationId', function(){
+      App.views.renderer.callUpdates(this);
+    }, this);
     App.study.on('change:Name', this.updateStudy, this);
     //Calling updates the first time:
-    updateAll.call(this);
+    App.views.renderer.callUpdates(this);
   }
   /**
     Overwrites the current model with the given one performing a deep merge.
