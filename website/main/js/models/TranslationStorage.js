@@ -261,6 +261,6 @@ TranslationStorage = Backbone.Model.extend({
 , getRfcLanguage: function(){
     var tId   = this.getTranslationId()
       , query = {LanguageIx: this.get('summary')[tId].RfcLanguage};
-    return App.languageCollection.where(query) || null;
+    return App.languageCollection.findWhere(query) || null;
   }
 });

@@ -10,6 +10,9 @@ LanguageCollection = Selection.extend({
       , data = ds.get('study');
     if(data && 'languages' in data){
       console.log('LanguageCollection.update()');
+      if('_spellingLanguages' in this){
+        delete this['_spellingLanguages'];
+      }
       this.reset(data.languages);
     }
   }
@@ -38,7 +41,16 @@ LanguageCollection = Selection.extend({
   }
 , getDefaultPhoneticLanguage: function(){
     return this.find(function(l){
-      return l.isDefaultPhoneticLanguage() || null;
+      return l.isDefaultPhoneticLanguage() || false;
     });
+  }
+, getSpellingLanguages: function(){
+    if(!this._spellingLanguages){
+      var langs = this.filter(function(l){
+        return parseInt(l.get('IsSpellingRfcLang')) === 1;
+      }, this);
+      this._spellingLanguages = new LanguageCollection(langs);
+    }
+    return this._spellingLanguages;
   }
 });

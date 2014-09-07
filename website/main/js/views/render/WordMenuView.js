@@ -15,8 +15,11 @@ WordMenuView = Backbone.View.extend({
     //Setting callbacks to update model:
     App.translationStorage.on('change:translationId', function(){
       this.updateStatic();
+      this.updateSearchFilter();
     }, this);
     App.pageState.on('change:wordOrder', this.updateSortBy, this);
+    App.pageState.on('change:spLang', this.updateSearchFilter, this);
+    App.pageState.on('change:phLang', this.updateSearchFilter, this);
     //Calling updates:
     App.views.renderer.callUpdates(this);
   }
@@ -65,11 +68,42 @@ WordMenuView = Backbone.View.extend({
   /**
     Since big parts of the searchFilter are already done by updateStatic,
     this method has a focus on building the {sp,ph}List entries.
-    FIXME install update callbacks on activation, for both translation change, and changing langs.
   */
 , updateSearchFilter: function(){
     var data = {spList: {}, phList: {}};
-    //FIXME WIP
+    //Filling spList:
+    var spLang = App.pageState.getSpLang();
+    data.spList.current = spLang ? spLang.getSpellingName() : App.translationStorage.getName();
+    //First item:
+    if(spLang){
+      data.spList.options = [{
+        link: 'data-href="#FIXME/implement setting the spLang"'
+      , name: App.translationStorage.getName()
+      }];
+    }
+    //Other items:
+    var spId = spLang ? spLang.getId() : -1;
+    App.languageCollection.getSpellingLanguages().each(function(l){
+      if(l.getId() === spId) return;
+      data.spList.options.push({
+        link: 'data-href="#FIXME/implement setting the spLang"'
+      , name: l.getSpellingName()
+      });
+    }, this);
+    //Filling phList:
+    var phLang = App.pageState.getPhLang()
+      , phId   = phLang.getId();
+    //Initial data for phList
+    data.phList.current = phLang.getShortName();
+    data.phList.options = [];
+    //Other phLangs:
+    App.languageCollection.each(function(l){
+      if(l.getId() === phId) return;
+      data.phList.options.push({
+        link: 'data-href="#FIXME/implement setting the phLang"'
+      , href: l.getShortName()
+      });
+    }, this);
     //Use App.pageState.get{Sp,Ph}Lang
     this.setModel({searchFilter: data});
   }

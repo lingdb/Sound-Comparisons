@@ -191,6 +191,16 @@ Language = Backbone.Model.extend({
     return trans;
   }
   /**
+    Returns the SpellingName for this Language in the current translation.
+    Falls back to the ShortName.
+  */
+, getSpellingName: function(){
+    var category = 'LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName'
+      , field    = this.getField()
+      , fallback = this.get('SpellingRfcLangName');
+    return App.translationStorage.translateDynamic(category, field, fallback);
+  }
+  /**
     Returns the LanguageStatusType connected with this Language.
   */
 , getLanguageStatusType: function(){
