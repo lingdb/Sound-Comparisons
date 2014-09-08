@@ -16,34 +16,13 @@ LanguageCollection = Selection.extend({
       this.reset(data.languages);
     }
   }
-  /**
-    Method to tell if multiple languages are selected.
-    It works on both, collections and arrays.
-    Returns {'all','some','none'}
-  */
-, areSelected: function(ls){
-    var all = true, none = true
-      , iterator = function(l){
-          if(this.isSelected(l)){
-            none = false;
-          }else{
-            all = false;
-          }
-        };
-    if(_.isArray(ls)){
-      _.each(ls, iterator, this);
-    }else{
-      ls.each(iterator, this);
-    }
-    if(all) return 'all';
-    if(none) return 'none';
-    return 'some';
-  }
+  /***/
 , getDefaultPhoneticLanguage: function(){
     return this.find(function(l){
       return l.isDefaultPhoneticLanguage() || false;
     });
   }
+  /***/
 , getSpellingLanguages: function(){
     if(!this._spellingLanguages){
       var langs = this.filter(function(l){

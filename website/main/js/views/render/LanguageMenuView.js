@@ -99,8 +99,8 @@ LanguageMenuView = Backbone.View.extend({
         console.log('Found region with no languages.');
         return;
       }
-      var isMultiView = false // FIXME implement
-        , isMapView   = false // FIXME implement
+      var isMultiView = App.pageState.isMultiView()
+        , isMapView   = App.pageState.isMapView()
         , region      = {
             selected: App.regionCollection.isSelected(r)
           , name: r.getShortName()

@@ -1,5 +1,5 @@
 /***/
-WordCollection = Backbone.Collection.extend({
+WordCollection = Selection.extend({
   model: Word
   /**
     The update method is connected by the App,

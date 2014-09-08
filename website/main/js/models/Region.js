@@ -82,4 +82,16 @@ Region = Backbone.Model.extend({
     }
     return this._languages;
   }
+  /**
+    A Region is historical, iff one of it's fields contains the substring 'Historical'.
+  */
+, isHistorical: function(){
+    var regex  = /Historical/
+      , fields = this.pick('RegionGpNameShort', 'RegionGpNameLong');
+    return _.any(fields, function(f){
+      if(f.match(regex))
+        return true;
+      return false;
+    }, this);
+  }
 });

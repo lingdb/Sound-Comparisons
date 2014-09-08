@@ -19,7 +19,9 @@ TranscriptionMap = Backbone.Model.extend({
   /**
     Searches the transcription for a combination of language and word.
   */
-, getTranscription: function(language, word){
-    return this.get(language.get('LanguageIx') + word.getId());
+, getTranscription: function(l, w){
+    var t = this.get(l.get('LanguageIx') + w.getId());
+    t.set({language: l, word: w});
+    return t;
   }
 });

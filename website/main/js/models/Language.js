@@ -273,8 +273,24 @@ Language = Backbone.Model.extend({
 , getTranscription: function(word){
     return App.transcriptionMap.getTranscription(this, word);
   }
+  /**
+    This shall also be knwon as 'hasTranscriptions',
+    as it's the same underlying question for both,
+    that was exhibited in the old Language.php
+  */
 , isDefaultPhoneticLanguage: function(){
     var isOrt = this.get('IsOrthographyHasNoTranscriptions');
     return parseInt(isOrt) === 0;
+  }
+  /***/
+, hasTranscriptions: function(){return this.isDefaultPhoneticLanguage();}
+  /***/
+, isHistorical: function(){
+    var rs = this.getRegions();
+    for(var i = 0; i < rs.models.length; i++){
+      if(rs.models[i].isHistorical())
+        return true;
+    }
+    return false;
   }
 });

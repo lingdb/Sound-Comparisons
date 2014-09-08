@@ -42,4 +42,27 @@ Selection = Backbone.Collection.extend({
     delete this.selected[m.getId()];
     return this;
   }
+  /**
+    Method to tell if multiple models are selected.
+    It works on both, collections and arrays.
+    Returns {'all','some','none'}
+  */
+, areSelected: function(models){
+    var all = true, none = true
+      , iterator = function(m){
+          if(this.isSelected(m)){
+            none = false;
+          }else{
+            all = false;
+          }
+        };
+    if(_.isArray(models)){
+      _.each(models, iterator, this);
+    }else{
+      models.each(iterator, this);
+    }
+    if(all) return 'all';
+    if(none) return 'none';
+    return 'some';
+  }
 });

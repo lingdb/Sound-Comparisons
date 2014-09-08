@@ -9,6 +9,8 @@ PageState = Backbone.Model.extend({
     wordOrder: 'alphabetical'
   , spLang: null
   , phLang: null
+  , pageView: 'word'
+  , pageViews: ['map','word','language','languagesXwords','wordsXlanguages']
   }
   /**
     Sets up callbacks to manipulate PageState when necessary.
@@ -70,5 +72,38 @@ PageState = Backbone.Model.extend({
       this.attributes.phLang = phl;
     }
     return phl;
+  }
+//Managing pageView:
+  /**
+    Predicate to tell if the current pageView is a multiView.
+  */
+, isMultiView: function(){
+    return _.contains(['languagesXwords','wordsXlanguages'], this.get('pageView'));
+  }
+  /**
+    Predicate to tell if the current pageView is the mapView.
+  */
+, isMapView: function(){
+    return this.get('pageView') === 'map';
+  }
+  /**
+    Returns the currently active pageView as a Backbone.View
+  */
+, getPageView: function(){
+    //FIXME implement
+  }
+  /**
+    Changes the current pageView.
+  */
+, setPageView: function(pv){
+    if(typeof(pv) === 'string'){
+      if(_.contains(this.get('pageViews'), pv)){
+        this.set({pageView: pv});
+      }else{
+        console.log('PageState.setPageView() refuses to set pageView: '+pv);
+      }
+    }else if(pv instanceof Backbone.View){
+      //FIXME implement
+    }
   }
 });

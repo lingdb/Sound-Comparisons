@@ -25,7 +25,10 @@ WordMenuView = Backbone.View.extend({
   }
 , updateStatic: function(){
     var staticT = App.translationStorage.translateStatic({
-      title: 'menu_words_words'
+      title:       'menu_words_words'
+    , meaningSets: 'menu_words_meaningSets_title'
+    , expand:      'menu_words_meaningSets_expand'
+    , collapse:    'menu_words_meaningSets_collapse'
     , sortBy: {
         sortBy: 'menu_words_selectortext'
       , aOrder: 'menu_words_selector_rfclangs'
@@ -106,6 +109,92 @@ WordMenuView = Backbone.View.extend({
     }, this);
     //Use App.pageState.get{Sp,Ph}Lang
     this.setModel({searchFilter: data});
+  }
+  /**
+    FIXME figure out the necessary callbacks, and implement them.
+    These should include: translations, wordCollection, meaningGroupCollection, wordOrder.
+  */
+, updateWordList: function(){
+    var data = {
+      isLogical: App.pageState.wordOrderIsLogical()
+    };
+    if(data.isLogical){
+      data.ahref = 'href="#FIXME/implement adding all meaningGroups"';
+      data.nhref = 'href="#FIXME/implement removing all meaningGroups"';
+      data.meaningGroups = [];
+      var isMulti = App.pageState.isMultiView();
+      App.meaningGroupsCollection.each(function(m){
+        var collapsed = !App.meaningGroupCollection.isSelected(m)
+          , mg = {
+              name: m.getName()
+            , fold: collapsed ? 'mgFold' : 'mgUnfold'
+            , triangle: collapsed ? 'icon-chevron-up rotate90' : 'icon-chevron-down'
+            , link: 'href="#FIXME/implement toggeling of meaningGroups"'
+            }
+          , words = m.getWords();
+        if(isMulti){
+          var box = {icon: 'icon-chkbox-custom'};
+          switch(App.wordCollection.areSelected(words)){
+            case 'all':
+              box.icon = 'icon-check';
+              box.link = 'data-href="#FIXME/implement removing multiple words"';
+              box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_minus');
+            break;
+            case 'some':
+              box.icon = 'icon-chkbox-half-custom';
+            case 'none':
+              box.link = 'data-href="#FIXME/implement adding multiple words"';
+              box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_plus');
+          }
+          mg.checkbox = box;
+        }
+        mg.wordList = this.buildWordList(words);
+        data.meaningGroups.push(mg);
+      }, this);
+    }else{
+      data.wordList = this.buildWordList(App.wordCollection);
+    }
+    this.setModel(data);
+  }
+  /**
+    This is a helper method for updateWordList.
+    It creates the wordList for a given Collection of Words,
+    so that they can be embedded in meaningGroups or in the WordMenu directly.
+  */
+, buildWordList: function(words){
+    var ws = [], isMulti = App.pageState.isMultiView();
+    words.each(function(word){
+      var w = {
+        cname:    word.getKey()
+      , selected: App.wordCollection.isSelected(word)
+      , trans:    word.getModernName()
+      , ttip:     word.getLongName()
+      };
+      //The checkbox/icon:
+      if(isMulti){
+        if(w.selected){
+          w.icon = {
+            ttip: App.translationStorage.translateStatic('multimenu_tooltip_del')
+          , link: 'href="#FIXME/implement removing a word"'
+          , icon: 'icon-check'
+          };
+        }else{
+          w.icon = {
+            ttip: App.translationStorage.translateStatic('multimenu_tooltip_add')
+          , link: 'href="#FIXME/implement adding a word"'
+          , icon: 'icon-chkbox-custom'
+          };
+        }
+      }
+      //Link for each word:
+      w.link = App.pageState.isMapView()
+             ? 'href="FIXME/implement setting a word to mapView"'
+             : 'href="FIXME/implement wordview of a single word"';
+      //Phonetics:
+      //FIXME needs Transcription:getPhonetics, which needs Transcription:getSuperscript
+      //FIXME implement
+    }, this);
+    return {words: ws};
   }
 , render: function(){
     console.log('WordMenuView.render()');

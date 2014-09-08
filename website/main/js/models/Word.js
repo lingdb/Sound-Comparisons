@@ -13,6 +13,14 @@ Word = Backbone.Model.extend({
     return ''+ixE+ixM;
   }
   /**
+    Returns the Key for a Word.
+    In contrast to the Id, the key is human readable, and may have duplicates.
+    I will potentially add the getKey method to many models that already have a getId.
+  */
+, getKey: function(){
+    return this.get('FullRfcModernLg01');
+  }
+  /**
     Helper method to produce the category necessary to fetch the dynamic translation.
   */
 , getCategory: function(suffix){
