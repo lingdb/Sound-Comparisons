@@ -12,6 +12,8 @@ Study = Backbone.Model.extend({
       this.set(data.study);
     }
   }
+  /***/
+, getId: function(){return this.get('Name');}
   /**
     Returns the name for the current study in the current translation.
     @param field can be used to overwrite the study name, which is helpful to translate other studies.

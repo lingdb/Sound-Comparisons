@@ -188,11 +188,18 @@ WordMenuView = Backbone.View.extend({
       }
       //Link for each word:
       w.link = App.pageState.isMapView()
-             ? 'href="FIXME/implement setting a word to mapView"'
-             : 'href="FIXME/implement wordview of a single word"';
+             ? 'href="#FIXME/implement setting a word to mapView"'
+             : 'href="#FIXME/implement wordview of a single word"';
       //Phonetics:
-      //FIXME needs Transcription:getPhonetics, which needs Transcription:getSuperscript
-      //FIXME implement
+      var phonetics = '*'+word.getProtoName();
+      if(phLang = App.pageState.getPhLang()){
+        var tr = word.getTranscription(phLang);
+        phonetics = tr.getPhonetics();
+      }
+      //Finish it:
+      _.each(phonetics, function(p){
+        ws.push($.extend(w, {phonetic: p}))
+      }, this);
     }, this);
     return {words: ws};
   }

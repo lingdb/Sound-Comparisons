@@ -85,7 +85,7 @@ Transcription = Backbone.Model.extend({
           historical:  language.isHistorical()
         , fileMissing: source.length === 0
         , phonetic:    phonetic
-        , srcs:        json_encode(source)
+        , srcs:        JSON.stringify(source)
         , _srcs:       source
         , hasTrans:    language.hasTranscriptions()
         , identifier:  { word:     word.getId()
