@@ -34,12 +34,12 @@ Configurator = Sanitizer.extend({
       App.pageState.setPhLang(phLang);
     }
     if('meaningGroups' in config){
-      var lookup = {};
-      _.each(config.meaningGroups, function(m){lookup[m] = true;});
-      var mgs = App.meaningGroupCollection.filter(function(m){
-        return m.getKey() in lookup;
-      }, this);
+      var mgs = App.meaningGroupCollection.filterKeys(config.meaningGroups);
       App.meaningGroupCollection.setSelected(mgs);
+    }
+    if('regions' in config){
+      var rs = App.regionCollection.filterKeys(config.regions);
+      App.regionCollection.setSelected(rs);
     }
     //FIXME Add other configuration cases.
   }
@@ -105,19 +105,40 @@ Configurator = Sanitizer.extend({
     }
     return config;
   }
-  /***/
+  /**
+    Builds configuration to set the given MeaningGroups as selected.
+  */
 , configSetMeaningGroups: function(config, mgs){
     config = config || {};
-    if(mgs instanceof MeaningGroupCollection){
-      mgs = mgs.models;
-    }
-    if(_.isArray(mgs)){
-      var ms = _.map(mgs, function(mg){
-        if(_.isString(mg)) return mg;
-        return mg.getKey();
-      }, this);
+    if(ms = this.configMkKeyArray(mgs)){
       config.meaningGroups = JSON.stringify(ms);
     }
     return config;
+  }
+  /**
+    Builds configuration to set the given Regions as selected.
+  */
+, configSetRegions: function(config, regions){
+    config = config || {};
+    if(rs = this.configMkKeyArray(regions)){
+      config.regions = JSON.stringify(rs);
+    }
+    return config;
+  }
+  /**
+    Helper method to build arrays of keys.
+    Backbone.Collection || [Model] -> [String] || null
+  */
+, configMkKeyArray: function(ms){
+    if(ms instanceof Backbone.Collection){
+      ms = ms.models;
+    }
+    if(_.isArray(ms)){
+      return _.map(ms, function(m){
+        if(_.isString(m)) return m;
+        return m.getKey();
+      }, this);
+    }
+    return null;
   }
 });

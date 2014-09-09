@@ -133,4 +133,14 @@ Selection = Backbone.Collection.extend({
     }, this);
     return _.values(current);
   }
+  /**
+    Returns an array of all models where model.getKey() is in the given array of keys.
+  */
+, filterKeys: function(keys){
+    var lookup = {};
+    _.each(keys, function(k){lookup[k] = true;});
+    return this.filter(function(m){
+      return m.getKey() in lookup;
+    }, this);
+  }
 });
