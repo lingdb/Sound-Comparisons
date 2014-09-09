@@ -45,11 +45,57 @@ Router = Backbone.Router.extend({
       }, this);
     }, this);
   }
+//Configuration related methods:
   /**
     This method shall modify different page settings that can be conveyed via the config routes.
   */
 , configure: function(config){
     console.log('Router.configure()');
     //FIXME implement
+  }
+//Link related methods:
+  /***/
+, linkMapView: function(options){
+    var o = this.helpLinkSingleWord(options);
+    //Building route:
+    var route = '#/'+o.study+'/map/'+o.word;
+    if(_.isString(o.config)){
+      route += '/'+o.config;
+    }
+    return route;
+  }
+  /**
+    Creates the link structure for single word view that can be placed in a href attribute.
+    Option parameters are {word,study,config}, all of which are optional.
+  */
+, linkWordView: function(options){
+    var o = this.helpLinkSingleWord(options);
+    //Building route:
+    var route = '#/'+o.study+'/word/'+o.word;
+    if(_.isString(o.config)){
+      route += '/'+o.config;
+    }
+    return route;
+  }
+  /**
+    Helper method for link{Map,Word}View, that sanitizes options and handles defaults.
+  */
+, helpLinkSingleWord: function(options){
+    var o = $.extend({
+      word:   App.wordCollection.getChoice()
+    , study:  App.study
+    , config: null
+    }, options);
+    //Sanitizing:
+    if(o.study instanceof Study){
+      o.study = o.study.getId();
+    }
+    if(o.word instanceof Word){
+      o.word = o.word.getKey();
+    }
+    if(o.config !== null){
+      o.config = JSON.stringify(o.config);
+    }
+    return o;
   }
 });

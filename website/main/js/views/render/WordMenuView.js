@@ -188,8 +188,8 @@ WordMenuView = Backbone.View.extend({
       }
       //Link for each word:
       w.link = App.pageState.isMapView()
-             ? 'href="#FIXME/implement setting a word to mapView"'
-             : 'href="#FIXME/implement wordview of a single word"';
+             ? 'href="'+App.router.linkMapView({word: word})+'"'
+             : 'href="'+App.router.linkWordView({word: word})+'"';
       //Phonetics:
       var phonetics = '*'+word.getProtoName();
       if(phLang = App.pageState.getPhLang()){
