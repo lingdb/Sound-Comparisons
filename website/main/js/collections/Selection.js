@@ -18,6 +18,13 @@ Selection = Backbone.Collection.extend({
     }, this);
   }
   /**
+    Returns the selected models as an array,
+    because the final collection for them is not known.
+  */
+, getSelected: function(){
+    return _.values(this.selected);
+  }
+  /**
     Runs the given iterator[ and context] over all currently selected models.
     Returns self for chaining.
   */

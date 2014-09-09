@@ -51,14 +51,49 @@ Router = Backbone.Router.extend({
   */
 , configure: function(config){
     console.log('Router.configure()');
-    //FIXME implement
+    //Sanitizing config:
+    if(_.isString(config)){
+      config = $.parseJSON(config);
+    }
+    //Configuring the wordOrder:
+    if('wordOrder' in config){
+      var callMap = { alphabetical: 'wordOrderSetAlphabetical'
+                    , logical:      'wordOrderSetLogical'};
+      if(config.wordOrder in callMap){
+        App.pageState[callMap[config.wordOrder]]();
+      }else{
+        console.log('Could not configure wordOrder: '+config.wordOrder);
+      }
+    }
+    //FIXME Add other configuration cases.
+  }
+  /**
+    Builds configuration to set the WordOrder managed by PageState to alphabetical.
+    If a config is given, it will be extended.
+  */
+, configSetWordOrderAlphabetical: function(config){
+    config = config || {};
+    config.wordOrder = 'alphabetical';
+    return config;
+  }
+  /**
+    Builds configuration to set the WordOrder managed by PageState to logical.
+    If a config is given, it will be extended.
+  */
+, configSetWordOrderLogical: function(config){
+    config = config || {};
+    config.wordOrder = 'logical';
+    return config;
   }
 //Link related methods:
-  /***/
+  /**
+    Creates the link structor for map view that can be placed in a href attribute.
+    Option parameters are {word,languages,study,config}.
+  */
 , linkMapView: function(options){
-    var o = this.helpLinkSingleWord(options);
+    var o = this.sanitize(['Config','Study','Languages','Word'], options);
     //Building route:
-    var route = '#/'+o.study+'/map/'+o.word;
+    var route = '#/'+o.study+'/map/'+o.word+'/'+o.languages;
     if(_.isString(o.config)){
       route += '/'+o.config;
     }
@@ -69,7 +104,7 @@ Router = Backbone.Router.extend({
     Option parameters are {word,study,config}, all of which are optional.
   */
 , linkWordView: function(options){
-    var o = this.helpLinkSingleWord(options);
+    var o = this.sanitize(['Config','Study','Word'], options);
     //Building route:
     var route = '#/'+o.study+'/word/'+o.word;
     if(_.isString(o.config)){
@@ -77,24 +112,69 @@ Router = Backbone.Router.extend({
     }
     return route;
   }
+//Sanitize methods that aid building the links:
   /**
-    Helper method for link{Map,Word}View, that sanitizes options and handles defaults.
+    A proxy for the other sanitize methods.
+    It chains all sanitize methods with the given suffixes,
+    threading the given object trough all of them,
+    to finally return the sanitized version.
   */
-, helpLinkSingleWord: function(options){
-    var o = $.extend({
-      word:   App.wordCollection.getChoice()
-    , study:  App.study
-    , config: null
-    }, options);
-    //Sanitizing:
+, sanitize: function(suffixes, o){
+    _.each(suffixes, function(s){
+      var key = 'sanitize'+s;
+      if(key in this){
+        o = this[key](o);
+      }else{
+        console.log('Router.sanitize() cannot sanitize with key: '+key);
+      }
+    }, this);
+    return o;
+  }
+  /***/
+, sanitizeConfig: function(o){
+    if('config' in o){
+      if(o.config !== null){
+        o.config = JSON.stringify(o.config);
+      }
+    }else{
+      o.config = null;
+    }
+    return o;
+  }
+  /***/
+, sanitizeLanguages: function(o){
+    if(!('languages' in  o)){
+      o.languages = App.languageCollection.getSelected()
+    }
+    if(o.languages instanceof Backbone.Collection){
+      o.languages = o.languages.models;
+    }
+    if(_.isArray(o.languages)){
+      var ls = _.map(o.languages, function(l){
+        if(_.isString(l)) return l;
+        return l.getKey();
+      }, this);
+      o.languages = JSON.stringify(o.languages);
+    }
+    return o;
+  }
+  /***/
+, sanitizeStudy: function(o){
+    if(!('study') in o){
+      o.study = App.study;
+    }
     if(o.study instanceof Study){
       o.study = o.study.getId();
     }
+    return o;
+  }
+  /***/
+, sanitizeWord: function(o){
+    if(!('word' in o)){
+      o.word = App.wordCollection.getChoice();
+    }
     if(o.word instanceof Word){
       o.word = o.word.getKey();
-    }
-    if(o.config !== null){
-      o.config = JSON.stringify(o.config);
     }
     return o;
   }
