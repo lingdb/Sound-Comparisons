@@ -45,6 +45,9 @@ Configurator = Sanitizer.extend({
       var fs = App.familyCollection.filterKeys(config.families);
       App.familyCollection.setSelected(fs);
     }
+    if('translation' in config){
+      App.translationStorage.setTranslationId(config.translation);
+    }
     //FIXME Add other configuration cases.
   }
   /**
@@ -130,6 +133,12 @@ Configurator = Sanitizer.extend({
     if(fs = this.configMkKeyArray(families)){
       config.families = JSON.stringify(fs);
     }
+    return config;
+  }
+  /***/
+, configSetTranslation: function(config, translationId){
+    config = config || {};
+    config.translation = translationId;
     return config;
   }
   /**

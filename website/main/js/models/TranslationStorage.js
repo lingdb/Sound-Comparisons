@@ -126,27 +126,27 @@ TranslationStorage = Backbone.Model.extend({
     }, this)
     this.set({fToDMap: map});
   }
-/**
-  function to produce the default TranslationId
-  for all occurences, to enable easy changing,
-  and have it as a nice constant.
-*/
+  /**
+    function to produce the default TranslationId
+    for all occurences, to enable easy changing,
+    and have it as a nice constant.
+  */
 , defaultTranslationId: function(){return 1;}
-/**
-  Saving the current TranslationId to localStorage:
-*/
+  /**
+    Saving the current TranslationId to localStorage:
+  */
 , saveTranslationId: function(){
     localStorage['translationId'] = this.get('translationId');
   }
-/**
-  Figuring out the TranslationId of a client,
-  works in multiple steps:
-  0.: If we already figured out the TranslationId,
-      we use the one given with this model.
-  1.: If TranslationId is known from localStorage, we use that.
-  2.: We see if the browser language matches a particular translation summary.
-  3.: We fall back to the defaultTranslationId.
-*/
+  /**
+    Figuring out the TranslationId of a client,
+    works in multiple steps:
+    0.: If we already figured out the TranslationId,
+        we use the one given with this model.
+    1.: If TranslationId is known from localStorage, we use that.
+    2.: We see if the browser language matches a particular translation summary.
+    3.: We fall back to the defaultTranslationId.
+  */
 , getTranslationId: function(){
     var tId = this.get('translationId');
     if(tId !== null) return tId;
@@ -172,13 +172,17 @@ TranslationStorage = Backbone.Model.extend({
     this.set({translationId: tId});
     return tId;
   }
-/**
-  Returns an array of TranslationIds that can be tried to try
-  and get a translation for something.
-  Usually this will be [tId, defaultTid].
-*/
+  /**
+    Returns an array of TranslationIds that can be tried to try
+    and get a translation for something.
+    Usually this will be [tId, defaultTid].
+  */
 , getTranslationIds: function(){
     return _.unique([this.getTranslationId(), this.defaultTranslationId()]);
+  }
+  /***/
+, setTranslationId: function(tId){
+    this.set({translationId: tId});
   }
   /**
     Static translations:

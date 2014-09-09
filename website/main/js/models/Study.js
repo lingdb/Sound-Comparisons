@@ -15,6 +15,10 @@ Study = Backbone.Model.extend({
   /***/
 , getId: function(){return this.get('Name');}
   /**
+    Returns the ids of all other studies.
+  */
+, getAllIds: function(){return App.dataStorage.get('global').studies;}
+  /**
     Returns the name for the current study in the current translation.
     @param field can be used to overwrite the study name, which is helpful to translate other studies.
   */
@@ -22,13 +26,6 @@ Study = Backbone.Model.extend({
     field = field || this.get('Name');
     var category = 'StudyTranslationProvider';
     return window.App.translationStorage.translateDynamic(category, field, field);
-  }
-  /**
-    Returns an array of the names of all other studies.
-  */
-, getAllNames: function(){
-    var studies = App.dataStorage.get('global').studies;
-    return _.map(studies, function(n){return this.getName(n);}, this);
   }
   /**
     Returns the title for the current study in the current translation.
