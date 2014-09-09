@@ -147,11 +147,12 @@ LanguageMenuView = Backbone.View.extend({
                       : 'icon-chevron-up rotate90';
       //Languages for selected Regions:
       if(region.selected){
+        var lCol = App.languageCollection;
         languages.each(function(l){
           var language = {
             shortName: l.getShortName()
           , longName:  l.getLongName()
-          , selected:  App.languageCollection.isSelected(l)
+          , selected:  lCol.isSelected(l)
           , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
           };
           //TODO implement flags if wanted!
@@ -168,14 +169,16 @@ LanguageMenuView = Backbone.View.extend({
               }else{
                 icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_del');
               }
-              icon.href = 'href="#FIXME/implement removing a language"';
+              var removed = lCol.getDifference(lCol.getSelected(), [l]);
+              icon.href = 'href="'+App.router.linkCurrent({languages: removed})+'"';
             }else{
               if(isMapView){
                 icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_add_map');
               }else{
                 icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_add');
               }
-              icon.href = 'href="#FIXME/implement adding a language"';
+              var additional = lCol.getUnion(lCol.getSelected(), [l]);
+              icon.href = 'href="'+App.router.linkCurrent({languages: additional})+'"';
             }
             language.icon = icon;
           }
