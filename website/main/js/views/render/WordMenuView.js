@@ -132,9 +132,19 @@ WordMenuView = Backbone.View.extend({
               name: m.getName()
             , fold: collapsed ? 'mgFold' : 'mgUnfold'
             , triangle: collapsed ? 'icon-chevron-up rotate90' : 'icon-chevron-down'
-            , link: 'href="#FIXME/implement toggeling of meaningGroups"'
             }
           , words = m.getWords();
+        //Building the link to toggle the MeaningGroup:
+        var toggleGroup = [], mgCol = App.meaningGroupCollection;
+        if(collapsed){
+          toggleGroup = mgCol.select(m).getSelected();
+          mgCol.unselect(m);
+        }else{
+          toggleGroup = mgCol.unselect(m).getSelected();
+          mgCol.select(m);
+        }
+        mg.link = 'href="'+App.router.linkConfig({MeaningGroups: toggleGroup})+'"';
+        //Building the checkbox:
         if(isMulti){
           var box = {icon: 'icon-chkbox-custom'};
           switch(App.wordCollection.areSelected(words)){
