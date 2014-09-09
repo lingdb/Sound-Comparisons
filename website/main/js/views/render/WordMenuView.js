@@ -149,18 +149,21 @@ WordMenuView = Backbone.View.extend({
           var box = {icon: 'icon-chkbox-custom'};
           switch(App.wordCollection.areSelected(words)){
             case 'all':
+              var remaining = words.getDifference(App.wordCollection.getSelected(), words);
               box.icon = 'icon-check';
-              box.link = 'data-href="#FIXME/implement removing multiple words"';
+              box.link = 'data-href="'+App.router.linkCurrent({words: remaining})+'"';
               box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_minus');
             break;
             case 'some':
               box.icon = 'icon-chkbox-half-custom';
             case 'none':
-              box.link = 'data-href="#FIXME/implement adding multiple words"';
+              var additional = words.getUnion(App.wordCollection.getSelected(), words);
+              box.link = 'data-href="'+App.router.linkCurrent({words: additional})+'"';
               box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_plus');
           }
           mg.checkbox = box;
         }
+        //Finishing:
         mg.wordList = this.buildWordList(words);
         data.meaningGroups.push(mg);
       }, this);

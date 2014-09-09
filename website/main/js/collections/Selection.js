@@ -91,4 +91,46 @@ Selection = Backbone.Collection.extend({
     if(none) return 'none';
     return 'some';
   }
+  /**
+    Returns {} with a mapping of getId -> model
+    for all models of the given bunch, or the collection itself.
+    The bunch may be an array or a Backbone.Collection.
+  */
+, getIdMap: function(bunch){
+    var ms = bunch || this;
+    if(ms instanceof Backbone.Collection){
+      ms = ms.models;
+    }
+    var map = {};
+    _.each(ms, function(m){
+      map[m.getId] = m;
+    }, this);
+    return map;
+  }
+  /**
+    Returns the difference of a and b with respect to their idMap.
+    If !a, it will be replaced with this.
+  */
+, getDifference: function(a, b){
+    var current = this.getIdMap(a||this)
+      , remove  = this.getIdMap(b);
+    _.each(_.keys(remove), function(k){
+      if(k in current){
+        delete current[k];
+      }
+    }, this);
+    return _.values(current);
+  }
+  /**
+    Returns the union of a and b with respect to their idMap.
+    If !a, it will be replaced with this.
+  */
+, getUnion: function(a, b){
+    var current = this.getIdMap(a||this)
+      , add     = this.getIdMap(b);
+    _.each(add, function(v, k){
+      current[k] = v;
+    }, this);
+    return _.values(current);
+  }
 });
