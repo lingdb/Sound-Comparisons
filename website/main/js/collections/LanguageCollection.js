@@ -1,5 +1,5 @@
 /***/
-LanguageCollection = Selection.extend({
+LanguageCollection = Choice.extend({
   model: Language
   /**
     The update method is connected by the App,

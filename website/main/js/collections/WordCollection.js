@@ -1,5 +1,5 @@
 /***/
-WordCollection = Selection.extend({
+WordCollection = Choice.extend({
   model: Word
   /**
     The update method is connected by the App,

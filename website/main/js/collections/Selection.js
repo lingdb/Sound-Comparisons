@@ -1,4 +1,6 @@
-/***/
+/**
+  Implements the aspect that several models of a collection can be marked as selected.
+*/
 Selection = Backbone.Collection.extend({
   initialize: function(){
     this.selected = {}; // model.getId() -> model

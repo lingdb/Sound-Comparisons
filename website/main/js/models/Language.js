@@ -21,6 +21,10 @@ Language = Backbone.Model.extend({
   }
   /***/
 , getId: function(){return this.get('LanguageIx');}
+  /***/
+, getKey: function(){
+    return this.get('ShortName');
+  }
   /**
     Returns the RfcLanguage for the current Language.
     The field _rfcLanguage is used for memoization.
