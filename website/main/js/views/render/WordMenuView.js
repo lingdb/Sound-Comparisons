@@ -65,12 +65,10 @@ WordMenuView = Backbone.View.extend({
 , updateSortBy: function(){
     var data = {
       isLogical: App.pageState.wordOrderIsLogical()
-    }, setWo = function(calls){
-      var config = App.router.configSet(calls);
-      return 'data-href="'+App.router.linkCurrent(config)+'"';
     };
-    data.link = data.isLogical ? setWo({WordOrderAlphabetical: []})
-                               : setWo({WordOrderLogical: []});
+    data.link = data.isLogical ? App.router.linkConfig({WordOrderAlphabetical: []})
+                               : App.router.linkConfig({WordOrderLogical: []});
+    data.link = 'data-href="'+data.link+'"';
     this.setModel({sortBy: data});
   }
   /**
@@ -85,7 +83,7 @@ WordMenuView = Backbone.View.extend({
     //First item:
     if(spLang){
       data.spList.options = [{
-        link: 'data-href="#FIXME/implement setting the spLang"'
+        link: 'data-href="'+App.router.linkConfig({SpLang: spLang})+'"'
       , name: App.translationStorage.getName()
       }];
     }
@@ -94,7 +92,7 @@ WordMenuView = Backbone.View.extend({
     App.languageCollection.getSpellingLanguages().each(function(l){
       if(l.getId() === spId) return;
       data.spList.options.push({
-        link: 'data-href="#FIXME/implement setting the spLang"'
+        link: 'data-href="'+App.router.linkConfig({SpLang: l})+'"'
       , name: l.getSpellingName()
       });
     }, this);
@@ -108,7 +106,7 @@ WordMenuView = Backbone.View.extend({
     App.languageCollection.each(function(l){
       if(l.getId() === phId) return;
       data.phList.options.push({
-        link: 'data-href="#FIXME/implement setting the phLang"'
+        link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
       , href: l.getShortName()
       });
     }, this);

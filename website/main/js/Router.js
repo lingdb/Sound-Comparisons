@@ -65,6 +65,18 @@ Router = Backbone.Router.extend({
         console.log('Could not configure wordOrder: '+config.wordOrder);
       }
     }
+    if('spLang' in config){
+      var spLang = App.languageCollection.find(function(l){
+        return l.getKey() === config.spLang;
+      }, this);
+      App.pageState.setSpLang(spLang);
+    }
+    if('phLang' in config){
+      var phLang = App.languageCollection.find(function(l){
+        return l.getKey() === config.phLang;
+      }, this);
+      App.pageState.setPhLang(phLang);
+    }
     //FIXME Add other configuration cases.
   }
   /**
@@ -95,7 +107,6 @@ Router = Backbone.Router.extend({
   }
   /**
     Builds configuration to set the WordOrder managed by PageState to alphabetical.
-    If a config is given, it will be extended.
   */
 , configSetWordOrderAlphabetical: function(config){
     config = config || {};
@@ -104,14 +115,41 @@ Router = Backbone.Router.extend({
   }
   /**
     Builds configuration to set the WordOrder managed by PageState to logical.
-    If a config is given, it will be extended.
   */
 , configSetWordOrderLogical: function(config){
     config = config || {};
     config.wordOrder = 'logical';
     return config;
   }
+  /**
+    Builds configuration to set the spLang to the given spLang.
+  */
+, configSetSpLang: function(config, spLang){
+    config = config || {};
+    if(spLang instanceof Language){
+      config.spLang = spLang.getKey();
+    }
+    return config;
+  }
+  /**
+    Builds configuration to set the phLang to the given phLang.
+  */
+, configSetPhLang: function(config, phLang){
+    config = config || {};
+    if(phLang instanceof Language){
+      config.phLang = phLang.getKey();
+    }
+    return config;
+  }
 //Link related methods:
+  /**
+    Produces a config with configSet, and builds a link with linkCurrent.
+    This shortens the code at several other places.
+  */
+, linkConfig: function(calls){
+    var options = {config: this.configSet(calls)};
+    return this.linkCurrent(options);
+  }
   /**
     Creates a link in the current view using the given options.
     This is mainly helpful for config related changes.

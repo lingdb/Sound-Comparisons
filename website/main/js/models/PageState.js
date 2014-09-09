@@ -58,6 +58,10 @@ PageState = Backbone.Model.extend({
     }
     return spl;
   }
+  /***/
+, setSpLang: function(l){
+    this.set({spLang: l || null});
+  }
   /**
     Returns the current phoneticLanguage
   */
@@ -72,6 +76,10 @@ PageState = Backbone.Model.extend({
       this.attributes.phLang = phl;
     }
     return phl;
+  }
+  /***/
+, setPhLang: function(l){
+    this.set({phLang: l || null});
   }
 //Managing pageView:
   /**
