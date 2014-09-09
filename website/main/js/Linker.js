@@ -53,7 +53,10 @@ Linker = Configurator.extend({
     }
     return route;
   }
-  /***/
+  /**
+    Creates the link structure for single language view that can be placed in a href attribute.
+    Option parameters are {config,study,language}, all of which are optional.
+  */
 , linkLanguageView: function(options){
     var o = this.sanitize(['Config','Study','Language'], options);
     //Building route:
@@ -63,14 +66,30 @@ Linker = Configurator.extend({
     }
     return route;
   }
-  /***/
+  /**
+    Creates the link structure for languagesXwords view that can be placed in a href attribute.
+    Option parameters are {config,study,words,languages}, all of which are optional.
+  */
 , linkLanguageWordView: function(options){
-    //FIXME implement
-    return '#FIXME/implement Router:linkLanguageWordView';
+    var o = this.sanitize(['Config','Study','Words','Languages'], options);
+    //Building route:
+    var route = '#/'+o.study+'/languagesXwords/'+o.languages+'/'+o.words;
+    if(_.isString(o.config)){
+      route += '/'+o.config;
+    }
+    return route;
   }
-  /***/
+  /**
+    Creates the link structure for wordsXlanguages view that can be placed in a href attribute.
+    Option parameters are {config,study,words,languages}, all of which are optional.
+  */
 , linkWordLanguageView: function(options){
-    //FIXME implement
-    return '#FIXME/implement Router:linkWordLanguageView';
+    var o = this.sanitize(['Config','Study','Words','Languages'], options);
+    //Building route:
+    var route = '#/'+o.study+'/wordsXlanguages/'+o.words+'/'+o.languages;
+    if(_.isString(o.config)){
+      route += '/'+o.config;
+    }
+    return route;
   }
 });

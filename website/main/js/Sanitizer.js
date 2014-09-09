@@ -23,7 +23,12 @@ Sanitizer = Backbone.Router.extend({
 , sanitizeConfig: function(o){
     if('config' in o){
       if(o.config !== null){
-        o.config = JSON.stringify(o.config);
+        var vals = _.map(o.config, function(v, k){
+          if(_.isArray(v))   v = _.filter(v,_.isString,_).join(',');
+          if(!_.isString(v)) v = ''+v;
+          return encodeURIComponent(k)+'='+encodeURIComponent(v);
+        }, this);
+        o.config = '?'+vals.join('&');
       }
     }else{
       o.config = null;
@@ -53,7 +58,7 @@ Sanitizer = Backbone.Router.extend({
         if(_.isString(l)) return l;
         return l.getKey();
       }, this);
-      o.languages = JSON.stringify(ls);
+      o.languages = this.sanitizeArray(ls);
     }
     return o;
   }
@@ -90,8 +95,38 @@ Sanitizer = Backbone.Router.extend({
         if(_.isString(w)) return w;
         return w.getKey();
       }, this);
-      o.words = JSON.stringify(ws);
+      o.words = this.sanitizeArray(ws);
     }
     return o;
+  }
+  /***/
+, sanitizeArray: function(a){
+    return encodeURIComponent(a.join());
+  }
+  /**
+    Parses a given config String c to return the config object.
+    This should be the exact antipart to sanitizeConfig, so that the following two rules hold:
+    sanitizeConfig(parseConfig(s)) === s, parseConfig(sanitizeConfig(config)) === config
+    Note that these rules don't hold exactly, because we don't care about [,&] in keys/values,
+    and values may only be String || [String].
+  */
+, parseConfig: function(c){
+    var ret = {}
+      , qs  = new QueryString(c)
+      , isArray = {meaningGroups: '', regions: '', families: ''};
+    _.each(qs.keys(), function(k){
+      var v = qs.value(k);
+      if(k in isArray){
+        v = v.split(',');
+      }
+      ret[k] = v;
+    }, this);
+    console.log('Sanitizer.parseConfig()');
+    console.log(ret);
+    return ret;
+  }
+  /***/
+, parseArray: function(c){
+    return decodeURIComponent(c).split(',');
   }
 });

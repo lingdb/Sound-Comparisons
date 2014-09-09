@@ -6,11 +6,8 @@ Configurator = Sanitizer.extend({
     This method shall modify different page settings that can be conveyed via the config routes.
   */
   configure: function(config){
-    console.log('Router.configure()');
-    //Sanitizing config:
-    if(_.isString(config)){
-      config = $.parseJSON(config);
-    }
+    //Parsing config:
+    config = this.parseConfig(config);
     //Configuring the wordOrder:
     if('wordOrder' in config){
       var callMap = { alphabetical: 'wordOrderSetAlphabetical'
@@ -18,7 +15,7 @@ Configurator = Sanitizer.extend({
       if(config.wordOrder in callMap){
         App.pageState[callMap[config.wordOrder]]();
       }else{
-        console.log('Could not configure wordOrder: '+config.wordOrder);
+        console.log('Configurator.configure() could not configure wordOrder: '+config.wordOrder);
       }
     }
     if('spLang' in config){
@@ -48,7 +45,6 @@ Configurator = Sanitizer.extend({
     if('translation' in config){
       App.translationStorage.setTranslationId(config.translation);
     }
-    //FIXME Add other configuration cases.
   }
   /**
     Takes a calls Object that maps Suffixes to args,
