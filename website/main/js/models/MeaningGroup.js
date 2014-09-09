@@ -10,6 +10,8 @@ MeaningGroup = Backbone.Model.extend({
 , getId: function(){
     return this.get('MeaningGroupIx');
   }
+  /***/
+, getKey: function(){return this.get('Name');}
   /**
     Returns the name of a MeaningGroup in the current translation.
   */

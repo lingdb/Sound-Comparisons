@@ -77,6 +77,14 @@ Router = Backbone.Router.extend({
       }, this);
       App.pageState.setPhLang(phLang);
     }
+    if('meaningGroups' in config){
+      var lookup = {};
+      _.each(config.meaningGroups, function(m){lookup[m] = true;});
+      var mgs = App.meaningGroupCollection.filter(function(m){
+        return m.getKey() in lookup;
+      }, this);
+      App.meaningGroupCollection.setSelected(mgs);
+    }
     //FIXME Add other configuration cases.
   }
   /**
@@ -138,6 +146,21 @@ Router = Backbone.Router.extend({
     config = config || {};
     if(phLang instanceof Language){
       config.phLang = phLang.getKey();
+    }
+    return config;
+  }
+  /***/
+, configSetMeaningGroups: function(config, mgs){
+    config = config || {};
+    if(mgs instanceof MeaningGroupCollection){
+      mgs = mgs.models;
+    }
+    if(_.isArray(mgs)){
+      var ms = _.map(mgs, function(mg){
+        if(_.isString(mg)) return mg;
+        return mg.getKey();
+      }, this);
+      config.meaningGroups = JSON.stringify(ms);
     }
     return config;
   }

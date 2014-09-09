@@ -122,8 +122,8 @@ WordMenuView = Backbone.View.extend({
       isLogical: App.pageState.wordOrderIsLogical()
     };
     if(data.isLogical){
-      data.ahref = 'href="#FIXME/implement adding all meaningGroups"';
-      data.nhref = 'href="#FIXME/implement removing all meaningGroups"';
+      data.ahref = 'href="'+App.router.linkConfig({MeaningGroups: App.meaningGroupCollection})+'"';
+      data.nhref = 'href="'+App.router.linkConfig({MeaningGroups: []})+'"';
       data.meaningGroups = [];
       var isMulti = App.pageState.isMultiView();
       App.meaningGroupsCollection.each(function(m){

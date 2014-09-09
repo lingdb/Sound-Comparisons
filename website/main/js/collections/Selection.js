@@ -25,6 +25,18 @@ Selection = Backbone.Collection.extend({
     return _.values(this.selected);
   }
   /**
+    Changes the selected models to the given array or Backbone.Collection.
+  */
+, setSelected: function(ms){
+    if(ms instanceof Backbone.Collection){
+      ms = ms.models;
+    }
+    if(_.isArray(ms)){
+      this.selected = {};
+      _.each(ms, this.select, this);
+    }
+  }
+  /**
     Runs the given iterator[ and context] over all currently selected models.
     Returns self for chaining.
   */
