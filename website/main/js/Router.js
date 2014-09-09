@@ -68,6 +68,30 @@ Router = Backbone.Router.extend({
     //FIXME Add other configuration cases.
   }
   /**
+    Takes a calls Object that maps Suffixes to args,
+    where Suffix is the match of /configSet(.+)/ for methods of Router,
+    and args will be applied to the Router method,
+    with the config as first argument.
+    If args is not an array, but a single value,
+    that value will be wrapped in an array,
+    and, after prepending the config, become the second argument.
+    Router:sanitize works in a similar fashion.
+  */
+, configSet: function(calls, config){
+    config = config || {};
+    _.each(calls, function(args, suffix){
+      var method = 'configSet'+suffix;
+      if(method in this){
+        if(!_.isArray(args)){
+          args = [args];
+        }
+        args.unshift(config);
+        config = this[method].apply(this, args);
+      }
+    }, this);
+    return config;
+  }
+  /**
     Builds configuration to set the WordOrder managed by PageState to alphabetical.
     If a config is given, it will be extended.
   */
@@ -87,7 +111,21 @@ Router = Backbone.Router.extend({
   }
 //Link related methods:
   /**
-    Creates the link structor for map view that can be placed in a href attribute.
+    Creates a link in the current view using the given options.
+    This is mainly helpful for config related changes.
+  */
+, linkCurrent: function(options){
+    var callMap = {
+      map:             'linkMapView'
+    , word:            'linkWordView'
+    , language:        'linkLanguageView'
+    , languagesXwords: 'linkLanguageWordView'
+    , wordsXlanguages: 'linkWordLanguageView'
+   };
+   return this[callMap[App.pageState.getPageViewKey()]](options);
+  }
+  /**
+    Creates the link structure for map view that can be placed in a href attribute.
     Option parameters are {word,languages,study,config}.
   */
 , linkMapView: function(options){
@@ -111,6 +149,21 @@ Router = Backbone.Router.extend({
       route += '/'+o.config;
     }
     return route;
+  }
+  /***/
+, linkLanguageView: function(options){
+    //FIXME implement
+    return '#FIXME/implement Router:linkLanguageView';
+  }
+  /***/
+, linkLanguageWordView: function(options){
+    //FIXME implement
+    return '#FIXME/implement Router:linkLanguageWordView';
+  }
+  /***/
+, linkWordLanguageView: function(options){
+    //FIXME implement
+    return '#FIXME/implement Router:linkWordLanguageView';
   }
 //Sanitize methods that aid building the links:
   /**

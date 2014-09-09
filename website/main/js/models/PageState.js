@@ -93,6 +93,10 @@ PageState = Backbone.Model.extend({
     //FIXME implement
   }
   /**
+    Returns the key for the current PageView.
+  */
+, getPageViewKey: function(){return this.get('pageView');}
+  /**
     Changes the current pageView.
   */
 , setPageView: function(pv){
