@@ -55,8 +55,13 @@ Linker = Configurator.extend({
   }
   /***/
 , linkLanguageView: function(options){
-    //FIXME implement
-    return '#FIXME/implement Router:linkLanguageView';
+    var o = this.sanitize(['Config','Study','Language'], options);
+    //Building route:
+    var route = '#/'+o.study+'/language/'+o.language;
+    if(_.isString(o.config)){
+      route += '/'+o.config;
+    }
+    return route;
   }
   /***/
 , linkLanguageWordView: function(options){

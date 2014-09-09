@@ -63,17 +63,19 @@ LanguageMenuView = Backbone.View.extend({
                  : fCol.getUnion(fCol.getSelected(), [f]);
         data.link = 'href="'+App.router.linkConfig({Families: fams})+'"'
         //Checkbox info:
-        var languages = f.getLanguages();
-        switch(App.languageCollection.areSelected(languages)){
+        var languages = f.getLanguages(), lCol = App.languageCollection;
+        switch(lCol.areSelected(languages)){
           case 'all':
+            var removed = lCol.getDifference(lCol.getSelected(), languages);
             data.checkbox.icon = 'icon-check';
-            data.checkbox.href = 'href="#FIXME/implement removing languages"';
+            data.checkbox.href = 'href="'+App.router.linkCurrent({languages: removed})+'"';
             data.checkbox.ttip = App.translationStorage.translateStatic('multimenu_tooltip_del_family');
           break;
           case 'some':
             data.checkbox.icon = 'icon-chkbox-half-custom';
           case 'none':
-            data.checkbox.href = 'href="#FIXME/implement adding languages"';
+            var additional = lCol.getUnion(lCol.getSelected(), languages);
+            data.checkbox.href = 'href="'+App.router.linkCurrent({languages: additional})+'"';
             data.checkbox.ttip = App.translationStorage.translateStatic('multimenu_tooltip_add_family');
         }
         //The RegionList:
@@ -92,7 +94,6 @@ LanguageMenuView = Backbone.View.extend({
     Helperfunction for updateTree that builds a RegionList for a given collection of regions.
   */
 , buildRegionTree: function(regions){
-    console.log('LanguageMenuView.buildRegionTree()'); // FIXME DEBUG
     var regionList = {
       isDl: !App.study.getColorByFamily()
     , regions: []
@@ -113,17 +114,19 @@ LanguageMenuView = Backbone.View.extend({
           };
       //Filling the checkbox:
       if(isMultiView||isMapView){
-        var box = {icon: 'icon-chkbox-custom'};
-        switch(App.languageCollection.areSelected(languages)){
+        var box = {icon: 'icon-chkbox-custom'}, lCol = App.languageCollection;
+        switch(lCol.areSelected(languages)){
           case 'all':
+            var removed = lCol.getDifference(lCol.getSelected(), languages);
             box.icon = 'icon-check';
-            box.href = 'href="#FIXME/implement removing languages"';
+            box.href = 'href="'+App.router.linkCurrent({languages: removed})+'"';
             box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_minus');
           break;
           case 'some':
             box.icon = 'icon-chkbox-half-custom';
           case 'none':
-            box.href = 'href="#FIXME/implement adding languages"';
+            var additional = lCol.getUnion(lCol.getSelected(), languages);
+            box.href = 'href="'+App.router.linkCurrent({languages: additional})+'"';
             box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_plus');
         }
         region.checkbox = box;
@@ -133,9 +136,11 @@ LanguageMenuView = Backbone.View.extend({
         region.color = r.getColor();
       }
       //The link:
-      region.link = region.selected
-                  ? 'href="#FIXME/implement removing regions"'
-                  : 'href="#FIXME/implement adding regions"';
+      var rCol = App.regionCollection
+        , rgs  = region.selected
+               ? rCol.getDifference(rCol.getSelected(), [r])
+               : rCol.getUnion(rCol.getSelected(), [r]);
+      region.link = 'href="'+App.router.linkConfig({Regions: rgs})+'"';
       //The triangle:
       region.triangle = region.selected
                       ? 'icon-chevron-down'
@@ -147,7 +152,7 @@ LanguageMenuView = Backbone.View.extend({
             shortName: l.getShortName()
           , longName:  l.getLongName()
           , selected:  App.languageCollection.isSelected(l)
-          , link:      'href="#FIXME/implement switching to a language"'
+          , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
           };
           //TODO implement flags if wanted!
           //language.flag = l.getFlag();
