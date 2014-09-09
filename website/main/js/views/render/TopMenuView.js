@@ -80,24 +80,14 @@ TopMenuView = Backbone.View.extend({
     , lw: 'lw.png'
     , wl: 'wl.png'
     };
-    var t = this, produce = function(pageView, key){
-      var data = {
+    this.setModel({pageViews: _.map(_.keys(names), function(key){
+      return {
         link:    'href="#FIXME/TopMenuView:updatePageViews"' // FIXME implement link building
-      , content: t.tColor(key, names[key])
+      , content: this.tColor(key, names[key])
       , title:   hovers[key]
-      , img:     images[key]};
-      if(false){ //FIXME add active field to data iff necessary.
-        data.active = true;
-      }
-      return data;
-    };
-    this.setModel({pageViews: [
-      produce(null, 'm')
-    , produce(null, 'w')
-    , produce(null, 'l')
-    , produce(null, 'lw')
-    , produce(null, 'wl')
-    ]});
+      , img:     images[key]
+      , active:  App.pageState.isPageView(key)};
+    }, this)});
   }
   /***/
 , updateTranslations: function(){

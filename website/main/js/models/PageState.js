@@ -106,4 +106,19 @@ PageState = Backbone.Model.extend({
       //FIXME implement
     }
   }
+  /***/
+, isPageView: function(key){
+    if(_.contains(this.get('pageViews'), key)){
+      return this.get('pageView') === key;
+    }
+    switch(key){//Used by topMenu so far.
+      case 'm':  return this.isPageView('map');
+      case 'w':  return this.isPageView('word');
+      case 'l':  return this.isPageView('language');
+      case 'lw': return this.isPageView('languagesXwords');
+      case 'wl': return this.isPageView('wordsXlanguages');
+    }
+    console.log('PageState.isPageState() with unexpected key: '+key);
+    return false;
+  }
 });
