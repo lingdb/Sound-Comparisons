@@ -64,8 +64,8 @@ WordMenuView = Backbone.View.extend({
     var data = {
       isLogical: App.pageState.wordOrderIsLogical()
     };
-    data.link = data.isLogical ? 'href="#FIXME/implement setting word order to alphabetical"'
-                               : 'href="#FIXME/implement setting word order to logical"';
+    data.link = data.isLogical ? 'data-href="#FIXME/implement setting word order to alphabetical"'
+                               : 'data-href="#FIXME/implement setting word order to logical"';
     this.setModel({sortBy: data});
   }
   /**
