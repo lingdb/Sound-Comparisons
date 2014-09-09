@@ -1,13 +1,18 @@
 /**
   Implements the aspect that several models of a collection can be marked as selected.
+  If children implement 'isDefaultSelection', it will be used to find the default selection,
+  rather than selection all models per default.
 */
 Selection = Backbone.Collection.extend({
   initialize: function(){
     this.selected = {}; // model.getId() -> model
-    //Defaulting to all as selected:
+    //Defaulting selected models:
     this.on('reset', function(){
+      var ms = ('isDefaultSelection' in this)
+             ? this.filter(this.isDefaultSelection, this)
+             : this.models;
       this.selected = {};
-      this.each(function(m){
+      _.each(ms, function(m){
         this.selected[m.getId()] = m;
       }, this);
     }, this);

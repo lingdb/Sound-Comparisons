@@ -1,12 +1,17 @@
 /**
   Implements the aspect that a single model of a collection may be marked as chosen.
+  If children implement 'getDefaultChoice', it will be used instead of null as default choice.
 */
 Choice = Selection.extend({
   initialize: function(){
     this.choice = null;
     //Defaulting to null as choice:
     this.on('reset', function(){
-      this.choice = null;
+      if('getDefaultChoice' in this){
+        this.choice = this.getDefaultChoice();
+      }else{
+        this.choice = null;
+      }
     }, this);
     //Calling superconstructor:
     Selection.prototype.initialize.apply(this, arguments);
