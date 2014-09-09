@@ -189,15 +189,17 @@ WordMenuView = Backbone.View.extend({
       //The checkbox/icon:
       if(isMulti){
         if(w.selected){
+          var remaining = App.wordCollection.getDifference(App.wordCollection.getSelected(), [word]);
           w.icon = {
             ttip: App.translationStorage.translateStatic('multimenu_tooltip_del')
-          , link: 'href="#FIXME/implement removing a word"'
+          , link: 'href="'+App.router.linkCurrent({words: remaining})+'"'
           , icon: 'icon-check'
           };
         }else{
+          var additional = App.wordCollection.getUnion(App.wordCollection.getSelected(), [word]);
           w.icon = {
             ttip: App.translationStorage.translateStatic('multimenu_tooltip_add')
-          , link: 'href="#FIXME/implement adding a word"'
+          , link: 'href="'+App.router.linkCurrent({words: additional})+'"'
           , icon: 'icon-chkbox-custom'
           };
         }
