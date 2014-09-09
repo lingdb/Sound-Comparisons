@@ -41,28 +41,25 @@ Configurator = Sanitizer.extend({
       var rs = App.regionCollection.filterKeys(config.regions);
       App.regionCollection.setSelected(rs);
     }
+    if('families' in config){
+      var fs = App.familyCollection.filterKeys(config.families);
+      App.familyCollection.setSelected(fs);
+    }
     //FIXME Add other configuration cases.
   }
   /**
     Takes a calls Object that maps Suffixes to args,
     where Suffix is the match of /configSet(.+)/ for methods of Router,
-    and args will be applied to the Router method,
-    with the config as first argument.
-    If args is not an array, but a single value,
-    that value will be wrapped in an array,
-    and, after prepending the config, become the second argument.
+    and args will be supplied to the Router method as second argument,
+    whereas config is the first argument.
     Router:sanitize works in a similar fashion.
   */
 , configSet: function(calls, config){
     config = config || {};
-    _.each(calls, function(args, suffix){
+    _.each(calls, function(arg, suffix){
       var method = 'configSet'+suffix;
       if(method in this){
-        if(!_.isArray(args)){
-          args = [args];
-        }
-        args.unshift(config);
-        config = this[method].apply(this, args);
+        config = this[method].call(this, config, arg);
       }else{
         console.log('Router:configSet() cannot call method: '+method);
       }
@@ -126,6 +123,16 @@ Configurator = Sanitizer.extend({
     return config;
   }
   /**
+    Builds configuration to set the given Families as selected.
+  */
+, configSetFamilies: function(config, families){
+    config = config || {};
+    if(fs = this.configMkKeyArray(families)){
+      config.families = JSON.stringify(fs);
+    }
+    return config;
+  }
+  /**
     Helper method to build arrays of keys.
     Backbone.Collection || [Model] -> [String] || null
   */
@@ -139,6 +146,6 @@ Configurator = Sanitizer.extend({
         return m.getKey();
       }, this);
     }
-    return null;
+    return [];
   }
 });

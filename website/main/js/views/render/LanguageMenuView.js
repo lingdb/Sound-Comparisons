@@ -6,8 +6,8 @@ LanguageMenuView = Backbone.View.extend({
   initialize: function(){
     //Initial model:
     this.model = {
-      collapseHref: 'href="#FIXME/implement links for adding regions"'
-    , expandHref:   'href="#FIXME/implement links for removing regions"'
+      collapseHref: 'href="'+App.router.linkConfig({Regions: []})+'"'
+    , expandHref:   'href="'+App.router.linkConfig({Regions: App.regionCollection})+'"'
     };
   }
   /**
@@ -43,21 +43,25 @@ LanguageMenuView = Backbone.View.extend({
 , updateTree: function(){
     console.log('LanguageMenuView.updateTree()');
     if(App.study.getColorByFamily()){
-      var families = [];
+      var families = [], fCol = App.familyCollection;
       App.familyCollection.each(function(f){
         //Checking if we got regions:
         var regions = f.getRegions();
         if(regions.length === 0) return;
-        var selected = App.familyCollection.isSelected(f)
+        var selected = fCol.isSelected(f)
           , data = { // Basic information for a family
               name:  f.getName()
             , color: f.getColor()
-            , link:  selected ? 'href="#FIXME/implement removing families"'
-                              : 'href="#FIXME/implement adding families"'
             , checkbox: {
                 icon: 'icon-chkbox-custom'
               }
             };
+        //Link building:
+        var fCol = App.familyCollection
+          , fams = (selected)
+                 ? fCol.getDifference(fCol.getSelected(), [f])
+                 : fCol.getUnion(fCol.getSelected(), [f]);
+        data.link = 'href="'+App.router.linkConfig({Families: fams})+'"'
         //Checkbox info:
         var languages = f.getLanguages();
         switch(App.languageCollection.areSelected(languages)){
