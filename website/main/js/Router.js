@@ -87,6 +87,8 @@ Router = Backbone.Router.extend({
         }
         args.unshift(config);
         config = this[method].apply(this, args);
+      }else{
+        console.log('Router:configSet() cannot call method: '+method);
       }
     }, this);
     return config;
@@ -195,9 +197,19 @@ Router = Backbone.Router.extend({
     return o;
   }
   /***/
+, sanitizeLanguage: function(o){
+    if(!('language' in o)){
+      o.language = App.languageCollection.getChoice();
+    }
+    if(o.language instanceof Language){
+      o.language = o.language.getKey();
+    }
+    return o;
+  }
+  /***/
 , sanitizeLanguages: function(o){
     if(!('languages' in  o)){
-      o.languages = App.languageCollection.getSelected()
+      o.languages = App.languageCollection.getSelected();
     }
     if(o.languages instanceof Backbone.Collection){
       o.languages = o.languages.models;
@@ -207,7 +219,7 @@ Router = Backbone.Router.extend({
         if(_.isString(l)) return l;
         return l.getKey();
       }, this);
-      o.languages = JSON.stringify(o.languages);
+      o.languages = JSON.stringify(ls);
     }
     return o;
   }
@@ -228,6 +240,23 @@ Router = Backbone.Router.extend({
     }
     if(o.word instanceof Word){
       o.word = o.word.getKey();
+    }
+    return o;
+  }
+  /***/
+, sanitizeWords: function(o){
+    if(!('words' in o)){
+      o.words = App.wordCollection.getSelected();
+    }
+    if(o.words instanceof Backbone.Collection){
+      o.words = o.words.models;
+    }
+    if(_.isArray(o.words)){
+      var ws = _.map(o.words, function(w){
+        if(_.isString(w)) return w;
+        return w.getKey();
+      }, this);
+      o.words = JSON.stringify(ws);
     }
     return o;
   }

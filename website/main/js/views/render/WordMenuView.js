@@ -7,7 +7,9 @@ WordMenuView = Backbone.View.extend({
     //Setting the initial model:
     this.model = {
       searchFilter: {
-        fClearAllLink: 'data-href="#FIXME/implement removing all words"'
+        fClearAllLink: function(){
+          return 'data-href="'+App.router.linkCurrent({words: []})+'"';
+        }
       }
     };
   }
@@ -63,9 +65,12 @@ WordMenuView = Backbone.View.extend({
 , updateSortBy: function(){
     var data = {
       isLogical: App.pageState.wordOrderIsLogical()
+    }, setWo = function(calls){
+      var config = App.router.configSet(calls);
+      return 'data-href="'+App.router.linkCurrent(config)+'"';
     };
-    data.link = data.isLogical ? 'data-href="#FIXME/implement setting word order to alphabetical"'
-                               : 'data-href="#FIXME/implement setting word order to logical"';
+    data.link = data.isLogical ? setWo({WordOrderAlphabetical: []})
+                               : setWo({WordOrderLogical: []});
     this.setModel({sortBy: data});
   }
   /**
