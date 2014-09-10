@@ -36,6 +36,7 @@ $(function(){
   _.each(['defaults','study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
     , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
   //Setting up callbacks for PageState:
+  App.wordCollection.listenWordOrder();
   App.pageState.activate();
   //Creating views:
   App.views.hideLinks = new HideLinks();

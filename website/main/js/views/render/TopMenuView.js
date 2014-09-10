@@ -17,7 +17,9 @@ TopMenuView = Backbone.View.extend({
     App.translationStorage.on('change:translationId', function(){
       App.views.renderer.callUpdates(this);
     }, this);
-    App.study.on('change:Name', this.updateStudy, this);
+    App.study.on('change:Name', function(){
+      App.views.renderer.callUpdates(this);
+    }, this);
     //Calling updates the first time:
     App.views.renderer.callUpdates(this);
   }
@@ -81,9 +83,16 @@ TopMenuView = Backbone.View.extend({
     , lw: 'lw.png'
     , wl: 'wl.png'
     };
+    var links = {
+      m:  App.router.linkMapView()
+    , w:  App.router.linkWordView()
+    , l:  App.router.linkLanguageView()
+    , lw: App.router.linkLanguageWordView()
+    , wl: App.router.linkWordLanguageView()
+    };
     this.setModel({pageViews: _.map(_.keys(names), function(key){
       return {
-        link:    'href="#FIXME/TopMenuView:updatePageViews"'
+        link:    'href="'+links[key]+'"'
       , content: this.tColor(key, names[key])
       , title:   hovers[key]
       , img:     images[key]

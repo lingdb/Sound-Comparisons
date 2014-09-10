@@ -7,8 +7,8 @@ MeaningGroupCollection = Selection.extend({
 , comparator: function(a, b){
     var x = a.getId()
       , y = b.getId()
-    if(x > y) return -1;
-    if(x < y) return  1;
+    if(x > y) return  1;
+    if(x < y) return -1;
     return 0;
   }
   /**

@@ -9,6 +9,7 @@ Sanitizer = Backbone.Router.extend({
     to finally return the sanitized version.
   */
   sanitize: function(suffixes, o){
+    o = o || {};
     _.each(suffixes, function(s){
       var key = 'sanitize'+s;
       if(key in this){
@@ -17,22 +18,6 @@ Sanitizer = Backbone.Router.extend({
         console.log('Router.sanitize() cannot sanitize with key: '+key);
       }
     }, this);
-    return o;
-  }
-  /***/
-, sanitizeConfig: function(o){
-    if('config' in o){
-      if(o.config !== null){
-        var vals = _.map(o.config, function(v, k){
-          if(_.isArray(v))   v = _.filter(v,_.isString,_).join(',');
-          if(!_.isString(v)) v = ''+v;
-          return encodeURIComponent(k)+'='+encodeURIComponent(v);
-        }, this);
-        o.config = '?'+vals.join('&');
-      }
-    }else{
-      o.config = null;
-    }
     return o;
   }
   /***/
@@ -100,8 +85,28 @@ Sanitizer = Backbone.Router.extend({
     return o;
   }
   /***/
+, sanitizeConfig: function(o){
+    if('config' in o){
+      if(o.config !== null){
+        var vals = _.map(o.config, function(v, k){
+          if(_.isArray(v)){
+            v = this.sanitizeArray(_.filter(v, _.isString));
+          }else{
+            if(!_.isString(v)) v = ''+v;
+            v = encodeURIComponent(v);
+          }
+          return encodeURIComponent(k)+'='+v;
+        }, this);
+        o.config = '?'+vals.join('&');
+      }
+    }else{
+      o.config = null;
+    }
+    return o;
+  }
+  /***/
 , sanitizeArray: function(a){
-    return encodeURIComponent(a.join());
+    return _.map(a, encodeURIComponent).join();
   }
   /**
     Parses a given config String c to return the config object.
@@ -117,7 +122,7 @@ Sanitizer = Backbone.Router.extend({
     _.each(qs.keys(), function(k){
       var v = qs.value(k);
       if(k in isArray){
-        v = v.split(',');
+        v = this.parseArray(v);
       }
       ret[k] = v;
     }, this);
@@ -127,6 +132,6 @@ Sanitizer = Backbone.Router.extend({
   }
   /***/
 , parseArray: function(c){
-    return decodeURIComponent(c).split(',');
+    return _.map(c.split(','), decodeURIComponent);
   }
 });

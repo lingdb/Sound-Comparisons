@@ -1,0 +1,3 @@
+/***/
+WordView = Backbone.View.extend({
+});

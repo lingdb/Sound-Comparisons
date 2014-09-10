@@ -78,6 +78,30 @@ Word = Backbone.Model.extend({
 , getTranscription: function(language){
     return App.transcriptionMap.getTranscription(language, this);
   }
-//FIXME implement fetching of Neighbours
+  /**
+    getNeighbour shall usually be called via get{Prev,Next}.
+    It returns the next or previous Word with respect to the current wordOrder.
+    Since the App.wordCollection is always kept in the correct order depending on App.pageState,
+    we can just select the correct one of it's models.
+  */
+, getNeighbour: function(next){
+    var key   = next ? 1 : -1 // Key already contains direction.
+      , words = App.wordCollection.models
+      , wId   = this.getId();
+    //Find current position in words array and add it to the key:
+    for(var i = 0; i < words.length; i++){
+      if(words[i].getId() === wId){
+        key += i;
+        break;
+      }
+    }
+    //Wrapping the key around the words:
+    key %= words.length;
+    if(key < 0) key += words.length;
+    //Done:
+    return words[key];
+  }
+, getPrev: function(){return this.getNeighbour(false);}
+, getNext: function(){return this.getNeighbour(true);}
 //FIXME implement language dependant translation
 });
