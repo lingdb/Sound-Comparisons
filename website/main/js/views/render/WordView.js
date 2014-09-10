@@ -8,7 +8,17 @@ WordView = Backbone.View.extend({
     Function to activate update methods, and run them the first time.
     This will be called by the Renderer.
   */
-, activate: function(){}
+, activate: function(){
+    //Setting callbacks to update model:
+    App.translationStorage.on('change:translationId', function(){
+      App.views.renderer.callUpdates(this);
+    }, this);
+    App.study.on('change:Name', function(){
+      App.views.renderer.callUpdates(this);
+    }, this);
+    //Calling updates the first time:
+    App.views.renderer.callUpdates(this);
+  }
   /**
     Overwrites the current model with the given one performing a deep merge.
   */
@@ -19,8 +29,9 @@ WordView = Backbone.View.extend({
     FIXME add necessary callbacks.
   */
 , updateWordHeadline: function(){
-    var word     = App.wordCollection.getChoice()
-      , spLang   = App.pageState.getSpLang()
+    var word = App.wordCollection.getChoice();
+    if(!word) return;
+    var spLang   = App.pageState.getSpLang()
       , headline = {name: word.getLongName() || word.getNameFor(spLang)};
     //Sanitize name:
     if(_.isArray(headline.name))
@@ -55,6 +66,7 @@ WordView = Backbone.View.extend({
 , updateWordTable: function(){
     //The word to use:
     var word = App.wordCollection.getChoice();
+    if(!word) return;
     //Calculating the maximum number of language cols:
     var maxLangCount = _.chain(App.regionCollection.models).map(function(r){
       var c = r.getLanguages().length;
@@ -103,7 +115,7 @@ WordView = Backbone.View.extend({
           cellCount--;
         }, this);
         //Handling empty languageCells:
-        for(;cellCount > 0; cellCount--){ls.push({isLanguageCell: true};)}
+        for(;cellCount > 0; cellCount--){ls.push({isLanguageCell: true});}
         lss.push(ls);
         //Filling regions from lss:
         _.each(lss, function(ls, i){
@@ -122,11 +134,12 @@ WordView = Backbone.View.extend({
       }, this);
     }, this);
     //Done:
-    this.setModel(table);
+    this.setModel({WordTable: table});
   }
   /***/
 , render: function(){
     console.log('WordView.render()');
-    //FIXME implement
+    this.$el.html(App.templateStorage.render('WordTable', this.model));
+    //FIXME implement active/not active handling.
   }
 });
