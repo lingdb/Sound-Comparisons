@@ -14,6 +14,7 @@ Renderer = Backbone.View.extend({
       new TopMenuView({el: this.$('#topMenu')})
     , new LanguageMenuView({el: this.$('#leftMenu')})
     , new WordMenuView({el: this.$('#rightMenu')})
+    , new WordView({el: this.$('#wordTableContainer')})
     ];
     //Each model has a segment in the loadingBar, and Renderer itself has two:
     App.loadingBar.addSegment(this.model.length + 2);

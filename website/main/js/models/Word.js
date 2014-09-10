@@ -48,11 +48,10 @@ Word = Backbone.Model.extend({
   */
 , getLongName: function(){
     var category = this.getCategory('LongerRfcModernLg01')
-      , fallback = this.get('LongerRfcModernLg01')
-      , fallbac_ = this.get('LongerRfcModernLg02');
-    if(typeof(fallback) !== 'string' || fallback === '')
-      fallback = fallbac_;
-    if(fallback === '')
+      , fallback = this.get('LongerRfcModernLg01');
+    if(!_.isString(fallback) || _.isEmpty(fallback))
+      fallback = this.get('LongerRfcModernLg02');
+    if(_.isEmpty(fallback))
       fallback = null;
     return App.translationStorage.translateDynamic(category, this.getField(), fallback);
   }
@@ -61,6 +60,14 @@ Word = Backbone.Model.extend({
   */
 , getProtoName: function(){
     return this.get('FullRfcProtoLg01');
+  }
+  /***/
+, getNameFor: function(language){
+    var t    = App.transcriptionMap.getTranscription(language, this)
+      , alts = t.getSpellingAltv();
+    if(alts.length > 0)
+      return alts;
+    return this.getModernName();
   }
   /**
     Returns the MeaningGroup that this word belongs in.

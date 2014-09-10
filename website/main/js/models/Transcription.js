@@ -121,4 +121,19 @@ Transcription = Backbone.Model.extend({
     }
     return ps;
   }
+  /**
+    Returns an array of all non empty SpellingAltv[12] fields in a transcription.
+  */
+, getSpellingAltv: function(){
+    //Notice that the add function also handles the case that one of the fields may be an array.
+    var alt = [], add = function(a){
+      if(_.isArray(a)){
+        _.each(a, add);
+      }else if(!_.isEmpty(a)){
+        alt.push(a);
+      }
+    };
+    add([this.get('SpellingAltv1'),this.get('SpellingAltv2')]);
+    return alt;
+  }
 });
