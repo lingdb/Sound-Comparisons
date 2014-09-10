@@ -98,7 +98,14 @@ PageState = Backbone.Model.extend({
     Returns the currently active pageView as a Backbone.View
   */
 , getPageView: function(){
-    //FIXME implement
+    var pvMap = {
+      map:             'mapView'
+    , word:            'wordView'
+    , language:        'languageView'
+    , languagesXwords: 'languageWordView'
+    , wordsXlanguages: 'wordLanguageView'
+    }, key = this.get('pageView');
+    return App.views.renderer.model[pvMap[key]];
   }
   /**
     Returns the key for the current PageView.
