@@ -112,30 +112,42 @@ PageState = Backbone.Model.extend({
   */
 , getPageViewKey: function(){return this.get('pageView');}
   /**
-    Changes the current pageView.
+    Changes the current pageView to a given String or Backbone.View.
+    Instances of Backbone.View are required to have a getKey method.
   */
 , setPageView: function(pv){
-    if(typeof(pv) === 'string'){
+    if(_.isString(pv)){
       if(_.contains(this.get('pageViews'), pv)){
         this.set({pageView: pv});
       }else{
         console.log('PageState.setPageView() refuses to set pageView: '+pv);
       }
     }else if(pv instanceof Backbone.View){
-      //FIXME implement
+      if(typeof(pv.getKey) === 'function'){
+        this.setPageView(pv.getKey());
+      }
     }
   }
-  /***/
+  /**
+    Tells wether the given String or Backbone.View is the current PageView.
+    Instances of Backbone.View are required to have a getKey method.
+  */
 , isPageView: function(key){
-    if(_.contains(this.get('pageViews'), key)){
-      return this.get('pageView') === key;
-    }
-    switch(key){//Used by topMenu so far.
-      case 'm':  return this.isPageView('map');
-      case 'w':  return this.isPageView('word');
-      case 'l':  return this.isPageView('language');
-      case 'lw': return this.isPageView('languagesXwords');
-      case 'wl': return this.isPageView('wordsXlanguages');
+    if(_.isString(key)){
+      if(_.contains(this.get('pageViews'), key)){
+        return this.get('pageView') === key;
+      }
+      switch(key){//Used by topMenu so far.
+        case 'm':  return this.isPageView('map');
+        case 'w':  return this.isPageView('word');
+        case 'l':  return this.isPageView('language');
+        case 'lw': return this.isPageView('languagesXwords');
+        case 'wl': return this.isPageView('wordsXlanguages');
+      }
+    }else if(key instanceof Backbone.View){
+      if(typeof(key.getKey) !== 'function')
+        return false;
+      key = key.getKey();
     }
     console.log('PageState.isPageState() with unexpected key: '+key);
     return false;

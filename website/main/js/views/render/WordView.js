@@ -1,10 +1,14 @@
 /***/
 WordView = Backbone.View.extend({
   /**
+    Method to make it possible to check what kind of PageView this Backbone.View is.
+  */
+  getKey: function(){return 'word';}
+  /**
     Function to activate update methods, and run them the first time.
     This will be called by the Renderer.
   */
-  activate: function(){}
+, activate: function(){}
   /**
     Overwrites the current model with the given one performing a deep merge.
   */
