@@ -19,7 +19,7 @@ Family = Backbone.Model.extend({
   */
 , getColor: function(){
     var c = this.get('FamilyColorOnWebsite');
-    if(typeof(c) === 'string' && c !== ''){
+    if(_.isString(c) && c !== ''){
       return '#'+c;
     }
     return null;

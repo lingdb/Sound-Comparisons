@@ -15,7 +15,9 @@ WordView = Backbone.View.extend({
 , setModel: function(m){
     this.model = $.extend(true, this.model, m);
   }
-  /***/
+  /**
+    FIXME add necessary callbacks.
+  */
 , updateWordHeadline: function(){
     var word     = App.wordCollection.getChoice()
       , spLang   = App.pageState.getSpLang()
@@ -46,6 +48,81 @@ WordView = Backbone.View.extend({
     , {title: App.translationStorage.translateStatic('tabulator_word_next')});
     //Done:
     this.setModel({wordHeadline: headline});
+  }
+  /**
+    FIXME add necessary callbacks.
+  */
+, updateWordTable: function(){
+    //The word to use:
+    var word = App.wordCollection.getChoice();
+    //Calculating the maximum number of language cols:
+    var maxLangCount = _.chain(App.regionCollection.models).map(function(r){
+      var c = r.getLanguages().length;
+      return (c > 6) ? 6 : c;
+    }).max().value();
+    //Do we color by family?
+    var colorByFamily = App.study.getColorByFamily();
+    //Building the table:
+    var table = {
+      wordHeadlinePlayAll: App.translationStorage.translateStatic('wordHeadline_playAll')
+    , rows: []
+    };
+    //We iterate the tree families->regions->languages and construct rows from that.
+    App.familyCollection.each(function(f){
+      var family = {rowSpan: 0, name: f.getName()};
+      if(colorByFamily) family.color = f.getColor();
+      //Regions to deal with:
+      var regions = [];
+      f.getRegions().each(function(r){
+        var region = {name: r.getShortName()}, languages = r.getLanguages();
+        if(!colorByFamily) region.color = r.getColor();
+        //Calculating the rowSpan for the current region:
+        region.rowSpan  = _.max([Math.ceil(languages.length / 6), 1]);
+        family.rowSpan += region.rowSpan;
+        //Further handling of languages; lss :: [[LanguageCell]]
+        var cellCount = maxLangCount, lss = [], ls = [];
+        languages.each(function(l){
+          //Swapping ls over to lss:
+          if(cellCount === 0){
+            lss.push(ls);
+            ls = [];
+            cellCount = maxLangCount;
+          }
+          //Generating a LanguageCell:
+          var cell = {
+            isLanguageCell: true
+          , link: 'href="'+App.router.linkLanguageView({language: l})+'"'
+          , shortName: l.getShortName()
+          , longName:  l.getLongName()
+          };
+          var t = App.transcriptionMap.getTranscription(l, word);
+          if(s = t.getAltSpelling()) cell.spelling = s;
+          cell.phonetic = t.getPhonetic();
+          //Filling ls:
+          ls.push(cell);
+          cellCount--;
+        }, this);
+        //Handling empty languageCells:
+        for(;cellCount > 0; cellCount--){ls.push({isLanguageCell: true};)}
+        lss.push(ls);
+        //Filling regions from lss:
+        _.each(lss, function(ls, i){
+          if(i === 0) ls.unshift(region);
+          regions.push(ls);
+        }, this);
+      }, this);
+      //Adding to the rows:
+      var row = {cells: []};
+      if(parseInt(f.getId()) !== 0) row.spaceRow = true;
+      _.each(regions, function(cells, i){
+        if(i === 0) cells.unshift(family);
+        row.cells = cells;
+        table.rows.push(row);
+        row = {cells: []};
+      }, this);
+    }, this);
+    //Done:
+    this.setModel(table);
   }
   /***/
 , render: function(){

@@ -297,4 +297,9 @@ Language = Backbone.Model.extend({
     }
     return false;
   }
+  /***/
+, isProto: function(){
+    var names = [this.getShortName(), this.get('ShortName')];
+    return _.any(names, function(n){return _.isArray(n.match(/^Proto-/));});
+  }
 });
