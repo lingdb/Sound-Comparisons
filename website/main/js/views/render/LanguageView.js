@@ -175,13 +175,38 @@ LanguageView = Backbone.View.extend({
   }
   /***/
 , updateLanguageTable: function(){
-    //FIXME implement
+    var language = App.languageCollection.getChoice();
+    if(!language){
+      console.log('LanguageView.updateLanguageTable() without a language.');
+      return;
+    }
+    //Gathering transcriptions:
+    var transcriptions = [];
+    App.wordCollection.each(function(word){
+      var tr = App.transcriptionMap.getTranscription(language, word);
+      if(!tr) return;
+      transcriptions.push({
+        link:     'href="'+App.router.linkWordView({word: word})+'"'
+      , ttip:     word.getLongName()
+      , trans:    word.getNameFor(language)
+      , spelling: tr.getAltSpelling()
+      , phonetic: tr.getPhonetics()
+      });
+    }, this);
+    //Finish:
+    this.setModel({rows: _.chain(transcriptions).groupBy(function(x, i){
+      //Creating rows as chunks of 6 transcriptions:
+      return Math.floor(i/6);
+    }).values().map(function(ts){
+      //Adding a key to each chunk:
+      return {transcriptions: ts};
+    }).value()});
   }
   /***/
 , render: function(){
     console.log('LanguageView.render()');
     if(App.pageState.isPageView(this)){
-      this.$el.html(App.templateStorage.render('LanguageTable', this.model));
+      this.$el.html(App.templateStorage.render('LanguageTable', {LanguageTable: this.model}));
       this.$el.removeClass('hide');
     }else{
       this.$el.addClass('hide');
