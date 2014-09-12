@@ -42,13 +42,6 @@ DataStorage = Backbone.Model.extend({
       window.App.setupBar.addLoaded(3);
     });
   }
-  /* We track the age of all fetched data,
-     so that we can delete them beginning with the oldest, if necessary.
-     FIXME even tough I like this piece of code, I gotta get rid of it.
-  */
-, time: Date.now || function(){
-    return +new Date;
-  }
   /*
     Cleans up localStorage a little to see that we get some space back.
     Returns true iff some cleanup was performed.
@@ -90,11 +83,11 @@ DataStorage = Backbone.Model.extend({
     }, this);
     return collected;
   }
-/**
-  The generalized save function of DataStorage, it handles compression and the key name.
-  This method triggers collectGarbadge, iff storing doesn't work as it should,
-  so that hopefully some storage will be freed, and storing can occur anyway.
-*/
+  /**
+    The generalized save function of DataStorage, it handles compression and the key name.
+    This method triggers collectGarbadge, iff storing doesn't work as it should,
+    so that hopefully some storage will be freed, and storing can occur anyway.
+  */
 , save: function(name, data){
     var key   = "DataStorage_"+name
       , value = LZString.compressToBase64(JSON.stringify(data))
@@ -109,26 +102,29 @@ DataStorage = Backbone.Model.extend({
       }
     }while(saved !== true);
   }
+  /***/
 , saveGlobal: function(){
     this.save('global', this.get('global'));
   }
+  /***/
 , saveStudy: function(){
     var data = this.get('study')
       , name = "Study_"+data.study.Name;
     this.save(name, data);
   }
-/**
-  The generalized load function of DataStorage, it handles compression and the key name.
-  The more specialized load functions only bother the server,
-  iff nothing is found by the load function,
-  or the information given by load is outdated.
-*/
+  /**
+    The generalized load function of DataStorage, it handles compression and the key name.
+    The more specialized load functions only bother the server,
+    iff nothing is found by the load function,
+    or the information given by load is outdated.
+  */
 , load: function(name){
     var key = "DataStorage_"+name;
     if(key in localStorage)
       return $.parseJSON(LZString.decompressFromBase64(localStorage[key]));
     return null;
   }
+  /***/
 , loadGlobal: function(){
     var timestamp = this.get('lastUpdate')
       , current   = this.load('global')
@@ -148,6 +144,7 @@ DataStorage = Backbone.Model.extend({
     }
     return promise;
   }
+  /***/
 , loadStudy: function(name){
     var name      = window.App.studyWatcher.get('study')
       , key       = "Study_"+name
@@ -168,5 +165,9 @@ DataStorage = Backbone.Model.extend({
       promise.resolve();
     }
     return promise;
+  }
+  /***/
+, getWikipediaLinks: function(){
+    return this.get('global').global.wikipediaLinks;
   }
 });

@@ -302,4 +302,36 @@ Language = Backbone.Model.extend({
     var names = [this.getShortName(), this.get('ShortName')];
     return _.any(names, function(n){return _.isArray(n.match(/^Proto-/));});
   }
+  /**
+    Returns the ISO code for this Language as String || null.
+  */
+, getISO: function(){
+    var iso = this.get('ISOCode');
+    if(_.isString(iso) && iso.length === 3)
+      return iso;
+    return null;
+  }
+  /**
+    Returns the wikipediaLink for this Language as String || null.
+  */
+, getWikipediaLink: function(){
+    if(iso = this.getISO()){
+      var query = {
+        BrowserMatch:      App.translationStorage.getBrowserMatch()
+      , ISOCode:           iso
+      , WikipediaLinkPart: this.get('WikipediaLinkPart')
+      };
+      var result = _.findWhere(App.dataStorage.getWikipediaLinks(), query);
+      if(result && 'Href' in result && !_.isEmpty(result.Href))
+        return result.Href;
+    }
+    return null;
+  }
+  /***/
+, getLocation: function(){
+    var data = _.values(this.pick('Latitude', 'Longtitude'));
+    if(data.length === 2)
+      return data;
+    return null;
+  }
 });
