@@ -13,19 +13,21 @@ WordMenuView = Backbone.View.extend({
       }
     };
   }
+  /**
+    Executes non /^update.+/ methods the first time and configures their callbacks.
+  */
 , activate: function(){
     //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', function(){
-      this.updateStatic();
-      this.updateSearchFilter();
-    }, this);
-    App.pageState.on('change:wordOrder', this.updateSortBy, this);
-    App.pageState.on('change:spLang', this.updateSearchFilter, this);
-    App.pageState.on('change:phLang', this.updateSearchFilter, this);
-    //Calling updates:
-    App.views.renderer.callUpdates(this);
+    App.translationStorage.on('change:translationId', this.buildStatic, this);
+    App.dataStorage.on('change:global', this.buildSoundPath, this);
+    //Building statics the first time:
+    this.buildStatic();
+    this.buildSoundPath();
   }
-, updateStatic: function(){
+  /**
+    Generates the static translation part for the WordMenu.
+  */
+, buildStatic: function(){
     var staticT = App.translationStorage.translateStatic({
       title:       'menu_words_words'
     , meaningSets: 'menu_words_meaningSets_title'
@@ -55,13 +57,19 @@ WordMenuView = Backbone.View.extend({
     });
     this.setModel(staticT);
   }
-, updateSoundPath: function(){
+  /**
+    Generates the soundPath part of the model for WordMenuView.
+  */
+, buildSoundPath: function(){
     this.setModel({
       searchFilter: {
         soundPath: App.dataStorage.get('global').global.soundPath
       }
     });
   }
+  /**
+    Generates the sortBy part of the model for WordMenuView.
+  */
 , updateSortBy: function(){
     var data = {
       isLogical: App.pageState.wordOrderIsLogical()
@@ -221,6 +229,7 @@ WordMenuView = Backbone.View.extend({
     }, this);
     return {words: ws};
   }
+  /***/
 , render: function(){
     console.log('WordMenuView.render()');
     this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));

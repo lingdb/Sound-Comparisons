@@ -9,19 +9,13 @@ TopMenuView = Backbone.View.extend({
     };
   }
   /**
-    Function to activate update methods, and run them the first time.
-    This will be called by the Renderer.
+    Function to call non /^update.+/ methods that are necessary for the model, and to setup their callbacks.
   */
 , activate: function(){
     //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', function(){
-      App.views.renderer.callUpdates(this);
-    }, this);
-    App.study.on('change:Name', function(){
-      App.views.renderer.callUpdates(this);
-    }, this);
-    //Calling updates the first time:
-    App.views.renderer.callUpdates(this);
+    App.translationStorage.on('change:translationId', this.buildStatic, this);
+    //Building statics the first time:
+    this.buildStatic();
   }
   /**
     Overwrites the current model with the given one performing a deep merge.
@@ -29,8 +23,10 @@ TopMenuView = Backbone.View.extend({
 , setModel: function(m){
     this.model = $.extend(true, this.model, m);
   }
-  /***/
-, updateStatic: function(){
+  /**
+    Builds the static translations for the model.
+  */
+, buildStatic: function(){
     var staticT = App.translationStorage.translateStatic({
       logoTitle:       'website_logo_hover'
     , pageViewTitle:   'topmenu_views'
@@ -45,7 +41,9 @@ TopMenuView = Backbone.View.extend({
     });
     this.setModel(staticT);
   }
-  /***/
+  /**
+    Generates the study part of the TopMenu.
+  */
 , updateStudy: function(){
     var data = {
       currentStudyName: App.study.getName()
@@ -60,7 +58,9 @@ TopMenuView = Backbone.View.extend({
     }, this);
     this.setModel(data);
   }
-  /***/
+  /**
+    Generates the PageViews part of the TopMenu.
+  */
 , updatePageViews: function(){
     var hovers = App.translationStorage.translateStatic({
       m:  'topmenu_views_mapview_hover'
@@ -99,7 +99,9 @@ TopMenuView = Backbone.View.extend({
       , active:  App.pageState.isPageView(key)};
     }, this)});
   }
-  /***/
+  /**
+    Generates the translations part of the TopMenu.
+  */
 , updateTranslations: function(){
     this.setModel({
       currentFlag: App.translationStorage.getFlag()
@@ -112,7 +114,9 @@ TopMenuView = Backbone.View.extend({
       }, App.translationStorage)
     });
   }
-  /***/
+  /**
+    Generates the about/info links part of the TopMenu.
+  */
 , updateEntries: function(){
     var entries = App.translationStorage.translateStatic([
       { link:  'topmenu_about_furtherinfo_href'

@@ -11,23 +11,19 @@ LanguageMenuView = Backbone.View.extend({
     };
   }
   /**
-    Function to activate update methods, and run them the first time.
-    This will be called by the Renderer.
+    Activates callbacks to build parts of the model, which shall not be produced by /^update.+/ methods.
   */
 , activate: function(){
     //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', function(){
-      App.views.renderer.callUpdates(this);
-    }, this);
-    App.study.on('change', this.updateTree, this);
-    _.each(['familyCollection','regionCollection','regionLanguageCollection','languageCollection'], function(c){
-      App[c].on('reset', this.updateTree, this);
-    }, this);
-    //Calling updates:
-    App.views.renderer.callUpdates(this);
+    App.translationStorage.on('change:translationId', this.buildStatic, this);
+    //Building statics:
+    this.buildStatic();
   }
-  /***/
-, updateStatic: function(){
+  /**
+    Builds the static translations, and is, in contrast to /^update.+/ methods,
+    only called on activate and change of translationId.
+  */
+, buildStatic: function(){
     var staticT = App.translationStorage.translateStatic({
       headline:      'menu_regions_headline'
     , languageSets:  'menu_regions_languageSets_title'

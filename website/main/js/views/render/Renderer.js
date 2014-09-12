@@ -39,6 +39,8 @@ Renderer = Backbone.View.extend({
       //Renderer is activated now:
       this._activated = true;
     }
+    //Updates:
+    _.each(this.model, this.callUpdates, this);
     //First segment of the renderer:
     App.loadingBar.addLoaded();
     //Render dependant views:
@@ -53,6 +55,7 @@ Renderer = Backbone.View.extend({
     Calls all methods that match /^update/ on the given Backbone.View.
   */
 , callUpdates: function(v){
+    if(v === null) return;
     _.each(_.keys(v.__proto__), function(k){
       if(k.match(/^update/) !== null){
         v[k].call(v);

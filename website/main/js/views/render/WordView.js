@@ -5,32 +5,21 @@ WordView = Backbone.View.extend({
   */
   getKey: function(){return 'word';}
   /**
-    Function to activate update methods, and run them the first time.
-    This will be called by the Renderer.
-  */
-, activate: function(){
-    //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', function(){
-      App.views.renderer.callUpdates(this);
-    }, this);
-    App.study.on('change:Name', function(){
-      App.views.renderer.callUpdates(this);
-    }, this);
-    //Calling updates the first time:
-    App.views.renderer.callUpdates(this);
-  }
-  /**
     Overwrites the current model with the given one performing a deep merge.
   */
 , setModel: function(m){
     this.model = $.extend(true, this.model, m);
   }
   /**
-    FIXME add necessary callbacks.
+    Generates the WordHeadline for WordView,
+    but might also be used to build the WordHeadline for MapView aswell.
   */
 , updateWordHeadline: function(){
     var word = App.wordCollection.getChoice();
-    if(!word) return;
+    if(!word){
+      console.log('WordView.updateWordHeadline() with no word.');
+      return;
+    }
     var spLang   = App.pageState.getSpLang()
       , headline = {name: word.getLongName() || word.getNameFor(spLang)};
     //Sanitize name:
@@ -61,12 +50,15 @@ WordView = Backbone.View.extend({
     this.setModel({wordHeadline: headline});
   }
   /**
-    FIXME add necessary callbacks.
+    Generates the WordTable for WordView.
   */
 , updateWordTable: function(){
     //The word to use:
     var word = App.wordCollection.getChoice();
-    if(!word) return;
+    if(!word){
+      console.log('WordView.updateWordTable() with no word.');
+      return;
+    }
     //Calculating the maximum number of language cols:
     var maxLangCount = _.chain(App.regionCollection.models).map(function(r){
       var c = r.getLanguages().length;
