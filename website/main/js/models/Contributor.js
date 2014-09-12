@@ -9,11 +9,27 @@ Contributor = Backbone.Model.extend({
     return fn+' '+sn;
   }
   /***/
+, getInitials: function(){return this.get('Initials');}
+  /***/
 , getEmail: function(){
     var x = this.get('EmailUpToAt')
       , y = this.get('EmailAfterAt');
     if(x === '' || y === '' || !x || !y)
       return null;
     return x+' [ at ] '+y;
+  }
+  /***/
+, getColumnDescription: function(col){
+    if(_.isEmpty(col)) return null;
+    if(col === 'ContributorCitationAuthor2'){
+      return this.getColumnDescription()+' (2)';
+    }
+    return App.translationStorage.translateStatic('description_contributor_'+col);
+  }
+  /***/
+, getYearPages: function(){
+    var str = _.values(this.pick('Year','Pages')).join(' : ');
+    if(str.length > 0) return '('+str+')';
+    return str;
   }
 });

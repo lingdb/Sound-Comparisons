@@ -23,15 +23,32 @@ LanguageView = Backbone.View.extend({
     }
     //The basic headline:
     var headline = {
-      longName: language.getLongName()
-    , LanguageLinks: this.buildLinks(language)
+      longName:            language.getLongName()
+    , LanguageLinks:       this.buildLinks(language)
     , LanguageDescription: this.buildDescription(language)
     , playAll: App.translationStorage.translateStatic('language_playAll')
     };
-    //Previous Language:
-    //Next Language:
+    //Neighbours:
+    _.each(['tabulator_language_prev','tabulator_language_next'], function(v, k){
+      var l = (k === 0) ? language.getPrev() : language.getNext()
+        , k = (k === 0) ? 'prev' : 'next';
+      headline[k] = {
+        title: App.translationStorage.translateStatic(v)
+      , link:  'href="'+App.router.linkLanguageView({language: l})+'"'
+      , trans: l.getShortName()
+      };
+    }, this);
     //Contributors:
-    //FIXME implement
+    headline.contributors = _.map(language.getContributors(), function(c, col){
+      return {
+        cdesc: c.getColumnDescription(col)
+      , link: 'href="#FIXME/implement linking to whoAreWe view with a specific target."'
+      , name: c.getName()
+      , info: c.getYearPages()
+      };
+    }, this);
+    headline.contributorTooltip = App.translationStorage.translateStatic('tooltip_contributor_list');
+    headline.hasContributors    = headline.contributors.length > 0;
     //Done:
     this.setModel({languageHeadline: headline});
   }
