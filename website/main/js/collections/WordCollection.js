@@ -41,4 +41,16 @@ WordCollection = Choice.extend({
 , listenWordOrder: function(){
     App.pageState.on('change:wordOrder', this.sort, this);
   }
+  /**
+    Returns the default Words as array to be used as selection for the WordCollection.
+  */
+, getDefaultSelection: function(){
+    return App.defaults.getWords();
+  }
+  /**
+    Returns the default Word to be used as Choice for the WordCollection.
+  */
+, getDefaultChoice: function(){
+    return App.defaults.getWord();
+  }
 });

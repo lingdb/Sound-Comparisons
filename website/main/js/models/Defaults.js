@@ -23,7 +23,7 @@ Defaults = Backbone.Model.extend({
     }, this);
   }
   /**
-    Returns the default Words for the current Study as defined in the v4.Default_Multiple_Words table.
+    Returns the default Words as an array for the current Study as defined in the v4.Default_Multiple_Words table.
   */
 , getWords: function(){
     var wIds = {}; // WordId -> Boolean
@@ -31,10 +31,9 @@ Defaults = Backbone.Model.extend({
       var word = new Word(w);
       wIds[word.getId()] = true;
     }, this);
-    var ws = App.wordCollection.filter(function(w){
+    return App.wordCollection.filter(function(w){
       return w.getId() in wIds;
     }, this);
-    return new WordCollection(ws);
   }
   /**
     Returns the default Language for the current Study as defined in the v4.Default_Languages table.
@@ -44,29 +43,29 @@ Defaults = Backbone.Model.extend({
     return App.languageCollection.findWhere(query);
   }
   /**
-    Returns the default Languages for the current Study as defined in the v4.Default_Multiple_Languages table.
+    Returns the default Languages as array for the current Study
+    as defined in the v4.Default_Multiple_Languages table.
   */
 , getLanguages: function(){
     var lIds = {}; // LanguageIx -> Boolean
     _.each(this.get('languages'), function(l){
       lIds[l.LanguageIx] = true;
     }, this);
-    var ls = App.languageCollection.filter(function(l){
+    return App.languageCollection.filter(function(l){
       return l.get('LanguageIx') in lIds;
     }, this);
-    return new LanguageCollection(ls);
   }
   /**
-    Returns the default Languages for map use in the current Study es defined in the v4.Default_Languages_Exclude_Map table.
+    Returns the default Languages as array for map use in the current Study
+    as defined in the v4.Default_Languages_Exclude_Map table.
   */
 , getMapLanguages: function(){
     var excludes = {}; // LanguageIx -> Boolean
     _.each(this.get('excludeMap'), function(l){
       excludes[l.LanguageIx] = true;
     }, this);
-    var ls = App.languageCollection.filter(function(l){
+    return App.languageCollection.filter(function(l){
       return !(l.get('LanguageIx') in excludes);
     }, this);
-    return new LanguageCollection(ls);
   }
 });

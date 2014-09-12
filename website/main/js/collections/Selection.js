@@ -8,8 +8,8 @@ Selection = Backbone.Collection.extend({
     this.selected = {}; // model.getId() -> model
     //Defaulting selected models:
     this.on('reset', function(){
-      var ms = ('isDefaultSelection' in this)
-             ? this.filter(this.isDefaultSelection, this)
+      var ms = ('getDefaultSelection' in this)
+             ? this.getDefaultSelection()
              : this.models;
       this.selected = {};
       _.each(ms, function(m){

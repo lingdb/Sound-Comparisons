@@ -1,9 +1,13 @@
 /***/
 WordView = Backbone.View.extend({
+  /***/
+  initialize: function(){
+    this.model = {};
+  }
   /**
     Method to make it possible to check what kind of PageView this Backbone.View is.
   */
-  getKey: function(){return 'word';}
+, getKey: function(){return 'word';}
   /**
     Overwrites the current model with the given one performing a deep merge.
   */
@@ -35,7 +39,7 @@ WordView = Backbone.View.extend({
     //Neighbours:
     var withN = function(w){
       return {
-        link:  App.router.linkCurrent({word: w})
+        link:  'href="'+App.router.linkCurrent({word: w})+'"'
       , ttip:  w.getLongName()
       , trans: w.getNameFor(spLang)
       };
@@ -101,7 +105,7 @@ WordView = Backbone.View.extend({
           };
           var t = App.transcriptionMap.getTranscription(l, word);
           if(s = t.getAltSpelling()) cell.spelling = s;
-          cell.phonetic = t.getPhonetic();
+          cell.phonetic = t.getPhonetics();
           //Filling ls:
           ls.push(cell);
           cellCount--;
@@ -131,7 +135,11 @@ WordView = Backbone.View.extend({
   /***/
 , render: function(){
     console.log('WordView.render()');
-    this.$el.html(App.templateStorage.render('WordTable', this.model));
-    //FIXME implement active/not active handling.
+    if(App.pageState.isPageView(this)){
+      this.$el.html(App.templateStorage.render('WordTable', this.model));
+      this.$el.removeClass('hide');
+    }else{
+      this.$el.addClass('hide');
+    }
   }
 });

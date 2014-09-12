@@ -147,7 +147,7 @@ PageState = Backbone.Model.extend({
     }else if(key instanceof Backbone.View){
       if(typeof(key.getKey) !== 'function')
         return false;
-      key = key.getKey();
+      return this.isPageView(key.getKey());
     }
     console.log('PageState.isPageState() with unexpected key: '+key);
     return false;

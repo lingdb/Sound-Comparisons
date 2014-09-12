@@ -32,4 +32,20 @@ LanguageCollection = Choice.extend({
     }
     return this._spellingLanguages;
   }
+  /**
+    Returns the default Languages as array to be used as selection for the LanguageCollection.
+    Note that this method depends on the current PageView.
+  */
+, getDefaultSelection: function(){
+    if(App.pageState.isMapView()){
+      return App.defaults.getMapLanguages();
+    }
+    return App.defaults.getLanguages();
+  }
+  /**
+    Returns the default Language to be used as Choice for the LanguageCollection.
+  */
+, getDefaultChoice: function(){
+    return App.defaults.getLanguage();
+  }
 });
