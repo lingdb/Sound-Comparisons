@@ -25,7 +25,7 @@ LanguageView = Backbone.View.extend({
     var headline = {
       longName: language.getLongName()
     , LanguageLinks: this.buildLinks(language)
-    , LanguageDescription: undefined // FIXME implement
+    , LanguageDescription: this.buildDescription(language)
     , playAll: App.translationStorage.translateStatic('language_playAll')
     };
     //Previous Language:
@@ -76,6 +76,85 @@ LanguageView = Backbone.View.extend({
       });
     }
     return {links: ls};
+  }
+  /***/
+, buildDescription: function(lang){
+    var lst   = lang.getLanguageStatusType()
+      , desc  = lang.getDescriptionData()
+      , lines = [];
+    //Composing description lines:
+    if('Tooltip' in desc){
+      lines.push({desc: desc.Tooltip});
+    }
+    //Historical period:
+    if('HistoricalPeriod' in desc){
+      var line = {
+        link: 'http://en.wikipedia.org/wiki/'+desc.HistoricalPeriodWikipediaString
+      , img:  'http://en.wikipedia.org/favicon.ico'
+      };
+      if(lst !== null && parseInt(lst.getField()) === 1){
+        line.desc = lst.getDescription()+' '+desc.HistoricalPeriod;
+        lst = null;
+      }else{
+        line.desc = App.translationStorage.translateStatic('language_description_historical')
+                  + ': ' + desc.HistoricalPeriod;
+      }
+      lines.push(line);
+    }
+    //Ethnic group:
+    if(lst !== null && parseInt(lst.getField) === 6){
+      if('EthnicGroup' in desc){
+        lines.push({desc: lst.getDescription()+' '+desc.EthnicGroup});
+      }
+      lst = null;
+    }
+    //Region:
+    if('StateRegion' in desc){
+      var line = {
+        desc: (lst !== null) ? lst.getDescription()
+            : App.translationStorage.translateStatic('language_description_region')
+      };
+      line.desc += ('NearestCity' in desc)
+                 ? desc.NearestCity + ' (' + desc.StateRegion + ')'
+                 : desc.StateRegion;
+      lines.push(line);
+      lst = null;
+    }
+    //Consume lst iff still available:
+    if(lst !== null){
+      lines.push({
+        desc: [lst.getDescription(), lang.getLongName()].join(' ')
+      });
+    }
+    //Locality:
+    if('PreciseLocality' in desc){
+      var spelling = ('PreciseLocalityNationalSpelling' in desc)
+                   ? ' (='+desc.PreciseLocalityNationalSpelling+')' : '';
+      lines.push({
+        desc: App.translationStorage.translateStatic('language_description_preciselocality')
+            + ': '+desc.PreciseLocality+spelling
+      });
+    }
+    //External Weblink:
+    if('ExternalWeblink' in desc){
+      lines.push({
+        desc: App.translationStorage.translateStatic('language_description_externalweblink')+': '
+      , link: desc.ExternalWeblink
+      , text: desc.ExternalWeblink
+      });
+    }
+    //WebsiteSubgroup:
+    if('WebsiteSubgroupName' in desc){
+      lines.push({
+        desc: App.translationStorage.translateStatic('language_description_subgroup')+': '
+      , link: ('WebsiteSubgroupWikipediaString' in desc)
+            ? 'http://en.wikipedia.org/wiki/' + desc.WebsiteSubgroupWikipediaString : null
+      , img:  'http://en.wikipedia.org/favicon.ico'
+      , afterLink: desc.WebsiteSubgroupName
+      });
+    }
+    //Done:
+    return {rows: lines};
   }
   /***/
 , updateLanguageTable: function(){

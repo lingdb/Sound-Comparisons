@@ -334,4 +334,26 @@ Language = Backbone.Model.extend({
       return data;
     return null;
   }
+  /***/
+, getDescriptionData: function(){
+    var data = {};
+    _.each(this.pick(
+      'Tooltip'
+    , 'SpecificLanguageVarietyName'
+    , 'WebsiteSubgroupName'
+    , 'WebsiteSubgroupWikipediaString'
+    , 'HistoricalPeriod'
+    , 'HistoricalPeriodWikipediaString'
+    , 'EthnicGroup'
+    , 'StateRegion'
+    , 'NearestCity'
+    , 'PreciseLocality'
+    , 'PreciseLocalityNationalSpelling'
+    , 'ExternalWeblink'), function(v, k){
+      if(!_.isEmpty(v)){
+        data[k] = v;
+      }
+    }, this);
+    return data;
+  }
 });
