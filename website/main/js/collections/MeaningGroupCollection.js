@@ -23,4 +23,19 @@ MeaningGroupCollection = Selection.extend({
       this.reset(data.meaningGroups);
     }
   }
+  /**
+    @param words [Word]
+    Returns an object {mMap :: MgId -> MeaningGroup, wMap :: MgId -> [Word]}
+    This Method is basically a helper method for the MultiViews,
+    and implements bucket sort, which runs in O(n), to sort Words by MeaningGroup.
+  */
+, getMeaningGroupBuckets: function(words){
+    var mMap = {}, wMap = {};
+    _.each(words, function(w){
+      var mg = w.getMeaningGroup(), mId = mg.getId();
+      if(!(mId in mMap)) mMap[mId] = mg;
+      (mId in wMap) ? wMap[mId].push(w) : wMap[mId] = [w];
+    }, this);
+    return {mMap: mMap, wMap: wMap};
+  }
 });

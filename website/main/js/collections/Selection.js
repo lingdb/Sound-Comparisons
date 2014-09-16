@@ -36,6 +36,15 @@ Selection = Backbone.Collection.extend({
       _.each(ms, this.select, this);
     }
   }
+  /***/
+, setSelectedByKey: function(ks){
+    var keys = {}; // Hash map for faster finding of keys
+    _.each(ks, function(k){keys[k] = true;}, this);
+    //Adding models that have a matching key:
+    return this.setSelected(this.filter(function(m){
+      return m.getKey() in keys;
+    }, this));
+  }
   /**
     Runs the given iterator[ and context] over all currently selected models.
     Returns self for chaining.

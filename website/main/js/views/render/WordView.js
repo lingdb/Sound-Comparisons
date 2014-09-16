@@ -1,6 +1,5 @@
 /***/
 WordView = Backbone.View.extend({
-  /***/
   initialize: function(){
     this.model = {};
     //Connecting to the router

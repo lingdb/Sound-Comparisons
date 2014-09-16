@@ -18,7 +18,6 @@ Study = Backbone.Model.extend({
     //Setup is only complete iff the first study:update was performed.
     if(this._firstUpdate === true){
       this._firstUpdate = false;
-      console.log('Finishing Study.update(); id is: '+this.getId());
       App.setupBar.addLoaded();
     }
   }

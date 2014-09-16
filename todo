@@ -1,6 +1,6 @@
 2014-09-16:
-  - Ask Hans-Jörg for a separate directory for the new version,
-    so that we can test it with the current one still around.
+  - Hover/Click switch for sound play function doesn't appear to be working.
+  - Remember a feature to list all missing translations.
 
 2014-09-04:
  - Gotta fix the Download options in the TopMenu.
