@@ -107,7 +107,7 @@ Configurator = Sanitizer.extend({
 , configSetMeaningGroups: function(config, mgs){
     config = config || {};
     if(ms = this.configMkKeyArray(mgs)){
-      config.meaningGroups = JSON.stringify(ms);
+      config.meaningGroups = this.sanitizeArray(ms);
     }
     return config;
   }
@@ -117,7 +117,7 @@ Configurator = Sanitizer.extend({
 , configSetRegions: function(config, regions){
     config = config || {};
     if(rs = this.configMkKeyArray(regions)){
-      config.regions = JSON.stringify(rs);
+      config.regions = this.sanitizeArray(rs);
     }
     return config;
   }
@@ -127,7 +127,7 @@ Configurator = Sanitizer.extend({
 , configSetFamilies: function(config, families){
     config = config || {};
     if(fs = this.configMkKeyArray(families)){
-      config.families = JSON.stringify(fs);
+      config.fmilies = this.sanitizeArray(fs);
     }
     return config;
   }
