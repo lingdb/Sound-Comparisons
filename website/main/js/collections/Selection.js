@@ -46,16 +46,6 @@ Selection = Backbone.Collection.extend({
     }, this));
   }
   /**
-    Runs the given iterator[ and context] over all currently selected models.
-    Returns self for chaining.
-  */
-, forSelected: function(iterator, context){
-    _.each(this.selected, function(v, k){
-      iterator.call(context, v, k);
-    }, this);
-    return this;
-  }
-  /**
     Predicate to check selection of a model.
   */
 , isSelected: function(m){
