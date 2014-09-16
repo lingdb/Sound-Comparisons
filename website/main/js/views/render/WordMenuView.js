@@ -61,11 +61,13 @@ WordMenuView = Backbone.View.extend({
     Generates the soundPath part of the model for WordMenuView.
   */
 , buildSoundPath: function(){
-    this.setModel({
-      searchFilter: {
-        soundPath: App.dataStorage.get('global').global.soundPath
+    var path = '';
+    if(g = App.dataStorage.get('global')){
+      if('global' in g && 'soundPath' in g.global){
+        path = g.global.soundPath;
       }
-    });
+    }
+    this.setModel({searchFilter: {soundPath: path}});
   }
   /**
     Generates the sortBy part of the model for WordMenuView.
@@ -105,26 +107,25 @@ WordMenuView = Backbone.View.extend({
       });
     }, this);
     //Filling phList:
-    var phLang = App.pageState.getPhLang()
-      , phId   = phLang.getId();
-    //Initial data for phList
-    data.phList.current = phLang.getShortName();
-    data.phList.options = [];
-    //Other phLangs:
-    App.languageCollection.each(function(l){
-      if(l.getId() === phId) return;
-      data.phList.options.push({
-        link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
-      , href: l.getShortName()
-      });
-    }, this);
+    var phLang = App.pageState.getPhLang();
+    if(phLang !== null){
+      var phId = phLang.getId();
+      //Initial data for phList
+      data.phList.current = phLang.getShortName();
+      data.phList.options = [];
+      //Other phLangs:
+      App.languageCollection.each(function(l){
+        if(l.getId() === phId) return;
+        data.phList.options.push({
+          link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
+        , href: l.getShortName()
+        });
+      }, this);
+    }
     //Use App.pageState.get{Sp,Ph}Lang
     this.setModel({searchFilter: data});
   }
-  /**
-    FIXME figure out the necessary callbacks, and implement them.
-    These should include: translations, wordCollection, meaningGroupCollection, wordOrder.
-  */
+  /***/
 , updateWordList: function(){
     var data = {
       isLogical: App.pageState.wordOrderIsLogical()

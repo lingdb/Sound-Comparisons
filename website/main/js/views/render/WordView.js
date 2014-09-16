@@ -3,6 +3,8 @@ WordView = Backbone.View.extend({
   /***/
   initialize: function(){
     this.model = {};
+    //Connecting to the router
+    App.router.on('route:wordView', this.route, this);
   }
   /**
     Method to make it possible to check what kind of PageView this Backbone.View is.
@@ -141,5 +143,19 @@ WordView = Backbone.View.extend({
     }else{
       this.$el.addClass('hide');
     }
+  }
+  /***/
+, route: function(study, word){
+    console.log('WordView.route('+study+', '+word+')');
+    var pv = this.getKey();
+    //Setting the study:
+    App.study.setStudy(study).always(function(){
+      //Setting the word:
+      App.wordCollection.setChoiceByKey(word);
+      //Set this pageView as active:
+      App.pageState.setPageView(pv);
+      //Render:
+      App.views.renderer.render();
+    });
   }
 });

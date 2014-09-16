@@ -27,9 +27,8 @@ DataStorage = Backbone.Model.extend({
       window.App.setupBar.addLoaded();
       t.set(data);
       t.loadGlobal().done(function(){
-        var study = App.studyWatcher.get('study');
         window.App.setupBar.addLoaded();
-        t.loadStudy(study).always(function(){
+        t.loadStudy().always(function(){
           console.log('DataStorage.loadstudy() done with setup.');
           window.App.setupBar.addLoaded();
         });
@@ -146,8 +145,8 @@ DataStorage = Backbone.Model.extend({
   }
   /***/
 , loadStudy: function(name){
-    var name      = window.App.studyWatcher.get('study')
-      , key       = "Study_"+name
+    name = name || App.studyWatcher.get('study');
+    var key       = "Study_"+name
       , study     = this.load(key)
       , timestamp = this.get('lastUpdate')
       , promise   = $.Deferred();

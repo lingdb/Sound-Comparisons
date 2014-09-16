@@ -3,6 +3,8 @@ LanguageView = Backbone.View.extend({
   /***/
   initialize: function(){
     this.model = {};
+    //Connecting to the router
+    App.router.on('route:languageView', this.route, this);
   }
   /**
     Method to make it possible to check what kind of PageView this Backbone.View is.
@@ -211,5 +213,19 @@ LanguageView = Backbone.View.extend({
     }else{
       this.$el.addClass('hide');
     }
+  }
+  /***/
+, route: function(study, language){
+    console.log('LanguageView.route('+study+', '+language+')');
+    var pv = this.getKey();
+    //Setting the study:
+    App.study.setStudy(study).always(function(){
+      //Setting the word:
+      App.languageCollection.setChoiceByKey(language);
+      //Set this pageView as active:
+      App.pageState.setPageView(pv);
+      //Render:
+      App.views.renderer.render();
+    });
   }
 });

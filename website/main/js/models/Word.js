@@ -110,5 +110,4 @@ Word = Backbone.Model.extend({
   }
 , getPrev: function(){return this.getNeighbour(false);}
 , getNext: function(){return this.getNeighbour(true);}
-//FIXME implement language dependant translation
 });

@@ -39,5 +39,11 @@ Choice = Selection.extend({
         return ms.getId() === m;
       }, this) || null;
     }
+    return this.choice;
+  }
+  /***/
+, setChoiceByKey: function(k){
+    var m = this.find(function(x){return x.getKey() === k;}, this);
+    return this.setChoice(m);
   }
 });

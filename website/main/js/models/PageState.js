@@ -71,7 +71,7 @@ PageState = Backbone.Model.extend({
       if(spl = this.getSpLang()){
         phl = spl;
       }else{
-        phl = App.languageCollection.getDefaultPhoneticLanguage();
+        phl = App.languageCollection.getDefaultPhoneticLanguage() || null;
       }
       this.attributes.phLang = phl;
     }
@@ -126,6 +126,9 @@ PageState = Backbone.Model.extend({
       if(typeof(pv.getKey) === 'function'){
         this.setPageView(pv.getKey());
       }
+    }else{
+      console.log('PageState.setPageView() failed:');
+      console.log(pv);
     }
   }
   /**

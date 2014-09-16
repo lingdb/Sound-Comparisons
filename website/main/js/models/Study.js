@@ -17,7 +17,11 @@ Study = Backbone.Model.extend({
   /**
     Returns the ids of all other studies.
   */
-, getAllIds: function(){return App.dataStorage.get('global').studies;}
+, getAllIds: function(){
+    if(g = App.dataStorage.get('global'))
+      if('studies' in g) return g.studies;
+    return [];
+  }
   /**
     Returns the name for the current study in the current translation.
     @param field can be used to overwrite the study name, which is helpful to translate other studies.
@@ -42,5 +46,21 @@ Study = Backbone.Model.extend({
   */
 , getColorByFamily: function(){
     return parseInt(this.get('ColorByFamily')) === 1;
+  }
+  /***/
+, setStudy: function(id){
+    var promise = $.Deferred();
+    if(_.any([!_.isString(id), id === 'undefined', _.isEmpty(id)])){
+      promise.reject('Study.setStudy with invalid id: '+id);
+    }else if(id === this.get('Name')){
+      promise.resolve(); // No change to the study
+    }else{ // We need to load the study via DataStorage:
+      App.dataStorage.loadStudy(id).done(function(){
+        promise.resolve(arguments);
+      }).fail(function(){
+        promise.reject(arguments);
+      });
+    }
+    return promise;
   }
 });
