@@ -148,7 +148,8 @@ Configurator = Sanitizer.extend({
     if(_.isArray(ms)){
       return _.map(ms, function(m){
         if(_.isString(m)) return m;
-        return m.getKey();
+        if(_.isFunction(m.getKey)) return m.getKey();
+        throw {msg: 'Configurator.configMkKeyArray() could not convert correctly.', model: m};
       }, this);
     }
     return [];

@@ -16,6 +16,10 @@ Region = Backbone.Model.extend({
       , regionGpIx  = this.get('RegionGpIx');
     return ''+studyIx+familyIx+subFamilyIx+regionGpIx;
   }
+  /***/
+, getKey: function(){
+    return this.get('RegionGpNameShort');
+  }
   /**
     Method to build the field name necessary for translation by using getId and the current study.
   */

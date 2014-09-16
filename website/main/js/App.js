@@ -16,7 +16,7 @@ $(function(){
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
   , router: new Router()
-  , setupBar: new LoadingBar({segments: 4})
+  , setupBar: new LoadingBar({segments: 5})
   , studyWatcher: new StudyWatcher()
   , study: new Study()
   , soundPlayOption: new SoundPlayOption()
@@ -38,6 +38,10 @@ $(function(){
   //Setting up callbacks for PageState:
   App.wordCollection.listenWordOrder();
   App.pageState.activate();
+  //Start routing once setup finishes:
+  App.setupBar.onFinish(function(){
+    Backbone.history.start();
+  });
   //Creating views:
   App.views.hideLinks = new HideLinks();
   App.views.ipaKeyboardView = new IPAKeyboardView({
@@ -65,6 +69,4 @@ $(function(){
   App.views.renderer = new Renderer({el: $('body')});
   App.views.singleLanguageView = new SingleLanguageView();
   App.views.whoAreWeView = new WhoAreWeView();
-  //Starting the routing:
-  Backbone.history.start();
 });

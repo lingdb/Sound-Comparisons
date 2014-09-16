@@ -6,8 +6,8 @@ LanguageMenuView = Backbone.View.extend({
   initialize: function(){
     //Initial model:
     this.model = {
-      collapseHref: 'href="'+App.router.linkConfig({Regions: []})+'"'
-    , expandHref:   'href="'+App.router.linkConfig({Regions: App.regionCollection})+'"'
+      collapseHref: function(){return 'href="'+App.router.linkConfig({Regions: []})+'"';}
+    , expandHref:   function(){return 'href="'+App.router.linkConfig({Regions: App.regionCollection})+'"';}
     };
   }
   /**

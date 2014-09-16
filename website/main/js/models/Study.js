@@ -1,19 +1,34 @@
 /***/
 Study = Backbone.Model.extend({
+  initialize: function(){
+    //Field to track the first update.
+    this._firstUpdate = true;
+  }
   /**
     The update method is connected by the App,
     to listen on change:study of the window.App.dataStorage.
   */
-  update: function(){
+, update: function(){
     var ds   = window.App.dataStorage
       , data = ds.get('study');
     if(data && 'study' in data){
       console.log('Study.update()');
       this.set(data.study);
     }
+    //Setup is only complete iff the first study:update was performed.
+    if(this._firstUpdate === true){
+      this._firstUpdate = false;
+      console.log('Finishing Study.update(); id is: '+this.getId());
+      App.setupBar.addLoaded();
+    }
   }
   /***/
-, getId: function(){return this.get('Name');}
+, getId: function(){
+    if(this._firstUpdate === true){
+      throw {obj: this, msg: 'Study.getId() before first update'};
+    }
+    return this.get('Name');
+  }
   /**
     Returns the ids of all other studies.
   */

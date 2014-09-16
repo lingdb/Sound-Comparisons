@@ -49,11 +49,14 @@ Sanitizer = Backbone.Router.extend({
   }
   /***/
 , sanitizeStudy: function(o){
-    if(!('study') in o){
+    if(!('study' in o)){
       o.study = App.study;
     }
     if(o.study instanceof Study){
       o.study = o.study.getId();
+    }
+    if(!_.isString(o.study)){
+      throw 'Sanitizer.sanitizeStudy() with unexpected study: '+o.study+' in '+JSON.stringify(o);
     }
     return o;
   }
