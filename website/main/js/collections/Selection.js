@@ -103,7 +103,7 @@ Selection = Backbone.Collection.extend({
     }
     var map = {};
     _.each(ms, function(m){
-      map[m.getId] = m;
+      map[m.getId()] = m;
     }, this);
     return map;
   }
