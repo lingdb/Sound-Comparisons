@@ -53,4 +53,12 @@ WordCollection = Choice.extend({
 , getDefaultChoice: function(){
     return App.defaults.getWord();
   }
+  /**
+    Overwriting Selection:getSelected to sort elements according to WordCollection:comparator.
+  */
+, getSelected: function(){
+    var selected = Selection.prototype.getSelected.call(this);
+    selected.sort(this.comparator);
+    return selected;
+  }
 });
