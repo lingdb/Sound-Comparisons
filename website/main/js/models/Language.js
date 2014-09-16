@@ -112,18 +112,18 @@ Language = Backbone.Model.extend({
       index = (index + delta + count) % count;
       return elems[index];
     };
-    //Find index of RegionLanguage in models:
-    var index  = 0
-      , models = App.regionLanguageCollection.models
-      , langId = this.get('LanguageIx');
-    for(var i = 0; i < models.length; i++){
-      if(models[i].get('LanguageIx') === langId){
-        index = i;
-        break;
-      }
-    }
+    //Building the array of languages, by order of their regions:
+    var langs = [], index = 0, lId = this.getId();
+    App.regionCollection.each(function(r){
+      r.getLanguages().each(function(l){
+        langs.push(l);
+        if(l.getId() === lId){
+          index = langs.length - 1;
+        }
+      }, this);
+    }, this);
     //Return Language belonging to neighbour RegionLanguage:
-    return getN(models, index).getLanguage();
+    return getN(langs, index);
   }
   /**
     Fetches the next Neighbour of this language by the means of getNeighbour.
