@@ -206,7 +206,6 @@ LanguageView = Backbone.View.extend({
   }
   /***/
 , render: function(){
-    console.log('LanguageView.render()');
     if(App.pageState.isPageView(this)){
       this.$el.html(App.templateStorage.render('LanguageTable', {LanguageTable: this.model}));
       this.$el.removeClass('hide');

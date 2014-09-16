@@ -26,6 +26,7 @@ Renderer = Backbone.View.extend({
     this._activated = false;
   }
 , render: function(){
+    console.log('Renderer.render()');
     //Activation:
     if(this._activated === false){
       //Installing update methods of contained views:

@@ -135,7 +135,6 @@ TopMenuView = Backbone.View.extend({
   }
   /***/
 , render: function(){
-    console.log('TopMenuView.render()');
     this.$el.html(App.templateStorage.render('TopMenu', {TopMenu: this.model}));
   }
   /**

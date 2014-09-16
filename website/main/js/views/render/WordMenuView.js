@@ -239,7 +239,6 @@ WordMenuView = Backbone.View.extend({
   }
   /***/
 , render: function(){
-    console.log('WordMenuView.render()');
     this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
   }
   /**

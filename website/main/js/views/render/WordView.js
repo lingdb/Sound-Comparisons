@@ -135,7 +135,6 @@ WordView = Backbone.View.extend({
   }
   /***/
 , render: function(){
-    console.log('WordView.render()');
     if(App.pageState.isPageView(this)){
       this.$el.html(App.templateStorage.render('WordTable', this.model));
       this.$el.removeClass('hide');

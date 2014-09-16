@@ -37,7 +37,6 @@ LanguageMenuView = Backbone.View.extend({
     Builds the complete tree of [families ->] regions -> languages
   */
 , updateTree: function(){
-    console.log('LanguageMenuView.updateTree()');
     if(App.study.getColorByFamily()){
       var families = [], fCol = App.familyCollection;
       App.familyCollection.each(function(f){
@@ -195,7 +194,6 @@ LanguageMenuView = Backbone.View.extend({
     return regionList;
   }
 , render: function(){
-    console.log('LanguageMenuView.render()');
     this.$el.html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
   }
   /**

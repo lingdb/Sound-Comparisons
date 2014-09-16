@@ -156,7 +156,6 @@ LanguageWordView = Backbone.View.extend({
   }
   /***/
 , render: function(){
-    console.log('LanguageWordView.render()');
     if(App.pageState.isPageView(this)){
       this.$el.html(App.templateStorage.render('Multitable', {Multitable: this.model}));
       this.$el.removeClass('hide');
