@@ -40,11 +40,14 @@ Router = Linker.extend({
     */
     var configRoutes = ["mapView", "wordView", "languageView", "languageWordView", "wordLanguageView"];
     _.each(configRoutes, function(r){
-      this.on('route:'+r+'Config', function(){
+      var c = r+'Config';
+      this.on('route:'+c, function(){
         //Process configuration:
         this.configure(_.last(arguments));
         //Triger non config route:
-        this.trigger(r, _.take(arguments, arguments.length - 1));
+        var forward = _.take(arguments, arguments.length - 1);
+        forward.unshift('route:'+r);
+        this.trigger.apply(this, forward);
       }, this);
     }, this);
   }
