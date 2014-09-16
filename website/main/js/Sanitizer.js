@@ -129,8 +129,6 @@ Sanitizer = Backbone.Router.extend({
       }
       ret[k] = v;
     }, this);
-    console.log('Sanitizer.parseConfig()');
-    console.log(ret);
     return ret;
   }
   /***/
