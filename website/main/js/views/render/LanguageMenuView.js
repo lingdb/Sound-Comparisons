@@ -148,9 +148,16 @@ LanguageMenuView = Backbone.View.extend({
           var language = {
             shortName: l.getShortName()
           , longName:  l.getLongName()
-          , selected:  lCol.isSelected(l)
           , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
           };
+          //Deciding if the language is selected:
+          if(isMultiView||isMapView){
+            language.selected = lCol.isSelected(l);
+          }else if(App.pageState.isPageView('l')){
+            language.selected = lCol.isChoice(l);
+          }else{
+            language.selected = false;
+          }
           //TODO implement flags if wanted!
           //language.flag = l.getFlag();
           //Building the icon for a language:

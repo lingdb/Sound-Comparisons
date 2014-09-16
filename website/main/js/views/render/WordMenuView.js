@@ -191,10 +191,17 @@ WordMenuView = Backbone.View.extend({
     words.each(function(word){
       var w = {
         cname:    word.getKey()
-      , selected: App.wordCollection.isSelected(word)
       , trans:    word.getModernName()
       , ttip:     word.getLongName()
       };
+      //Deciding if a word is selected:
+      if(isMulti){
+        w.selected = App.wordCollection.isSelected(word);
+      }else if(App.pageState.isPageView('w')){
+        w.selected = App.wordCollection.isChoice(word);
+      }else{
+        w.selected = false;
+      }
       //The checkbox/icon:
       if(isMulti){
         if(w.selected){
