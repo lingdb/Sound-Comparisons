@@ -114,14 +114,14 @@ LanguageMenuView = Backbone.View.extend({
           case 'all':
             var removed = lCol.getDifference(lCol.getSelected(), languages);
             box.icon = 'icon-check';
-            box.href = 'href="'+App.router.linkCurrent({languages: removed})+'"';
+            box.link = 'href="'+App.router.linkCurrent({languages: removed})+'"';
             box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_minus');
           break;
           case 'some':
             box.icon = 'icon-chkbox-half-custom';
           case 'none':
             var additional = lCol.getUnion(lCol.getSelected(), languages);
-            box.href = 'href="'+App.router.linkCurrent({languages: additional})+'"';
+            box.link = 'href="'+App.router.linkCurrent({languages: additional})+'"';
             box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_plus');
         }
         region.checkbox = box;
@@ -172,7 +172,7 @@ LanguageMenuView = Backbone.View.extend({
                 icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_del');
               }
               var removed = lCol.getDifference(lCol.getSelected(), [l]);
-              icon.href = 'href="'+App.router.linkCurrent({languages: removed})+'"';
+              icon.link = 'href="'+App.router.linkCurrent({languages: removed})+'"';
             }else{
               if(isMapView){
                 icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_add_map');
@@ -180,7 +180,7 @@ LanguageMenuView = Backbone.View.extend({
                 icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_add');
               }
               var additional = lCol.getUnion(lCol.getSelected(), [l]);
-              icon.href = 'href="'+App.router.linkCurrent({languages: additional})+'"';
+              icon.link = 'href="'+App.router.linkCurrent({languages: additional})+'"';
             }
             language.icon = icon;
           }
