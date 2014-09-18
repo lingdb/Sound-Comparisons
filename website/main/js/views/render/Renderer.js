@@ -19,6 +19,7 @@ Renderer = Backbone.View.extend({
     , languageView:     new LanguageView({el: this.$('#languageTableContainer')})
     , languageWordView: new LanguageWordView({el: this.$('#multitableContainer')})
     , wordLanguageView: new WordLanguageView({el: this.$('#multitableTransposedContainer')})
+    , contributorView:  new ContributorView({el: this.$('#contributors')})
     };
     //Each model has a segment in the loadingBar, and Renderer itself has two:
     App.loadingBar.addSegment(this.model.length + 2);

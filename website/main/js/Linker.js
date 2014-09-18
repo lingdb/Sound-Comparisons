@@ -24,6 +24,8 @@ Linker = Configurator.extend({
     , language:        'linkLanguageView'
     , languagesXwords: 'linkLanguageWordView'
     , wordsXlanguages: 'linkWordLanguageView'
+    //We cannot generate links with options for contributorView:
+    , contributorView: 'linkMapView'
    };
    return this[callMap[App.pageState.getPageViewKey()]](options);
   }

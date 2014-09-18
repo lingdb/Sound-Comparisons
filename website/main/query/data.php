@@ -81,6 +81,18 @@ if(array_key_exists('global',$_GET)){
   , 'wikipediaLinks'              => fetchAll('SELECT * FROM WikipediaLinks')
   , 'soundPath'                   => Config::$soundPath
   );
+  //Fixing contributor avatars:
+  foreach($global['contributors'] as $k => $v){
+    $prefix = 'img/contributors/';
+    $inits  = $v['Initials'];
+    foreach(array('.jpg','.png','.gif') as $ext){
+      $file = $prefix.$inits.$ext;
+      if(file_exists($file)){
+        $global['contributors'][$k]['Avatar'] = $file;
+        break;
+      }
+    }
+  }
   //Done:
   echo json_encode(array(
     'studies' => $studies

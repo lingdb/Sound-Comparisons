@@ -44,7 +44,7 @@ LanguageView = Backbone.View.extend({
     headline.contributors = _.map(language.getContributors(), function(c, col){
       return {
         cdesc: c.getColumnDescription(col)
-      , link: 'href="#FIXME/implement linking to whoAreWe view with a specific target."'
+      , link: 'href="#/whoAreWe/'+c.getInitials()+'"'
       , name: c.getName()
       , info: c.getYearPages()
       };

@@ -19,6 +19,9 @@ Router = Linker.extend({
   , ":study/language/:language/*config":                "languageViewConfig"
   , ":study/languagesXwords/:languages/:words/*config": "languageWordViewConfig"
   , ":study/wordsXlanguages/:words/:languages/*config": "wordLanguageViewConfig"
+    //Various other routes:
+  , 'whoAreWe':                                         "contributorView"
+  , 'whoAreWe/:initials':                               "contributorView"
     //Route for missing implementations of links:
   , "FIXME":                                            "missingRoute"
   , "FIXME/*infos":                                     "missingRoute"

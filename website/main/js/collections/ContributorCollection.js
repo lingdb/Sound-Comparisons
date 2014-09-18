@@ -23,4 +23,23 @@ ContributorCollection = Backbone.Collection.extend({
       this.reset(data.contributors);
     }
   }
+  /***/
+, mainContributors: function(){
+    return this.filter(function(c){
+      return parseInt(this.get('SortIxForAboutPage')) !== 0;
+    }, this);
+  }
+  /***/
+, citeContributors: function(){
+    var cs = this.filter(function(c){
+      return parseInt(this.get('SortIxForAboutPage')) === 0;
+    }, this);
+    cs.sort(function(a,b){
+      var an = a.get('Surnames'), bn = b.get('Surnames');
+      if(an > bn) return -1;
+      if(an < bn) return  1;
+      return 0;
+    });
+    return cs;
+  }
 });

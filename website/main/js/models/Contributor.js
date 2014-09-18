@@ -32,4 +32,17 @@ Contributor = Backbone.Model.extend({
     if(str.length > 0) return '('+str+')';
     return str;
   }
+  /***/
+, getAvatar: function(){
+    return this.get('Avatar') || null;
+  }
+  /***/
+, getPersonalWebsite: function(){
+    return this.get('PersonalWebsite');
+  }
+  /***/
+, getFullRoleDescription: function(){
+    var desc = this.get('FullRoleDescription');
+    return desc.replace("\n", '<br>');
+  }
 });

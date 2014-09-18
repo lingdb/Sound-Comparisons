@@ -10,7 +10,7 @@ PageState = Backbone.Model.extend({
   , spLang: null
   , phLang: null
   , pageView: 'language'
-  , pageViews: ['map','word','language','languagesXwords','wordsXlanguages']
+  , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView']
   }
   /**
     Sets up callbacks to manipulate PageState when necessary.
