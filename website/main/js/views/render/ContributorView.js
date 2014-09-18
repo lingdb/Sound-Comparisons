@@ -1,5 +1,5 @@
 /***/
-ContributorView = Backbone.View.extend({
+ContributorView = Renderer.prototype.SubView.extend({
   /***/
   initialize: function(){
     this.model = {};

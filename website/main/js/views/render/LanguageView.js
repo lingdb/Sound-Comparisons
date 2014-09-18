@@ -1,5 +1,5 @@
 /***/
-LanguageView = Backbone.View.extend({
+LanguageView = Renderer.prototype.SubView.extend({
   /***/
   initialize: function(){
     this.model = {};

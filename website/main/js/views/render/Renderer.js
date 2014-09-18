@@ -42,7 +42,11 @@ Renderer = Backbone.View.extend({
       this._activated = true;
     }
     //Updates:
-    _.each(this.model, this.callUpdates, this);
+    _.each(this.model, function(m){
+      if(_.isEmpty(m)) return;
+      var call = (_.isFunction(m.isActive)) ? m.isActive() : true;
+      if(call) this.callUpdates(m);
+    }, this);
     //First segment of the renderer:
     App.loadingBar.addLoaded();
     //Render dependant views:
@@ -64,4 +68,12 @@ Renderer = Backbone.View.extend({
       }
     }, this);
   }
+  /**
+    To be extended by views that are used as models for the Renderer.
+  */
+, SubView: Backbone.View.extend({
+    getKey: function(){throw 'Renderer.SubView:getKey should be overwritten!';}
+  , render: function(){throw 'Renderer.SubView:render should be overwritten!';}
+  , isActive: function(){return App.pageState.isPageView(this);}
+  })
 });

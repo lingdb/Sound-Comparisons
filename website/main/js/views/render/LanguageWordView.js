@@ -1,5 +1,5 @@
 /***/
-LanguageWordView = Backbone.View.extend({
+LanguageWordView = Renderer.prototype.SubView.extend({
   initialize: function(){
     this.model = {};
     //Connecting to the router
