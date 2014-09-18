@@ -5,10 +5,14 @@ ContributorCollection = Backbone.Collection.extend({
     Custom comparator to make sure contributors are sorted by SortIxForAboutPage
   */
 , comparator: function(a, b){
-    var x = a.get('SortIxForAboutPage')
-      , y = b.get('SortIxForAboutPage');
+    //First choice is DESC by SortIx:
+    var x = a.get('SortIxForAboutPage'), y = b.get('SortIxForAboutPage');
     if(x > y) return -1;
     if(x < y) return  1;
+    //Second choice is ASC by Surnames:
+    x = a.get('Surnames'), y = b.get('Surnames');
+    if(x > y) return  1;
+    if(x < y) return -1;
     return 0;
   }
   /**
@@ -26,20 +30,15 @@ ContributorCollection = Backbone.Collection.extend({
   /***/
 , mainContributors: function(){
     return this.filter(function(c){
-      return parseInt(this.get('SortIxForAboutPage')) !== 0;
+      return parseInt(c.get('SortIxForAboutPage')) !== 0;
     }, this);
   }
   /***/
 , citeContributors: function(){
     var cs = this.filter(function(c){
-      return parseInt(this.get('SortIxForAboutPage')) === 0;
+      return parseInt(c.get('SortIxForAboutPage')) === 0;
     }, this);
-    cs.sort(function(a,b){
-      var an = a.get('Surnames'), bn = b.get('Surnames');
-      if(an > bn) return -1;
-      if(an < bn) return  1;
-      return 0;
-    });
+    //Note that these are already sorted by surnames, since their SortIx are the same.
     return cs;
   }
 });
