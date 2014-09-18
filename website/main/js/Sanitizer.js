@@ -109,7 +109,8 @@ Sanitizer = Backbone.Router.extend({
   }
   /***/
 , sanitizeArray: function(a){
-    return _.map(a, encodeURIComponent).join();
+    var arr = _.map(a, encodeURIComponent).join();
+    return arr === '' ? ' ' : arr;
   }
   /**
     Parses a given config String c to return the config object.
@@ -133,6 +134,7 @@ Sanitizer = Backbone.Router.extend({
   }
   /***/
 , parseArray: function(c){
+    if(c === ' ') return [];
     return _.map(c.split(','), decodeURIComponent);
   }
 });
