@@ -1,3 +1,6 @@
+2014-09-18:
+  - I could merge parts of both mutliViews into a MutliView class that they both extend.
+
 2014-09-16:
   - Hover/Click switch for sound play function doesn't appear to be working.
   - Remember a feature to list all missing translations.
