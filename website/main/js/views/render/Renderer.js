@@ -14,7 +14,7 @@ Renderer = Backbone.View.extend({
       topMenuView:      new TopMenuView({el: this.$('#topMenu')})
     , languageMenuView: new LanguageMenuView({el: this.$('#leftMenu')})
     , wordMenuView:     new WordMenuView({el: this.$('#rightMenu')})
-    , mapView:          null
+    , mapView:          new MapView({el: this.$('#mapViewContainer')})
     , wordView:         new WordView({el: this.$('#wordTableContainer')})
     , languageView:     new LanguageView({el: this.$('#languageTableContainer')})
     , languageWordView: new LanguageWordView({el: this.$('#multitableContainer')})

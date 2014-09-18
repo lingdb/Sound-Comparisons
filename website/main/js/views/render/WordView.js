@@ -10,12 +10,6 @@ WordView = Renderer.prototype.SubView.extend({
   */
 , getKey: function(){return 'word';}
   /**
-    Overwrites the current model with the given one performing a deep merge.
-  */
-, setModel: function(m){
-    this.model = $.extend(true, this.model, m);
-  }
-  /**
     Generates the WordHeadline for WordView,
     but might also be used to build the WordHeadline for MapView aswell.
   */
@@ -52,7 +46,7 @@ WordView = Renderer.prototype.SubView.extend({
     headline.next = $.extend(withN(word.getNext())
     , {title: App.translationStorage.translateStatic('tabulator_word_next')});
     //Done:
-    this.setModel({wordHeadline: headline});
+    _.extend(this.model, {wordHeadline: headline});
   }
   /**
     Generates the WordTable for WordView.
@@ -131,7 +125,7 @@ WordView = Renderer.prototype.SubView.extend({
       }, this);
     }, this);
     //Done:
-    this.setModel({WordTable: table});
+    _.extend(this.model, {WordTable: table});
   }
   /***/
 , render: function(){

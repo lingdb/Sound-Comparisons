@@ -77,4 +77,10 @@ Study = Backbone.Model.extend({
     }
     return promise;
   }
+  /***/
+, getMapZoomCorners: function(){
+    var cs = this.pick('DefaultTopLeftLat','DefaultTopLeftLon','DefaultBottomRightLat','DefaultBottomRightLon');
+    return [{lat: cs.DefaultTopLeftLat,     lon: cs.DefaultTopLeftLon}
+           ,{lat: cs.DefaultBottomRightLat, lon: cs.DefaultBottomRightLon}];
+  }
 });

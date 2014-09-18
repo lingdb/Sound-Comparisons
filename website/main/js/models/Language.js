@@ -99,6 +99,8 @@ Language = Backbone.Model.extend({
     }
     return this._family;
   }
+  /***/
+, getFamilyIx: function(){return this.get('FamilyIx');}
   /**
     Fetches the next or previous Neighbour of this language,
     according to LanguageIx inside the first Region of a language.
@@ -355,5 +357,14 @@ Language = Backbone.Model.extend({
       }
     }, this);
     return data;
+  }
+  /***/
+, getColor: function(){
+    var lst = this.getLanguageStatusType();
+    return {
+      color:      this.getRegion().getColor()
+    , opacity:    lst.get('Opacity')
+    , colorDepth: lst.get('ColorDepth')
+    };
   }
 });

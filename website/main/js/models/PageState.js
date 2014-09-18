@@ -9,7 +9,7 @@ PageState = Backbone.Model.extend({
     wordOrder: 'alphabetical'
   , spLang: null
   , phLang: null
-  , pageView: 'language'
+  , pageView: 'map'
   , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView']
   }
   /**
