@@ -6,7 +6,7 @@
 */
 PageState = Backbone.Model.extend({
   defaults: {
-    wordOrder: 'alphabetical'
+    wordOrder: 'logical'
   , spLang: null
   , phLang: null
   , pageView: 'map'

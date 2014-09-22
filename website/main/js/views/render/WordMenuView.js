@@ -135,7 +135,7 @@ WordMenuView = Backbone.View.extend({
       data.nhref = 'href="'+App.router.linkConfig({MeaningGroups: []})+'"';
       data.meaningGroups = [];
       var isMulti = App.pageState.isMultiView();
-      App.meaningGroupsCollection.each(function(m){
+      App.meaningGroupCollection.each(function(m){
         var collapsed = !App.meaningGroupCollection.isSelected(m)
           , mg = {
               name: m.getName()
