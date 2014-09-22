@@ -88,9 +88,16 @@ WordOverlayView = function(o){
       div.style.top  = bbox.y1 + 'px';
     });
   }
+  //Making removal possible:
+  this.remove = function(){
+    this.setMap(null);
+  };
   //Handling removal from the map:
   this.onRemove = function(){
-    this.model.get('div').parentNode.removeChild(this.div);
+    var div = this.model.get('div')
+    if(div instanceof Node){
+      div.parentNode.removeChild(div);
+    };
     this.model.get('marker').setMap(null);
     this.model.set({div: null, marker: null});
   }

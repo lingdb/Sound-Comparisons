@@ -21,6 +21,11 @@ if(typeof(google) !== 'undefined'){
       Called by views/render/MapView to set a model to represent on the map.
     */
   , setModel: function(m){
+      //Removing old wordOverlays:
+      _.each(this.get('wordOverlays'), function(wo){
+        if(v = wo.get('view')) v.remove();
+      }, this);
+      //Setting new data:
       this.set(m);
       this.initRegionBounds();
       //Building WordOverlays:
