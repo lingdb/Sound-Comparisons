@@ -51,10 +51,6 @@ $(function(){
   , model: App.soundPlayOption
   });
   App.views.audioLogic = new AudioLogic();
-  App.views.mapView = new MapView({
-    el: $('#contentArea')
-  , model: App.map
-  });
 //FIXME enable/rebuild later on
 //App.views.wordlistFilter = new WordlistFilter();
   App.views.loadingBar = new LoadingBarView({

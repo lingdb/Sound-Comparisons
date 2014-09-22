@@ -65,45 +65,52 @@ WordOverlay = Backbone.Model.extend({
 , equals: function(wo){
     return this.get('id') === wo.get('id');
   }
+  /**
+    Since getBBox depends on getPoint(),
+    it must return a Promise and cannot return a BBox immediately.
+  */
 , getBBox: function(edge){
-    var p    = this.get('view').getPoint()
-      , div  = $(this.get('div'))
-      , edge = edge || this.get('edge')
-      , bbox = {
-          x1: p.x
-        , y1: p.y
-        , x2: p.x + div.width()
-        , y2: p.y + div.height()
-        , w:  div.width()
-        , h:  div.height()
-        };
-    if(/^nw$/i.test(edge)){
-    }else if(/^ne$/i.test(edge)){
-      bbox = $.extend(bbox, {
-        x1: bbox.x1 - bbox.w
-      , x2: bbox.x2 - bbox.w
-      });
-    }else if(/^sw$/i.test(edge)){
-      bbox = $.extend(bbox, {
-        y1: bbox.y1 - bbox.h
-      , y2: bbox.y2 - bbox.h
-      });
-    }else if(/^se$/i.test(edge)){
-      bbox = $.extend(bbox, {
-        x1: bbox.x1 - bbox.w
-      , y1: bbox.y1 - bbox.h
-      , x2: bbox.x2 - bbox.w
-      , y2: bbox.y2 - bbox.h
-      });
-    }
-    return bbox;
+    var promise = $.Deferred(), t = this;
+    this.get('view').getPoint().done(function(p){
+      var div  = $(t.get('div'))
+        , edge = edge || t.get('edge')
+        , bbox = {
+            x1: p.x
+          , y1: p.y
+          , x2: p.x + div.width()
+          , y2: p.y + div.height()
+          , w:  div.width()
+          , h:  div.height()
+          };
+      if(/^nw$/i.test(edge)){
+      }else if(/^ne$/i.test(edge)){
+        bbox = $.extend(bbox, {
+          x1: bbox.x1 - bbox.w
+        , x2: bbox.x2 - bbox.w
+        });
+      }else if(/^sw$/i.test(edge)){
+        bbox = $.extend(bbox, {
+          y1: bbox.y1 - bbox.h
+        , y2: bbox.y2 - bbox.h
+        });
+      }else if(/^se$/i.test(edge)){
+        bbox = $.extend(bbox, {
+          x1: bbox.x1 - bbox.w
+        , y1: bbox.y1 - bbox.h
+        , x2: bbox.x2 - bbox.w
+        , y2: bbox.y2 - bbox.h
+        });
+      }
+      promise.resolve(bbox);
+    });
+    return promise;
   }
-/**
- @param a bbox
- @param b bbox
- @return bbox
- Shifts a given bbox by the x1,y1 values of another.
-*/
+  /**
+   @param a bbox
+   @param b bbox
+   @return bbox
+   Shifts a given bbox by the x1,y1 values of another.
+  */
 , shiftBy: function(a, b){
     return {
       x1: a.x1 + b.x1
@@ -114,11 +121,11 @@ WordOverlay = Backbone.Model.extend({
     , h:  a.h
     };
   }
-/**
-  @param a bbox
-  @param b bbox
-  @return Bool
-*/
+  /**
+    @param a bbox
+    @param b bbox
+    @return Bool
+  */
 , overlap: function(a, b){
     if(a.x2 < b.x1) return false;
     if(a.x1 > b.x2) return false;
@@ -126,38 +133,52 @@ WordOverlay = Backbone.Model.extend({
     if(a.y1 > b.y2) return false;
     return true;
   }
-/**
-  @param wos [WordOverlay]
-  To find a good edge, this method works as follows:
-  1: Build a lost of possible edges/positions
-  2: Iterate all given WordOverlays,
-     and eliminate edges that overlap
-  3: Append the fallback edge to the reduced edges list,
-     to have a last resort.
-  4: Select the first of the remaining edges
-*/
+  /**
+    @param wos [WordOverlay]
+    To find a good edge, this method works as follows:
+    1: Build a lost of possible edges/positions
+    2: Iterate all given WordOverlays,
+       and eliminate edges that overlap
+    3: Append the fallback edge to the reduced edges list,
+       to have a last resort.
+    4: Select the first of the remaining edges
+  */
 , place: function(wos){
     //Setup:
-    var edges     = ['sw','se','nw','ne']
+    var t = this
+      , edges     = ['sw','se','nw','ne']
       , fallback  = 'ne'
-      , mapBox    = App.views.mapView.getBBox()
-      , positions = _.map(edges, function(e){
-          return {edge: e, bbox: this.shiftBy(this.getBBox(e), mapBox)};
-        }, this);
-    //Filtering edges against wos:
-    _.each(wos, function(wo){
-      var bbox = this.shiftBy(wo.getBBox(), mapBox);
-      _.each(positions, function(p){
-        if(this.overlap(bbox, p.bbox)){
-          edges = _.filter(edges, function(e){
-            return (e !== p.edge);
+      , mapBox    = App.views.renderer.model.mapView.getBBox()
+      , positions = [], stage1 = [];
+    //Filling promises with shifted BBoxes:
+    _.each(edges, function(e){
+      stage1.push(t.getBBox(e).done(function(box){
+        positions.push({edge: e, bbox: t.shiftBy(box, mapBox)})
+      }));
+    });
+    //Awaiting finish of stage1:
+    var stage2 = [];
+    $.when.apply($, stage1).done(function(){
+      //Filtering edges against wos:
+      _.each(wos, function(wo){
+        stage2.push(wo.getBBox().done(function(woBox){
+          var bbox = t.shiftBy(woBox, mapBox);
+          _.each(positions, function(p){
+            if(t.overlap(bbox, p.bbox)){
+              edges = _.filter(edges, function(e){
+                return (e !== p.edge);
+              });
+            }
           });
-        }
-      }, this);
-    }, this);
-    //Appending the fallback edge:
-    edges.push(fallback);
-    //Selecting the first remaining edge:
-    this.set({edge: _.head(edges)})
+        }));
+      });
+    });
+    //Awaiting finish of promises to finish placement:
+    $.when.apply($, stage2).done(function(){
+      //Appending the fallback edge:
+      edges.push(fallback);
+      //Selecting the first remaining edge:
+      t.set({edge: _.head(edges)})
+    });
   }
 });

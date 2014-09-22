@@ -22,9 +22,12 @@ RegionCollection = Selection.extend({
 , getRegionBuckets: function(languages){
     var rMap = {}, lMap = {};
     _.each(languages, function(l){
-      var r = l.getRegion(), rId = r.getId();
-      if(!(rId in rMap)) rMap[rId] = r;
-      (rId in lMap) ? lMap[rId].push(l) : lMap[rId] = [l];
+      var r = l.getRegion();
+      if(r !== null){ // We only act on cases with regions.
+        var rId = r.getId();
+        if(!(rId in rMap)) rMap[rId] = r;
+        (rId in lMap) ? lMap[rId].push(l) : lMap[rId] = [l];
+      }
     }, this);
     return {rMap: rMap, lMap: lMap};
   }

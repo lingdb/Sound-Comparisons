@@ -1,22 +1,25 @@
 /**
+  Our constructor expects the following options:
   el:    google.maps.Map
   model: WordOverlay
 */
-WordOverlayView = ColorCalcView.extend({
-  initialize: function(){
-    this.model.set({view: this});
-    this.model.on('change:edge', this.edgeChanged, this);
-    this.setMap(this.el);
-  }
-// Called when a WordOverlayView is added to a map:
-, onAdd: function(){
+WordOverlayView = function(o){
+  //Required properties of google.maps.OverlayView:
+  this.bounds_ = null;
+  this.image_  = null;
+  this.map_    = o.el;
+  //Custom properties:
+  this.model = o.model;
+  //Custom methods:
+  //Called when a WordOverlayView is added to a map:
+  this.onAdd = function(){
     //Creating the div:
     var div   = document.createElement("div")
       , color = this.model.get('color');
     //Calculating the color values:
     color.opacity /= 100;
-//FIXME we don't use hsl at the moment.
-//    color.color = this.getColorDepth(color.color, color.colorDepth);
+    //FIXME we don't use hsl at the moment.
+    //    color.color = this.getColorDepth(color.color, color.colorDepth);
     //Filling and styling the div:
     $(div).addClass('mapAudio', 'audio')
           .html(this.model.get('content'))
@@ -57,32 +60,58 @@ WordOverlayView = ColorCalcView.extend({
     , marker: marker
     , added:  true
     });
+  };
+  /**
+    The problem with getPoint is, that it depends on the map being 'ready'.
+    To achive this, we wait for the first idle event in case getProjection is empty.
+    Because of this, getPoint can only return a Promise for a Point, but not a Point itself.
+  */
+  this.getPoint = function(){
+    var pos  = this.model.get('position')
+      , prom = $.Deferred()
+      , prj  = this.getProjection();
+    if(_.isEmpty(prj)){
+      var t = this;
+      google.maps.event.addListenerOnce(this.map_, 'idle', function(){
+        prom.resolve(t.getProjection().fromLatLngToDivPixel(pos));
+      });
+    }else{
+      prom.resolve(prj.fromLatLngToDivPixel(pos));
+    }
+    return prom;
+  };
+  //The draw method:
+  this.draw = function(){
+    var div = this.model.get('div');
+    this.model.getBBox().done(function(bbox){
+      div.style.left = bbox.x1 + 'px';
+      div.style.top  = bbox.y1 + 'px';
+    });
   }
-, getPoint: function(){
-    var p = this.model.get('position');
-    return this.getProjection().fromLatLngToDivPixel(p);
-  }
-, draw: function(){
-    var bbox = this.model.getBBox()
-      , div  = this.model.get('div');
-    div.style.left = bbox.x1 + 'px';
-    div.style.top  = bbox.y1 + 'px';
-  }
-, onRemove: function(){
+  //Handling removal from the map:
+  this.onRemove = function(){
     this.model.get('div').parentNode.removeChild(this.div);
     this.model.get('marker').setMap(null);
     this.model.set({div: null, marker: null});
   }
-, onScreen: function(){
+  //Predicate to chk iff this overlay is on the screen.
+  this.onScreen = function(){
     var p = this.model.get('position');
     return this.el.getBounds().contains(p);
   }
-, edgeChanged: function(){
+  //Callback to handle changed edges
+  this.edgeChanged = function(){
     if(this.model.get('added'))
       this.draw();
   }
-});
-WordOverlayView.prototype = _.extend(
-  WordOverlayView.prototype
-, google.maps.OverlayView.prototype
-);
+  //Callbacks:
+  this.model.on('change:edge', this.edgeChanged, this);
+  //Setting the map:
+  this.setMap(o.el);
+};
+/**
+  Because of reasons, I have problems with WordOverlayView being an instance of both,
+  ColerCalcView and google.maps.OverlayView.
+  To work around this, I reimplemented WordOverlayView in a fashion that makes it independant of ColorCalcView below.
+*/
+WordOverlayView.prototype = new google.maps.OverlayView();

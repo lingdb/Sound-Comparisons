@@ -17,17 +17,21 @@ if(typeof(google) !== 'undefined'){
     , wordOverlays:  []
     , notAddedWos:   0
     }
-  , initialize: function(){
-      var txt = $('div#map_data').text();
-      if(txt === '') return; // Abort
-      this.set($.parseJSON(txt));
+    /**
+      Called by views/render/MapView to set a model to represent on the map.
+    */
+  , setModel: function(m){
+      this.set(m);
       this.initRegionBounds();
       //Building WordOverlays:
+      var map = App.views.renderer.model.mapView.map;
       var wos = _.map(
         this.get('transcriptions')
       , function(t){
           var wo = new WordOverlay(t);
           wo.on('change:added', this.wordOverlayAdded, this);
+          //WordOverlayView will be added as the view to the WordOverlay.
+          wo.set({view: new WordOverlayView({model: wo, el: map})});
           return wo;
         }
       , this
