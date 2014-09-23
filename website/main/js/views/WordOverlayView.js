@@ -18,8 +18,6 @@ WordOverlayView = function(o){
       , color = this.model.get('color');
     //Calculating the color values:
     color.opacity /= 100;
-    //FIXME we don't use hsl at the moment.
-    //    color.color = this.getColorDepth(color.color, color.colorDepth);
     //Filling and styling the div:
     $(div).addClass('mapAudio', 'audio')
           .html(this.model.get('content'))

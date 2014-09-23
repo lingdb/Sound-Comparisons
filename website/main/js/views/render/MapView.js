@@ -140,21 +140,7 @@ MapView = Renderer.prototype.SubView.extend({
   */
 , renderMap: function(){
     this.adjustCanvasSize();
-    //Delayed centerRegion:
-    var t = this, tid = window.setTimeout(function(){
-      t.centerRegion();
-      window.clearTimeout(tid);
-    }, 1000);
-    this.wordOverlayViews = _.map(
-      App.map.get('wordOverlays')
-    , function(wo){
-        return wo.get('view');
-      //FIXME remove commented
-      //return new WordOverlayView({
-      //  el: this.map, model: wo});
-      }
-    , this
-    );
+    this.centerRegion();
   }
   /**
     A method to make sure that the canvas size equals the maximum size possible in the current browser window.
