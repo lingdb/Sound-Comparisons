@@ -56,15 +56,12 @@ MapView = Renderer.prototype.SubView.extend({
 , updateWordHeadline: function(){
     return WordView.prototype.updateWordHeadline.call(this, arguments);
   }
-  /**
-    TODO viewLast currently has the defaults, which is probably not what we want.
-         In that case we'll have to introduce Selection:getPreviousSelection or something.
-  */
+  /***/
 , updateLinks: function(){
     var lc = App.languageCollection;
     _.extend(this.model, {
-      viewAll:     'href="'+App.router.linkMapView({languages: lc})+'"'
-    , viewLast:    'href="'+App.router.linkMapView({languages: App.defaults.getLanguages()})+'"'
+      viewAll:     'href="'+App.router.linkConfig({MapViewIgnoreSelection: true})+'"'
+    , viewLast:    'href="'+App.router.linkConfig({MapViewIgnoreSelection: false})+'"'
     , allSelected: lc.length === lc.getSelected().length
     });
   }
@@ -75,7 +72,10 @@ MapView = Renderer.prototype.SubView.extend({
     , regionZoom: App.study.getMapZoomCorners()
     }, word = App.wordCollection.getChoice();
     //Iterating languages:
-    _.each(App.languageCollection.getSelected(), function(l){
+    var languages = App.pageState.get('mapViewIgnoreSelection')
+                  ? App.languageCollection.models
+                  : App.languageCollection.getSelected();
+    _.each(languages, function(l){
       var latlon = l.getLocation();
       if(latlon === null) return;
       var tr = App.transcriptionMap.getTranscription(l, word);
@@ -158,17 +158,13 @@ MapView = Renderer.prototype.SubView.extend({
     so that the event callbacks can easily be setup again.
   */
 , bindEvents: function(){
-    var events = {
-      '#map_menu_viewAll':        'saveSelection'
-    , '#map_menu_viewLast':       'loadSelection'
-    , '#map_menu_zoomCenter':     'centerDefault'
-    , '#map_menu_zoomCoreRegion': 'centerRegion'
-    }, t = this;
-    _.each(events, function(mName, tgt){
+    var t = this;
+    _.each({'#map_menu_zoomCenter': 'centerDefault', '#map_menu_zoomCoreRegion': 'centerRegion'}
+    , function(mName, tgt){
       this.$(tgt).click(function(){
         t[mName].call(t);
       });
-    });
+    }, this);
   }
   /**
     Centers the Map on the given default.
@@ -185,18 +181,6 @@ MapView = Renderer.prototype.SubView.extend({
     this.map.fitBounds(App.map.get('regionBounds'));
     $('#map_menu_zoomCoreRegion').addClass('selected');
     $('#map_menu_zoomCenter').removeClass('selected');
-  }
-  //FIXME is this method still necessary/usefull?
-, saveSelection: function(){
-    var save = $('div#saveLocation').attr('href');
-    localStorage['maps_userSelection'] = save;
-  }
-  //FIXME is this method still necessary/usefull?
-, loadSelection: function(e){
-    if(localStorage['maps_userSelection']){
-      window.location.href = localStorage['maps_userSelection'];
-      e.preventDefault();
-    }
   }
   /**
     Fills a PlaySequence with currently displayed entries from the map in the given direction.

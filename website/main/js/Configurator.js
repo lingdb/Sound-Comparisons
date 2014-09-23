@@ -45,6 +45,9 @@ Configurator = Sanitizer.extend({
     if('translation' in config){
       App.translationStorage.setTranslationId(config.translation);
     }
+    if('mapViewIgnoreSelection' in config){
+      App.pageState.set({mapViewIgnoreSelection: config.mapViewIgnoreSelection === 'true'});
+    }
   }
   /**
     Takes a calls Object that maps Suffixes to args,
@@ -135,6 +138,11 @@ Configurator = Sanitizer.extend({
 , configSetTranslation: function(config, translationId){
     config = config || {};
     config.translation = translationId;
+    return config;
+  }
+, configSetMapViewIgnoreSelection: function(config, ignore){
+    config = config || {};
+    config.mapViewIgnoreSelection = ignore ? 'true' : 'false';
     return config;
   }
   /**

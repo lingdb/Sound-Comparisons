@@ -11,6 +11,7 @@ PageState = Backbone.Model.extend({
   , phLang: null
   , pageView: 'map'
   , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView']
+  , mapViewIgnoreSelection: false // On true all languages shall be displayed
   }
   /**
     Sets up callbacks to manipulate PageState when necessary.
