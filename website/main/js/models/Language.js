@@ -360,11 +360,11 @@ Language = Backbone.Model.extend({
   }
   /***/
 , getColor: function(){
-    var lst = this.getLanguageStatusType();
-    return {
-      color:      (r = this.getRegion()) ? r.getColor() : null
-    , opacity:    lst.get('Opacity')
-    , colorDepth: lst.get('ColorDepth')
-    };
+    var ret = {color: (r = this.getRegion()) ? r.getColor() : null};
+    if(lst = this.getLanguageStatusType()){
+      ret.opacity    = lst.get('Opacity');
+      ret.colorDepth = lst.get('ColorDepth');
+    }
+    return ret;
   }
 });

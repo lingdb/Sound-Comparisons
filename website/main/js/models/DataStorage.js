@@ -130,7 +130,7 @@ DataStorage = Backbone.Model.extend({
       , promise   = $.Deferred();
     if(!current || current.timestamp < timestamp){
       var t = this;
-      $.getJSON(this.get('target'), {global: null}).done(function(data){
+      $.getJSON(t.get('target'), {global: null}).done(function(data){
         data.timestamp = timestamp;
         t.set({global: data});
         promise.resolve();
@@ -152,7 +152,7 @@ DataStorage = Backbone.Model.extend({
       , promise   = $.Deferred();
     if(!study || study.timestamp < timestamp){
       var t = this;
-      $.getJSON(this.get('target'), {study: name}).done(function(data){
+      $.getJSON(t.get('target'), {study: name}).done(function(data){
         data.timestamp = timestamp;
         t.set({study: data});
         promise.resolve();

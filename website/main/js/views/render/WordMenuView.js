@@ -88,16 +88,16 @@ WordMenuView = Backbone.View.extend({
     this method has a focus on building the {sp,ph}List entries.
   */
 , updateSearchFilter: function(){
-    var data = {spList: {}, phList: {}};
+    var data = {spList: {options: []}, phList: {}};
     //Filling spList:
     var spLang = App.pageState.getSpLang();
     data.spList.current = spLang ? spLang.getSpellingName() : App.translationStorage.getName();
     //First item:
     if(spLang){
-      data.spList.options = [{
+      data.spList.options.push({
         link: 'data-href="'+App.router.linkConfig({SpLang: spLang})+'"'
       , name: App.translationStorage.getName()
-      }];
+      });
     }
     //Other items:
     var spId = spLang ? spLang.getId() : -1;
@@ -110,7 +110,7 @@ WordMenuView = Backbone.View.extend({
     }, this);
     //Filling phList:
     var phLang = App.pageState.getPhLang();
-    if(phLang !== null){
+    if(phLang){
       var phId = phLang.getId();
       //Initial data for phList
       data.phList.current = phLang.getShortName();
@@ -230,14 +230,14 @@ WordMenuView = Backbone.View.extend({
              ? 'href="'+App.router.linkMapView({word: word})+'"'
              : 'href="'+App.router.linkWordView({word: word})+'"';
       //Phonetics:
-      var phonetics = '*'+word.getProtoName();
+      var phonetics = ['*'+word.getProtoName()];
       if(phLang = App.pageState.getPhLang()){
-        var tr = word.getTranscription(phLang);
-        phonetics = tr.getPhonetics();
+        if(tr = word.getTranscription(phLang))
+          phonetics = tr.getPhonetics();
       }
       //Finish it:
       _.each(phonetics, function(p){
-        ws.push($.extend(w, {phonetic: p}))
+        ws.push(_.extend(w, {phonetic: p}))
       }, this);
     }, this);
     return {words: ws};

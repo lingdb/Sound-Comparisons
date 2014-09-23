@@ -14,6 +14,8 @@ Family = Backbone.Model.extend({
       , familyIx = this.get('FamilyIx');
     return ''+studyIx+familyIx;
   }
+  /***/
+, getKey: function(){return this.get('FamilyNm');}
   /**
     Returns a color string in the form of /#{[0-9a-fA-F]}6/, or null.
   */

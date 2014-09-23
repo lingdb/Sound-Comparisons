@@ -39,7 +39,7 @@ LanguageMenuView = Backbone.View.extend({
 , updateTree: function(){
     if(App.study.getColorByFamily()){
       var families = [], fCol = App.familyCollection;
-      App.familyCollection.each(function(f){
+      fCol.each(function(f){
         //Checking if we got regions:
         var regions = f.getRegions();
         if(regions.length === 0) return;
@@ -52,10 +52,8 @@ LanguageMenuView = Backbone.View.extend({
               }
             };
         //Link building:
-        var fCol = App.familyCollection
-          , fams = (selected)
-                 ? fCol.getDifference(fCol.getSelected(), [f])
-                 : fCol.getUnion(fCol.getSelected(), [f]);
+        var fams = selected ? fCol.getDifference(fCol.getSelected(), [f])
+                            : fCol.getUnion(fCol.getSelected(), [f]);
         data.link = 'href="'+App.router.linkConfig({Families: fams})+'"'
         //Checkbox info:
         var languages = f.getLanguages(), lCol = App.languageCollection;

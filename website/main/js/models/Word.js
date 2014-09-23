@@ -63,10 +63,12 @@ Word = Backbone.Model.extend({
   }
   /***/
 , getNameFor: function(language){
-    var t    = App.transcriptionMap.getTranscription(language, this)
-      , alts = t.getSpellingAltv();
-    if(alts.length > 0)
-      return alts;
+    if(language){
+      var t    = App.transcriptionMap.getTranscription(language, this)
+        , alts = t.getSpellingAltv();
+      if(alts.length > 0)
+        return alts;
+    }
     return this.getModernName();
   }
   /**
