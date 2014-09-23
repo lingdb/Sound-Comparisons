@@ -28,7 +28,7 @@ PlaySequence.prototype.clear = function(){
 PlaySequence.prototype.play = function(){
   this.playing = true;
   var t = this;
-  window.App.views.audioLogic.setPlayFinished(function(){ t._play(); });
+  App.views.audioLogic.setPlayFinished(function(){ t._play(); });
   this._play();
   //Stopping on spacebar:
   var stop = function(e){
@@ -57,7 +57,7 @@ PlaySequence.prototype._play = function(){
   var audio = this.sequence[this.next];
   this.next++;
   //Playing the audio:
-  window.App.views.audioLogic.play(audio);
+  App.views.audioLogic.play(audio);
 };
 /**
   Stops the PlaySequence from playing further.

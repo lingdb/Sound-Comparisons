@@ -21,7 +21,7 @@ Renderer = Backbone.View.extend({
     , wordLanguageView: new WordLanguageView({el: this.$('#multitableTransposedContainer')})
     , contributorView:  new ContributorView({el: this.$('#contributors')})
     };
-    //Memoization wether models have been activated:
+    //Flag if models have been activated:
     this._activated = false;
   }
 , render: function(){

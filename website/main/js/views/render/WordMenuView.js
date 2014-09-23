@@ -12,6 +12,8 @@ WordMenuView = Backbone.View.extend({
         }
       }
     };
+    //We need a WordlistFilter:
+    this.wordlistFilter = new WordlistFilter();
   }
   /**
     Executes non /^update.+/ methods the first time and configures their callbacks.
@@ -136,13 +138,16 @@ WordMenuView = Backbone.View.extend({
       data.meaningGroups = [];
       var isMulti = App.pageState.isMultiView();
       App.meaningGroupCollection.each(function(m){
+        //Each meaningGroup should have some words:
+        var words = m.getWords();
+        if(words.length === 0) return;
+        //Data for the current MeaningGroup:
         var collapsed = !App.meaningGroupCollection.isSelected(m)
           , mg = {
               name: m.getName()
             , fold: collapsed ? 'mgFold' : 'mgUnfold'
             , triangle: collapsed ? 'icon-chevron-up rotate90' : 'icon-chevron-down'
-            }
-          , words = m.getWords();
+            };
         //Building the link to toggle the MeaningGroup:
         var toggleGroup = [], mgCol = App.meaningGroupCollection;
         if(collapsed){
@@ -239,7 +244,10 @@ WordMenuView = Backbone.View.extend({
   }
   /***/
 , render: function(){
+    //Updating the WordMenu html representation:
     this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
+    //Reinitializing the WordlistFilter:
+    this.wordlistFilter.reinitialize();
   }
   /**
     Basically the same as TopMenuView:setModel,

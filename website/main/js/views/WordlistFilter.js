@@ -7,15 +7,9 @@ WordlistFilter = Backbone.View.extend({
   , inputId:    'wordlistfilter_inputId'
   , selectedId: 'wordlistfilter_selectedId'
   }
+  /***/
 , initialize: function(){
-    //We need to make sure, WordlistFilter is reinitialized each navigation.
-    window.App.loadingBar.onFinish(function(){
-      this.reinitialize();
-      //Return true to be called each time:
-      return true;
-    }, this);
-    //Besides the initial setup above, we proxy to reinitialize:
-    this.reinitialize();
+    App.pageState.on('change:pageView', this.clearStorage, this);
   }
 /*
   This fullfills the works of initialize, but may also be called later on.
@@ -23,12 +17,11 @@ WordlistFilter = Backbone.View.extend({
   as parts of the page will be replaced on navigation.
 */
 , reinitialize: function(){
-    //Checking if former inputs can be found:
-    if(window.App.studyWatcher.studyChanged() || window.App.viewWatcher.viewChanged()){
+    if(window.App.studyWatcher.studyChanged()){
       this.clearStorage();
     }else{
       $(window.localStorage[this.storage.selectedId]).addClass('selected');
-      $(window.localStorage[this.storage.inputId]).val(window.localStorage[this.storage.content]);
+      $(window.localStorage[this.storage.inputId]).val(window.localStorage[this.storage.content] || '');
     }
     //Checking if we can filter the languageTable aswell:
     this.hasLanguageTable = ($('#languageTable').length > 0);
@@ -98,13 +91,10 @@ WordlistFilter = Backbone.View.extend({
 , getLanguageTableSet: function(useTranscriptions){
     //If ¬useTranscriptions we use words to filter on.
     var set = $('#languageTable td.transcription').map(function(i, e){
-      var ret = {target: $(e)};
-      if(useTranscriptions){
-        ret.text = $('div.transcription', e).text();
-      }else{
-        ret.text = $('.color-word', e).text();
-      }
-      return ret;
+      return { target: $(e)
+             , text:   useTranscriptions ? $('div.transcription', e).text()
+                                         : $('.color-word', e).text()
+      };
     });
     return set;
   }

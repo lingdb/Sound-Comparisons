@@ -31,6 +31,7 @@ $(function(){
     this.dataStorage.on('change:global', this[l].update, this[l]);
   }, App);
   //Listening for changing studies:
+  //App.studyWatcher.listen();//TODO get the new StudyWatcher ready.
   App.studyWatcher.on('change:study', App.dataStorage.loadStudy, App.dataStorage);
   _.each(['defaults','study','familyCollection','languageCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
     , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
@@ -50,8 +51,6 @@ $(function(){
   , model: App.soundPlayOption
   });
   App.views.audioLogic = new AudioLogic();
-//FIXME enable/rebuild later on
-//App.views.wordlistFilter = new WordlistFilter();
   App.views.setupBar = new SetupBarView({
     el: $('#appSetup'), model: App.setupBar
   });

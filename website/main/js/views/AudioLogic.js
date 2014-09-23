@@ -28,7 +28,7 @@ AudioLogic = Backbone.View.extend({
     this.findAudio();
   }
 , findAudio: function(target){
-    var t   = this, tgt = target || $('body');
+    var t = this, tgt = target || $('body');
     tgt.find('.audio').each(function(i){
       var a = $('audio', this).get(0);
       $(this).on('click mouseover mouseout touchstart', function(e){
