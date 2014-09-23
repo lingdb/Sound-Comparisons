@@ -22,12 +22,14 @@ Renderer = Backbone.View.extend({
     , contributorView:  new ContributorView({el: this.$('#contributors')})
     };
     //Each model has a segment in the loadingBar, and Renderer itself has two:
-    App.loadingBar.addSegment(this.model.length + 2);
+    App.loadingBar.addSegment(_.keys(this.model).length + 2);
     //Memoization wether models have been activated:
     this._activated = false;
   }
 , render: function(){
     console.log('Renderer.render()');
+    //First segment of the renderer:
+    App.loadingBar.addLoaded();
     //Activation:
     if(this._activated === false){
       //Installing update methods of contained views:
@@ -47,12 +49,10 @@ Renderer = Backbone.View.extend({
       var call = (_.isFunction(m.isActive)) ? m.isActive() : true;
       if(call) this.callUpdates(m);
     }, this);
-    //First segment of the renderer:
-    App.loadingBar.addLoaded();
     //Render dependant views:
     _.each(this.model, function(v){
-      if(v === null) return;
-      return v.render();
+      App.loadingBar.addLoaded();
+      v.render();
     }, this);
     //Second segment of the renderer:
     App.loadingBar.addLoaded();
