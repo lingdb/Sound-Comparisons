@@ -21,15 +21,11 @@ Renderer = Backbone.View.extend({
     , wordLanguageView: new WordLanguageView({el: this.$('#multitableTransposedContainer')})
     , contributorView:  new ContributorView({el: this.$('#contributors')})
     };
-    //Each model has a segment in the loadingBar, and Renderer itself has two:
-    App.loadingBar.addSegment(_.keys(this.model).length + 2);
     //Memoization wether models have been activated:
     this._activated = false;
   }
 , render: function(){
     console.log('Renderer.render()');
-    //First segment of the renderer:
-    App.loadingBar.addLoaded();
     //Activation:
     if(this._activated === false){
       //Installing update methods of contained views:
@@ -51,11 +47,8 @@ Renderer = Backbone.View.extend({
     }, this);
     //Render dependant views:
     _.each(this.model, function(v){
-      App.loadingBar.addLoaded();
       v.render();
     }, this);
-    //Second segment of the renderer:
-    App.loadingBar.addLoaded();
   }
   /**
     Calls all methods that match /^update/ on the given Backbone.View.

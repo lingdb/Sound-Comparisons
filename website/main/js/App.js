@@ -8,7 +8,6 @@ $(function(){
   , languageCollection: new LanguageCollection()
   , languageStatusTypeCollection: new LanguageStatusTypeCollection()
   , linkInterceptor: new LinkInterceptor()
-  , loadingBar: new LoadingBar({})
   , logger: new Logger()
   , map: new Map()
   , meaningGroupCollection: new MeaningGroupCollection()
@@ -53,9 +52,6 @@ $(function(){
   App.views.audioLogic = new AudioLogic();
 //FIXME enable/rebuild later on
 //App.views.wordlistFilter = new WordlistFilter();
-  App.views.loadingBar = new LoadingBarView({
-    el: $('.loadingBar'), model: App.loadingBar
-  });
   App.views.setupBar = new SetupBarView({
     el: $('#appSetup'), model: App.setupBar
   });
