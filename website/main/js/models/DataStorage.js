@@ -19,6 +19,19 @@ DataStorage = Backbone.Model.extend({
     //Self dependant events:
     this.on('change:global', this.saveGlobal, this);
     this.on('change:study', this.saveStudy, this);
+    //Compressor setup, if possible:
+    this.compressor = null;
+    if(_.isFunction(window.Worker)){
+      this.compressor = new Worker('js/worker/Compressor.js');
+      this.set({compressorCallbacks: {}}); // Label -> [[callback, context]]
+      this.compressor.onmessage = function(m){
+        App.dataStorage.handleCompressor(m);
+      };
+      this.compressor.onerror = function(e){
+        console.log('DataStorage.compressor.onerror:');
+        console.log(e);
+      };
+    }
     //Fetching initial data from target:
     var t = this;
     $.getJSON(this.get('target')).done(function(data){
@@ -89,17 +102,29 @@ DataStorage = Backbone.Model.extend({
   */
 , save: function(name, data){
     var key   = "DataStorage_"+name
-      , value = LZString.compressToBase64(JSON.stringify(data))
-      , saved = false;
-    do{
-      try{
-        localStorage[key] = value;
-        saved = true;
-      }catch(e){
-        //We cancel saving and say it's true, iff we couldn't free any space:
-        saved = this.collectGarbadge() ? false : true;
-      }
-    }while(saved !== true);
+      , msg   = {label: 'save'+key, data: data, task: 'compress'}
+      , saved = false, def = $.Deferred();
+    if(this.compressor){
+      this.onCompressor(msg.label, function(m){
+        msg.data = m.data;
+        def.resolve();
+      }, this);
+      this.compressor.postMessage(msg);
+    }else{
+      msg.data = LZString.compressToBase64(JSON.stringify(msg.data));
+      def.resolve();
+    }
+    def.done(function(){
+      do{
+        try{
+          localStorage[key] = msg.data;
+          saved = true;
+        }catch(e){
+          //We cancel saving and say it's true, iff we couldn't free any space:
+          saved = App.dataStorage.collectGarbadge() ? false : true;
+        }
+      }while(saved !== true);
+    });
   }
   /***/
 , saveGlobal: function(){
@@ -118,29 +143,41 @@ DataStorage = Backbone.Model.extend({
     or the information given by load is outdated.
   */
 , load: function(name){
-    var key = "DataStorage_"+name;
-    if(key in localStorage)
-      return $.parseJSON(LZString.decompressFromBase64(localStorage[key]));
-    return null;
+    var key = "DataStorage_"+name, def = $.Deferred();
+    if(key in localStorage){
+      var msg = {label: 'load:'+key, data: localStorage[key], task: 'decompress'};
+      if(this.compressor){
+        this.onCompressor(msg.label, function(m){
+          def.resolve(m.data);
+        }, this);
+        this.compressor.postMessage(msg);
+      }else{
+        def.resolve($.parseJSON(LZString.decompressFromBase64(msg.data)));
+      }
+    }else{
+      def.resolve(null);
+    }
+    return def;
   }
   /***/
 , loadGlobal: function(){
     var timestamp = this.get('lastUpdate')
       , current   = this.load('global')
-      , promise   = $.Deferred();
-    if(!current || current.timestamp < timestamp){
-      var t = this;
-      $.getJSON(t.get('target'), {global: null}).done(function(data){
-        data.timestamp = timestamp;
-        t.set({global: data});
+      , promise   = $.Deferred(), t = this;
+    current.done(function(c){
+      if(c === null || c.timestamp < timestamp){
+        $.getJSON(t.get('target'), {global: null}).done(function(data){
+          data.timestamp = timestamp;
+          t.set({global: data});
+          promise.resolve();
+        }).fail(function(f){
+          promise.reject(f);
+        });
+      }else{
+        t.set({global: c});
         promise.resolve();
-      }).fail(function(f){
-        promise.reject(f);
-      });
-    }else{
-      this.set({global: current});
-      promise.resolve();
-    }
+      }
+    });
     return promise;
   }
   /***/
@@ -149,24 +186,52 @@ DataStorage = Backbone.Model.extend({
     var key       = "Study_"+name
       , study     = this.load(key)
       , timestamp = this.get('lastUpdate')
-      , promise   = $.Deferred();
-    if(!study || study.timestamp < timestamp){
-      var t = this;
-      $.getJSON(t.get('target'), {study: name}).done(function(data){
-        data.timestamp = timestamp;
-        t.set({study: data});
+      , promise   = $.Deferred(), t = this;
+    study.done(function(s){
+      if(!s || s.timestamp < timestamp){
+        $.getJSON(t.get('target'), {study: name}).done(function(data){
+          data.timestamp = timestamp;
+          t.set({study: data});
+          promise.resolve();
+        }).fail(function(f){
+          promise.reject(f);
+        });
+      }else{
+        t.set({study: s});
         promise.resolve();
-      }).fail(function(f){
-        promise.reject(f);
-      });
-    }else{
-      this.set({study: study});
-      promise.resolve();
-    }
+      }
+    });
     return promise;
   }
   /***/
 , getWikipediaLinks: function(){
     return this.get('global').global.wikipediaLinks;
+  }
+  /**
+    Handles a message from the Compressor by executing all functions on the stack for the given label once,
+    handing them the data parameter of the received message.
+    The stack for the according label is clean afterwards.
+  */
+, handleCompressor: function(e){
+    var msg = e.data, cbks = this.get('compressorCallbacks');
+    if(msg.label in cbks){
+      var stack = cbks[msg.label];
+      if(_.isArray(stack) && !_.isEmpty(stack)){
+        _.each(stack, function(cbk){
+          cbk[0].call(cbk[1], msg);
+        }, this);
+      }
+      cbks[msg.label] = [];
+    }
+  }
+  /**
+    Sets up a given function and context to be called once the Compressor finishes for a given label.
+  */
+, onCompressor: function(label, func, ctx){
+    if(this.compressor !== null){
+      var cbks = this.get('compressorCallbacks');
+      if(!(label in cbks)) cbks[label] = [];
+      cbks[label].push([func,ctx]);
+    }
   }
 });
