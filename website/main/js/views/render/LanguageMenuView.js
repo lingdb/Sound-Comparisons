@@ -31,7 +31,7 @@ LanguageMenuView = Backbone.View.extend({
     , expandTitle:   'menu_regions_languageSets_expand'
     });
     staticT.languageSets += ':';
-    this.setModel(staticT);
+    _.extend(this.model, staticT);
   }
   /**
     Builds the complete tree of [families ->] regions -> languages
@@ -78,9 +78,9 @@ LanguageMenuView = Backbone.View.extend({
         //Finish:
         families.push(data);
       }, this);
-      this.setModel({families: families});
+      _.extend(this.model, {families: families, RegionList: null});
     }else{
-      this.setModel({RegionList: this.buildRegionTree(App.regionCollection)});
+      _.extend(this.model, {RegionList: this.buildRegionTree(App.regionCollection), families: null});
     }
   }
   /**
@@ -193,12 +193,5 @@ LanguageMenuView = Backbone.View.extend({
   }
 , render: function(){
     this.$el.html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
-  }
-  /**
-    Basically the same as TopMenuView:setModel,
-    this overwrites the current model with the given one performing a deep merge.
-  */
-, setModel: function(m){
-    this.model = $.extend(true, this.model, m);
   }
 });

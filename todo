@@ -6,7 +6,7 @@
       if they are available. If not, the Browser will have to perform the task at hand in a non-concurrent fashion.
   - Make Ctrl+Mousewheel not zoom the map, if mouse hovers it,
     but rather zoom the browser window, and zoom the map only on mouse hover + mouse wheel without ctrl.
-  - LanguageMenuView renders checkboxes in singleviews. This is wrong. Obviously.
+  - In Englishes Superscripts for Languages are missing. They are necessary to distinguish the different Languages here.
 
 2014-09-16:
   - Hover/Click switch for sound play function doesn't appear to be working.
