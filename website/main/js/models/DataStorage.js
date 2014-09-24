@@ -37,21 +37,21 @@ DataStorage = Backbone.Model.extend({
     $.getJSON(this.get('target')).done(function(data){
       delete data['Description'];
       console.log("Got target data: "+JSON.stringify(data));
-      window.App.setupBar.addLoaded();
+      App.setupBar.addLoaded();
       t.set(data);
       t.loadGlobal().done(function(){
-        window.App.setupBar.addLoaded();
+        App.setupBar.addLoaded();
         t.loadStudy().always(function(){
           console.log('DataStorage.loadstudy() done with setup.');
-          window.App.setupBar.addLoaded();
+          App.setupBar.addLoaded();
         });
       }).fail(function(){
         console.log('DataStorage.loadGlobal() done with setup.');
-        window.App.setupBar.addLoaded(2);
+        App.setupBar.addLoaded(2);
       });
     }).fail(function(){
       console.log('DataStorage done with setup.');
-      window.App.setupBar.addLoaded(3);
+      App.setupBar.addLoaded(3);
     });
   }
   /*

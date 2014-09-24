@@ -15,7 +15,9 @@ $(function(){
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
   , router: new Router()
-  , setupBar: new LoadingBar({segments: 5})
+  , setupBar: new LoadingBar({
+      segments: 6 // TranslationStorage: 1, DataStorage: 3, TemplateStorage: 1, Study: 1
+    })
   , studyWatcher: new StudyWatcher()
   , study: new Study()
   , soundPlayOption: new SoundPlayOption()
@@ -26,6 +28,8 @@ $(function(){
   , views: {}
   , wordCollection: new WordCollection()
   };
+  //Making sure TranslationStorage does it's thing:
+  App.translationStorage.init();
   //Listening for changing global data:
   _.each(['contributorCollection','languageStatusTypeCollection','meaningGroupCollection','transcriptionSuperscriptCollection'], function(l){
     this.dataStorage.on('change:global', this[l].update, this[l]);
