@@ -35,18 +35,19 @@ TemplateStorage = Backbone.Model.extend({
 */
 , process: function(info){
     //Fetching missing templates, loading others:
-    var fetches = [], keepSet = {};
+    var preFetches = [], fetches = [], keepSet = {};
     _.each(info, function(i){
       keepSet['tmpl_'+i.name] = true;
-      var current = this.load(i.name);
-      if(current && current.hash === i.hash){
-        i.content = current.content;
-      }else{
-        console.log('Fetching template: '+i.name);
-        fetches.push($.get(i.path, function(c){
-          i.content = c;
-        }));
-      }
+      preFetches.push(this.load(i.name).done(function(current){
+        if(current && current.hash === i.hash){
+          i.content = current.content;
+        }else{
+          console.log('Fetching template: '+i.name);
+          fetches.push($.get(i.path, function(c){
+            i.content = c;
+          }));
+        }
+      }));
     }, this);
     //Cleaning up templates that no longer exist:
     _.each(_.keys(localStorage), function(k){
@@ -57,25 +58,46 @@ TemplateStorage = Backbone.Model.extend({
     }, this);
     //Saving templates:
     var storage = this;
-    $.when.apply($, fetches).done(function(){
-      _.each(info, storage.store, storage);
-      var ps = {};
-      _.each(info, function(i){ps[i.name] = i.content});
-      storage.set({ready: true, partials: ps});
+    $.when.apply($, preFetches).done(function(){
+      $.when.apply($, fetches).done(function(){
+        _.each(info, storage.store, storage);
+        var ps = {};
+        _.each(info, function(i){ps[i.name] = i.content});
+        storage.set({ready: true, partials: ps});
+      });
     });
   }
 //Loads a template object from localStorage
 , load: function(name){
-    var key = 'tmpl_'+name;
-    if(key in localStorage)
-      return $.parseJSON(LZString.decompressFromBase64(localStorage[key]));
-    return null;
+    var key = 'tmpl_'+name, def = $.Deferred();
+    if(key in localStorage){
+      var msg = {label: 'load:'+key, data: localStorage[key], task: 'decompress'};
+      if(App.dataStorage.compressor){
+        App.dataStorage.onCompressor(msg.label, function(m){
+          def.resolve(m.data);
+        }, this);
+        App.dataStorage.compressor.postMessage(msg);
+      }else{
+        def.resolve($.parseJSON(LZString.decompressFromBase64(msg.data)));
+      }
+    }else{
+      def.resolve(null);
+    }
+    return def;
   }
 //Stores a template object in localStorage.
 , store: function(tmpl){
     if('content' in tmpl){
       var key = 'tmpl_'+tmpl.name;
-      localStorage[key] = LZString.compressToBase64(JSON.stringify(tmpl));
+      if(App.dataStorage.compressor){
+        var msg = {label: 'store:'+key, data: tmpl, task: 'compress'};
+        App.dataStorage.onCompressor(msg.label, function(m){
+          localStorage[key] = m.data;
+        }, this);
+        App.dataStorage.compressor.postMessage(msg);
+      }else{
+        localStorage[key] = LZString.compressToBase64(JSON.stringify(tmpl));
+      }
     }
   }
 /**
