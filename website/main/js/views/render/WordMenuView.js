@@ -246,6 +246,7 @@ WordMenuView = Backbone.View.extend({
 , render: function(){
     //Updating the WordMenu html representation:
     this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
+    App.views.audioLogic.findAudio(this.$el);
     //Reinitializing the WordlistFilter:
     this.wordlistFilter.reinitialize();
   }

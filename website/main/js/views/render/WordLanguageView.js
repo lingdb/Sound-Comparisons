@@ -158,6 +158,7 @@ WordLanguageView = Renderer.prototype.SubView.extend({
     if(App.pageState.isPageView(this)){
       this.$el.html(App.templateStorage.render('MultitableTransposed', {MultitableTransposed: this.model}));
       this.$el.removeClass('hide');
+      App.views.audioLogic.findAudio(this.$el);
     }else{
       this.$el.addClass('hide');
     }
