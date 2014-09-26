@@ -159,7 +159,9 @@ LanguageWordView = Renderer.prototype.SubView.extend({
     if(App.pageState.isPageView(this)){
       this.$el.html(App.templateStorage.render('Multitable', {Multitable: this.model}));
       this.$el.removeClass('hide');
+      //Updating sound related stuff:
       App.views.audioLogic.findAudio(this.$el);
+      App.views.playSequenceView.update(this.getKey());
     }else{
       this.$el.addClass('hide');
     }

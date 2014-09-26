@@ -1,18 +1,15 @@
 PlaySequenceView = Backbone.View.extend({
-  initialize: function(){
-    //Looking for the current pageView:
-    var regex    = /.*pageView=([^&]*).*/;
-    var pageView = (href = $('div#saveLocation').attr('href')) ? regex.exec(href)[1] : '';
+  update: function(pageView){
     //mapView and singleLanguageView ship their own solutions,
     //we care for the rest:
     switch(pageView){
-      case 'singleWordView':
+      case 'word':
         var p = new PlaySequence($('#wordHeadline_playAll'));
         $('#singleWordTable audio').each(function(){
           p.add(this);
         });
       break;
-      case 'multiWordView':
+      case 'languagesXwords':
         //Play all in one language:
         $('.multitablePlayWe').each(function(){
           var p = new PlaySequence($(this));
@@ -33,7 +30,7 @@ PlaySequenceView = Backbone.View.extend({
           });
         });
       break;
-      case 'multiViewTransposed':
+      case 'wordsXlanguages':
         //Play all for one word:
         $('.multitablePlayWe').each(function(){
           var p = new PlaySequence($(this));
