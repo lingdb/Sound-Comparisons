@@ -77,7 +77,8 @@ WordView = Renderer.prototype.SubView.extend({
       //Regions to deal with:
       var regions = [];
       f.getRegions().each(function(r){
-        var region = {name: r.getShortName()}, languages = r.getLanguages();
+        var region = {name: r.getShortName()}
+          , languages = r.getLanguages();
         if(!colorByFamily) region.color = r.getColor();
         //Calculating the rowSpan for the current region:
         region.rowSpan  = _.max([Math.ceil(languages.length / 6), 1]);

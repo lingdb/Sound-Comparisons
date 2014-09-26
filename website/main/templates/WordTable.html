@@ -10,7 +10,7 @@
     <tr {{#data-i}}data-i="{{{data-i}}}"{{/data-i}}>
       {{#cells}}
       {{^isLanguageCell}}
-      <th rowspan="{{rowSpan}}" style="background-color: #{{color}};">{{name}}</th>
+      <th rowspan="{{rowSpan}}"{{#color}} style="background-color: {{{.}}};"{{/color}}>{{name}}</th>
       {{/isLanguageCell}}
       {{#isLanguageCell}}
       <td>
