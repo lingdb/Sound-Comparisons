@@ -3,7 +3,7 @@
   model: MapView
 */
 SoundControlView = Backbone.View.extend({
-  initialize: function(){
+  update: function(){
     var div     = document.createElement('div')
       , dirs    = $('#map_play_directions')
       , mapView = this.model;

@@ -108,6 +108,8 @@ MapView = Renderer.prototype.SubView.extend({
       this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
       //Binding click events:
       this.bindEvents();
+      //Updating SoundControlView:
+      this.soundControlView.update();
       //Setting mapsData to map model:
       App.map.setModel(this.model.mapsData);
       //Displaying stuff:

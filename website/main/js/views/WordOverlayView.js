@@ -102,7 +102,7 @@ WordOverlayView = function(o){
   //Predicate to chk iff this overlay is on the screen.
   this.onScreen = function(){
     var p = this.model.get('position');
-    return this.el.getBounds().contains(p);
+    return this.map_.getBounds().contains(p);
   }
   //Callback to handle changed edges
   this.edgeChanged = function(){
