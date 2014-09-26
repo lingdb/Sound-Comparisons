@@ -67,6 +67,7 @@ Transcription = Backbone.Model.extend({
     var phonetics = this.get('Phonetic')   // [String]   || String
       , sources   = this.get('soundPaths') // [[String]] || [String]
       , superScr  = this.getSuperscriptInfo()
+      , aLogic    = App.views.audioLogic
       , ps        = [];
     //Sanitizing phonetics:
     if(_.isEmpty(phonetics))  phonetics = '--';
@@ -78,7 +79,7 @@ Transcription = Backbone.Model.extend({
     //Iterating phonetics:
     for(var i = 0; i < phonetics.length; i++){
       var phonetic = phonetics[i]
-        , source   = sources.shift() || [] //TODO filter ogg/mp3 depending on browser.
+        , source   = sources.shift() || []
         , language = this.get('language')
         , word     = this.get('word')
         , p = { // Data gathered for phonetic:

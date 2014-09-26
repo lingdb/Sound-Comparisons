@@ -1,6 +1,7 @@
 /**
   The rewrite of AudioLogic to a Backbone.View.
   It will be used by the App, and PlaySequence will be adjusted to fit it.
+  el may be an audio tag, that can be used to check iff the browser supports a given format.
 */
 AudioLogic = Backbone.View.extend({
   initialize: function(){
@@ -27,6 +28,7 @@ AudioLogic = Backbone.View.extend({
     //Adaptation from the former initAudio():
     this.findAudio();
   }
+  /***/
 , findAudio: function(target){
     var t = this, tgt = target || $('body');
     tgt.find('.audio').each(function(i){
@@ -47,6 +49,7 @@ AudioLogic = Backbone.View.extend({
       });
     });
   }
+  /***/
 , mouseOver: function(audio){
     if(!window.App.soundPlayOption.playOnHover())
       return;
@@ -56,17 +59,18 @@ AudioLogic = Backbone.View.extend({
       t.timeoutId = null;
     }, this.hoverDelay);
   }
+  /***/
 , mouseOut: function(audio){
     if(this.timeoutId){
       window.clearTimeout(this.timeoutId);
       this.timeoutId = null;
     }
   }
-/**
-  @param audio HTML5 audio tag to play
-  Plays the given audio.
-  Stops another audio, if it's currently playing.
-*/
+  /**
+    @param audio HTML5 audio tag to play
+    Plays the given audio.
+    Stops another audio, if it's currently playing.
+  */
 , play: function(audio){
     if(!audio){
       if(f = this.playFinished) f();
@@ -90,6 +94,7 @@ AudioLogic = Backbone.View.extend({
     //Logging the play event:
     this.log(audio);
   }
+  /***/
 , stop: function(){
     this.playing = false;
     if(this.current){
@@ -99,59 +104,61 @@ AudioLogic = Backbone.View.extend({
     }
     this.current = null;
   }
-/**
-  @param audio HTML5 audio tag
-  This function is called whenever AudioLogic finished playing an audio tag.
-*/
+  /**
+    @param audio HTML5 audio tag
+    This function is called whenever AudioLogic finished playing an audio tag.
+  */
 , played: function(audio){
     this.playing = false;
     this.markNotPlaying(audio);
     this.current = null;
     if(f = this.playFinished) f();
   }
-/**
-  @param audio HTML5 audio tag
-  Adds a class to the transcription that belongs to an audio tag
-  so that it is marked as playing.
-*/
+  /**
+    @param audio HTML5 audio tag
+    Adds a class to the transcription that belongs to an audio tag
+    so that it is marked as playing.
+  */
 , markPlaying: function(audio){
     $(audio).parent().find('.transcription').addClass('playing');
   }
-/**
-  @param audio HTML5 audio tag
-  Removes the class that marks the transcription belonging to an audio tag as playing.
-*/
+  /**
+    @param audio HTML5 audio tag
+    Removes the class that marks the transcription belonging to an audio tag as playing.
+  */
 , markNotPlaying: function(audio){
     $(audio).parent().find('.transcription').removeClass('playing');
   }
-/**
-  @param audio HTML5 audio tag
-  Loads the onDemand sources that may be
-  given with the source tags of an audio tag,
-  so that not all sound files need be loaded immediate.
-*/
+  /**
+    @param audio HTML5 audio tag
+    Loads the onDemand sources that may be
+    given with the source tags of an audio tag,
+    so that not all sound files need be loaded immediate.
+  */
 , onDemand: function(audio){
     if(d = $(audio).attr('data-onDemand')){
       var src = "";
       $($.parseJSON(d)).each(function(i, s){
-        src = src + "<source src='" + s + "'></source>";
+        if(App.views.audioLogic.filterSoundfiles(s)){
+          src += "<source src='" + s + "'></source>";
+        }
       });
       $(audio).attr('onDemand', '').html(src);
       audio.load();
     }
   }
-/**
-  @param callback function
-  Sets the playFinished of the AudioLogic to the passed callback function.
-  That function is called everytime that an audio finished playing.
-*/
+  /**
+    @param callback function
+    Sets the playFinished of the AudioLogic to the passed callback function.
+    That function is called everytime that an audio finished playing.
+  */
 , setPlayFinished: function(callback){
     this.playFinished = callback;
   }
-/**
-  @param audio HTML5 audio tag
-  Logs the event of playing a sound with GoogleAnalytics
-*/
+  /**
+    @param audio HTML5 audio tag
+    Logs the event of playing a sound with GoogleAnalytics
+  */
 , log: function(audio){
     var src = $('source', audio).attr('src');
     var r   = /.*sound\/(.*)\.(ogg|mp3)/;
@@ -161,5 +168,50 @@ AudioLogic = Backbone.View.extend({
       this.playCounts[src] = count;
       window.App.logger.logEvent('AudioLogic', 'play', src, count);
     }
+  }
+  /**
+    See http://diveintohtml5.info/everything.html for further insight.
+    This method returns an int specifying the level of support.
+    0 is no support. The higher, the better.
+  */
+, canPlayType: function(type){
+    if(this.el && _.isFunction(this.el.canPlayType)){
+      switch(this.el.canPlayType(type)){
+        case 'probably': return 2;
+        case 'maybe':    return 1;
+        default:         return 0;
+      }
+    }
+    return 0;
+  }
+  /***/
+, playsMp3: function(){return this.canPlayType('audio/mpeg');}
+  /***/
+, playsOgg: function(){return this.canPlayType('audio/ogg; codecs="vorbis"');}
+  /**
+    This method accepts [String]|String, and returns either a filtered array or a boolean.
+    filterSoundfiles replaces itself on first call.
+  */
+, filterSoundfiles: function(x){
+    var score = 0, regex = /^$/;
+    if(s = this.playsOgg()){
+      if(s > score){
+        score = s; regex = /.+\.ogg$/;
+      }
+    }
+    if(s = this.playsMp3() && s > score){
+      if(s > score){
+        score = s; regex = /.+\.mp3$/;
+      }
+    }
+    this.filterSoundfiles = function(x){
+      if(_.isString(x)){
+        return !_.isEmpty(x.match(regex));
+      }
+      if(_.isArray(x)){
+        return _.filter(x, this.filterSoundfiles, this);
+      }
+    };
+    return this.filterSoundfiles(x);
   }
 });

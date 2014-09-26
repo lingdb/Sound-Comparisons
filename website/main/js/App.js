@@ -56,7 +56,7 @@ $(function(){
     el: $('#topmenuSoundOptions')
   , model: App.soundPlayOption
   });
-  App.views.audioLogic = new AudioLogic();
+  App.views.audioLogic = new AudioLogic({el: $('#audioLogic')});
   App.views.setupBar = new SetupBarView({
     el: $('#appSetup'), model: App.setupBar
   });
