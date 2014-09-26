@@ -113,6 +113,7 @@ MapView = Renderer.prototype.SubView.extend({
       //Displaying stuff:
       this.$el.removeClass('hide');
       $('#map_canvas').removeClass('hide');
+      this.renderMap();
     }else{
       this.$el.addClass('hide');
       $('#map_canvas').addClass('hide');
@@ -135,12 +136,27 @@ MapView = Renderer.prototype.SubView.extend({
     });
   }
   /**
-    Kept from the older views/MapView,
-    this method makes sure all WordOverlayViews are displayed on the map correctly.
+    This method fixes the view level to the regionBounds
+    once the study is changed or it is called the first time.
+    This method also calls adjustCanvasSize.
   */
 , renderMap: function(){
-    this.adjustCanvasSize();
-    this.centerRegion();
+    var first = true;
+    this.renderMap = function(){
+      (function(t){
+        /*
+          It would be nice to depend on events rather than a Timeout,
+          but events appeared to be rather annoying while this is simple.
+        */
+        window.setTimeout(function(){
+          t.adjustCanvasSize();
+          if(first || App.studyWatcher.studyChanged()){
+            first = false; t.centerRegion();
+          }
+        }, 10000);
+      })(this);
+    }
+    return this.renderMap();
   }
   /**
     A method to make sure that the canvas size equals the maximum size possible in the current browser window.

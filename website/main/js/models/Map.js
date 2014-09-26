@@ -47,9 +47,10 @@ if(typeof(google) !== 'undefined'){
       });
     }
   , initRegionBounds: function(){
+      var rBounds = this.get('regionBounds');
       _.each(this.get('regionZoom'), function(e){
         var latLng = new google.maps.LatLng(e.lat, e.lon);
-        this.get('regionBounds').extend(latLng);
+        rBounds.extend(latLng);
       }, this);
     }
   , sortWordOverlays: function(direction){
