@@ -9,6 +9,12 @@ PlaySequenceView = Backbone.View.extend({
           p.add(this);
         });
       break;
+      case 'language':
+        var p = new PlaySequence($('#language_playAll'));
+        $('#languageTable td:visible audio').each(function(){
+          p.add(this);
+        });
+      break;
       case 'languagesXwords':
         //Play all in one language:
         $('.multitablePlayWe').each(function(){
