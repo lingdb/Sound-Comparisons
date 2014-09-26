@@ -1,3 +1,15 @@
+2014-09-26:
+  - SoundControlView is added to the MapView everytime the Map is rendered.
+    This is clearly broken, and can easily be mitigated by using initialize in conjunction with update
+  - Selection of spLang/phLang in WordMenuView is broken, and shall be fixed.
+    I also found that the phLangs aren't shown at the moment, but appear to be there as the menu is quite long.
+  - It might be helpful to have a maximum Number of Languages/Words in the MultiView to make sure they aren't displayed outside the browsers viewport
+    To fix this we have a two stage system:
+    1.: Establish maximal numbers that cannot be overstepped.
+    2.: If something would be drawn outside the viewport, cut it out after rendering,
+    => In both cases we just ommit the entries that are too many, but hand out a warning to the client,
+       to enable reducing the seleciton.
+
 2014-09-24:
   - Make Ctrl+Mousewheel not zoom the map, if mouse hovers it,
     but rather zoom the browser window, and zoom the map only on mouse hover + mouse wheel without ctrl.

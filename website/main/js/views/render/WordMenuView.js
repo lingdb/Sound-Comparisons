@@ -246,9 +246,17 @@ WordMenuView = Backbone.View.extend({
 , render: function(){
     //Updating the WordMenu html representation:
     this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
+    //Updating soundfiles:
     App.views.audioLogic.findAudio(this.$el);
     //Reinitializing the WordlistFilter:
     this.wordlistFilter.reinitialize();
+    //Setting up callbacks:
+    //WordOrder:
+    this.$('#sortBy input[data-href]').click(function(){
+      App.router.navigate($(this).attr('data-href'));
+    });
+    //Sp-/Phlang:
+    //FIXME implement!
   }
   /**
     Basically the same as TopMenuView:setModel,
