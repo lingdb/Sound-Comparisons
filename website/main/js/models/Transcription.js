@@ -82,16 +82,16 @@ Transcription = Backbone.Model.extend({
         , language = this.get('language')
         , word     = this.get('word')
         , p = { // Data gathered for phonetic:
-          historical:  language.isHistorical()
-        , fileMissing: source.length === 0
-        , phonetic:    phonetic
-        , srcs:        JSON.stringify(source)
-        , _srcs:       source
-        , hasTrans:    language.hasTranscriptions()
-        , identifier:  { word:     word.getId()
-                       , language: language.getId()
-                       , study:    App.study.getId()
-                       , n:        i }
+            historical:  language.isHistorical()
+          , fileMissing: source.length === 0
+          , phonetic:    phonetic
+          , srcs:        JSON.stringify(source)
+          , _srcs:       source
+          , hasTrans:    language.hasTranscriptions()
+          , identifier:  { word:     word.getId()
+                         , language: language.getId()
+                         , study:    App.study.getId()
+                         , n:        i }
         };
       //Not cognate:
       if(i < superScr.length){

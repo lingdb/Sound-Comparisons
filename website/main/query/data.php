@@ -21,12 +21,10 @@ function soundPaths($sId, $t){
   if(!isset($lIx) || !isset($wId))
     return array();
   $base = Config::$soundPath;
-  $lq   = "SELECT FilePathPart FROM Languages_$sId WHERE LanguageIx != $lIx";
+  $lq   = "SELECT FilePathPart FROM Languages_$sId WHERE LanguageIx = $lIx";
   $wq   = "SELECT SoundFileWordIdentifierText FROM Words_$sId "
         . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = '$wId'";
-  //error_log($lq);
   $lang = current(current(fetchAll($lq)));
-  //error_log($wq);
   $word = current(current(fetchAll($wq)));
   $path = "$base/$lang/$lang$word";
   $ret  = array();
