@@ -256,7 +256,11 @@ WordMenuView = Backbone.View.extend({
       App.router.navigate($(this).attr('data-href'));
     });
     //Sp-/Phlang:
-    //FIXME implement!
+    this.$('select').each(function(){
+      $(this).change(function(){
+        App.router.navigate($(this).find(':selected').data('href'));
+      });
+    });
   }
   /**
     Basically the same as TopMenuView:setModel,

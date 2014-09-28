@@ -1,5 +1,4 @@
 2014-09-26:
-  - Selection of spLang/phLang in WordMenuView is broken, and shall be fixed.
   - It might be helpful to have a maximum Number of Languages/Words in the MultiView to make sure they aren't displayed outside the browsers viewport
     To fix this we have a two stage system:
     1.: Establish maximal numbers that cannot be overstepped.
