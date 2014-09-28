@@ -34,7 +34,7 @@ TranscriptionSuperscriptCollection = Backbone.Collection.extend({
           return e.pick('Abbreviation', 'FullNameForHoverText');
       }
     }else if(_.isNumber(field)){
-      var predicate = function(e){return parseInt(this.get('Ix')) === field;};
+      var predicate = function(e){return parseInt(e.get('Ix')) === field;};
       if(e = this.find(predicate))
         return e.pick('Abbreviation', 'HoverText');
     }
