@@ -120,7 +120,7 @@ WordMenuView = Backbone.View.extend({
         if(l.getId() === phId) return;
         data.phList.options.push({
           link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
-        , href: l.getShortName()
+        , name: l.getShortName()
         });
       }, this);
     }
