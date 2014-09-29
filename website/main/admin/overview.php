@@ -2,10 +2,7 @@
   <fieldset>
     <legend>Update password:</legend>
     <label>
-      <input name="current" type="password" placeholder="current password"/>
-    </label>
       <input name="new" type="password" placeholder="new password"/>
-    <label>
     </label>
     <label>
       <input name="confirm" type="password" placeholder="confirm password"/>

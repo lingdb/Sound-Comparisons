@@ -12,7 +12,7 @@
     /* Parameters: username, password, mayTranslate, mayEdit */
     case 'create':
       $username     = $dbConnection->escape_string($_POST['username']);
-      $password     = md5($_POST['password']);
+      $password     = password_hash($_POST['password'], PASSWORD_BCRYPT);
       $mayTranslate = ($_POST['mayTranslate'] === '1') ? '1' : '0';
       $mayEdit      = ($_POST['mayEdit']      === '1') ? '1' : '0';
       /* Checking that username is not taken: */

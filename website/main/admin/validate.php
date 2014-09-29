@@ -15,7 +15,7 @@
     $query = 'SELECT Login, Hash FROM Edit_Users WHERE UserId = '
       .$dbConnection->escape_string($_SESSION['UserId']);
     if($row = $dbConnection->query($query)->fetch_assoc())
-      return ($_SESSION['Secret'] == md5(''.$row['Login'].$row['Hash']));
+      return password_verify($row['Login'].$row['Hash'], $_SESSION['Secret']);
     return false;
   }
   /**
@@ -25,7 +25,7 @@
     @param $hash String
   */
   function session_mkValid($user, $hash){
-    $_SESSION['Secret'] = md5($user.$hash);
+    $_SESSION['Secret'] = password_hash($user.$hash, PASSWORD_BCRYPT);
   }
   /**
     Checks if the current login may translate languages
