@@ -1,19 +1,6 @@
-2014-09-26:
-  - It might be helpful to have a maximum Number of Languages/Words in the MultiView to make sure they aren't displayed outside the browsers viewport
-    To fix this we have a two stage system:
-    1.: Establish maximal numbers that cannot be overstepped.
-    2.: If something would be drawn outside the viewport, cut it out after rendering,
-    => In both cases we just ommit the entries that are too many, but hand out a warning to the client,
-       to enable reducing the seleciton.
-
 2014-09-24:
   - Make Ctrl+Mousewheel not zoom the map, if mouse hovers it,
     but rather zoom the browser window, and zoom the map only on mouse hover + mouse wheel without ctrl.
-  - In Englishes Superscripts for Languages are missing. They are necessary to distinguish the different Languages here.
-
-2014-09-16:
-  - Hover/Click switch for sound play function doesn't appear to be working.
-  - Remember a feature to list all missing translations.
 
 2014-09-04:
  - Gotta fix the Download options in the TopMenu.
@@ -35,11 +22,8 @@
 2014-07-02:
  - Push out a new update, to supply Scott, Hans-Jörg and Paul with new, working versions of the site.
    - Remember the dump.
- - WordMenuList needs a scrollBar again
 
 2014-06-10:
- - Make sure playSequences be working everywhere on the page.
-   - I've got the impression, that PlaySequenceView has some bugs.
  - Once we've got an equal to the ValueManager in JavaScript,
    something that might also build on top of the PageWatcher,
    we want this thing to log the events that the PageWatcher currently does,
@@ -68,27 +52,10 @@
    - We can also proxy to other clld sites, so that the .js can do happy/wild things
  - Superscripts after Transcriptions appear to be buggy (look at Slavic)
 
-2014-03-06:
- - Tried site performance with hhvm-nightly.
-   apach2+php: Times (min, avg, max): 2.0196, 3.0096589473684, 5.4663
-   hhvm:       Times (min, avg, max): 0.7163, 2.7047795918367, 6.4519
-   It appears that hhvm is a better choice than php,
-   but the database still makes for much slowdown.
- - With the stopwatch I found out,
-   that about 3.4s (< 50%) are used on sorting words for
-   http://127.0.0.1/shk/main/?study=Mapudungun&languages=Huilliche%20%28Lagos%29&pageView=languageView&hl=en&wo_order=alphabetical&wo_phLang=Ancestral%20Mapudungun
-   If I could use a view to sort words,
-   or some other, smart method,
-   this could increase performance by a leap.
-
 2014-02-27:
  - Ask Paul which fields he'd like to have in .csv exports.
 
 2014-02-13:
- - Up to ~1.6s are spent on a call of Study:getWords,
-   which means, that up to ~3s of site generation could be spent this way.
-   Look at http://127.0.0.1/shk/main/?study=Mapudungun&languages=Huilliche%20%28Lagos%29&pageView=languageView&hl=en&wo_order=alphabetical&wo_phLang=Ancestral%20Mapudungun
-   - It just took 8.2493s to generate.
  - export/csv.php is the last pice to use database/Transcription:getNotCognates,
    it could be cleaned up, if csv.php was rewritten.
  - Show lexeme numbers >1 as subscripts for Transcriptions and Words
@@ -110,19 +77,7 @@
  - Later on:
    - Use Chromium Developer Tools -> Audit to streamline .css
      - Leverage this to get rid of style.css, because we've got main.css now
-   - Refine database/Language.php:getDescription
-     - Also think about the way it's included in the Tabulator.php:languageHeadline
 
 From myself:
  - IsHtml field can be removed from v4.Page_StaticTranslation
    - This will need adjustment in different places
-
-Using 'My Selection' in mapView removes all languages from the map
-  where it should switch to the last selection
-
-The Language Set collapse/expand box doesn't behave correctly.
- - It deletes selected languages somehow, and I don't know where/how o.O
- - Maybe it does so in Init functions of the PageView…
-
-Storing of mySelection in Mapview and in TopMenu between views
- - this can be incorporated once the main site runs with .js
