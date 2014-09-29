@@ -3,7 +3,10 @@
   model: LoadingBar
 */
 SetupBarView = Backbone.View.extend({
-  initialize: function(){
+  events: {
+    'click .clearStorage': 'clearStorage'
+  }
+, initialize: function(){
     //Updating the bar state:
     this.model.on('change:loaded', this.render, this);
     //Finishing the setup:
@@ -27,7 +30,13 @@ SetupBarView = Backbone.View.extend({
     this.model.off(null, null, this);
     //Remove the el from the document:
     this.$el.remove();
+    //Display hidelinks:
+    $('.container-fluid').removeClass('hide');
     //Making sure this callback only works once:
     return false;
+  }
+, clearStorage: function(){
+    localStorage.clear();
+    location.reload(true);
   }
 });
