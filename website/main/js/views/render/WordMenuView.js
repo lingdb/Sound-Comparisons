@@ -57,7 +57,7 @@ WordMenuView = Backbone.View.extend({
       , fClearAll:        'menu_words_filterClearAllWords'
       }
     });
-    this.setModel(staticT);
+    $.extend(true, this.model, staticT);
   }
   /**
     Generates the soundPath part of the model for WordMenuView.
@@ -69,7 +69,7 @@ WordMenuView = Backbone.View.extend({
         path = g.global.soundPath;
       }
     }
-    this.setModel({searchFilter: {soundPath: path}});
+    $.extend(true, this.model, {searchFilter: {soundPath: path}});
   }
   /**
     Generates the sortBy part of the model for WordMenuView.
@@ -81,7 +81,7 @@ WordMenuView = Backbone.View.extend({
     data.link = data.isLogical ? App.router.linkConfig({WordOrderAlphabetical: []})
                                : App.router.linkConfig({WordOrderLogical: []});
     data.link = 'data-href="'+data.link+'"';
-    this.setModel({sortBy: data});
+    $.extend(true, this.model, {sortBy: data});
   }
   /**
     Since big parts of the searchFilter are already done by updateStatic,
@@ -125,7 +125,7 @@ WordMenuView = Backbone.View.extend({
       }, this);
     }
     //Use App.pageState.get{Sp,Ph}Lang
-    this.setModel({searchFilter: data});
+    $.extend(true, this.model, {searchFilter: data});
   }
   /***/
 , updateWordList: function(){
@@ -178,13 +178,21 @@ WordMenuView = Backbone.View.extend({
           mg.checkbox = box;
         }
         //Finishing:
-        mg.wordList = this.buildWordList(words);
+        if(!collapsed){
+          mg.wordList = this.buildWordList(words);
+        }
         data.meaningGroups.push(mg);
+        if('wordList' in this.model){
+          delete this.model['wordList'];
+        }
       }, this);
     }else{
       data.wordList = this.buildWordList(App.wordCollection);
+      if('meaningGroups' in this.model){
+        delete this.model['meaningGroups'];
+      }
     }
-    this.setModel(data);
+    _.extend(this.model, data);
   }
   /**
     This is a helper method for updateWordList.
@@ -261,12 +269,5 @@ WordMenuView = Backbone.View.extend({
         App.router.navigate($(this).find(':selected').data('href'));
       });
     });
-  }
-  /**
-    Basically the same as TopMenuView:setModel,
-    this overwrites the current model with the given one performing a deep merge.
-  */
-, setModel: function(m){
-    this.model = $.extend(true, this.model, m);
   }
 });
