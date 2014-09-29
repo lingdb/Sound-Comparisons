@@ -4,7 +4,9 @@ Setup instructions:
 1. You'll need a webserver with a simple [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle)) setup.
    To get this under debian/ubuntu linux you'd probably like to install apache, mysql and php:
    to install the following packages:
-   ``apt-get install apache2-mpm-prefork libapache2-mod-php5 php5 php5-mysql mysql-client mysql-server``
+   ```
+    apt-get install apache2-mpm-prefork libapache2-mod-php5 php5 php5-mysql mysql-client mysql-server
+    ```
 
 2. You'll need a fitting database and soundfiles for the website to work with.
    These files will probably become accessible here soon.
