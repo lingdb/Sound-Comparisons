@@ -133,9 +133,22 @@ TopMenuView = Backbone.View.extend({
     });
     this.setModel({aboutEntries: entries});
   }
+  /**
+    Reflects the current SoundPlayOption:
+  */
+, updatePlayOption: function(){
+    this.setModel({soundOptionHover: App.soundPlayOption.playOnHover()});
+  }
   /***/
 , render: function(){
     this.$el.html(App.templateStorage.render('TopMenu', {TopMenu: this.model}));
+    //The SoundPlayOption:
+    var options = this.$('#topmenuSoundOptions img').click(function(){
+      App.soundPlayOption.set({playMode: this.attributes['value'].value});
+      options.each(function(){
+        $(this).toggleClass('hide');
+      });
+    });
   }
   /**
     Helper method to color strings for updatePageViews.

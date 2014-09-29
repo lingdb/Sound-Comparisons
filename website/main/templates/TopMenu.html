@@ -86,8 +86,10 @@
   </ul>
   <ul id="topmenuSoundOptions" class="nav nav-tabs">
     <li>
-      <img value="hover" class="btn btn-mini hide" title="{{soundClickTitle}}" src="img/hover.png">
-      <img value="click" class="btn btn-mini" title="{{soundHoverTitle}}" src="img/click.png">
+      <img value="hover" class="btn btn-mini{{#soundOptionHover}} hide{{/soundOptionHover}}"
+      title="{{soundClickTitle}}" src="img/hover.png">
+      <img value="click" class="btn btn-mini{{^soundOptionHover}} hide{{/soundOptionHover}}"
+      title="{{soundHoverTitle}}" src="img/click.png">
     </li>
   </ul>
   <ul id="topmenuAbout" class="nav">
