@@ -121,7 +121,7 @@ LanguageView = Renderer.prototype.SubView.extend({
       lines.push(line);
     }
     //Ethnic group:
-    if(lst !== null && parseInt(lst.getField) === 6){
+    if(lst !== null && parseInt(lst.getField()) === 6){
       if('EthnicGroup' in desc){
         lines.push({desc: lst.getDescription()+' '+desc.EthnicGroup});
       }

@@ -17,7 +17,7 @@ Choice = Selection.extend({
     Selection.prototype.initialize.apply(this, arguments);
   }
   /***/
-, getChoice: function(){return this.choice;}
+, getChoice: function(){return this.choice || null;}
   /***/
 , isChoice: function(m){
     var current = this.getChoice();
