@@ -21,9 +21,18 @@ Language = Backbone.Model.extend({
   }
   /***/
 , getId: function(){return this.get('LanguageIx');}
-  /***/
+  /**
+    For fear of duplicates, the getKey method has to look at App.languageCollection.shortNameCount,
+    and use the superscript with the ShortName if a duplicate exists, instead of the ShortName alone.
+  */
 , getKey: function(){
-    return this.get('ShortName');
+    var sn = this.get('ShortName');
+    if(App.languageCollection.shortNameCount(sn) > 1){
+      if(lst = this.getLanguageStatusType()){
+        return sn+' '+lst.getStatus();
+      }
+    }
+    return sn;
   }
   /**
     Returns the RfcLanguage for the current Language.

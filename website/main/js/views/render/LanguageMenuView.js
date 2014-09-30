@@ -143,7 +143,7 @@ LanguageMenuView = Backbone.View.extend({
         var lCol = App.languageCollection;
         languages.each(function(l){
           var language = {
-            shortName: l.getShortName()
+            shortName: l.getSuperscript(l.getShortName())
           , longName:  l.getLongName()
           , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
           };

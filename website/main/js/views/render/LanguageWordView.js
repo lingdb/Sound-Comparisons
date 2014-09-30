@@ -122,7 +122,7 @@ LanguageWordView = Renderer.prototype.SubView.extend({
             , lng = _.extend({}, lBase, {
             link:         'href="'+App.router.linkLanguageView({language: l})+'"'
           , languageTtip: l.getLongName(false)
-          , shortName:    l.getShortName()
+          , shortName:    l.getSuperscript(l.getShortName())
           , deleteLink:   'href="'+App.router.linkLanguageWordView({languages: remaining})+'"'
           , first:        i === 0
           });

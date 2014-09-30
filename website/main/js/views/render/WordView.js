@@ -96,7 +96,7 @@ WordView = Renderer.prototype.SubView.extend({
           var cell = {
             isLanguageCell: true
           , link: 'href="'+App.router.linkLanguageView({language: l})+'"'
-          , shortName: l.getShortName()
+          , shortName: l.getSuperscript(l.getShortName())
           , longName:  l.getLongName()
           };
           var t = App.transcriptionMap.getTranscription(l, word);

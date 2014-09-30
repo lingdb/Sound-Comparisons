@@ -68,7 +68,7 @@ WordLanguageView = Renderer.prototype.SubView.extend({
       table.languages = _.map(languages, function(l){
         var remaining = App.languageCollection.getDifference(languages, [l]);
         return _.extend({}, basic, {
-          shortName: l.getShortName()
+          shortName: l.getSuperscript(l.getShortName())
         , ttip:      l.getLongName()
         , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
         , deleteLanguageLink: 'href="'+App.router.linkWordLanguageView({languages: remaining})+'"'

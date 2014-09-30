@@ -25,7 +25,7 @@ LanguageView = Renderer.prototype.SubView.extend({
     }
     //The basic headline:
     var headline = {
-      longName:            language.getLongName()
+      longName:            language.getSuperscript(language.getLongName())
     , LanguageLinks:       this.buildLinks(language)
     , LanguageDescription: this.buildDescription(language)
     , playAll: App.translationStorage.translateStatic('language_playAll')
