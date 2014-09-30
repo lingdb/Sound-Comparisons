@@ -26,3 +26,12 @@ Setup instructions:
      It is also possible to provide the website without the ``admin`` subdirectory,
      or let have the ``admin`` directory have a different name, as it's not required for the main website.
      The admin area itself however requires the main part of the website to be accessible.
+
+4. Have a look at the .htaccess file.
+   You'll need to adjust the RewriteBase from ``/shk/main/`` to the path on your webserver.
+   If the website is served from your webroot, you can set it to ``/``
+   You might also want to uncomment the ``Restricted Area`` part at the beginning,
+   if you'd like to setup some simple form of access control.
+
+5. The folder ``export/download`` is used to generate archive files for users to download.
+   To make this possible the website your webserver must be enabled to write to this directory.
