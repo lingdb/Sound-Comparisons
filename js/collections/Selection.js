@@ -41,10 +41,19 @@ var Selection = Backbone.Collection.extend({
 , setSelectedByKey: function(ks){
     var keys = {}; // Hash map for faster finding of keys
     _.each(ks, function(k){keys[k] = true;}, this);
-    //Adding models that have a matching key:
-    return this.setSelected(this.filter(function(m){
+    //Finding selected:
+    var ms = this.filter(function(m){
       return m.getKey() in keys;
-    }, this));
+    }, this);
+    if(ms.length === 0){
+      if('getDefaultSelection' in this){
+        ms = this.getDefaultSelection();
+      }else{
+        ms = _.take(this.models, 5);
+      }
+    }
+    //Adding models that have a matching key:
+    return this.setSelected(ms);
   }
   /**
     Predicate to check selection of a model.

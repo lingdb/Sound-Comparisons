@@ -44,7 +44,14 @@ var Choice = Selection.extend({
   }
   /***/
 , setChoiceByKey: function(k){
-    var m = this.find(function(x){return x.getKey() === k;}, this);
+    var m = this.find(function(x){return x.getKey() === k;}, this) || null;
+    if(m === null){
+      if('getDefaultChoice' in this){
+        m = this.getDefaultChoice();
+      }else{
+        m = this.models[0];
+      }
+    }
     return this.setChoice(m);
   }
 });
