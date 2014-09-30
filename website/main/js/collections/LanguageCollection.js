@@ -1,5 +1,6 @@
+"use strict";
 /***/
-LanguageCollection = Choice.extend({
+var LanguageCollection = Choice.extend({
   model: Language
   /**
     LanguageCollection get's its own initialize so that it can handle language keys on reset.

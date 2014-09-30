@@ -1,10 +1,11 @@
+"use strict";
 /**
   The PageState has a variety of tasks that lie at the core of our Application.
   - It tracks state for the site, where the different parts should not do so themselfs.
   - It aids construcing links for the site.
   - It assists in parsing links for the site.
 */
-PageState = Backbone.Model.extend({
+var PageState = Backbone.Model.extend({
   defaults: {
     wordOrder: 'logical'
   , spLang: null
@@ -69,7 +70,8 @@ PageState = Backbone.Model.extend({
 , getPhLang: function(){
     var phl = this.get('phLang');
     if(phl === null){
-      if(spl = this.getSpLang()){
+      var spl = this.getSpLang();
+      if(spl){
         phl = spl;
       }else{
         phl = App.languageCollection.getDefaultPhoneticLanguage() || null;

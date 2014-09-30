@@ -1,5 +1,6 @@
+"use strict";
 /***/
-WordLanguageView = Renderer.prototype.SubView.extend({
+var WordLanguageView = Renderer.prototype.SubView.extend({
   initialize: function(){
     this.model = {};
     //Connecting to the router

@@ -1,5 +1,6 @@
+"use strict";
 /***/
-Study = Backbone.Model.extend({
+var Study = Backbone.Model.extend({
   initialize: function(){
     //Field to track the first update.
     this._firstUpdate = true;
@@ -32,8 +33,10 @@ Study = Backbone.Model.extend({
     Returns the ids of all other studies.
   */
 , getAllIds: function(){
-    if(g = App.dataStorage.get('global'))
+    var g = App.dataStorage.get('global');
+    if(g){
       if('studies' in g) return g.studies;
+    }
     return [];
   }
   /**

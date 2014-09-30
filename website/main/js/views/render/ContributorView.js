@@ -1,5 +1,6 @@
+"use strict";
 /***/
-ContributorView = Renderer.prototype.SubView.extend({
+var ContributorView = Renderer.prototype.SubView.extend({
   /***/
   initialize: function(){
     this.model = {};

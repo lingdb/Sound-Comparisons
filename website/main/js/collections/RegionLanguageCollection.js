@@ -1,5 +1,6 @@
+"use strict";
 /***/
-RegionLanguageCollection = Backbone.Collection.extend({
+var RegionLanguageCollection = Backbone.Collection.extend({
   model: RegionLanguage
   /***/
 , comparator: function(a, b){

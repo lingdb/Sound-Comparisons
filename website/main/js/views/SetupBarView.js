@@ -1,8 +1,9 @@
+"use strict";
 /**
   el: #appSetup
   model: LoadingBar
 */
-SetupBarView = Backbone.View.extend({
+var SetupBarView = Backbone.View.extend({
   events: {
     'click .clearStorage': 'clearStorage'
   }

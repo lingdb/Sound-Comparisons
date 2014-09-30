@@ -1,5 +1,6 @@
+"use strict";
 /***/
-FamilyCollection = Selection.extend({
+var FamilyCollection = Selection.extend({
   model: Family
   /**
     The update method is connected by the App,

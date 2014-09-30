@@ -1,5 +1,6 @@
+"use strict";
 /***/
-LanguageStatusTypeCollection = Backbone.Collection.extend({
+var LanguageStatusTypeCollection = Backbone.Collection.extend({
   model: LanguageStatusType
   /**
     The update method is connected by the App,

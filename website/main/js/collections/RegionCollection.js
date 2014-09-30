@@ -1,5 +1,6 @@
+"use strict";
 /***/
-RegionCollection = Selection.extend({
+var RegionCollection = Selection.extend({
   model: Region
   /**
     The update method is connected by the App,

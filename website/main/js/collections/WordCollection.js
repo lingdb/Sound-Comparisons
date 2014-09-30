@@ -1,5 +1,6 @@
+"use strict";
 /***/
-WordCollection = Choice.extend({
+var WordCollection = Choice.extend({
   model: Word
   /**
     The update method is connected by the App,

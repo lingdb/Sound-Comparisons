@@ -1,4 +1,5 @@
-SoundPlayOption = Backbone.Model.extend({
+"use strict";
+var SoundPlayOption = Backbone.Model.extend({
   initialize: function(){
     //Loading the playMode:
     var mode = localStorage.playMode;

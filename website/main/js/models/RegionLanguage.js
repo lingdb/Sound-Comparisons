@@ -1,5 +1,6 @@
+"use strict";
 /***/
-RegionLanguage = Backbone.Model.extend({
+var RegionLanguage = Backbone.Model.extend({
   initialize: function(){
     //Field for the memoization of the Language that belongs to this RegionLanguage:
     this._language = null;

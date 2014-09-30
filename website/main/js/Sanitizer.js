@@ -1,7 +1,8 @@
+"use strict";
 /**
   The Sanitizer provides means to sanitize options such as used by the Linker.
 */
-Sanitizer = Backbone.Router.extend({
+var Sanitizer = Backbone.Router.extend({
   /**
     A proxy for the other sanitize methods.
     It chains all sanitize methods with the given suffixes,

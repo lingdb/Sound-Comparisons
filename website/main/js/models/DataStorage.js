@@ -1,3 +1,4 @@
+"use strict";
 /**
   Given that query/data allows us to fetch individual studies,
   it appears helpful, to keep the data in localStorage.
@@ -5,7 +6,7 @@
   Study related data can/will be cleaned out once the space limit is reached,
   while global data will only be overwritten.
 */
-DataStorage = Backbone.Model.extend({
+var DataStorage = Backbone.Model.extend({
   defaults: {
     global: null
   , lastUpdate: 0

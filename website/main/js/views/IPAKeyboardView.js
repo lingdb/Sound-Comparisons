@@ -1,8 +1,9 @@
+"use strict";
 /**
   An onscreen keyboard to insert IPA phonetic symbols into the phonetic filter.
   el: #ipaKeyboard
 */
-IPAKeyboardView = Backbone.View.extend({
+var IPAKeyboardView = Backbone.View.extend({
   initialize: function(){
     var t = this;
     //Calling render whenever IPAKeyboard is opened:

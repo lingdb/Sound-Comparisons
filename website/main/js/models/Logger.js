@@ -1,4 +1,5 @@
-Logger = Backbone.Model.extend({
+"use strict";
+var Logger = Backbone.Model.extend({
   defaults: {
     stack: [] // Actions to perform later on.
   }

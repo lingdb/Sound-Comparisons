@@ -1,5 +1,6 @@
+"use strict";
 /***/
-TranscriptionMap = Backbone.Model.extend({
+var TranscriptionMap = Backbone.Model.extend({
   /**
     The update method is connected by the App,
     to listen on change:study of the window.App.dataStorage.

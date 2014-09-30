@@ -1,8 +1,9 @@
+"use strict";
 /**
   The Renderer will coordinate an array of views as it's model.
   This hands us a single entry point to trigger rendering if anything changed.
 */
-Renderer = Backbone.View.extend({
+var Renderer = Backbone.View.extend({
   initialize: function(){
     //Makeing sure we render once setup finishes:
     App.setupBar.onFinish(function(){

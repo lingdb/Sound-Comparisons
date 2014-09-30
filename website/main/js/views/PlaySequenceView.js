@@ -1,4 +1,5 @@
-PlaySequenceView = Backbone.View.extend({
+"use strict";
+var PlaySequenceView = Backbone.View.extend({
   update: function(pageView){
     //mapView and singleLanguageView ship their own solutions,
     //we care for the rest:

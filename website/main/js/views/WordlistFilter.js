@@ -1,7 +1,8 @@
+"use strict";
 /**
   Controls the filter box and mitigates it's effects.
 */
-WordlistFilter = Backbone.View.extend({
+var WordlistFilter = Backbone.View.extend({
   storage: {
     content:    'wordlistfilter_content'
   , inputId:    'wordlistfilter_inputId'

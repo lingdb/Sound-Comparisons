@@ -1,7 +1,8 @@
+"use strict";
 /**
   TranscriptionSuperscript encapsules both, transcrSuperscriptInfo and transcrSuperscriptLenderLgs.
 */
-TranscriptionSuperscript = Backbone.Model.extend({
+var TranscriptionSuperscript = Backbone.Model.extend({
   /**
     Helper for is{LenderLgs,SuperscriptInfo}
   */

@@ -1,5 +1,6 @@
+"use strict";
 /***/
-Defaults = Backbone.Model.extend({
+var Defaults = Backbone.Model.extend({
   /**
     The update method is connected by the App,
     to listen on change:study of the window.App.dataStorage.

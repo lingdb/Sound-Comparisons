@@ -1,5 +1,6 @@
+"use strict";
 /***/
-ContributorCollection = Backbone.Collection.extend({
+var ContributorCollection = Backbone.Collection.extend({
   model: Contributor
   /**
     Custom comparator to make sure contributors are sorted by SortIxForAboutPage

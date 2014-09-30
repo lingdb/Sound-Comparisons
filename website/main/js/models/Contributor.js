@@ -1,5 +1,6 @@
+"use strict";
 /***/
-Contributor = Backbone.Model.extend({
+var Contributor = Backbone.Model.extend({
   /**
     Returns the full name of a Contributor.
   */

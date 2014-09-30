@@ -1,3 +1,4 @@
+"use strict";
 /**
   The router for our application.
   See http://backbonetutorials.com/what-is-a-router for basic info.
@@ -5,7 +6,7 @@
   The classes {Sanitizer,Configurator,Linker} where once part of the Router,
   but are now separated due to their different tasks and the want for shorter source files.
 */
-Router = Linker.extend({
+var Router = Linker.extend({
   routes: {
     //Basic routes for pageViews:
     ":study/map/:word/:languages":                      "mapView"

@@ -1,5 +1,6 @@
+"use strict";
 /***/
-LanguageStatusType = Backbone.Model.extend({
+var LanguageStatusType = Backbone.Model.extend({
   /**
     Helper method to construct the Category used for dynamic translation.
   */

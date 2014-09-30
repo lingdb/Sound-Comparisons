@@ -1,5 +1,6 @@
+"use strict";
 /***/
-LanguageWordView = Renderer.prototype.SubView.extend({
+var LanguageWordView = Renderer.prototype.SubView.extend({
   initialize: function(){
     this.model = {};
     //Connecting to the router
@@ -138,8 +139,9 @@ LanguageWordView = Renderer.prototype.SubView.extend({
           }else{//We've got words, to build our transcriptions with:
             lng.transcriptions = _.map(words, function(w){
               var tr  = App.transcriptionMap.getTranscription(l, w)
-                , tsc = {isFake: false, phonetic: tr.getPhonetics()};
-              if(spelling = tr.getAltSpelling())
+                , tsc = {isFake: false, phonetic: tr.getPhonetics()}
+                , spelling = tr.getAltSpelling();
+              if(spelling)
                 tsc.spelling = spelling;
               return tsc;
             }, this);

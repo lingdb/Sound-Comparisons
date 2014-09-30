@@ -1,7 +1,8 @@
 /**
   The Configurator provides means to build configuration such as used by the Linker.
 */
-Configurator = Sanitizer.extend({
+"use strict";
+var Configurator = Sanitizer.extend({
   /**
     This method shall modify different page settings that can be conveyed via the config routes.
   */
@@ -109,7 +110,8 @@ Configurator = Sanitizer.extend({
   */
 , configSetMeaningGroups: function(config, mgs){
     config = config || {};
-    if(ms = this.configMkKeyArray(mgs)){
+    var ms = this.configMkKeyArray(mgs);
+    if(ms){
       config.meaningGroups = this.sanitizeArray(ms);
     }
     return config;
@@ -119,7 +121,8 @@ Configurator = Sanitizer.extend({
   */
 , configSetRegions: function(config, regions){
     config = config || {};
-    if(rs = this.configMkKeyArray(regions)){
+    var rs = this.configMkKeyArray(regions);
+    if(rs){
       config.regions = this.sanitizeArray(rs);
     }
     return config;
@@ -129,7 +132,8 @@ Configurator = Sanitizer.extend({
   */
 , configSetFamilies: function(config, families){
     config = config || {};
-    if(fs = this.configMkKeyArray(families)){
+    var fs = this.configMkKeyArray(families);
+    if(fs){
       config.fmilies = this.sanitizeArray(fs);
     }
     return config;

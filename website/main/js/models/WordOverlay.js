@@ -1,4 +1,5 @@
-WordOverlay = Backbone.Model.extend({
+"use strict";
+var WordOverlay = Backbone.Model.extend({
   defaults: {
     content:   ''        // Html String
   , color:     '#000000' // Color to be used for the div

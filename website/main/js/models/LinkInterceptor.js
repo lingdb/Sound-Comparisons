@@ -1,3 +1,4 @@
+"use strict";
 /*
   The LinkInterceptor identifies links once the TemplateStorage is ready,
   and can than be used to intercept loading their original localtion,
@@ -6,7 +7,7 @@
   The LinkInterceptor has a task that is somehow between a model and a view,
   but for practical reasons I understand it as a model.
 */
-LinkInterceptor = Backbone.Model.extend({
+var LinkInterceptor = Backbone.Model.extend({
   defaults: {
     url: null // Changes everytime a link is clicked. Can be used to listen to LinkInterceptor.
   , fragment: '' // Should be appended to the url, will have a leading '#' if not ''.

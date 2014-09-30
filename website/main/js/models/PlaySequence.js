@@ -1,3 +1,4 @@
+"use strict";
 /**
   @param target JQuery object to listen on for clicks.
   The PlaySequence can be triggered to play a sequence of audiofiles.

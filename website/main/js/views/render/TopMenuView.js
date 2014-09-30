@@ -1,8 +1,9 @@
+"use strict";
 /**
   The TopMenuView will be used by the Renderer.
   The TopMenuView will set it's own model to handle and smartly update it's render data.
 */
-TopMenuView = Backbone.View.extend({
+var TopMenuView = Backbone.View.extend({
   initialize: function(){
     this.model = {
       formats: ['mp3','ogg']

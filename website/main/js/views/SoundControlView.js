@@ -1,8 +1,9 @@
+"use strict";
 /**
   el:    google.maps.Map
   model: MapView
 */
-SoundControlView = Backbone.View.extend({
+var SoundControlView = Backbone.View.extend({
   initialize: function(){
     this.firstUpdate = true;
   }

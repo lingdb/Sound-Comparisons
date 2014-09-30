@@ -1,8 +1,9 @@
+"use strict";
 /**
   el:  google.maps.Map
   model: MapView
 */
-MouseTrackView = Backbone.View.extend({
+var MouseTrackView = Backbone.View.extend({
   initialize: function(){
     var view = this;
     google.maps.event.addListener(this.el, 'click', function(e){

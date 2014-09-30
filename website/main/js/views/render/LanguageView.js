@@ -1,5 +1,6 @@
+"use strict";
 /***/
-LanguageView = Renderer.prototype.SubView.extend({
+var LanguageView = Renderer.prototype.SubView.extend({
   /***/
   initialize: function(){
     this.model = {};
@@ -60,7 +61,8 @@ LanguageView = Renderer.prototype.SubView.extend({
 , buildLinks: function(lang){
     var ls = [];
     //Various links:
-    if(iso = lang.getISO()){
+    var iso = lang.getISO();
+    if(iso){
       ls.push(
         { href: 'http://www.ethnologue.com/show_language.asp?code='+iso
         , img:  'http://www.ethnologue.com/favicon.ico'
@@ -78,7 +80,8 @@ LanguageView = Renderer.prototype.SubView.extend({
       );
     }
     //Wikipedia link:
-    if(href = lang.getWikipediaLink()){
+    var href = lang.getWikipediaLink();
+    if(href){
       ls.push({
         ttip:  App.translationStorage.translateStatic('tooltip_languages_link_wikipedia')
       , img:   'http://en.wikipedia.org/favicon.ico'
@@ -87,7 +90,8 @@ LanguageView = Renderer.prototype.SubView.extend({
       });
     }
     //Maps link:
-    if(loc = lang.getLocation()){
+    var loc = lang.getLocation();
+    if(loc){
       ls.push({
         ttip: App.translationStorage.translateStatic('tooltip_languages_link_mapview')
       , href: 'http://maps.google.com/maps?z=12&q='+loc.join()

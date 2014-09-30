@@ -1,10 +1,11 @@
+"use strict";
 /**
   The Linker extends the Configurator, which in turn extends the Sanitizer.
   Building links makes use of both, the Sanitizer and the Configurator.
   This Class is extended by the Router,
   which is the central link building/route processing entity in our App.
 */
-Linker = Configurator.extend({
+var Linker = Configurator.extend({
   /**
     Produces a config with configSet, and builds a link with linkCurrent.
     This shortens the code at several other places.

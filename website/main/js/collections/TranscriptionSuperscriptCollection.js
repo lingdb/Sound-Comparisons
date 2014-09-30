@@ -1,5 +1,6 @@
+"use strict";
 /***/
-TranscriptionSuperscriptCollection = Backbone.Collection.extend({
+var TranscriptionSuperscriptCollection = Backbone.Collection.extend({
   model: TranscriptionSuperscript
   /**
     The update method is connected by the App,
@@ -30,13 +31,13 @@ TranscriptionSuperscriptCollection = Backbone.Collection.extend({
       if(field in this.transcriptionFieldLookup){
         return this.getTranscriptionSuperscript(this.transcriptionFieldLookup[field]);
       }else if(field.length === 3){
-        if(e = this.findWhere({ISOCode: field}))
-          return e.pick('Abbreviation', 'FullNameForHoverText');
+        var e = this.findWhere({ISOCode: field});
+        if(e) return e.pick('Abbreviation', 'FullNameForHoverText');
       }
     }else if(_.isNumber(field)){
-      var predicate = function(e){return parseInt(e.get('Ix')) === field;};
-      if(e = this.find(predicate))
-        return e.pick('Abbreviation', 'HoverText');
+      var predicate = function(e){return parseInt(e.get('Ix')) === field;}
+        , e = this.find(predicate);
+      if(e) return e.pick('Abbreviation', 'HoverText');
     }
     console.log('Trans…Super…Collection.getTranscriptionSuperscript() had undefined field: '+field);
     return null;

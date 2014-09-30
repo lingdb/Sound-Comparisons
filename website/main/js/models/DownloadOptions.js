@@ -1,8 +1,9 @@
+"use strict";
 /**
   This model handles the options associated with the download options given in the TopMenu.
   It is important to track these options, because they're purely client side settings.
 */
-DownloadOptions = Backbone.Model.extend({
+var DownloadOptions = Backbone.Model.extend({
   defaults: {
     wordByWord: false
   , format:     'mp3'

@@ -1,9 +1,10 @@
+"use strict";
 /**
   Our constructor expects the following options:
   el:    google.maps.Map
   model: WordOverlay
 */
-WordOverlayView = function(o){
+var WordOverlayView = function(o){
   //Required properties of google.maps.OverlayView:
   this.bounds_ = null;
   this.image_  = null;

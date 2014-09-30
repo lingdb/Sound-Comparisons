@@ -1,7 +1,10 @@
-StudyWatcher = Backbone.Model.extend({
+"use strict";
+var StudyWatcher = Backbone.Model.extend({
   defaults: {study: null, lastStudy: null}
 , initialize: function(){
-    var s = ls = (l = localStorage.lastStudy) ? l : 'Germanic';
+    var l  = localStorage.lastStudy
+      , s  = (l) ? l : 'Germanic'
+      , ls = s;
     //The current study will become the last study:
     localStorage.lastStudy = s;
     //Setting the vals:

@@ -1,3 +1,4 @@
+"use strict";
 var _gaq = _gaq || [];
 function initLogging(){
   //Ga init:

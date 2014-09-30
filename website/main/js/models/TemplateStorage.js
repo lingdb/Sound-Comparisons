@@ -1,4 +1,5 @@
-TemplateStorage = Backbone.Model.extend({
+"use strict";
+var TemplateStorage = Backbone.Model.extend({
   defaults: {
     ready:    false // true iff partials and render method are ready.
   , partials: null  // PartialName -> Content

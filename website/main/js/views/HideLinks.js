@@ -1,4 +1,5 @@
-HideLinks = Backbone.View.extend({
+"use strict";
+var HideLinks = Backbone.View.extend({
   initialize: function(){
     this.content = $('#contentArea');
     this.links   = {};

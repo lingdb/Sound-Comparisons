@@ -1,5 +1,6 @@
+"use strict";
 /***/
-MeaningGroupCollection = Selection.extend({
+var MeaningGroupCollection = Selection.extend({
   model: MeaningGroup
   /**
     Custom comparator to make sure MeaningGroups are sorted by MeaningGroupIx

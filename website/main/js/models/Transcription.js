@@ -1,10 +1,11 @@
+"use strict";
 /**
   Note that contrary to the Transcription model implemented in php,
   this Transcription may have arrays of multiple values for some fields,
   instead of there being multiple Transcriptions that belong together,
   but repeat some fields while others change.
 */
-Transcription = Backbone.Model.extend({
+var Transcription = Backbone.Model.extend({
   defaults: {
     //Fields for the language and word a transcription belongs to.
     //These are set by TranscriptionMap:getTranscription.
@@ -156,7 +157,8 @@ Transcription = Backbone.Model.extend({
       if(!fail) return altSp;
     }
     if(language.isRfcLanguage()) return word.getModernName();
-    if(rfc = language.getRfcLanguage()){
+    var rfc = language.getRfcLanguage();
+    if(rfc){
       var t = App.transcriptionMap.getTranscription(rfc, word);
       return t.getAltSpelling();
     }

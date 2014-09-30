@@ -1,3 +1,4 @@
+"use strict";
 function initScroll(){
   //Checks if scrollDown should be displayed
   var chkBottom = function(){

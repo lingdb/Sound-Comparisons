@@ -1,8 +1,9 @@
+"use strict";
 /**
   The WordMenuView will be used by the Renderer.
   It will set it's own model and handle it similar to TopMenuView.
 */
-WordMenuView = Backbone.View.extend({
+var WordMenuView = Backbone.View.extend({
   initialize: function(){
     //Setting the initial model:
     this.model = {
@@ -63,8 +64,8 @@ WordMenuView = Backbone.View.extend({
     Generates the soundPath part of the model for WordMenuView.
   */
 , buildSoundPath: function(){
-    var path = '';
-    if(g = App.dataStorage.get('global')){
+    var path = '', g = App.dataStorage.get('global');
+    if(g){
       if('global' in g && 'soundPath' in g.global){
         path = g.global.soundPath;
       }
@@ -238,10 +239,11 @@ WordMenuView = Backbone.View.extend({
              ? 'href="'+App.router.linkMapView({word: word})+'"'
              : 'href="'+App.router.linkWordView({word: word})+'"';
       //Phonetics:
-      var phonetics = ['*'+word.getProtoName()];
-      if(phLang = App.pageState.getPhLang()){
-        if(tr = word.getTranscription(phLang))
-          phonetics = tr.getPhonetics();
+      var phonetics = ['*'+word.getProtoName()]
+        , phLang = App.pageState.getPhLang();
+      if(phLang){
+        var tr = word.getTranscription(phLang);
+        if(tr) phonetics = tr.getPhonetics();
       }
       //Finish it:
       _.each(phonetics, function(p){

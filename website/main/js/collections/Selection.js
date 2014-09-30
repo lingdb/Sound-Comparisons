@@ -1,9 +1,10 @@
+"use strict";
 /**
   Implements the aspect that several models of a collection can be marked as selected.
   If children implement 'isDefaultSelection', it will be used to find the default selection,
   rather than selection all models per default.
 */
-Selection = Backbone.Collection.extend({
+var Selection = Backbone.Collection.extend({
   initialize: function(){
     this.selected = {}; // model.getId() -> model
     //Defaulting selected models:

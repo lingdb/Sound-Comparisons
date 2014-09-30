@@ -1,9 +1,10 @@
+"use strict";
 /**
   The rewrite of AudioLogic to a Backbone.View.
   It will be used by the App, and PlaySequence will be adjusted to fit it.
   el may be an audio tag, that can be used to check iff the browser supports a given format.
 */
-AudioLogic = Backbone.View.extend({
+var AudioLogic = Backbone.View.extend({
   initialize: function(){
     // Keeping track of wether we're currently playing something:
     this.playing = false;
@@ -73,7 +74,8 @@ AudioLogic = Backbone.View.extend({
   */
 , play: function(audio){
     if(!audio){
-      if(f = this.playFinished) f();
+      if(_.isFunction(this.playFinished))
+        this.playFinished();
       return;
     }
     if(this.current) this.stop();
@@ -112,7 +114,8 @@ AudioLogic = Backbone.View.extend({
     this.playing = false;
     this.markNotPlaying(audio);
     this.current = null;
-    if(f = this.playFinished) f();
+    if(_.isFunction(this.playFinished))
+      this.playFinished();
   }
   /**
     @param audio HTML5 audio tag
@@ -136,7 +139,8 @@ AudioLogic = Backbone.View.extend({
     so that not all sound files need be loaded immediate.
   */
 , onDemand: function(audio){
-    if(d = $(audio).attr('data-onDemand')){
+    var d = $(audio).attr('data-onDemand');
+    if(d){
       var src = "";
       $($.parseJSON(d)).each(function(i, s){
         if(App.views.audioLogic.filterSoundfiles(s)){
@@ -193,16 +197,13 @@ AudioLogic = Backbone.View.extend({
     filterSoundfiles replaces itself on first call.
   */
 , filterSoundfiles: function(x){
-    var score = 0, regex = /^$/;
-    if(s = this.playsOgg()){
-      if(s > score){
-        score = s; regex = /.+\.ogg$/;
-      }
+    var score = 0, regex = /^$/, s = this.playsOgg();
+    if(s > 0 && s > score){
+      score = s; regex = /.+\.ogg$/;
     }
-    if(s = this.playsMp3() && s > score){
-      if(s > score){
-        score = s; regex = /.+\.mp3$/;
-      }
+    s = this.playsMp3();
+    if(s > 0 && s > score){
+      score = s; regex = /.+\.mp3$/;
     }
     this.filterSoundfiles = function(x){
       if(_.isString(x)){

@@ -1,4 +1,5 @@
-SoundPlayOptionView = Backbone.View.extend({
+"use strict";
+var SoundPlayOptionView = Backbone.View.extend({
   initialize: function(){
     this.model.on('change:playMode', this.render, this);
     this.render();

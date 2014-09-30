@@ -1,5 +1,6 @@
+"use strict";
 /***/
-Language = Backbone.Model.extend({
+var Language = Backbone.Model.extend({
   initialize: function(){
     //Field for memoization of this languages rfcLanguage:
     this._rfcLanguage = null; // null -> not tried, undefined -> not found.
@@ -28,7 +29,8 @@ Language = Backbone.Model.extend({
 , getKey: function(){
     var sn = this.get('ShortName');
     if(App.languageCollection.shortNameCount(sn) > 1){
-      if(lst = this.getLanguageStatusType()){
+      var lst = this.getLanguageStatusType();
+      if(lst){
         return sn+' '+lst.getStatus();
       }
     }
@@ -269,8 +271,9 @@ Language = Backbone.Model.extend({
       App.contributorCollection.each(function(c){
         var cId = c.get('ContributorIx');
         if(cId in idFMap){
-          var field = idFMap[cId];
-          if(ms = field.match(/CitationAuthor([12])$/)){
+          var field = idFMap[cId]
+            , ms = field.match(/CitationAuthor([12])$/);
+          if(ms){
             var n   = ms[1]
               , add = { Year:  this.get('Citation'+n+'Year')
                       , Pages: this.get('Citation'+n+'Pages')};
@@ -326,7 +329,8 @@ Language = Backbone.Model.extend({
     Returns the wikipediaLink for this Language as String || null.
   */
 , getWikipediaLink: function(){
-    if(iso = this.getISO()){
+    var iso = this.getISO();
+    if(iso){
       var query = {
         BrowserMatch:      App.translationStorage.getBrowserMatch()
       , ISOCode:           iso
@@ -369,8 +373,9 @@ Language = Backbone.Model.extend({
   }
   /***/
 , getColor: function(){
-    var ret = {color: (r = this.getRegion()) ? r.getColor() : null};
-    if(lst = this.getLanguageStatusType()){
+    var ret = {color: (r = this.getRegion()) ? r.getColor() : null}
+      , lst = this.getLanguageStatusType();
+    if(lst){
       ret.opacity    = lst.get('Opacity');
       ret.colorDepth = lst.get('ColorDepth');
     }

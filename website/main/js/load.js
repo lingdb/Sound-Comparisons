@@ -1,3 +1,4 @@
+"use strict";
 /*
   Load listens for links with a load attribute and changes their behaviour.
   It does so by looking at each page and examining the current pageView.

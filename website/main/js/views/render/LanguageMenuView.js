@@ -1,8 +1,9 @@
+"use strict";
 /**
   The LanguageMenuView will be used by the Renderer.
   It will set it's own model and handle it similar to TopMenuView.
 */
-LanguageMenuView = Backbone.View.extend({
+var LanguageMenuView = Backbone.View.extend({
   initialize: function(){
     //Initial model:
     this.model = {

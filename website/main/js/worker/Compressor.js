@@ -1,3 +1,4 @@
+"use strict";
 /**
   (de-)compressing strings turned out to be a rather time intensive task.
   To circumvent a blocked page and browsers complaining to their users about long running scripts,

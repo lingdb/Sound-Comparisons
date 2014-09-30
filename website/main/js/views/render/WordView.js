@@ -1,5 +1,6 @@
+"use strict";
 /***/
-WordView = Renderer.prototype.SubView.extend({
+var WordView = Renderer.prototype.SubView.extend({
   initialize: function(){
     this.model = {};
     //Connecting to the router
@@ -99,8 +100,9 @@ WordView = Renderer.prototype.SubView.extend({
           , shortName: l.getSuperscript(l.getShortName())
           , longName:  l.getLongName()
           };
-          var t = App.transcriptionMap.getTranscription(l, word);
-          if(s = t.getAltSpelling()) cell.spelling = s;
+          var t = App.transcriptionMap.getTranscription(l, word)
+            , s = t.getAltSpelling();
+          if(s) cell.spelling = s;
           cell.phonetic = t.getPhonetics();
           //Filling ls:
           ls.push(cell);

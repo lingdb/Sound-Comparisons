@@ -1,5 +1,6 @@
+"use strict";
 if(typeof(google) !== 'undefined'){
-  Map = Backbone.Model.extend({
+  var Map = Backbone.Model.extend({
     defaults: {
       mapOptions: {
         zoom:              2
@@ -23,7 +24,8 @@ if(typeof(google) !== 'undefined'){
   , setModel: function(m){
       //Removing old wordOverlays:
       _.each(this.get('wordOverlays'), function(wo){
-        if(v = wo.get('view')) v.remove();
+        var v = wo.get('view');
+        if(v) v.remove();
       }, this);
       //Setting new data:
       this.set(m);

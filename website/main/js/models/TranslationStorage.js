@@ -1,4 +1,5 @@
-TranslationStorage = Backbone.Model.extend({
+"use strict";
+var TranslationStorage = Backbone.Model.extend({
   defaults: {
     ready:        false // Ready as soon, as a translation is usable.
   , summary:      {}    // TranslationId -> Translation
@@ -247,13 +248,21 @@ TranslationStorage = Backbone.Model.extend({
       , data = this.get('cToDMap');
     for(var i = 0; i < tIds.length; i++){
       var currentMap = data[tIds[i]];
-      if(category in currentMap){
-        var ts = _.chain(currentMap[category]).where({Field: field}).pluck('Trans').value();
-        if(ts.length > 0){
-          if(ts.length === 1)
-            return ts[0];
-          return ts;
+      try{
+        if(category in currentMap){
+          var ts = _.chain(currentMap[category]).where({Field: field}).pluck('Trans').value();
+          if(ts.length > 0){
+            if(ts.length === 1)
+              return ts[0];
+            return ts;
+          }
         }
+      }catch(e){
+        //I've seen an exception with the above if in ff,
+        //and will now dump aditional info, to figure out what it's about:
+        console.log('FF debug effort: '+typeof(currentMap));
+        console.log(currentMap);
+        throw(e);
       }
     }
     //Translation not found:

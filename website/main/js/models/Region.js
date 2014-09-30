@@ -1,5 +1,6 @@
+"use strict";
 /***/
-Region = Backbone.Model.extend({
+var Region = Backbone.Model.extend({
   initialize: function(){
     //Field for memoization of this regions family:
     this._family = null;

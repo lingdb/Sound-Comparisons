@@ -1,5 +1,6 @@
+"use strict";
 /***/
-MapView = Renderer.prototype.SubView.extend({
+var MapView = Renderer.prototype.SubView.extend({
   /***/
   initialize: function(){
     //Data representation created by update methods:

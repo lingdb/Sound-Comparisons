@@ -1,8 +1,9 @@
+"use strict";
 /*
   el:    body
   model: DownloadOptions
 */
-DownloadOptionView = Backbone.View.extend({
+var DownloadOptionView = Backbone.View.extend({
   initialize: function(){
     window.App.loadingBar.onFinish(this.setup, this);
     this.model.on('change:wordByWord', this.wordByWord, this);

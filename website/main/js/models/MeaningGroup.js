@@ -1,5 +1,6 @@
+"use strict";
 /***/
-MeaningGroup = Backbone.Model.extend({
+var MeaningGroup = Backbone.Model.extend({
   initialize: function(){
     //Field for memoization of the Words that belong to this MeaningGroup.
     this._words = null;

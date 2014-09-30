@@ -1,4 +1,5 @@
-LoadingBar = Backbone.Model.extend({
+"use strict";
+var LoadingBar = Backbone.Model.extend({
   defaults: {
     segments: 0
   , loaded:   0
