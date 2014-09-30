@@ -373,7 +373,8 @@ var Language = Backbone.Model.extend({
   }
   /***/
 , getColor: function(){
-    var ret = {color: (r = this.getRegion()) ? r.getColor() : null}
+    var r = this.getRegion()
+      , ret = {color: (r) ? r.getColor() : null}
       , lst = this.getLanguageStatusType();
     if(lst){
       ret.opacity    = lst.get('Opacity');

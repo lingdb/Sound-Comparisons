@@ -66,10 +66,11 @@ var LanguageWordView = Renderer.prototype.SubView.extend({
         var remaining = App.wordCollection.getDifference(words, [w])
           , alts = w.getNameFor(spLang);
         if(_.isArray(alts)) alts = alts.join(', ');
+        var ln = w.getLongName();
         return _.extend({}, base, {
           deleteLink: 'href="'+App.router.linkCurrent({words: remaining})+'"'
         , link:       'href="'+App.router.linkWordView({word: w})+'"'
-        , ttip:       (ln = w.getLongName()) ? " title='"+ln+"'" : ''
+        , ttip:       (!_.isEmpty(ln)) ? " title='"+ln+"'" : ''
         , trans:      alts
         , map: {
             link: 'href="'+App.router.linkMapView({word: w})+'"'
