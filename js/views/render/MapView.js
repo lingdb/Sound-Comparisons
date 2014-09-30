@@ -81,13 +81,16 @@ var MapView = Renderer.prototype.SubView.extend({
       if(latlon === null) return;
       var tr = App.transcriptionMap.getTranscription(l, word);
       //Creating psf entries:
-      var psf = _.map(tr.getPhonetics(), function(p){
-        return { phonetic:   p.phonetic
-               , soundfiles: p._srcs };
-      }, this);
+      var psf = [];
+      if(tr !== null){
+        psf = _.map(tr.getPhonetics(), function(p){
+          return { phonetic:   p.phonetic
+                 , soundfiles: p._srcs };
+        }, this);
+      }
       //The complete structure:
       data.transcriptions.push({
-        altSpelling:        tr.getAltSpelling()
+        altSpelling:        (tr !== null) ? tr.getAltSpelling() : ''
       , translation:        word.getNameFor(l)
       , lat:                latlon[0]
       , lon:                latlon[1]

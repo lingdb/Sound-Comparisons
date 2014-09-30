@@ -101,9 +101,11 @@ var WordView = Renderer.prototype.SubView.extend({
           , longName:  l.getLongName()
           };
           var t = App.transcriptionMap.getTranscription(l, word)
-            , s = t.getAltSpelling();
+            , s = (t !== null) ? t.getAltSpelling() : null;
           if(s) cell.spelling = s;
-          cell.phonetic = t.getPhonetics();
+          if(t !== null){
+            cell.phonetic = t.getPhonetics();
+          }
           //Filling ls:
           ls.push(cell);
           cellCount--;
