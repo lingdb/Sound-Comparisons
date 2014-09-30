@@ -57,6 +57,9 @@ var Region = Backbone.Model.extend({
     Returns a color string in the form of /#{[0-9a-fA-F]}6/, or null.
   */
 , getColor: function(){
+    if(App.study.getColorByFamily()){
+      return this.getFamily().getColor();
+    }
     var c = this.get('Color');
     if(typeof(c) === 'string' && c !== ''){
       return '#'+c;
