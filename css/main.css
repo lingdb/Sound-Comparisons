@@ -31,10 +31,6 @@ i, .icon, .favicon, input[type="radio"] {
 .icon-remove-custom {background-position: -483px 0px;}
 .icon-chkbox-custom {background-position: -483px -48px;}
 .icon-chkbox-half-custom {background-position: -483px -72px;}
-.icon-remove-custom:hover, a:hover > .icon-remove-custom {background-position: -483px -25px;}
-  .icon-chkbox-custom:hover, .icon-chkbox-half-custom:hover
-, a:hover > .icon-chkbox-custom, a:hover > .icon-chkbox-half-custom {background-position: -144px -72px;}
-.icon-check:hover, a:hover > .icon-check {background-position: -483px -48px;}
 .flag {
   margin-right: 0.5em;
   height: 14.7px;
