@@ -14,12 +14,16 @@ if(array_key_exists('name', $_POST)){
   $url  = ($_POST['url']) ? $dbConnection->escape_string($_POST['url']) : '';
   if(empty($url)){
     $q = "DELETE FROM Page_ShortLinks WHERE Name = '$name'";
+    $dbConnection->query($q);
   }else{
+    $uid = session_getUid();
+    $q = "INSERT INTO Edit_Imports (Who) VALUES ($uid)";
+    $dbConnection->query($q);
     $q = "INSERT INTO Page_ShortLinks (Name, Target) "
        . "VALUES ('$name', '$url') "
        . "ON DUPLICATE KEY UPDATE Target = '$url'";
+    $dbConnection->query($q);
   }
-  $dbConnection->query($q);
 }
 ?>
 <!DOCTYPE HTML>

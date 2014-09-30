@@ -26,6 +26,8 @@ var Router = Linker.extend({
     //Route for missing implementations of links:
   , "FIXME":                                            "missingRoute"
   , "FIXME/*infos":                                     "missingRoute"
+    //ShortLinks:
+  , ":shortLink":                                       "shortLink"
     //Catch all route:
   , "*actions":                                         "defaultRoute"
   }
@@ -53,6 +55,24 @@ var Router = Linker.extend({
         forward.unshift('route:'+r);
         this.trigger.apply(this, forward);
       }, this);
+    }, this);
+    /**
+      The Router handles shortLinks and triggers navigating them.
+      We don't want the URL to change, but we'd like the router to act as if it changed.
+      https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
+    */
+    this.on('route:shortLink', function(shortLink){
+      var slMap = App.dataStorage.getShortLinksMap();
+      if(shortLink in slMap){
+        var url = slMap[shortLink]
+          , matches = url.match(/^[^#]*#(.+)$/);
+        if(matches){
+          var fragment = matches[1];
+          Backbone.history.loadUrl(fragment);
+        }
+      }else{
+        console.log('Could not route shortLink: '+shortLink);
+      }
     }, this);
   }
 });

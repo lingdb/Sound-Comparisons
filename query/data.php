@@ -77,8 +77,13 @@ if(array_key_exists('global',$_GET)){
   , 'transcrSuperscriptInfo'      => fetchAll('SELECT * FROM TranscrSuperscriptInfo')
   , 'transcrSuperscriptLenderLgs' => fetchAll('SELECT * FROM TranscrSuperscriptLenderLgs')
   , 'wikipediaLinks'              => fetchAll('SELECT * FROM WikipediaLinks')
+  , 'shortLinks'                  => array()
   , 'soundPath'                   => Config::$soundPath
   );
+  //Adding shortLinks:
+  foreach(fetchAll('SELECT Name, Target FROM Page_ShortLinks') as $s){
+    $global['shortLinks'][$s['Name']] = $s['Target'];
+  }
   //Fixing contributor avatars:
   foreach($global['contributors'] as $k => $v){
     $prefix = 'img/contributors/';

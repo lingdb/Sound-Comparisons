@@ -235,4 +235,10 @@ var DataStorage = Backbone.Model.extend({
       cbks[label].push([func,ctx]);
     }
   }
+  /**
+    Returns a map from ShortLink names to URLs
+  */
+, getShortLinksMap: function(){
+    return this.get('global').global.shortLinks;
+  }
 });
