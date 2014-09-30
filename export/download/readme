@@ -1,0 +1,2 @@
+This directory is used by the website to generated files to download on request by a user.
+To work properly, the webserver needs permission to write in this directory.

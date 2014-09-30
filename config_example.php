@@ -24,7 +24,7 @@ class Config extends ConfigBase {
   // Public configuration:
   public static $debug         = true;
   public static $flags_enabled = false;
-  public static $soundPath     = '../sound';
+  public static $soundPath     = 'sound';
   public static $downloadPath  = 'export/download';
   public static $locale        = 'en-US';
   /***/
