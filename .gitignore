@@ -1,3 +1,4 @@
 .*.swp
 website/sound
 database
+website/main/config.php

@@ -6,14 +6,14 @@ Setup instructions:
    to install the following packages:
    ```
     apt-get install apache2-mpm-prefork libapache2-mod-php5 php5 php5-mysql mysql-client mysql-server
-    ```
+   ```
 
 2. You'll need a fitting database and soundfiles for the website to work with.
    These files will probably become accessible here soon.
    For the following steps we assume that your database is setup correctly,
    and the soundfiles are at some part relative to the website that is also accessible via HTTP.
 
-3. The website specific code lies in website/main, and you'll need to adjust the contents of config.php
+3. The website specific code lies in website/main, and you'll need to rename ``config_example.php`` to ``config.php`` and adjust it's contents:
    * Make sure the ``$mainDbLogin`` is filled with data fitting the mysql database
    * Set ``$soundPath`` to the location of the soundfile directory relative to config.php
    * Make sure the directory specified as ``$downloadPath`` is writeable by the webserver,
