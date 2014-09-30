@@ -27,8 +27,6 @@ LanguageCollection = Choice.extend({
         this.shortNameMap[sn] = 1;
       }
     }, this);
-    console.log('Created shortNameMap!');
-    console.log(this.shortNameMap);
   }
   /**
     The shortNameCount described from initialize, to aid Language:getKey
