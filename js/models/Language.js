@@ -225,7 +225,7 @@ var Language = Backbone.Model.extend({
       var query = {LanguageStatusType: this.get('LanguageStatusType')};
       this._languageStatusType = App.languageStatusTypeCollection.findWhere(query);
     }
-    return this._languageStatusType;
+    return this._languageStatusType || null;
   }
   /**
     Returns the Superscript for this Language, with fields in the current translation.
@@ -233,6 +233,9 @@ var Language = Backbone.Model.extend({
   */
 , getSuperscript: function(target){
     var lst = this.getLanguageStatusType();
+    if(lst === null){
+      return target || null;
+    }
     return {
       target: target || null
     , ttip: lst.getStatusTooltip()
