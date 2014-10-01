@@ -22,6 +22,16 @@ var MapView = Renderer.prototype.SubView.extend({
     google.maps.event.addListener(this.map, 'zoom_changed', function(){
       App.map.placeWordOverlays();
     });
+    //Handle zooming via mouse on clicking the map:
+    google.maps.event.addListener(this.map, 'mousedown', function(){
+      view.setScrollWheel(true);
+    });
+    $('body').on('mousedown', function(e){
+      var onMap = $(event.target).parents('#map_canvas').length > 0;
+      if(!onMap){
+        view.setScrollWheel(false);
+      }
+    });
     //Connecting to the router
     App.router.on('route:mapView', this.route, this);
   }
@@ -251,5 +261,12 @@ var MapView = Renderer.prototype.SubView.extend({
     , w:  e.width()
     , h:  e.height()
     };
+  }
+  /**
+    Per default, the map doesn't care for the scroll wheel,
+    but this functions allows us to change that.
+  */
+, setScrollWheel: function(use){
+    return this.map.setOptions({scrollwheel: use});
   }
 });

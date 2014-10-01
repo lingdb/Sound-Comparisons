@@ -6,6 +6,7 @@ if(typeof(google) !== 'undefined'){
         zoom:              2
       , center:            new google.maps.LatLng(54.92, 1.875)
       , mapTypeId:         google.maps.MapTypeId.TERRAIN
+      , scrollwheel:       false
       , streetViewControl: false
       , styles:            [{
         featureType: "administrative.country"
