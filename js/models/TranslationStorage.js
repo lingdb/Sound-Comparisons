@@ -212,7 +212,11 @@ var TranslationStorage = Backbone.Model.extend({
     Usually this will be [tId, defaultTid].
   */
 , getTranslationIds: function(){
-    return _.unique([this.getTranslationId(), this.defaultTranslationId()]);
+    var tIds = [this.getTranslationId(), this.defaultTranslationId()];
+    return _.unique(_.map(tIds, function(t){
+      if(_.isString(t)) return parseInt(t);
+      return t;
+    }));
   }
   /***/
 , setTranslationId: function(tId){
@@ -235,7 +239,7 @@ var TranslationStorage = Backbone.Model.extend({
       return req;
     }
     var tId  = this.getTranslationId()
-      , data = this.get('statics')[tId];
+      , data = this.get('statics')[tId] || {};
     //Fallback of tId to 1, iff necessary:
     if(!(req in data) && tId !== this.defaultTranslationId()){
       data = this.get('statics')[1];
@@ -247,22 +251,14 @@ var TranslationStorage = Backbone.Model.extend({
     var tIds = this.getTranslationIds()
       , data = this.get('cToDMap');
     for(var i = 0; i < tIds.length; i++){
-      var currentMap = data[tIds[i]];
-      try{
-        if(category in currentMap){
-          var ts = _.chain(currentMap[category]).where({Field: field}).pluck('Trans').value();
-          if(ts.length > 0){
-            if(ts.length === 1)
-              return ts[0];
-            return ts;
-          }
+      var currentMap = data[tIds[i]] || {};
+      if(category in currentMap){
+        var ts = _.chain(currentMap[category]).where({Field: field}).pluck('Trans').value();
+        if(ts.length > 0){
+          if(ts.length === 1)
+            return ts[0];
+          return ts;
         }
-      }catch(e){
-        //I've seen an exception with the above if in ff,
-        //and will now dump aditional info, to figure out what it's about:
-        console.log('FF debug effort: '+typeof(currentMap));
-        console.log(currentMap);
-        throw(e);
       }
     }
     //Translation not found:

@@ -31,7 +31,6 @@
     @param $hash String
   */
   function session_mkValid($user, $hash){
-    error_log("session_mkValid($user, $hash)");
     $h = password_hash($user.$hash, PASSWORD_BCRYPT);
     if(!$h){//Fallback on md5
       $h = md5($user.$hash);
