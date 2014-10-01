@@ -169,9 +169,12 @@ var TopMenuView = Backbone.View.extend({
     if(cType === 'string'){
       return '<div class="inline '+color+'">'+content+'</div>';
     }else if(cType === 'object'){
-      var matches = content.match(/^(.*) [Xx×] (.*)$/)
-        , m1 = matches[1], m2 = matches[2];
-      return '<div class="inline '+color.c1+'">'+m1+'</div>×<div class="inline '+color.c2+'">'+m2+'</div>';
+      var matches = content.match(/^(.*) [Xx×] (.*)$/);
+      if(matches){
+        var m1 = matches[1], m2 = matches[2];
+        return '<div class="inline '+color.c1+'">'+m1+'</div>×<div class="inline '+color.c2+'">'+m2+'</div>';
+      }
+      return '<div class="inline color-map">'+content+'</div>';
     }
     console.log('Unexpected behaviour in TopMenuView.tColor() with mode: '+mode);
     return content;
