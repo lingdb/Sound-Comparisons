@@ -21,10 +21,13 @@
         }else{//Probably still an md5 hash - need to update.
           $hash = md5($_POST['password']);
           if($row['Hash'] === $hash){
-            $hash = password_hash($_POST['password'], PASSWORD_BCRYPT);
-            $q = "UPDATE Edit_Users SET Hash = '$hash' WHERE UserId = ".$row['UserId'];
-            $dbConnection->query($q);
             $valid = true;
+            $bcHash = password_hash($_POST['password'], PASSWORD_BCRYPT);
+            if($bcHash){
+              $hash = $bcHash;
+              $q = "UPDATE Edit_Users SET Hash = '$hash' WHERE UserId = ".$row['UserId'];
+              $dbConnection->query($q);
+            }
           }
         }
       }
@@ -35,7 +38,7 @@
       }else{?>
         <!DOCTYPE HTML>
         <html><?php
-          $title    = "Login failed, try again.";
+          $title = "Login failed, try again.";
           require 'head.php';
         ?><body><?php
           $loginMessage = "Login failed.";
