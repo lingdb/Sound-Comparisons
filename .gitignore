@@ -1,3 +1,7 @@
 .*.swp
 sound
 config.php
+.htaccess
+.htpasswd
+export/.htaccess
+query/.htaccess
