@@ -15,6 +15,9 @@
       $password     = password_hash($_POST['password'], PASSWORD_BCRYPT);
       $mayTranslate = ($_POST['mayTranslate'] === '1') ? '1' : '0';
       $mayEdit      = ($_POST['mayEdit']      === '1') ? '1' : '0';
+      if(!$password){//Fallback for md5:
+        $password = md5($_POST['password']);
+      }
       /* Checking that username is not taken: */
       $q = "SELECT COUNT(*) FROM Edit_Users WHERE Login = '$username'";
       $r = $dbConnection->query($q)->fetch_row();
@@ -43,7 +46,10 @@
       }
       if(isset($_POST['password']))
         if($_POST['password'] != ''){
-          $password = md5($_POST['password']);
+          $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+          if(!$password){//Fallback for md5:
+            $password = md5($_POST['password']);
+          }
           $q = "UPDATE Edit_Users SET Hash = '$password' WHERE UserId = $userid";
           $dbConnection->query($q);
           echo "Updated password.\n";

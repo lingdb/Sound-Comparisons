@@ -54,8 +54,11 @@
         if($newP !== $confirm)
           Config::error("New password doesn't match confirmation.");
         $hash = password_hash($_POST['new'], PASSWORD_BCRYPT);
-        $uid  = session_getUid();
-        $q    = "UPDATE Edit_Users SET Hash = '$hash' WHERE UserId = $uid";
+        if(!$hash){//Fallback to md5
+          $hash = md5($_POST['new']);
+        }
+        $uid = session_getUid();
+        $q   = "UPDATE Edit_Users SET Hash = '$hash' WHERE UserId = $uid";
         $dbConnection->query($q);
         session_destroy();
         header('LOCATION: index.php');
