@@ -65,18 +65,13 @@
       }else Config::error('Invalid session!');
     break;
     default:
-      if(session_validate()){?>
-       <!DOCTYPE HTML>
-        <html><?php
-          $title   = "Welcome to the administration area.";
-          $jsFiles = array("overview.js");
-          require 'head.php';
-        ?><body><?php
-          require 'topmenu.php';
-          require 'overview.php';
-        ?></body>
-        </html>
-      <?php }else{?>
+      if(session_validate()){
+        if(session_mayEdit()){
+          header('LOCATION: userAccount.php');
+        }else{
+          header('LOCATION: translate.php');
+        }
+      }else{?>
        <!DOCTYPE HTML>
         <html><?php
           $title = "Login to perform administration tasks.";
