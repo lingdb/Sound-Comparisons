@@ -14,6 +14,15 @@ var Word = Backbone.Model.extend({
     return ''+ixE+ixM;
   }
   /**
+    Returns the Id that should be used to sort Words inside the same MeaningGroup.
+  */
+, getMgId: function(){
+    var mId = this.get('MeaningGroupMemberIx');
+    if(_.isString(mId))
+      return parseInt(mId);
+    return mId;
+  }
+  /**
     Returns the Key for a Word.
     In contrast to the Id, the key is human readable, and may have duplicates.
     I will potentially add the getKey method to many models that already have a getId.

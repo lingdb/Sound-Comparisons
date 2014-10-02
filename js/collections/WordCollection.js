@@ -28,7 +28,7 @@ var WordCollection = Choice.extend({
         var maId = ma.getId(), mbId = mb.getId();
         if(maId > mbId) return  1;
         if(maId < mbId) return -1;
-        var aId = a.getId(), bId = b.getId();
+        var aId = a.getMgId(), bId = b.getMgId();
         if(aId > bId) return  1;
         if(aId < bId) return -1;
       }
