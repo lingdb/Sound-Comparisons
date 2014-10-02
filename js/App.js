@@ -8,7 +8,6 @@ $(function(){
   , familyCollection: new FamilyCollection()
   , languageCollection: new LanguageCollection()
   , languageStatusTypeCollection: new LanguageStatusTypeCollection()
-  , linkInterceptor: new LinkInterceptor()
   , logger: new Logger()
   , map: new Map()
   , meaningGroupCollection: new MeaningGroupCollection()

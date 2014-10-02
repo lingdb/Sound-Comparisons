@@ -20,8 +20,7 @@ var TemplateStorage = Backbone.Model.extend({
       });
       storage.process(info);
     }).fail(function(){
-      window.App.linkInterceptor.set({enabled: false});
-      console.log('Could not fetch templateInfo from host -> LinkInterceptor disabled.');
+      console.log('TemplateStorage failed to fetch templates from host.');
     }).always(function(){
       console.log('TemplateStorage done with setup.');
       window.App.setupBar.addLoaded();
