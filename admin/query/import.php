@@ -159,6 +159,10 @@
     , 'FROM_UNIXTIME('.$esc($dt['Time']).')'
     ));
   }
+  array_push($sql,
+    'INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans, Time) '
+  . 'VALUES '.$compose($xs)
+  );
   //Final statements:
   array_push($sql,
     'SET FOREIGN_KEY_CHECKS=1'
