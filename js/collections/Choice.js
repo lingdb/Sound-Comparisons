@@ -44,7 +44,10 @@ var Choice = Selection.extend({
   }
   /***/
 , setChoiceByKey: function(k){
-    var m = this.find(function(x){return x.getKey() === k;}, this) || null;
+    var m = null;
+    if(_.isString(k)){
+      m = this.find(function(x){return x.getKey() === k;}, this) || null;
+    }
     if(m === null){
       if('getDefaultChoice' in this){
         m = this.getDefaultChoice();

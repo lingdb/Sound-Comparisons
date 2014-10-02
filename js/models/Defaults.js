@@ -19,9 +19,14 @@ var Defaults = Backbone.Model.extend({
 , getWord: function(){
     var w   = new Word(this.get('word'))
       , wId = w.getId();
-    return App.wordCollection.find(function(x){
+    //Searching word by wId:
+    w = App.wordCollection.find(function(x){
       return x.getId() === wId;
     }, this);
+    if(!w){//Fallback to first word:
+      w = App.wordCollection.models[0];
+    }
+    return w;
   }
   /**
     Returns the default Words as an array for the current Study as defined in the v4.Default_Multiple_Words table.
@@ -32,6 +37,7 @@ var Defaults = Backbone.Model.extend({
       var word = new Word(w);
       wIds[word.getId()] = true;
     }, this);
+    //Search words:
     return App.wordCollection.filter(function(w){
       return w.getId() in wIds;
     }, this);
@@ -41,7 +47,9 @@ var Defaults = Backbone.Model.extend({
   */
 , getLanguage: function(){
     var query = this.get('language');
-    return App.languageCollection.findWhere(query);
+    //Try to find the language, fallback to first language:
+    var l = App.languageCollection.findWhere(query);
+    return l || App.languageCollection.models[0];
   }
   /**
     Returns the default Languages as array for the current Study

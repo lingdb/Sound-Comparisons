@@ -135,7 +135,8 @@ var Sanitizer = Backbone.Router.extend({
   }
   /***/
 , parseArray: function(c){
-    if(c === ' ') return [];
+    if(!_.isString(c)) return [];
+    if(c === ' ')      return [];
     return _.map(c.split(','), decodeURIComponent);
   }
 });

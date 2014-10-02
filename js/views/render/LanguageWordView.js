@@ -5,6 +5,7 @@ var LanguageWordView = Renderer.prototype.SubView.extend({
     this.model = {};
     //Connecting to the router
     App.router.on('route:languageWordView', this.route, this);
+    App.router.on('route:languageWordView_', function(s,w,l){return this.route(s,l,w);}, this);
   }
   /**
     Method to make it possible to check what kind of PageView this Backbone.View is.
