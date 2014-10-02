@@ -17,49 +17,6 @@ var WordMenuView = Backbone.View.extend({
     this.wordlistFilter = new WordlistFilter();
   }
   /**
-    Executes non /^update.+/ methods the first time and configures their callbacks.
-  */
-, activate: function(){
-    //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', this.buildStatic, this);
-    App.dataStorage.on('change:global', this.buildSoundPath, this);
-    //Building statics the first time:
-    this.buildStatic();
-    this.buildSoundPath();
-  }
-  /**
-    Generates the static translation part for the WordMenu.
-  */
-, buildStatic: function(){
-    var staticT = App.translationStorage.translateStatic({
-      title:       'menu_words_words'
-    , meaningSets: 'menu_words_meaningSets_title'
-    , expand:      'menu_words_meaningSets_expand'
-    , collapse:    'menu_words_meaningSets_collapse'
-    , sortBy: {
-        sortBy: 'menu_words_selectortext'
-      , aOrder: 'menu_words_selector_rfclangs'
-      , lOrder: 'menu_words_sortelicitation'
-      }
-    , searchFilter: {
-        sfby:             'menu_words_filter_head'
-      , spelling:         'menu_words_filterspelling'
-      , phonetics:        'menu_words_filterphonetics'
-      , soundFile:        'menu_words_filter_fonetics_file'
-      , fonetics:         'menu_words_filter_fonetics'
-      , psTarget:         'menu_words_filter_regex_link'
-      , psHover:          'menu_words_filter_regex_hover'
-      , in:               'menu_words_filter_spphin'
-      , ipaOpenTitle:     'menu_words_open_ipaKeyboard'
-      , filterFoundWords: 'menu_words_filterFoundWords'
-      , fAddAll:          'menu_words_filterAddMultiWords'
-      , fRefresh:         'menu_words_filterRefreshMultiWords'
-      , fClearAll:        'menu_words_filterClearAllWords'
-      }
-    });
-    $.extend(true, this.model, staticT);
-  }
-  /**
     Generates the soundPath part of the model for WordMenuView.
   */
 , buildSoundPath: function(){
@@ -69,26 +26,49 @@ var WordMenuView = Backbone.View.extend({
         path = g.global.soundPath;
       }
     }
+    return path;
     $.extend(true, this.model, {searchFilter: {soundPath: path}});
   }
   /**
     Generates the sortBy part of the model for WordMenuView.
   */
 , updateSortBy: function(){
-    var data = {
-      isLogical: App.pageState.wordOrderIsLogical()
-    };
+    var data = App.translationStorage.translateStatic({
+      sortBy: 'menu_words_selectortext'
+    , aOrder: 'menu_words_selector_rfclangs'
+    , lOrder: 'menu_words_sortelicitation'
+    });
+    data.isLogical = App.pageState.wordOrderIsLogical();
     data.link = data.isLogical ? App.router.linkConfig({WordOrderAlphabetical: []})
                                : App.router.linkConfig({WordOrderLogical: []});
     data.link = 'data-href="'+data.link+'"';
-    $.extend(true, this.model, {sortBy: data});
+    _.extend(this.model, {sortBy: data});
   }
   /**
     Since big parts of the searchFilter are already done by updateStatic,
     this method has a focus on building the {sp,ph}List entries.
   */
 , updateSearchFilter: function(){
-    var data = {spList: {options: []}, phList: {}};
+    var data = App.translationStorage.translateStatic({
+      sfby:             'menu_words_filter_head'
+    , spelling:         'menu_words_filterspelling'
+    , phonetics:        'menu_words_filterphonetics'
+    , soundFile:        'menu_words_filter_fonetics_file'
+    , fonetics:         'menu_words_filter_fonetics'
+    , psTarget:         'menu_words_filter_regex_link'
+    , psHover:          'menu_words_filter_regex_hover'
+    , in:               'menu_words_filter_spphin'
+    , ipaOpenTitle:     'menu_words_open_ipaKeyboard'
+    , filterFoundWords: 'menu_words_filterFoundWords'
+    , fAddAll:          'menu_words_filterAddMultiWords'
+    , fRefresh:         'menu_words_filterRefreshMultiWords'
+    , fClearAll:        'menu_words_filterClearAllWords'
+    });
+    _.extend(data, {
+      spList: {options: []}
+    , phList: {}
+    , soundPath: this.buildSoundPath()
+    });
     //Filling spList:
     var spLang = App.pageState.getSpLang();
     data.spList.current = spLang ? spLang.getSpellingName() : App.translationStorage.getName();
@@ -125,13 +105,17 @@ var WordMenuView = Backbone.View.extend({
       }, this);
     }
     //Use App.pageState.get{Sp,Ph}Lang
-    $.extend(true, this.model, {searchFilter: data});
+    _.extend(this.model, {searchFilter: data});
   }
   /***/
 , updateWordList: function(){
-    var data = {
-      isLogical: App.pageState.wordOrderIsLogical()
-    };
+    var data = App.translationStorage.translateStatic({
+      title:       'menu_words_words'
+    , meaningSets: 'menu_words_meaningSets_title'
+    , expand:      'menu_words_meaningSets_expand'
+    , collapse:    'menu_words_meaningSets_collapse'
+    });
+    data.isLogical = App.pageState.wordOrderIsLogical();
     if(data.isLogical){
       data.ahref = 'href="'+App.router.linkConfig({MeaningGroups: App.meaningGroupCollection})+'"';
       data.nhref = 'href="'+App.router.linkConfig({MeaningGroups: []})+'"';
