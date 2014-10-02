@@ -52,7 +52,6 @@ var WordMenuView = Backbone.View.extend({
       , in:               'menu_words_filter_spphin'
       , ipaOpenTitle:     'menu_words_open_ipaKeyboard'
       , filterFoundWords: 'menu_words_filterFoundWords'
-      , fTitle:           'menu_words_filterTitleMultiWords'
       , fAddAll:          'menu_words_filterAddMultiWords'
       , fRefresh:         'menu_words_filterRefreshMultiWords'
       , fClearAll:        'menu_words_filterClearAllWords'
