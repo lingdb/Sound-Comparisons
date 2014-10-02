@@ -134,7 +134,7 @@ var Configurator = Sanitizer.extend({
     config = config || {};
     var fs = this.configMkKeyArray(families);
     if(fs){
-      config.fmilies = this.sanitizeArray(fs);
+      config.families = this.sanitizeArray(fs);
     }
     return config;
   }
