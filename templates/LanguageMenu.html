@@ -9,7 +9,7 @@
   <dl class="familyList">
     <dt style="background-color: {{color}};">
       {{#checkbox}}
-        <a {{{link}}} title="{{title}}"><i class="{{icon}}"></i></a>
+        <a {{{link}}}{{#title}} title="{{title}}"{{/title}}><i class="{{icon}}"></i></a>
       {{/checkbox}}
       <a class="color-family" {{{link}}}>{{name}}</a>
     </dt>

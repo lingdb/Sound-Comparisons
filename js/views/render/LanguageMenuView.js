@@ -62,14 +62,14 @@ var LanguageMenuView = Backbone.View.extend({
           case 'all':
             var removed = lCol.getDifference(lCol.getSelected(), languages);
             data.checkbox.icon = 'icon-check';
-            data.checkbox.href = 'href="'+App.router.linkCurrent({languages: removed})+'"';
+            data.checkbox.link = 'href="'+App.router.linkCurrent({languages: removed})+'"';
             data.checkbox.ttip = App.translationStorage.translateStatic('multimenu_tooltip_del_family');
           break;
           case 'some':
             data.checkbox.icon = 'icon-chkbox-half-custom';
           case 'none':
             var additional = lCol.getUnion(lCol.getSelected(), languages);
-            data.checkbox.href = 'href="'+App.router.linkCurrent({languages: additional})+'"';
+            data.checkbox.link = 'href="'+App.router.linkCurrent({languages: additional})+'"';
             data.checkbox.ttip = App.translationStorage.translateStatic('multimenu_tooltip_add_family');
         }
         //The RegionList:
