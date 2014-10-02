@@ -5,11 +5,6 @@
 */
 var Renderer = Backbone.View.extend({
   initialize: function(){
-    //Makeing sure we render once setup finishes:
-    App.setupBar.onFinish(function(){
-      this.render();
-      return false;
-    }, this);
     //Views managed by the Renderer:
     this.model = {
       topMenuView:      new TopMenuView({el: this.$('#topMenu')})
