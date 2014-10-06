@@ -170,6 +170,9 @@ var MapView = Renderer.prototype.SubView.extend({
             first = false; t.centerRegion();
           }
         }, 10000);
+        if(!first){
+          t.centerRegion();
+        }
       })(this);
     }
     return this.renderMap();

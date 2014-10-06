@@ -14,8 +14,8 @@ if(typeof(google) !== 'undefined'){
         , stylers: [{visibility: "off"}]
         }]
       }
-    , defaultBounds: new google.maps.LatLngBounds()
-    , regionBounds:  new google.maps.LatLngBounds()
+    , defaultBounds: null // LatLngBounds, filled with all words.
+    , regionBounds:  null // LatLngBounds, filled with regionZoom.
     , wordOverlays:  []
     , notAddedWos:   0
     }
@@ -23,6 +23,8 @@ if(typeof(google) !== 'undefined'){
       Called by views/render/MapView to set a model to represent on the map.
     */
   , setModel: function(m){
+      //Cleaning defaultBounds:
+      this.set({defaultBounds: new google.maps.LatLngBounds()});
       //Removing old wordOverlays:
       _.each(this.get('wordOverlays'), function(wo){
         var v = wo.get('view');
@@ -50,11 +52,12 @@ if(typeof(google) !== 'undefined'){
       });
     }
   , initRegionBounds: function(){
-      var rBounds = this.get('regionBounds');
+      var rBounds = new google.maps.LatLngBounds();
       _.each(this.get('regionZoom'), function(e){
         var latLng = new google.maps.LatLng(e.lat, e.lon);
         rBounds.extend(latLng);
       }, this);
+      this.set({regionBounds: rBounds});
     }
   , sortWordOverlays: function(direction){
       if(!/^(ns|sn|we|ew)$/i.test(direction)){

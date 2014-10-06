@@ -5,20 +5,28 @@
     and injects the according values into $_GET.
   */
   if(isset($_GET['shortLink'])){
-    $sLink = $dbConnection->escape_string($_GET['shortLink']);
-    $q = "SELECT Target FROM Page_ShortLinks WHERE Name = '$sLink'";
-    if($r = $dbConnection->query($q)->fetch_row()){
-      $q = parse_url($r[0], PHP_URL_QUERY);
-      $parts = explode('&', $q);
-      foreach($parts as $p){
-        $pair = explode('=', $p);
-        if(count($pair) === 2){
-          $key = $pair[0];
-          $val = urldecode($pair[1]);
-          $_GET[$key] = $val;
+    $forwarded = false;
+    if($_GET['shortLink'] === 'index.php'){
+      $forwarded = true;
+    }else{
+      $sLink = $dbConnection->escape_string($_GET['shortLink']);
+      $q = "SELECT COUNT(*) FROM Page_ShortLinks WHERE Name = '$sLink'";
+      if($r = $dbConnection->query($q)->fetch_row()){
+        if($r[0] > 0){
+          error_log($q);
+          $forwarded = true;
+          header('LOCATION: .#'.$sLink);
+        }else{
+          error_log("ShortLink not found: $sLink");
         }
       }
     }
-    unset($sLink, $q, $parts, $pair, $key, $val);
+    if(!$forwarded){
+      $error = array(
+        'title' => 'Something went wrong.'
+      );
+      die(Config::getMustache()->render('shortlinkerror', $error));
+    }
+    unset($sLink, $q, $parts, $pair, $key, $val, $forwarded);
   }
 ?>
