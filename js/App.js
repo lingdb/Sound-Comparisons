@@ -62,4 +62,5 @@ $(function(){
   });
   App.views.playSequenceView = new PlaySequenceView();
   App.views.renderer = new Renderer({el: $('body')});
+  App.views.loadModalView = new LoadModalView({el: $('#loadModal')});
 });

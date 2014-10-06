@@ -78,6 +78,12 @@ var Study = Backbone.Model.extend({
         promise.reject(arguments);
       });
     }
+    //Showing that a study is loaded:
+    var state = App.setupBar.pick('loaded','segments');
+    if(state.loaded === 0 || state.loaded === state.segments){
+      App.views.loadModalView.loadStudy(promise);
+    }
+    //Done:
     return promise;
   }
   /***/
