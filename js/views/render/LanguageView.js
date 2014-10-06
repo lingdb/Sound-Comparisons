@@ -92,9 +92,10 @@ var LanguageView = Renderer.prototype.SubView.extend({
     //Maps link:
     var loc = lang.getLocation();
     if(loc){
+      var ll = loc.join();
       ls.push({
         ttip: App.translationStorage.translateStatic('tooltip_languages_link_mapview')
-      , href: 'http://maps.google.com/maps?z=12&q='+loc.join()
+      , href: "https://www.google.com/maps/place/"+ll+"/@"+ll+",7z/"
       , img:  'img/langmap.png'
       });
     }
