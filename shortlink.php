@@ -23,7 +23,9 @@
     }
     if(!$forwarded){
       $error = array(
-        'title' => 'Something went wrong.'
+        'title' => 'Shortlink not found.'
+      , 'description' => "You tried to load the shortlink '$sLink'. Maybe there was a typo?"
+      , 'aText' => 'Back to the main website.'
       );
       die(Config::getMustache()->render('shortlinkerror', $error));
     }
