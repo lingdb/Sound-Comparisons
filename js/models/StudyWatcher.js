@@ -5,6 +5,12 @@ var StudyWatcher = Backbone.Model.extend({
     var l  = localStorage.lastStudy
       , s  = (l) ? l : 'Germanic'
       , ls = s;
+    //Check if a study is given in the fragment:
+    var fragment = window.location.hash
+      , matches  = fragment.match(/#\/([^\/]+)\/(|map|word|language|languagesXwords|wordsXlanguages)/);
+    if(_.isArray(matches)){
+      s = matches[1];
+    }
     //The current study will become the last study:
     localStorage.lastStudy = s;
     //Setting the vals:

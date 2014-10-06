@@ -158,6 +158,9 @@ var TopMenuView = Backbone.View.extend({
     @return content html string
   */
 , tColor: function(mode, content){
+    //Sanitizing:
+    if(!_.isString(content)) content = '';
+    //Data to operate on:
     var modes = {
       m:  'color-map'
     , w:  'color-word'

@@ -95,7 +95,7 @@ var LanguageMenuView = Backbone.View.extend({
     regions.each(function(r){
       var languages = r.getLanguages();
       if(languages.length === 0){
-        console.log('Found region with no languages.');
+        console.log('Found region with no languages: '+r.getShortName());
         return;
       }
       var isMultiView = App.pageState.isMultiView()
