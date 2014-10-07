@@ -5,6 +5,13 @@ var MapView = Renderer.prototype.SubView.extend({
   initialize: function(){
     //Data representation created by update methods:
     this.model = {}; // Notice that we also make heavy use of App.map
+    //Connecting to the router
+    App.router.on('route:mapView', this.route, this);
+    //Abort further work if no maps:
+    if(typeof(google) === 'undefined'){
+      console.log('MapView.initialize() aborts, google undefined.');
+      return;
+    }
     //Map setup:
     this.div = document.getElementById("map_canvas");
     this.map = new google.maps.Map(this.div, App.map.get('mapOptions'));
@@ -32,8 +39,6 @@ var MapView = Renderer.prototype.SubView.extend({
         view.setScrollWheel(false);
       }
     });
-    //Connecting to the router
-    App.router.on('route:mapView', this.route, this);
   }
   /**
     Method to make it possible to check what kind of PageView this Backbone.View is.
@@ -118,18 +123,22 @@ var MapView = Renderer.prototype.SubView.extend({
   /***/
 , render: function(){
     if(App.pageState.isPageView(this)){
-      //Rendering the template:
-      this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
-      //Binding click events:
-      this.bindEvents();
-      //Updating SoundControlView:
-      this.soundControlView.update();
-      //Setting mapsData to map model:
-      App.map.setModel(this.model.mapsData);
-      //Displaying stuff:
-      this.$el.removeClass('hide');
-      $('#map_canvas').removeClass('hide');
-      this.renderMap();
+      if(typeof(google) === 'undefined'){
+        App.views.loadModalView.noMap();
+      }else{
+        //Rendering the template:
+        this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
+        //Binding click events:
+        this.bindEvents();
+        //Updating SoundControlView:
+        this.soundControlView.update();
+        //Setting mapsData to map model:
+        App.map.setModel(this.model.mapsData);
+        //Displaying stuff:
+        this.$el.removeClass('hide');
+        $('#map_canvas').removeClass('hide');
+        this.renderMap();
+      }
     }else{
       this.$el.addClass('hide');
       $('#map_canvas').addClass('hide');

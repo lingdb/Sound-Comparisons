@@ -10,7 +10,6 @@ $(function(){
   , languageCollection: new LanguageCollection()
   , languageStatusTypeCollection: new LanguageStatusTypeCollection()
   , logger: new Logger()
-  , map: new Map()
   , meaningGroupCollection: new MeaningGroupCollection()
   , pageState: new PageState()
   , regionCollection: new RegionCollection()
@@ -29,6 +28,9 @@ $(function(){
   , views: {}
   , wordCollection: new WordCollection()
   });
+  if(typeof(Map) !== 'undefined'){
+    _.extend(window.App, {map: new Map()});
+  }
   //Making sure TranslationStorage does it's thing:
   App.translationStorage.init();
   //Listening for changing global data:

@@ -20,6 +20,14 @@ var LoadModalView = Backbone.View.extend({
     var view = this;
     promise.always(function(){view.render();});
   }
+, noMap: function(){
+    this.render({
+      exit: true
+    , headline: 'Maps not accessable'
+    , description: 'It appears that google maps could not be loaded. '
+                  +'Please check your internet connection.'
+    });
+  }
 , render: function(model){
     if(!_.isObject(model)){
       this.$el.modal('hide');

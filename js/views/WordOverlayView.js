@@ -120,4 +120,6 @@ var WordOverlayView = function(o){
   ColerCalcView and google.maps.OverlayView.
   To work around this, I reimplemented WordOverlayView in a fashion that makes it independant of ColorCalcView below.
 */
-WordOverlayView.prototype = new google.maps.OverlayView();
+if(typeof(google) !== 'undefined'){
+  WordOverlayView.prototype = new google.maps.OverlayView();
+}
