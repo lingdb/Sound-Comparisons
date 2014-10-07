@@ -26,7 +26,9 @@ function soundPaths($sId, $t){
         . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = '$wId'";
   $lang = current(current(fetchAll($lq)));
   $word = current(current(fetchAll($wq)));
-  $path = "$base/$lang/$lang$word";
+  $pron = ($t['AlternativePhoneticRealisationIx'] > 1) ? '_pron'.$t['AlternativePhoneticRealisationIx'] : '';
+  $lex  = ($t['AlternativeLexemIx'] > 1) ? '_lex'.$t['AlternativeLexemIx'] : '';
+  $path = "$base/$lang/$lang$word$lex$pron";
   $ret  = array();
   foreach(array('.mp3', '.ogg') as $ext){
     $p = $path.$ext;

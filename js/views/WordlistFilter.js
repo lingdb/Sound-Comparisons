@@ -136,7 +136,8 @@ var WordlistFilter = Backbone.View.extend({
     $('#PhoneticFilter').val('');
     $('#FilterPhonetic').removeClass('selected');
     $('#FilterSpelling').addClass('selected');
-    var input = (v = $('#SpellingFilter').val()) ? v.toLowerCase() : '';
+    var v =  $('#SpellingFilter').val();
+    var input = (!_.isEmpty(v)) ? v.toLowerCase() : '';
     this.setStorage('#FilterSpelling', '#SpellingFilter', input);
     var elems = $('ul.wordList .color-word').map(function(i, e){
       return {text: $(e).text(), target: $(e).closest('li')};
