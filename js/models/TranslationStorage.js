@@ -80,7 +80,7 @@ var TranslationStorage = Backbone.Model.extend({
   }
 , load: function(){
     var key = 'TranslationStorage', def = $.Deferred()
-      , msg = {label: key+'.load', data: localStorage[key], task: 'decompress'};
+      , msg = {label: key+'.load', data: App.storage[key], task: 'decompress'};
     if(msg.data){
       var handle = function(d){
         if(_.isObject(d)){
@@ -111,11 +111,11 @@ var TranslationStorage = Backbone.Model.extend({
     if(App.dataStorage.compressor){
       var msg = {label: key+'.save', data: data, task: 'compress'};
       App.dataStorage.onCompressor(msg.label, function(m){
-        localStorage[key] = m.data;
+        App.storage[key] = m.data;
       }, this);
       App.dataStorage.compressor.postMessage(msg);
     }else{
-      localStorage[key] = LZString.compressToBase64(JSON.stringify(data));
+      App.storage[key] = LZString.compressToBase64(JSON.stringify(data));
     }
   }
 , mkNToTMap: function(){
@@ -167,26 +167,26 @@ var TranslationStorage = Backbone.Model.extend({
   */
 , defaultTranslationId: function(){return 1;}
   /**
-    Saving the current TranslationId to localStorage:
+    Saving the current TranslationId to App.storage:
   */
 , saveTranslationId: function(){
-    localStorage['translationId'] = this.get('translationId');
+    App.storage['translationId'] = this.get('translationId');
   }
   /**
     Figuring out the TranslationId of a client,
     works in multiple steps:
     0.: If we already figured out the TranslationId,
         we use the one given with this model.
-    1.: If TranslationId is known from localStorage, we use that.
+    1.: If TranslationId is known from App.storage, we use that.
     2.: We see if the browser language matches a particular translation summary.
     3.: We fall back to the defaultTranslationId.
   */
 , getTranslationId: function(){
     var tId = this.get('translationId');
     if(tId !== null) return tId;
-    //Is the translationId known from localStorage?
-    if('translationId' in localStorage){
-      tId = localStorage['translationId'];
+    //Is the translationId known from App.storage?
+    if('translationId' in App.storage){
+      tId = App.storage['translationId'];
     }else{
       //Finding the translationId via browser language:
       var lang = navigator.language || navigator.userLanguage

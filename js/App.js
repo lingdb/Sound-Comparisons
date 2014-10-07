@@ -1,7 +1,8 @@
 "use strict";
 $(function(){
   //Building the App singleton:
-  window.App = {
+  window.App = {storage: window.sessionStorage};
+  _.extend(window.App, {
     contributorCollection: new ContributorCollection()
   , dataStorage: new DataStorage()
   , defaults: new Defaults()
@@ -27,7 +28,7 @@ $(function(){
   , translationStorage: new TranslationStorage()
   , views: {}
   , wordCollection: new WordCollection()
-  };
+  });
   //Making sure TranslationStorage does it's thing:
   App.translationStorage.init();
   //Listening for changing global data:

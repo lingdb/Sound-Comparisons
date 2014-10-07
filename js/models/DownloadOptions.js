@@ -18,8 +18,8 @@ var DownloadOptions = Backbone.Model.extend({
     var options = {};
     _.each(_.keys(this.defaults), function(k){
       var l = this.storageKey(k);
-      if(l in localStorage){
-        options[k] = localStorage[l];
+      if(l in App.storage){
+        options[k] = App.storage[l];
       }
     }, this);
     this.set(options);
@@ -27,7 +27,7 @@ var DownloadOptions = Backbone.Model.extend({
 , store: function(){
     _.each(_.keys(this.defaults), function(k){
       var l = this.storageKey(k), v = this.get(k);
-      localStorage[l] = v;
+      App.storage[l] = v;
     }, this);
   }
 , storageKey: function(k){return "DownloadOptions_"+k;}

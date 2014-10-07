@@ -37,7 +37,7 @@ var SetupBarView = Backbone.View.extend({
     return false;
   }
 , clearStorage: function(){
-    localStorage.clear();
+    App.storage.clear();
     location.reload(true);
   }
 });

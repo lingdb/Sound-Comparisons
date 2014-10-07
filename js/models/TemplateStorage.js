@@ -50,10 +50,10 @@ var TemplateStorage = Backbone.Model.extend({
       }));
     }, this);
     //Cleaning up templates that no longer exist:
-    _.each(_.keys(localStorage), function(k){
+    _.each(_.keys(App.storage), function(k){
       if(k.match(/^tmpl_/) !== null && !(k in keepSet)){
         console.log('Template no longer required: '+k);
-        delete localStorage[k];
+        delete App.storage[k];
       }
     }, this);
     //Saving templates:
@@ -67,11 +67,11 @@ var TemplateStorage = Backbone.Model.extend({
       });
     });
   }
-//Loads a template object from localStorage
+//Loads a template object from App.storage
 , load: function(name){
     var key = 'tmpl_'+name, def = $.Deferred();
-    if(key in localStorage){
-      var msg = {label: 'load:'+key, data: localStorage[key], task: 'decompress'};
+    if(key in App.storage){
+      var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompress'};
       if(App.dataStorage.compressor){
         App.dataStorage.onCompressor(msg.label, function(m){
           def.resolve(m.data);
@@ -85,18 +85,18 @@ var TemplateStorage = Backbone.Model.extend({
     }
     return def;
   }
-//Stores a template object in localStorage.
+//Stores a template object in App.storage.
 , store: function(tmpl){
     if('content' in tmpl){
       var key = 'tmpl_'+tmpl.name;
       if(App.dataStorage.compressor){
         var msg = {label: 'store:'+key, data: tmpl, task: 'compress'};
         App.dataStorage.onCompressor(msg.label, function(m){
-          localStorage[key] = m.data;
+          App.storage[key] = m.data;
         }, this);
         App.dataStorage.compressor.postMessage(msg);
       }else{
-        localStorage[key] = LZString.compressToBase64(JSON.stringify(tmpl));
+        App.storage[key] = LZString.compressToBase64(JSON.stringify(tmpl));
       }
     }
   }

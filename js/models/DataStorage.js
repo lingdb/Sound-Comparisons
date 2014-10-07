@@ -1,7 +1,7 @@
 "use strict";
 /**
   Given that query/data allows us to fetch individual studies,
-  it appears helpful, to keep the data in localStorage.
+  it appears helpful, to keep the data in App.storage.
   We distinguish between study related data and global data.
   Study related data can/will be cleaned out once the space limit is reached,
   while global data will only be overwritten.
@@ -56,7 +56,7 @@ var DataStorage = Backbone.Model.extend({
     });
   }
   /*
-    Cleans up localStorage a little to see that we get some space back.
+    Cleans up App.storage a little to see that we get some space back.
     Returns true iff some cleanup was performed.
     We work in two stages here:
     1.: Try to find outdated studies and remove them.
@@ -80,7 +80,7 @@ var DataStorage = Backbone.Model.extend({
         , s   = this.load("Study_"+study);
       if(s && s.timestamp < timestamp){
         console.log('DataStorage.collectGarbadge() outdated: '+study);
-        delete localStorage[key];
+        delete App.storage[key];
         collected = true;
       }
     }, this);
@@ -88,9 +88,9 @@ var DataStorage = Backbone.Model.extend({
     //Stage 2:
     _.each(studies, function(study){
       var key = "Study_"+study;
-      if(key in localStorage){
+      if(key in App.storage){
         console.log('DataStorage.collectGarbadge() unused: '+study);
-        delete localStorage[key];
+        delete App.storage[key];
         collected = true;
       }
     }, this);
@@ -118,7 +118,7 @@ var DataStorage = Backbone.Model.extend({
     def.done(function(){
       do{
         try{
-          localStorage[key] = msg.data;
+          App.storage[key] = msg.data;
           saved = true;
         }catch(e){
           //We cancel saving and say it's true, iff we couldn't free any space:
@@ -145,8 +145,8 @@ var DataStorage = Backbone.Model.extend({
   */
 , load: function(name){
     var key = "DataStorage_"+name, def = $.Deferred();
-    if(key in localStorage){
-      var msg = {label: 'load:'+key, data: localStorage[key], task: 'decompress'};
+    if(key in App.storage){
+      var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompress'};
       if(this.compressor){
         this.onCompressor(msg.label, function(m){
           def.resolve(m.data);

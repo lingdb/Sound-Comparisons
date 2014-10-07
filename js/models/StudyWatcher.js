@@ -2,7 +2,7 @@
 var StudyWatcher = Backbone.Model.extend({
   defaults: {study: null, lastStudy: null}
 , initialize: function(){
-    var l  = localStorage.lastStudy
+    var l  = App.storage.lastStudy
       , s  = (l) ? l : 'Germanic'
       , ls = s;
     //Check if a study is given in the fragment:
@@ -12,7 +12,7 @@ var StudyWatcher = Backbone.Model.extend({
       s = matches[1];
     }
     //The current study will become the last study:
-    localStorage.lastStudy = s;
+    App.storage.lastStudy = s;
     //Setting the vals:
     this.set({study: s, lastStudy: ls});
   }
@@ -29,9 +29,9 @@ var StudyWatcher = Backbone.Model.extend({
 , update: function(){
     console.log('StudyWatcher.update()');
     var s  = App.study.getId() || 'Germanic'
-      , ls = localStorage.lastStudy || s;
+      , ls = App.storage.lastStudy || s;
     //The current study will become the last study:
-    localStorage.lastStudy = s;
+    App.storage.lastStudy = s;
     //Setting the vals:
     this.set({study: s, lastStudy: ls});
   }

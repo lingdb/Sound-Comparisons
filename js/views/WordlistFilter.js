@@ -21,8 +21,8 @@ var WordlistFilter = Backbone.View.extend({
     if(window.App.studyWatcher.studyChanged()){
       this.clearStorage();
     }else{
-      $(localStorage[this.storage.selectedId]).addClass('selected');
-      $(localStorage[this.storage.inputId]).val(localStorage[this.storage.content] || '');
+      $(App.storage[this.storage.selectedId]).addClass('selected');
+      $(App.storage[this.storage.inputId]).val(App.storage[this.storage.content] || '');
     }
     //Checking if we can filter the languageTable aswell:
     this.hasLanguageTable = ($('#languageTable').length > 0);
@@ -43,14 +43,14 @@ var WordlistFilter = Backbone.View.extend({
   }
 , clearStorage: function(){
     _.each(_.values(this.storage), function(k){
-      delete window.localStorage[k];
+      delete App.storage[k];
     });
     return this;
   }
 , setStorage: function(selectedId, inputId, content){
-    localStorage[this.storage.selectedId] = selectedId || '';
-    localStorage[this.storage.inputId]    = inputId    || '';
-    localStorage[this.storage.content]    = content    || '';
+    App.storage[this.storage.selectedId] = selectedId || '';
+    App.storage[this.storage.inputId]    = inputId    || '';
+    App.storage[this.storage.content]    = content    || '';
     return this;
   }
 , chkInput: function(input){
