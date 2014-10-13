@@ -25,7 +25,7 @@ var WordlistFilter = Backbone.View.extend({
       $(App.storage[this.storage.inputId]).val(App.storage[this.storage.content] || '');
     }
     //Checking if we can filter the languageTable aswell:
-    this.hasLanguageTable = ($('#languageTable').length > 0);
+    this.hasLanguageTable = App.pageState.isPageView('l');
     //Binding events:
     var t = this;
     $('#SpellingFilter').keyup(function(){ t.spellingFilter(); });
@@ -145,7 +145,7 @@ var WordlistFilter = Backbone.View.extend({
     this.filter(elems, input);
     if(this.hasLanguageTable){
       this.filter(this.getLanguageTableSet(false), input);
-      $('#languageTable').trigger('redraw');
+      App.views.renderer.model.languageView.redraw();
     }
     return this.chkInput(input);
   }
@@ -168,7 +168,7 @@ var WordlistFilter = Backbone.View.extend({
     this.filter(elems, this.enhanceIPA(input));
     if(this.hasLanguageTable){
       this.filter(this.getLanguageTableSet(true), input);
-      $('#languageTable').trigger('redraw');
+      App.views.renderer.model.languageView.redraw();
     }
     return this.chkInput(input);
   }

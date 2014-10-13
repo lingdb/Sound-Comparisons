@@ -217,6 +217,8 @@ var LanguageView = Renderer.prototype.SubView.extend({
       //Updating sound related stuff:
       App.views.audioLogic.findAudio(this.$el);
       App.views.playSequenceView.update(this.getKey());
+      //Calling redraw:
+      this.redraw();
     }else{
       this.$el.addClass('hide');
     }
@@ -234,5 +236,55 @@ var LanguageView = Renderer.prototype.SubView.extend({
       //Render:
       App.views.renderer.render();
     });
+  }
+  /**
+    Organizes the table items in a more clever way .)
+    This method is to be called on these occasions:
+    1: When LanguageView.render is done.
+    2: When WordlistFilter filters some elements.
+    3: SetupBarView.finish removed the setupBar.
+    This is done in the following fashion:
+    0: If we're not in single language view, abort
+    1: Get width of the table
+    2: Get maximum width of a visible cell
+    3: Calculate number of cells per row
+    4: Reorganize cells according to maximum number of cells per row
+  */
+, redraw: function(){
+    if(!App.pageState.isPageView(this))
+      return;//Step 0
+    //Step 1:
+    var tWidth = this.$el.width();
+    //Step 2:
+    var elWidth = 80, cells = [];
+    this.$('#languageTable td.transcription').each(function(){
+      //Building array of cells:
+      var cell = $(this);
+      cells.push(cell);
+      //Finding max. width:
+      var w = _.chain(cell.children()).map(function(e){return $(e).width();}).max().value();
+      if(w > elWidth){
+        elWidth = w;
+      }
+    });
+    //Step 3:
+    var cMax = Math.max(Math.floor(tWidth / elWidth), 1);
+    //Step 4:
+    var oldTr = this.$('#languageTable tr');
+    while(cells.length > 0){
+      var tr = $('<tr></tr>').appendTo(this.$('#languageTable'));
+      var i = 0; // Outside of loop on purpose
+      for(;i < cMax;){
+        var c = cells.shift();
+        if(!c) break;
+        if(c.is(':visible')) i++;
+        c.appendTo(tr);
+      }
+      var missing = cMax - i;
+      if(missing > 0){
+        tr.append('<td colspan="'+missing+'"></td>');
+      }
+    }
+    oldTr.remove();
   }
 });

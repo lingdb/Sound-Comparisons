@@ -33,6 +33,8 @@ var SetupBarView = Backbone.View.extend({
     this.$el.remove();
     //Display hidelinks:
     $('.container-fluid').removeClass('hide');
+    //Redraw of languageView if necessary:
+    App.views.renderer.model.languageView.redraw();
     //Making sure this callback only works once:
     return false;
   }
