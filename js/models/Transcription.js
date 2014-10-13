@@ -71,7 +71,7 @@ var Transcription = Backbone.Model.extend({
       , aLogic    = App.views.audioLogic
       , ps        = [];
     //Sanitizing phonetics:
-    if(_.isEmpty(phonetics))  phonetics = '--';
+    if(_.isEmpty(phonetics))  phonetics = 'play';
     if(!_.isArray(phonetics)) phonetics = [phonetics];
     //Sanitizing sources:
     if(!_.isArray(sources))    sources = [];
@@ -86,6 +86,7 @@ var Transcription = Backbone.Model.extend({
         , p = { // Data gathered for phonetic:
             historical:  language.isHistorical()
           , fileMissing: source.length === 0
+          , smallCaps:   phonetic === 'play'
           , phonetic:    phonetic
           , srcs:        JSON.stringify(source)
           , _srcs:       source

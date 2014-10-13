@@ -33,13 +33,14 @@ var WordOverlay = Backbone.Model.extend({
       var fileMissing = ''; //Historical entries -> no files
       if(this.get('historical') == 1 || audio === "")
         fileMissing = ' fileMissing';
+      var smallCaps = (sf.phonetic === 'play') ? ' style="font-variant: small-caps;"' : '';
       if(this.get('historical') == 1)
         sf.phonetic = "*" + sf.phonetic;
       if(d.content !== "")
         d.content += ",";
       d.content += "<div class='transcription"
                  + fileMissing
-                 + "'>" + sf.phonetic + "</div>"
+                 + "'"+smallCaps+">" + sf.phonetic + "</div>"
                  + audio;
     }, this);
     this.set(d);
