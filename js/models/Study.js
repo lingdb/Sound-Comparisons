@@ -4,6 +4,8 @@ var Study = Backbone.Model.extend({
   initialize: function(){
     //Field to track the first update.
     this._firstUpdate = true;
+    //Link map depending on PageView:
+    this._linkMap = {}; // StudyName -> PageView -> Fragment
   }
   /**
     The update method is connected by the App,
@@ -91,5 +93,31 @@ var Study = Backbone.Model.extend({
     var cs = this.pick('DefaultTopLeftLat','DefaultTopLeftLon','DefaultBottomRightLat','DefaultBottomRightLon');
     return [{lat: cs.DefaultTopLeftLat,     lon: cs.DefaultTopLeftLon}
            ,{lat: cs.DefaultBottomRightLat, lon: cs.DefaultBottomRightLon}];
+  }
+  /**
+  */
+, getLink: function(name){
+    if(name in this._linkMap){
+      var map = this._linkMap[name]
+        , pv  = App.pageState.getPageViewKey();
+      if(pv in map) return map[pv];
+    }
+    return App.router.linkCurrent({
+      study: name
+    , language:  ''
+    , languages: ''
+    , word:      ''
+    , words:     ''
+    });
+  }
+  /**
+    Updates the link for the current study in the current pageView.
+    This way it can be saved in this._linkMap, and be used for getLink.
+  */
+, trackLinks: function(fragment){
+    var name = this.getId()
+      , pv   = App.pageState.getPageViewKey();
+    if(!(name in this._linkMap)) this._linkMap[name] = {};
+    this._linkMap[name][pv] = fragment;
   }
 });

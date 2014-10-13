@@ -49,6 +49,7 @@ var Renderer = Backbone.View.extend({
     (function(r){
       var fragment = r.linkCurrent({config: r.getConfig()});
       r.navigate(fragment, {trigger: false});
+      App.study.trackLinks(fragment);
     })(App.router);
   }
   /**

@@ -50,10 +50,11 @@ var TopMenuView = Backbone.View.extend({
       currentStudyName: App.study.getName()
     };
     data.studies = _.map(App.study.getAllIds(), function(n){
-      var name = App.study.getName(n);
+      var name = App.study.getName(n)
+        , link = App.study.getLink(n);
       return {
         currentStudy: name === data.currentStudyName
-      , link: 'href="'+App.router.linkCurrent({study: n})+'"'
+      , link: 'href="'+link+'"'
       , studyName: name
       };
     }, this);
