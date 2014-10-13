@@ -77,6 +77,8 @@ var Transcription = Backbone.Model.extend({
     if(!_.isArray(sources))    sources = [];
     if(sources.length === 0)   sources = [sources];
     if(_.isString(sources[0])) sources = [sources];
+    //WordByWord logic:
+    var wordByWord = App.pageState.get('wordByWord')
     //Iterating phonetics:
     for(var i = 0; i < phonetics.length; i++){
       var phonetic = phonetics[i]
@@ -95,6 +97,7 @@ var Transcription = Backbone.Model.extend({
                          , language: language.getId()
                          , study:    App.study.getId()
                          , n:        i }
+          , wordByWord:  wordByWord
         };
       //Not cognate:
       if(i < superScr.length){

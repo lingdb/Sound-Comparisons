@@ -9,7 +9,7 @@ var Configurator = Sanitizer.extend({
   configure: function(config){
     //Parsing config:
     config = this.parseConfig(config);
-    //Configuring the wordOrder:
+    //Configuring different fields:
     if('wordOrder' in config){
       var callMap = { alphabetical: 'wordOrderSetAlphabetical'
                     , logical:      'wordOrderSetLogical'};
@@ -49,6 +49,9 @@ var Configurator = Sanitizer.extend({
     if('mapViewIgnoreSelection' in config){
       App.pageState.set({mapViewIgnoreSelection: config.mapViewIgnoreSelection === 'true'});
     }
+    if('wordByWord' in config){
+      App.pageState.set({wordByWord: config.wordByWord === 'true'});
+    }
   }
   /**
     The reverse operation to configure.
@@ -84,6 +87,8 @@ var Configurator = Sanitizer.extend({
     config.translation = App.translationStorage.getTranslationId();
     //mapViewIgnoreSelection:
     config.mapViewIgnoreSelection = ps.get('mapViewIgnoreSelection');
+    //wordByWord:
+    config.wordByWord = ps.get('wordByWord');
     //done:
     return config;
   }
@@ -181,9 +186,16 @@ var Configurator = Sanitizer.extend({
     config.translation = translationId;
     return config;
   }
+  /***/
 , configSetMapViewIgnoreSelection: function(config, ignore){
     config = config || {};
     config.mapViewIgnoreSelection = ignore ? 'true' : 'false';
+    return config;
+  }
+  /***/
+, configSetWordByWord: function(config, wordByWord){
+    config = config || {};
+    config.wordByWord = wordByWord ? 'true' : false;
     return config;
   }
   /**
