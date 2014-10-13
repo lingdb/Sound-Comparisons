@@ -51,6 +51,43 @@ var Configurator = Sanitizer.extend({
     }
   }
   /**
+    The reverse operation to configure.
+    It shall generate an object describing the whole configuration.
+  */
+, getConfig: function(){
+    var config = {}, ps = App.pageState;
+    //wordOrder:
+    if(ps.wordOrderIsAlphabetical()){
+      config.wordOrder = 'alphabetical';
+    }else{
+      config.wordOrder = 'logical';
+    }
+    //spLang:
+    var spLang = ps.getSpLang();
+    if(spLang){
+      config.spLang = spLang.getKey();
+    }
+    //phLang:
+    var phLang = ps.getPhLang();
+    if(phLang){
+      config.phLang = phLang.getKey();
+    }
+    //Helper function:
+    var getKeys = function(xs){return _.map(xs, function(x){return x.getKey();})};
+    //meaningGroups:
+    config.meaningGroups = getKeys(App.meaningGroupCollection.getSelected());
+    //regions:
+    config.regions = getKeys(App.regionCollection.getSelected());
+    //families:
+    config.families = getKeys(App.familyCollection.getSelected());
+    //translation:
+    config.translation = App.translationStorage.getTranslationId();
+    //mapViewIgnoreSelection:
+    config.mapViewIgnoreSelection = ps.get('mapViewIgnoreSelection');
+    //done:
+    return config;
+  }
+  /**
     Takes a calls Object that maps Suffixes to args,
     where Suffix is the match of /configSet(.+)/ for methods of Router,
     and args will be supplied to the Router method as second argument,

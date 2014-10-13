@@ -45,6 +45,11 @@ var Renderer = Backbone.View.extend({
     _.each(this.model, function(v){
       v.render();
     }, this);
+    //Updating fragment:
+    (function(r){
+      var fragment = r.linkCurrent({config: r.getConfig()});
+      r.navigate(fragment, {trigger: false});
+    })(App.router);
   }
   /**
     Calls all methods that match /^update/ on the given Backbone.View.
