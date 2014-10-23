@@ -80,7 +80,7 @@ var TranslationStorage = Backbone.Model.extend({
   }
 , load: function(){
     var key = 'TranslationStorage', def = $.Deferred()
-      , msg = {label: key+'.load', data: App.storage[key], task: 'decompress'};
+      , msg = {label: key+'.load', data: App.storage[key], task: 'decompressBase64'};
     if(msg.data){
       var handle = function(d){
         if(_.isObject(d)){
@@ -109,7 +109,7 @@ var TranslationStorage = Backbone.Model.extend({
     params.unshift(this.attributes);
     var data = _.pick.apply(_, params);
     if(App.dataStorage.compressor){
-      var msg = {label: key+'.save', data: data, task: 'compress'};
+      var msg = {label: key+'.save', data: data, task: 'compressBase64'};
       App.dataStorage.onCompressor(msg.label, function(m){
         App.storage[key] = m.data;
       }, this);

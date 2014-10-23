@@ -103,7 +103,7 @@ var DataStorage = Backbone.Model.extend({
   */
 , save: function(name, data){
     var key   = "DataStorage_"+name
-      , msg   = {label: 'save'+key, data: data, task: 'compress'}
+      , msg   = {label: 'save'+key, data: data, task: 'compressBase64'}
       , saved = false, def = $.Deferred();
     if(this.compressor){
       this.onCompressor(msg.label, function(m){
@@ -146,7 +146,7 @@ var DataStorage = Backbone.Model.extend({
 , load: function(name){
     var key = "DataStorage_"+name, def = $.Deferred();
     if(key in App.storage){
-      var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompress'};
+      var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompressBase64'};
       if(this.compressor){
         this.onCompressor(msg.label, function(m){
           def.resolve(m.data);

@@ -1,43 +1,28 @@
 <?php
-//Setup:
-chdir('..');
-require_once 'config.php';
-require_once 'stopwatch.php';
-require_once 'valueManager/RedirectingValueManager.php';
-$dbConnection = Config::getConnection();
-$valueManager = RedirectingValuemanager::getInstance();
-//Helper functions:
-function fetchAll($q){
-  $ret = array();
-  $set = Config::getConnection()->query($q);
-  while($x = $set->fetch_assoc()){
-    array_push($ret, $x);
+//Parsing cli args, if necessary/possible:
+if(php_sapi_name() === 'cli'){
+  if(!isset($_GET)){
+    $_GET = array();
   }
-  return $ret;
-}
-function soundPaths($sId, $t){
-  $lIx  = $t['LanguageIx'];
-  $wId  = $t['IxElicitation'].$t['IxMorphologicalInstance'];
-  if(!isset($lIx) || !isset($wId))
-    return array();
-  $base = Config::$soundPath;
-  $lq   = "SELECT FilePathPart FROM Languages_$sId WHERE LanguageIx = $lIx";
-  $wq   = "SELECT SoundFileWordIdentifierText FROM Words_$sId "
-        . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = '$wId'";
-  $lang = current(current(fetchAll($lq)));
-  $word = current(current(fetchAll($wq)));
-  $pron = ($t['AlternativePhoneticRealisationIx'] > 1) ? '_pron'.$t['AlternativePhoneticRealisationIx'] : '';
-  $lex  = ($t['AlternativeLexemIx'] > 1) ? '_lex'.$t['AlternativeLexemIx'] : '';
-  $path = "$base/$lang/$lang$word$lex$pron";
-  $ret  = array();
-  foreach(array('.mp3', '.ogg') as $ext){
-    $p = $path.$ext;
-    if(file_exists($p)){
-      array_push($ret, $p);
+  if(count($argv) > 0){
+    for($i = 1; $i < count($argv); $i++){
+      switch($argv[$i]){
+        case 'global':
+          $_GET['global'] = true;
+        break;
+        case 'study':
+        case 'blacklist':
+          $_GET[$argv[$i]] = $argv[$i+1];
+          $i++;
+        break;
+      }
     }
   }
-  return $ret;
 }
+//Setup:
+require_once 'dataProvider.php';
+chdir('..');
+require_once 'config.php';
 /*
   For the site to do as much as possible in the browser, it's crucial to have a data representation in JSON,
   so that we can use and manipulate stuff in JavaScript with ease.
@@ -61,49 +46,12 @@ function soundPaths($sId, $t){
       - Defaults for the Study
 */
 if(array_key_exists('global',$_GET)){
-  /*
-    Provide a list of all studies,
-    but normally it'll probably be simpler to parse the studies from the page initially.
-  */
-  $studies = array();
-  $set = $dbConnection->query('SELECT Name FROM Studies');
-  while($r = $set->fetch_assoc()){
-    array_push($studies, $r['Name']);
-  }
-  //Fetching study independant data:
-  $global = array(
-    'contributors'                => fetchAll('SELECT * FROM Contributors')
-  , 'flagTooltip'                 => fetchAll("SELECT * FROM FlagTooltip WHERE FLAG != ''")
-  , 'languageStatusTypes'         => fetchAll('SELECT * FROM LanguageStatusTypes')
-  , 'meaningGroups'               => fetchAll('SELECT * FROM MeaningGroups')
-  , 'transcrSuperscriptInfo'      => fetchAll('SELECT * FROM TranscrSuperscriptInfo')
-  , 'transcrSuperscriptLenderLgs' => fetchAll('SELECT * FROM TranscrSuperscriptLenderLgs')
-  , 'wikipediaLinks'              => fetchAll('SELECT * FROM WikipediaLinks')
-  , 'shortLinks'                  => array()
-  , 'soundPath'                   => Config::$soundPath
-  );
-  //Adding shortLinks:
-  foreach(fetchAll('SELECT Name, Target FROM Page_ShortLinks') as $s){
-    $global['shortLinks'][$s['Name']] = $s['Target'];
-  }
-  //Fixing contributor avatars:
-  foreach($global['contributors'] as $k => $v){
-    $prefix = 'img/contributors/';
-    $inits  = $v['Initials'];
-    foreach(array('.jpg','.png','.gif') as $ext){
-      $file = $prefix.$inits.$ext;
-      if(file_exists($file)){
-        $global['contributors'][$k]['Avatar'] = $file;
-        break;
-      }
-    }
-  }
-  //Done:
   echo json_encode(array(
-    'studies' => $studies
-  , 'global'  => $global
+    'studies' => DataProvider::getStudies()
+  , 'global'  => DataProvider::getGlobal()
   ));
 }else if(array_key_exists('study',$_GET)){
+  //The representation that will be returned
   $ret = array(
     'study'               => null
   , 'families'            => array()
@@ -121,86 +69,57 @@ if(array_key_exists('global',$_GET)){
     , 'excludeMap' => array()
     )
   );
-  //Provide complete data for a single study:
-  $n = $dbConnection->escape_string($_GET['study']);
-  $q = "SELECT CONCAT(StudyIx, FamilyIx) FROM Studies WHERE Name = '$n'";
-  $sId = $dbConnection->query($q)->fetch_row();
-  if(!$sId){
-    die('Could not fetch the required study, sorry.');
-  }else{
-    $sId = current($sId);
-  }
-  //Fetching the study:
-  $q = "SELECT * FROM Studies WHERE Name = '$n'";
-  $ret['study'] = $dbConnection->query($q)->fetch_assoc();
-  //Fetching the families:
-  $q = "SELECT * FROM Families "
-     . "WHERE CONCAT(StudyIx, FamilyIx) "
-     . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))";
-  $ret['families'] = fetchAll($q);
-  //Fetching Regions:
-  $q = "SELECT * FROM Regions_$n";
-  $ret['regions'] = fetchAll($q);
-  //Fetching RegionLanguages:
-  $q = "SELECT * FROM RegionLanguages_$n";
-  $ret['regionLanguages'] = fetchAll($q);
-  //Fetching Languages:
-  $q = "SELECT * FROM Languages_$n";
-  $ret['languages'] = fetchAll($q);
-  //Fetching Words:
-  $q = "SELECT * FROM Words_$n";
-  $ret['words'] = fetchAll($q);
-  //Fetching MeaningGroupMembers:
-  $q = "SELECT MeaningGroupIx, MeaningGroupMemberIx, IxElicitation, IxMorphologicalInstance  FROM MeaningGroupMembers "
-     . "WHERE CONCAT(StudyIx, FamilyIx) = $sId";
-  $ret['meaningGroupMembers'] = fetchAll($q);
-  //Fetching Transcriptions:
-  $q = "SELECT * FROM Transcriptions_$n";
-  $set = $dbConnection->query($q);
-  while($t = $set->fetch_assoc()){
-    $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
-    if(array_key_exists($tKey, $ret['transcriptions'])){
-      //Merging transcriptions:
-      $old = $ret['transcriptions'][$tKey];
-      foreach($t as $k => $v){
-        if(array_key_exists($k, $old)){
-          $o = $old[$k];
-          if(isset($o) && $o !== '' && $o !== $v){
-            $t[$k] = array($o, $v);
-          }
-        }
+  //Filtering $ret with the blacklist:
+  if(array_key_exists('blacklist',$_GET)){
+    foreach(explode(',', $_GET['blacklist']) as $b){
+      if(array_key_exists($b, $ret)){
+        unset($ret[$b]);
       }
-    }else{
-      $t['soundPaths'] = soundPaths($n, $t);
     }
-    $ret['transcriptions'][$tKey] = $t;
+  }
+  //Provide complete data for a single study:
+  $sId = DataProvider::getStudyId($_GET['study']);
+  //Fetching the study:
+  if(array_key_exists('study', $ret)){
+    $ret['study'] = DataProvider::getStudy($_GET['study']);
+  }
+  //Fetching the families:
+  if(array_key_exists('families', $ret)){
+    $ret['families'] = DataProvider::getFamilies($sId);
+  }
+  //Fetching Regions:
+  if(array_key_exists('regions', $ret)){
+    $ret['regions'] = DataProvider::getRegions($_GET['study']);
+  }
+  //Fetching RegionLanguages:
+  if(array_key_exists('regionLanguages', $ret)){
+    $ret['regionLanguages'] = DataProvider::getRegionLanguages($_GET['study']);
+  }
+  //Fetching Languages:
+  if(array_key_exists('languages', $ret)){
+    $ret['languages'] = DataProvider::getLanguages($_GET['study']);
+  }
+  //Fetching Words:
+  if(array_key_exists('words', $ret)){
+    $ret['words'] = DataProvider::getWords($_GET['study']);
+  }
+  //Fetching MeaningGroupMembers:
+  if(array_key_exists('meaningGroupMembers', $ret)){
+    $ret['meaningGroupMembers'] = DataProvider::getMeaningGroupMembers($sId);
+  }
+  //Fetching Transcriptions:
+  if(array_key_exists('transcriptions', $ret)){
+    $ret['transcriptions'] = DataProvider::getTranscriptions($_GET['study']);
   }
   //Fetching Defaults:
-  //Default_Languages
-  $q = "SELECT LanguageIx FROM Default_Languages "
-     . "WHERE CONCAT(StudyIx, FamilyIx) = $sId";
-  $ret['defaults']['language'] = $dbConnection->query($q)->fetch_assoc();
-  //Default_Words
-  $q = "SELECT IxElicitation, IxMorphologicalInstance FROM Default_Words "
-     . "WHERE CONCAT(StudyIx, FamilyIx) = $sId";
-  $ret['defaults']['word'] = $dbConnection->query($q)->fetch_assoc();
-  //Default_Multiple_Languages
-  $q = "SELECT LanguageIx FROM Default_Multiple_Languages "
-     . "WHERE CONCAT(StudyIx, FamilyIx) = $sId";
-  $ret['defaults']['languages'] = fetchAll($q);
-  //Default_Multiple_Words
-  $q = "SELECT IxElicitation, IxMorphologicalInstance FROM Default_Multiple_Words "
-     . "WHERE CONCAT(StudyIx, FamilyIx) = $sId";
-  $ret['defaults']['words'] = fetchAll($q);
-  //Default_Languages_Exclude_Map
-  $q = "SELECT LanguageIx FROM Default_Languages_Exclude_Map "
-     . "WHERE CONCAT(StudyIx, FamilyIx) = $sId";
-  $ret['defaults']['excludeMap'] = fetchAll($q);
+  if(array_key_exists('defaults', $ret)){
+    $ret['defaults'] = DataProvider::getDefaults($sId);
+  }
   //Done:
   echo json_encode($ret);
 }else{
   $q = 'SELECT UNIX_TIMESTAMP(Time) FROM Edit_Imports ORDER BY TIME DESC LIMIT 1';
-  $time = current(current(fetchAll($q)));
+  $time = current(current(DataProvider::fetchAll($q)));
   echo json_encode(array(
     'lastUpdate'  => $time
   , 'Description' => 'Add a global parameter to fetch global data, '

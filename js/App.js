@@ -15,6 +15,7 @@ $(function(){
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
   , router: new Router()
+  , soundDownloader: new SoundDownloader()
   , setupBar: new LoadingBar({
       segments: 6 // TranslationStorage: 1, DataStorage: 3, TemplateStorage: 1, Study: 1
     })

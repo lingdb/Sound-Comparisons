@@ -13,6 +13,13 @@ var Transcription = Backbone.Model.extend({
   , word:     null
   }
   /**
+    This was mainly build to enable export/soundfiles to identify transcriptions.
+  */
+, getId: function(){
+    var d = this.pick('language','word');
+    return [d.language.getId(), d.word.getId()].join('');
+  }
+  /**
     Returns the SuperscriptInfo for a Transcription as an object.
     A helper for getPhonetics.
   */
@@ -60,38 +67,46 @@ var Transcription = Backbone.Model.extend({
     return ret;
   }
   /**
+    @returns [[String]]
+  */
+, getSoundfiles: function(){
+    var sources = this.get('soundPaths'); // [[String]] || [String]
+    if(!_.isArray(sources))    sources = [];
+    if(sources.length === 0)   sources = [sources];
+    if(_.isString(sources[0])) sources = [sources];
+    return sources;
+  }
+  /**
+    Filters arrays of soundfiles for the selected wordByWordFormat.
+    [String] -> [String]
+  */
+, filterSoundfiles: function(xs){
+    var suffix = App.pageState.get('wordByWordFormat');
+    return _.filter(xs, function(x){
+      // https://stackoverflow.com/questions/280634/endswith-in-javascript
+      return x.indexOf(suffix, x.length - suffix.length) !== -1;
+    });
+  }
+  /**
     Returns the Phonetics for a Transcription as an object.
     Uses getSuperscriptInfo.
   */
 , getPhonetics: function(){
     //Note that both phonetics and sources will be sanitized for the first case.
-    var phonetics = this.get('Phonetic')   // [String]   || String
-      , sources   = this.get('soundPaths') // [[String]] || [String]
+    var phonetics = this.get('Phonetic') // [String]   || String
+      , sources   = this.getSoundfiles() // [[String]]
       , superScr  = this.getSuperscriptInfo()
       , aLogic    = App.views.audioLogic
       , ps        = [];
     //Sanitizing phonetics:
     if(_.isEmpty(phonetics))  phonetics = 'play';
     if(!_.isArray(phonetics)) phonetics = [phonetics];
-    //Sanitizing sources:
-    if(!_.isArray(sources))    sources = [];
-    if(sources.length === 0)   sources = [sources];
-    if(_.isString(sources[0])) sources = [sources];
     //WordByWord logic:
     var wordByWord = App.pageState.get('wordByWord');
-    //Function to filter via wordByWordFormat:
-    var srcFilter = (function(suffix){
-      return function(xs){
-        return _.filter(xs, function(x){
-          // https://stackoverflow.com/questions/280634/endswith-in-javascript
-          return x.indexOf(suffix, x.length - suffix.length) !== -1;
-        });
-      };
-    })(App.pageState.get('wordByWordFormat'));
     //Iterating phonetics:
     for(var i = 0; i < phonetics.length; i++){
       var phonetic = phonetics[i]
-        , source   = srcFilter(sources.shift() || [])
+        , source   = this.filterSoundfiles(sources.shift() || [])
         , language = this.get('language')
         , word     = this.get('word')
         , p = { // Data gathered for phonetic:

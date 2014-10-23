@@ -32,7 +32,6 @@ var TopMenuView = Backbone.View.extend({
       logoTitle:       'website_logo_hover'
     , pageViewTitle:   'topmenu_views'
     , csvTitle:        'topmenu_download_csv'
-    , sndLink:         'export/soundfiles'
     , sndTitle:        'topmenu_download_zip'
     , cogTitle:        'topmenu_download_cogTitle'
     , wordByWord:      'topmenu_download_wordByWord'
@@ -140,6 +139,15 @@ var TopMenuView = Backbone.View.extend({
   */
 , updatePlayOption: function(){
     this.setModel({soundOptionHover: App.soundPlayOption.playOnHover()});
+  }
+  /**
+    Link to download the current soundfiles:
+  */
+, updateSoundLink: function(){
+    var d = App.soundDownloader.mkPathDesc()
+      , s = App.study.getId()
+      , x = App.pageState.get('wordByWordFormat');
+    this.setModel({sndLink: 'export/soundfiles?study='+s+'&files='+d+'&suffix='+x});
   }
   /***/
 , render: function(){

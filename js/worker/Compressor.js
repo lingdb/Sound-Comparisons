@@ -24,11 +24,17 @@ onmessage = function(e){
   var msg = e.data;
   if('task' in msg && 'data' in msg){
     switch(msg.task){
-      case 'compress':
+      case 'compressBase64':
         msg.data = LZString.compressToBase64(JSON.stringify(msg.data));
       break;
-      case 'decompress':
+      case 'decompressBase64':
         msg.data = JSON.parse(LZString.decompressFromBase64(msg.data));
+      break;
+      case 'compress':
+        msg.data = LZString.compress(JSON.stringify(msg.data));
+      break;
+      case 'decompress':
+        msg.data = JSON.parse(LZString.decompress(msg.data));
       break;
       default:
         throw 'Compressor.onmessage() with unknown task: '+msg.task;

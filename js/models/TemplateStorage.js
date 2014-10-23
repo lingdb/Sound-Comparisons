@@ -71,7 +71,7 @@ var TemplateStorage = Backbone.Model.extend({
 , load: function(name){
     var key = 'tmpl_'+name, def = $.Deferred();
     if(key in App.storage){
-      var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompress'};
+      var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompressBase64'};
       if(App.dataStorage.compressor){
         App.dataStorage.onCompressor(msg.label, function(m){
           def.resolve(m.data);
@@ -90,7 +90,7 @@ var TemplateStorage = Backbone.Model.extend({
     if('content' in tmpl){
       var key = 'tmpl_'+tmpl.name;
       if(App.dataStorage.compressor){
-        var msg = {label: 'store:'+key, data: tmpl, task: 'compress'};
+        var msg = {label: 'store:'+key, data: tmpl, task: 'compressBase64'};
         App.dataStorage.onCompressor(msg.label, function(m){
           App.storage[key] = m.data;
         }, this);
