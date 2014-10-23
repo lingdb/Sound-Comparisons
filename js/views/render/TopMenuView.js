@@ -144,6 +144,14 @@ var TopMenuView = Backbone.View.extend({
   /***/
 , render: function(){
     this.$el.html(App.templateStorage.render('TopMenu', {TopMenu: this.model}));
+    //The wordByWord option:
+    var wordByWord = this.$('#wordByWordCheckbox').click(function(){
+      App.pageState.set({wordByWord: wordByWord.is(':checked')});
+      App.views.renderer.render();
+    });
+    if(App.pageState.get('wordByWord')){
+      wordByWord.prop('checked', true);
+    }
     //The SoundPlayOption:
     var options = this.$('#topmenuSoundOptions img').click(function(){
       App.soundPlayOption.set({playMode: this.attributes['value'].value});
