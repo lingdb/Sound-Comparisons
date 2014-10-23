@@ -14,6 +14,7 @@ var PageState = Backbone.Model.extend({
   , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView']
   , mapViewIgnoreSelection: false // On true all languages shall be displayed
   , wordByWord: false // Should wordByWord downloads be displayed?
+  , wordByWordFormat: 'mp3' // Initially set by views/AudioLogic
   }
   /**
     Sets up callbacks to manipulate PageState when necessary.

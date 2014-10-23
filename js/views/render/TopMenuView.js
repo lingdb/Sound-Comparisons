@@ -152,6 +152,19 @@ var TopMenuView = Backbone.View.extend({
     if(App.pageState.get('wordByWord')){
       wordByWord.prop('checked', true);
     }
+    //The wordByWordFormat selection:
+    var radios = this.$('input[name="wordByWordFormat"]').click(function(){
+      var val = $(this).val();
+      if(val !== App.pageState.get('wordByWordFormat')){
+        App.pageState.set({wordByWordFormat: val});
+        App.views.renderer.render();
+      }
+    }).each(function(){
+      var t = $(this), val = t.val();
+      if(val === App.pageState.get('wordByWordFormat')){
+        t.prop('checked', true);
+      }
+    });
     //The SoundPlayOption:
     var options = this.$('#topmenuSoundOptions img').click(function(){
       App.soundPlayOption.set({playMode: this.attributes['value'].value});

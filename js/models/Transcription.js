@@ -78,11 +78,20 @@ var Transcription = Backbone.Model.extend({
     if(sources.length === 0)   sources = [sources];
     if(_.isString(sources[0])) sources = [sources];
     //WordByWord logic:
-    var wordByWord = App.pageState.get('wordByWord')
+    var wordByWord = App.pageState.get('wordByWord');
+    //Function to filter via wordByWordFormat:
+    var srcFilter = (function(suffix){
+      return function(xs){
+        return _.filter(xs, function(x){
+          // https://stackoverflow.com/questions/280634/endswith-in-javascript
+          return x.indexOf(suffix, x.length - suffix.length) !== -1;
+        });
+      };
+    })(App.pageState.get('wordByWordFormat'));
     //Iterating phonetics:
     for(var i = 0; i < phonetics.length; i++){
       var phonetic = phonetics[i]
-        , source   = sources.shift() || []
+        , source   = srcFilter(sources.shift() || [])
         , language = this.get('language')
         , word     = this.get('word')
         , p = { // Data gathered for phonetic:
