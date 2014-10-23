@@ -15,9 +15,9 @@ if(preg_match('/\\.\\./', $file)){
   error_log(__FILE__.' prevented access to '.$file);
   die('Sorry, I cannot serve this file.');
 }
-$file = Config::$soundPath.$file;
 //Checking existence:
 if(!file_exists($file)){
+  error_log("Could not serve file: $file from directory: ".`pwd`);
   die('Sorry, the requested file does not appear to exist.');
 }
 //Setting headers:
