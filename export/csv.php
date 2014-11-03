@@ -1,13 +1,8 @@
 <?php
-//Initial setup:
-if(!isset($valueManager)){
-  chdir('..');
-  require_once 'config.php';
-  require_once 'stopwatch.php';
-  require_once 'valueManager/RedirectingValueManager.php';
-  $dbConnection = Config::getConnection();
-  $valueManager = RedirectingValueManager::getInstance();
-}
+//Setup:
+chdir('..');
+require_once 'config.php';
+require_once 'query/dataProvider.php';
 /**
   @param $filename String - generated downlaod will be named $filename.csv
   @param $headline String[] - first row of the .csv
@@ -38,95 +33,68 @@ function buildCSV($filename, $headline, $rows){
   header("Content-Transfer-Encoding: binary");
   ob_end_flush();
 }
-/***/
-function wordHeadline(){
-  return array("WordName","WordId","WordModernName","WordProtoName");
+//Making sure necessary GET parameters exist
+if(!array_key_exists('study', $_GET)){
+  die('Missing GET parameter: study');
 }
-/***/
-function wordRow($w){
-  $wName = $w->getKey();
-  $wId   = $w->getId();
-  $wMN   = $w->getModernName();
-  $wPr   = $w->getProtoName();
-  return array($wName, $wId, $wMN, $wPr);
+if(!array_key_exists('languages', $_GET)){
+  die('Missing GET parameter: languages');
 }
-/***/
-function languageHeadline(){
-  return array("LanguageName","LanguageId", "Latitude", "Longitude");
+if(!array_key_exists('words', $_GET)){
+  die('Missing GET parameter: words');
 }
-/***/
-function languageRow($l){
-  $lName = $l->getShortName(false);
-  $lId   = $l->getId();
-  $loc   = $l->getLocation();
-  $lat   = $loc ? $loc[0] : '';
-  $lng   = $loc ? $loc[1] : '';
-  return array($lName, $lId, $lat, $lng);
+//Languages to work with:
+$languages = array();
+foreach(explode(',', $_GET['languages']) as $lIx){
+  $languages[$lIx] = true;
 }
-/***/
-function transcriptionHeadline(){
-  return array("AltSpelling"
-    ,"PhoneticTranscription1","NotCognateWithMainWordInThisFamily1"
-    ,"PhoneticTranscription2","NotCognateWithMainWordInThisFamily2");
+foreach(DataProvider::getLanguages($_GET['study']) as $l){
+  $lIx = $l['LanguageIx'];
+  if(array_key_exists($lIx, $languages)){
+    $languages[$lIx] = $l;
+  }
 }
-/***/
-function transcriptionRow($tr){
-  $phonetics = $tr->getTranscriptions();
-  $nCognates = $tr->getNotCognates();
-  $altSpelling = ($s = $tr->getAltSpelling()) ? $s : '';
-  $p0  = (count($phonetics) >= 1) ? $phonetics[0] : '';
-  $p1  = (count($phonetics) >= 2) ? $phonetics[1] : '';
-  $nc0 = (count($nCognates) >= 1) ? $nCognates[0] : false;
-  $nc1 = (count($nCognates) >= 2) ? $nCognates[1] : false;
-  return array($altSpelling, $p0, $nc0, $p1, $nc1);
+//Words to work with:
+$words = array();
+foreach(explode(',', $_GET['words']) as $wIx){
+  $words[$wIx] = true;
 }
-//Acting according to the valueManager:
-$v = $valueManager;
-//Building the .csv:
-$filename = 'undefined_export';
-$headline = array();
-$rows = array();
-if($v->gpv()->isView('WordView')||$v->gpv()->isView('MapView')){
-  $word = current($v->getWords());
-  $filename = "Wordexport_".$word->getKey();
-  $headline = array_merge(array("FamilyName","RegionName","RegionId")
-     , languageHeadline()
-     , transcriptionHeadline());
-  foreach($v->getStudy()->getFamilies() as $f){
-    $fName = $f->getName();
-    foreach($f->getRegions() as $r){
-      $rName = $r->getName();
-      $rId   = $r->getId();
-      foreach($r->getLanguages() as $l){
-        $lr  = languageRow($l);
-        $tr  = transcriptionRow(Transcription::getTranscriptionForWordLang($word, $l));
-        $row = array_merge(array($fName, $rName, $rId), $lr, $tr);
-        array_push($rows, $row);
+foreach(DataProvider::getWords($_GET['study']) as $w){
+  $wIx = $w['IxElicitation'].$w['IxMorphologicalInstance'];
+  if(array_key_exists($wIx, $words)){
+    $words[$wIx] = $w;
+  }
+}
+//Transcriptions to work with:
+$transcriptions = array();
+foreach(DataProvider::getTranscriptions($_GET['study']) as $t){
+  $lIx = $t['LanguageIx'];
+  if(array_key_exists($lIx, $languages)){
+    $wIx = $t['IxElicitation'].$t['IxMorphologicalInstance'];
+    if(array_key_exists($wIx, $words)){
+      $tIx = $lIx.'-'.$wIx;
+      if(array_key_exists($tIx, $transcriptions)){
+        array_push($transcriptions[$tIx], $t);
+      }else{
+        $transcriptions[$tIx] = array($t);
       }
     }
   }
-}else if($v->gpv()->isView('LanguageView')){
-  $language = current($v->getLanguages());
-  $filename = "Languagexport_".$language->getShortName(false);
-  $headline = array_merge(wordHeadline(), transcriptionHeadline());
-  foreach($v->getStudy()->getWords() as $w){
-    $wr = wordRow($w);
-    $tr = transcriptionRow(Transcription::getTranscriptionForWordLang($w, $language));
-    array_push($rows, array_merge($wr, $tr));
-  }
-}else if($v->gpv()->isSelection()){
-  $filename = "Customexport";
-  $headline = array_merge(languageHeadline(), wordHeadline(), transcriptionHeadline());
-  $ls = $v->getLanguages();
-  $ws = $v->getWords();
-  if(count($ls) === 0) $ls = $v->getStudy()->getLanguages();
-  if(count($ws) === 0) $ws = $v->getStudy()->getWords();
-  foreach($ls as $l){
-    $lr = languageRow($l);
-    foreach($ws as $w){
-      $wr = wordRow($w);
-      $tr = transcriptionRow(Transcription::getTranscriptionForWordLang($w, $l));
-      array_push($rows, array_merge($lr, $wr, $tr));
+}
+//Building the .csv:
+$filename = 'Customexport';
+$headline = array("LanguageId", "LanguageName", "Latitude", "Longitude"
+                , "WordId", "WordModernName1", "WordModernName2", "WordProtoName1", "WordProtoName2"
+                , "Phonetic", "SpellingAltv1", "SpellingAltv2", "NotCognateWithMainWordInThisFamily2");
+$rows = array();
+foreach($languages as $lIx => $l){
+  foreach($words as $wIx => $w){
+    foreach($transcriptions[$lIx.'-'.$wIx] as $t){
+      array_push($rows, array(
+        $lIx, $l['ShortName'], $l['Latitude'], $l['Longtitude']
+      , $wIx, $w['FileNameRfcModernLg01'], $w['FileNameRfcModernLg02'], $w['FileNameRfcProtoLg01'], $w['FileNameRfcProtoLg02']
+      , $t['Phonetic'], $t['SpellingAltv1'], $t['SpellingAltv2'], $t['NotCognateWithMainWordInThisFamily']
+      ));
     }
   }
 }

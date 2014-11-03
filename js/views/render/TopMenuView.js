@@ -150,6 +150,23 @@ var TopMenuView = Backbone.View.extend({
     this.setModel({sndLink: 'export/soundfiles?study='+s+'&files='+d+'&suffix='+x});
   }
   /***/
+, updateCsvLink: function(){
+    var s = App.study.getId(), ls = [], ws = [];
+    if(App.pageState.isMultiView()){
+      ls = App.languageCollection.getSelected();
+      ws = App.wordCollection.getSelected();
+    }else if(App.pageState.isPageView('l')){
+      ls = [App.languageCollection.getChoice()];
+      ws = App.wordCollection.models;
+    }else if(_.any(['m','w'], App.pageState.isPageView, App.pageState)){
+      ls = App.languageCollection.models;
+      ws = [App.wordCollection.getChoice()];
+    }
+    var go = function(xs){return _.map(xs, function(x){return x.getId();}).join(',')};
+    var w = go(ws), l = go(ls);
+    this.setModel({csvLink: 'export/csv?study='+s+'&languages='+l+'&words='+w});
+  }
+  /***/
 , render: function(){
     this.$el.html(App.templateStorage.render('TopMenu', {TopMenu: this.model}));
     //The wordByWord option:
