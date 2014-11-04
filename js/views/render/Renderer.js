@@ -7,7 +7,8 @@ var Renderer = Backbone.View.extend({
   initialize: function(){
     //Views managed by the Renderer:
     this.model = {
-      topMenuView:      new TopMenuView({el: this.$('#topMenu')})
+      titleView:        new TitleView({model: App.translationStorage, el: $('head>title')})
+    , topMenuView:      new TopMenuView({el: this.$('#topMenu')})
     , languageMenuView: new LanguageMenuView({el: this.$('#leftMenu')})
     , wordMenuView:     new WordMenuView({el: this.$('#rightMenu')})
     , mapView:          new MapView({el: this.$('#mapViewContainer')})
