@@ -79,7 +79,7 @@
             </div>
           </div>
           <div class="control-group">
-            <label class="control-label" for="referenceLanguage">Reference language:</label>
+            <label class="control-label" for="referenceLanguage">Equivalent language in database:</label>
             <div class="controls">
               <select name="referenceLanguage" id="Translations_RfcLanguage">
                 <option class="default" selected="selected" value="null">none</option><?php
