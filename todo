@@ -1,18 +1,15 @@
+2014-11-06:
+ - The italian translation is missing?
+
 2014-07-04:
  - Can we remove parts of the language table that are translated?
 
 2014-07-03:
- - October is a deadline for when we want the site to run without bugs
  - HideButtons for SideMenues appear to break the page layout
    - Map and 1L view for example
- - A function to search/find missing translations that need to be filled in
  - Display study that a translation originates from along with the search results
    - Remember the case of Knochen/Bein in Germanic vs. Knochen in the rest of studies.
  - Maybe we can get rid of the admin/query/migrate script and the providers' migrate methods?
-
-2014-07-02:
- - Push out a new update, to supply Scott, Hans-Jörg and Paul with new, working versions of the site.
-   - Remember the dump.
 
 2014-06-10:
  - Once we've got an equal to the ValueManager in JavaScript,
@@ -33,22 +30,7 @@
  - Simple TranslationProviders don't care for their study at the moment,
    but I've got the impression that they should.
 
-2014-03-11:
- - When switching to do more via .js:
-   - I want to orientate on the JSON syntax for languages/families that robert uses under http://glottolog.org/resource/languoid/id/atla1278.json
-   - The whole data of glottolog is to be found under https://github.com/clld/glottolog-data and shall help me derive the layout for the json
-   - I'll need some kind of presentation for words, I think
-   - This is the chance to keep the map from zooming in many times
-   - Also the map should remember it's location when switching words
-   - We can also proxy to other clld sites, so that the .js can do happy/wild things
- - Superscripts after Transcriptions appear to be buggy (look at Slavic)
-
-2014-02-27:
- - Ask Paul which fields he'd like to have in .csv exports.
-
 2014-02-13:
- - export/csv.php is the last pice to use database/Transcription:getNotCognates,
-   it could be cleaned up, if csv.php was rewritten.
  - Show lexeme numbers >1 as subscripts for Transcriptions and Words
  - Contributors on page for translations would be nice
    - But we need a way of building this
