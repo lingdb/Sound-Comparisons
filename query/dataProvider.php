@@ -10,8 +10,10 @@ class DataProvider {
   public static function fetchAll($q){
     $ret = array();
     $set = Config::getConnection()->query($q);
-    while($x = $set->fetch_assoc()){
-      array_push($ret, $x);
+    if($set !== false){
+      while($x = $set->fetch_assoc()){
+        array_push($ret, $x);
+      }
     }
     return $ret;
   }
@@ -151,23 +153,25 @@ class DataProvider {
     $q   = "SELECT * FROM Transcriptions_$n";
     $ret = array();
     $set = $db->query($q);
-    while($t = $set->fetch_assoc()){
-      $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
-      if(array_key_exists($tKey, $ret)){
-        //Merging transcriptions:
-        $old = $ret[$tKey];
-        foreach($t as $k => $v){
-          if(array_key_exists($k, $old)){
-            $o = $old[$k];
-            if(isset($o) && $o !== '' && $o !== $v){
-              $t[$k] = array($o, $v);
+    if($set !== false){
+      while($t = $set->fetch_assoc()){
+        $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
+        if(array_key_exists($tKey, $ret)){
+          //Merging transcriptions:
+          $old = $ret[$tKey];
+          foreach($t as $k => $v){
+            if(array_key_exists($k, $old)){
+              $o = $old[$k];
+              if(isset($o) && $o !== '' && $o !== $v){
+                $t[$k] = array($o, $v);
+              }
             }
           }
+        }else{
+          $t['soundPaths'] = DataProvider::soundPaths($n, $t);
         }
-      }else{
-        $t['soundPaths'] = DataProvider::soundPaths($n, $t);
+        $ret[$tKey] = $t;
       }
-      $ret[$tKey] = $t;
     }
     return $ret;
   }
