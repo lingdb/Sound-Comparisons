@@ -256,7 +256,7 @@
   }
   //Logging the import:
   $uid = $dbConnection->escape_string(session_getUid());
-  $logging = "INSERT INTO Edit_Imports (Who) VALUES ($uid);"
+  $logging = "INSERT INTO Edit_Imports (Who) VALUES ($uid);";
   //Executing queries:
   $q   = 'SET AUTOCOMMIT=0;'
        . 'SET FOREIGN_KEY_CHECKS=0;'
