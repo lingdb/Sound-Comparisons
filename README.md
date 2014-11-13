@@ -5,6 +5,10 @@ Setup instructions:
    ```
     git submodule init; git submodule update
    ```
+   in this case fetch updates with something like
+   ```
+   git pull && git submodule update --init --recursive
+   ```
 
 2. You'll need a webserver with a simple [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle)) setup.
    To get this under debian/ubuntu linux you'd probably like to install apache, mysql and php:
