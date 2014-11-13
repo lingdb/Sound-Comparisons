@@ -1,19 +1,24 @@
 Setup instructions:
 ===
 
-1. You'll need a webserver with a simple [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle)) setup.
+1. When cloning the repository: If you have access to [vcs.eva.mpg.de](vcs.eva.mpg.de), execute
+   ```
+    git submodule init; git submodule update
+   ```
+
+2. You'll need a webserver with a simple [LAMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle)) setup.
    To get this under debian/ubuntu linux you'd probably like to install apache, mysql and php:
    to install the following packages:
    ```
     apt-get install apache2-mpm-prefork libapache2-mod-php5 php5 php5-mysql mysql-client mysql-server
    ```
 
-2. You'll need a fitting database and soundfiles for the website to work with.
+3. You'll need a fitting database and soundfiles for the website to work with.
    These files will probably become accessible here soon.
    For the following steps we assume that your database is setup correctly,
    and the soundfiles are at some part relative to the website that is also accessible via HTTP.
 
-3. The website specific code lies in website/main, and you'll need to rename ``config_example.php`` to ``config.php`` and adjust it's contents:
+4. The website specific code lies in website/main, and you'll need to rename ``config_example.php`` to ``config.php`` and adjust it's contents:
    * Make sure the ``$mainDbLogin`` is filled with data fitting the mysql database
    * Set ``$soundPath`` to the location of the soundfile directory relative to config.php
    * Make sure the directory specified as ``$downloadPath`` is writeable by the webserver,
@@ -27,7 +32,7 @@ Setup instructions:
      or let have the ``admin`` directory have a different name, as it's not required for the main website.
      The admin area itself however requires the main part of the website to be accessible.
 
-4. Have a look at the ``.htaccess`` files.
+5. Have a look at the ``.htaccess`` files.
    There are ``.htaccess.example`` files in the repo root and in the query and export directories.
    Rename these files to ``.htaccess`` and adjust the RewriteBase entry where it says ``/shk/main/``
    to the path on your webserver.
@@ -35,5 +40,5 @@ Setup instructions:
    If you want to employ some simple access control, uncomment the ``Restricted Area``
    part at the beginning, and rename the ``.htpasswd.example`` to ``.htpasswd``.
 
-5. The folder ``export/download`` is used to generate archive files for users to download.
+6. The folder ``export/download`` is used to generate archive files for users to download.
    To make this possible the website your webserver must be enabled to write to this directory.
