@@ -6,5 +6,7 @@
   but repeat some fields while others change.
 */
 var DummyTranscription = Transcription.extend({
-  initialize: function(){}
+  initialize: function(){
+    this.set({Phonetic: 'missing'});
+  }
 });
