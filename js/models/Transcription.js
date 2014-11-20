@@ -105,8 +105,8 @@ var Transcription = Backbone.Model.extend({
     var wordByWord = App.pageState.get('wordByWord');
     //Iterating phonetics:
     for(var i = 0; i < phonetics.length; i++){
-      var phonetic = phonetics[i]
-        , source   = this.filterSoundfiles(sources.shift() || [])
+      var phonetic = phonetics[i]//String
+        , source   = sources.shift() || []//[String]
         , language = this.get('language')
         , word     = this.get('word')
         , p = { // Data gathered for phonetic:
@@ -115,7 +115,7 @@ var Transcription = Backbone.Model.extend({
           , smallCaps:   phonetic === 'play'
           , phonetic:    phonetic
           , srcs:        JSON.stringify(source)
-          , _srcs:       source
+          , _srcs:       this.filterSoundfiles(source)
           , hasTrans:    language.hasTranscriptions()
           , identifier:  { word:     word.getId()
                          , language: language.getId()

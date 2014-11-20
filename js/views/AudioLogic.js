@@ -139,7 +139,7 @@ var AudioLogic = Backbone.View.extend({
     so that not all sound files need be loaded immediate.
   */
 , onDemand: function(audio){
-    var d = $(audio).attr('data-onDemand');
+    var d = $(audio).attr('data-ondemand');
     if(d){
       var src = "";
       $($.parseJSON(d)).each(function(i, s){
