@@ -12,6 +12,7 @@ var Router = Linker.extend({
     ":study/map/:word/:languages":                      "mapView"
   , ":study/map/:word/":                                "mapView"
   , ":study/map/:word":                                 "mapView"
+  , ":study/map//":                                     "mapView"
   , ":study/map/":                                      "mapView"
   , ":study/map":                                       "mapView"
   , ":study/word/:word":                                "wordView"
