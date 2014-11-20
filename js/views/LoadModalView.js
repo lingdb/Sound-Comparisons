@@ -5,8 +5,7 @@
 */
 var LoadModalView = Backbone.View.extend({
   initialize: function(){
-    $('#loadModal').modal({backdrop: true, keyboard: false, show: false});
-    //this.$el.modal({backdrop: true, keyboard: false, show: false});
+    this.$el.modal({backdrop: true, keyboard: false, show: false});
   }
 , loadStudy: function(promise){
     //Showing the modal:
