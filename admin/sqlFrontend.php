@@ -14,6 +14,10 @@ if(!session_mayEdit($dbConnection))
   ?>
   <body>
     <?php require_once 'topmenu.php'; ?>
+    <div class="alert alert-error">
+      <h2>This feature is currently under construction.</h2>
+      You cannot perform SQL operations now, but it will become possible in the future.
+    </div>
     <form class="form-horizontal" action="query/sql.php?action=import" method="POST" enctype="multipart/form-data">
       <legend>Upload a .sql file:</legend>
       <div class="control-group">

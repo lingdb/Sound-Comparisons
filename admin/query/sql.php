@@ -1,4 +1,8 @@
 <?php
+//FIXME REMOVE DISABLE PART BELOW
+error_log('This feature is currently disabled.');
+die('This feature is currently disabled.');
+//FIXME REMOVE DISABLE PART ABOVE
 chdir('..');
 require 'common.php';
 if(php_sapi_name() === 'cli'){
