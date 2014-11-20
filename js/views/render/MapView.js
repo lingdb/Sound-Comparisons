@@ -100,7 +100,7 @@ var MapView = Renderer.prototype.SubView.extend({
       if(tr !== null){
         psf = _.map(tr.getPhonetics(), function(p){
           return { phonetic:   p.phonetic
-                 , soundfiles: p._srcs };
+                 , soundfiles: $.parseJSON(p.srcs) };
         }, this);
       }
       //The complete structure:
