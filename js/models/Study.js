@@ -94,8 +94,7 @@ var Study = Backbone.Model.extend({
     return [{lat: cs.DefaultTopLeftLat,     lon: cs.DefaultTopLeftLon}
            ,{lat: cs.DefaultBottomRightLat, lon: cs.DefaultBottomRightLon}];
   }
-  /**
-  */
+  /***/
 , getLink: function(name){
     if(name in this._linkMap){
       var map = this._linkMap[name]

@@ -7,7 +7,7 @@ var StudyWatcher = Backbone.Model.extend({
       , ls = s;
     //Check if a study is given in the fragment:
     var fragment = window.location.hash
-      , matches  = fragment.match(/#\/([^\/]+)\/(|map|word|language|languagesXwords|wordsXlanguages)/);
+      , matches  = fragment.match(/#\/([^\/]+)\/(map|word|language|languagesXwords|wordsXlanguages)/);
     if(_.isArray(matches)){
       s = matches[1];
     }

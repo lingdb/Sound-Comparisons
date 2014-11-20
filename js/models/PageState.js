@@ -145,12 +145,13 @@ var PageState = Backbone.Model.extend({
       if(_.contains(this.get('pageViews'), key)){
         return this.get('pageView') === key;
       }
-      switch(key){//Used by topMenu so far.
+      switch(key){
         case 'm':  return this.isPageView('map');
         case 'w':  return this.isPageView('word');
         case 'l':  return this.isPageView('language');
         case 'lw': return this.isPageView('languagesXwords');
         case 'wl': return this.isPageView('wordsXlanguages');
+        case 'c': return this.isPageView('contributorView');
       }
     }else if(key instanceof Backbone.View){
       if(typeof(key.getKey) !== 'function')

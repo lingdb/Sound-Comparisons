@@ -42,8 +42,9 @@ var Router = Linker.extend({
   , ":study/languagesXwords/:languages/:words/*config": "languageWordViewConfig"
   , ":study/wordsXlanguages/:words/:languages/*config": "wordLanguageViewConfig"
     //Various other routes:
-  , 'whoAreWe':                                         "contributorView"
   , 'whoAreWe/:initials':                               "contributorView"
+  , 'whoAreWe/':                                        "contributorView"
+  , 'whoAreWe':                                         "contributorView"
     //Route for missing implementations of links:
   , "FIXME":                                            "missingRoute"
   , "FIXME/*infos":                                     "missingRoute"
