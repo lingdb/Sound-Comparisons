@@ -75,7 +75,7 @@ var WordMenuView = Backbone.View.extend({
     //First item:
     if(spLang){
       data.spList.options.push({
-        link: 'data-href="'+App.router.linkConfig({SpLang: spLang})+'"'
+        link: 'data-href="'+App.router.linkConfig({SpLang: null})+'"'
       , name: App.translationStorage.getName()
       });
     }
@@ -184,11 +184,12 @@ var WordMenuView = Backbone.View.extend({
     so that they can be embedded in meaningGroups or in the WordMenu directly.
   */
 , buildWordList: function(words){
+    var spLang = App.pageState.getSpLang();
     var ws = [], isMulti = App.pageState.isMultiView();
     words.each(function(word){
       var w = {
         cname:    word.getKey()
-      , trans:    word.getModernName()
+      , trans:    word.getNameFor(spLang)
       , ttip:     word.getLongName()
       };
       //Deciding if a word is selected:

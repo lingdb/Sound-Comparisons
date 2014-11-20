@@ -134,6 +134,8 @@ var Configurator = Sanitizer.extend({
     config = config || {};
     if(spLang instanceof Language){
       config.spLang = spLang.getKey();
+    }else if(spLang === null){
+      config.spLang = null;
     }
     return config;
   }

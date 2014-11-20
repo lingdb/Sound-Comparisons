@@ -188,6 +188,8 @@ var LanguageView = Renderer.prototype.SubView.extend({
       console.log('LanguageView.updateLanguageTable() without a language.');
       return;
     }
+    //SpLang to use:
+    var spLang = App.pageState.getSpLang();
     //Gathering transcriptions:
     var transcriptions = [];
     App.wordCollection.each(function(word){
@@ -196,7 +198,7 @@ var LanguageView = Renderer.prototype.SubView.extend({
       transcriptions.push({
         link:     'href="'+App.router.linkWordView({word: word})+'"'
       , ttip:     word.getLongName()
-      , trans:    word.getNameFor(language)
+      , trans:    word.getNameFor(spLang)
       , spelling: tr.getAltSpelling()
       , phonetic: tr.getPhonetics()
       });
