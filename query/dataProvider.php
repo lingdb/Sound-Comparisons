@@ -27,8 +27,16 @@ class DataProvider {
     $lq   = "SELECT FilePathPart FROM Languages_$sId WHERE LanguageIx = $lIx";
     $wq   = "SELECT SoundFileWordIdentifierText FROM Words_$sId "
           . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = '$wId'";
-    $lang = current(current(DataProvider::fetchAll($lq)));
-    $word = current(current(DataProvider::fetchAll($wq)));
+    $getFirst = function($q){
+      $set = DataProvider::fetchAll($q);
+      if(count($set) === 0){
+        error_log("Problem with query: '$q'");
+        return '';
+      }
+      return current(current($set));
+    };
+    $lang = $getFirst($lq);
+    $word = $getFirst($wq);
     $pron = ($t['AlternativePhoneticRealisationIx'] > 1) ? '_pron'.$t['AlternativePhoneticRealisationIx'] : '';
     $lex  = ($t['AlternativeLexemIx'] > 1) ? '_lex'.$t['AlternativeLexemIx'] : '';
     $path = "$base/$lang/$lang$word$lex$pron";
