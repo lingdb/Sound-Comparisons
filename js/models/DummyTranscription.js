@@ -9,4 +9,5 @@ var DummyTranscription = Transcription.extend({
   initialize: function(){
     this.set({Phonetic: 'missing'});
   }
+, isDummy: function(){return true;}
 });

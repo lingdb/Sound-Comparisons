@@ -18,6 +18,20 @@ class DataProvider {
     return $ret;
   }
   /***/
+  public static function findSoundFiles($sId, $lang, $word, $pron = '', $lex = ''){
+    if($pron !== '') $pron = '_pron'.$pron;
+    if($lex  !== '') $lex  = '_lex'.$lex;
+    $path = Config::$soundPath."/$lang/$lang$word$lex$pron";
+    $ret  = array();
+    foreach(array('.mp3', '.ogg') as $ext){
+      $p = $path.$ext;
+      if(file_exists($p)){
+        array_push($ret, $p);
+      }
+    }
+    return $ret;
+  }
+  /***/
   public static function soundPaths($sId, $t){
     $lIx  = $t['LanguageIx'];
     $wId  = $t['IxElicitation'].$t['IxMorphologicalInstance'];
@@ -37,17 +51,9 @@ class DataProvider {
     };
     $lang = $getFirst($lq);
     $word = $getFirst($wq);
-    $pron = ($t['AlternativePhoneticRealisationIx'] > 1) ? '_pron'.$t['AlternativePhoneticRealisationIx'] : '';
-    $lex  = ($t['AlternativeLexemIx'] > 1) ? '_lex'.$t['AlternativeLexemIx'] : '';
-    $path = "$base/$lang/$lang$word$lex$pron";
-    $ret  = array();
-    foreach(array('.mp3', '.ogg') as $ext){
-      $p = $path.$ext;
-      if(file_exists($p)){
-        array_push($ret, $p);
-      }
-    }
-    return $ret;
+    $pron = ($t['AlternativePhoneticRealisationIx'] > 1) ? $t['AlternativePhoneticRealisationIx'] : '';
+    $lex  = ($t['AlternativeLexemIx'] > 1) ? $t['AlternativeLexemIx'] : '';
+    return DataProvider::findSoundFiles($sId, $lang, $word, $pron, $lex);
   }
   /***/
   public static function getStudies(){
@@ -180,8 +186,66 @@ class DataProvider {
         }
         $ret[$tKey] = $t;
       }
+      //Handling dummy transcriptions:
+      foreach(DataProvider::getDummyTranscriptions($studyName) as $t){
+        $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
+        if(!array_key_exists($tKey, $ret)){
+          $ret[$tKey] = $t;
+        }
+      }
     }
     return $ret;
+  }
+  /***/
+  public static function getDummyTranscriptions($studyName){
+    //Add dummy transcriptions:
+    $dummies = array();
+    //Handling languages without transcriptions:
+    $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
+        . "WHERE LanguageIx NOT IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
+    $ls = DataProvider::fetchAll($lq);
+    $pairs = array();
+    if(count($ls) > 0){
+      //We create pairs for all words here:
+      $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
+          . "FROM Words_$studyName";
+      $ws = DataProvider::fetchAll($wq);
+      foreach($ls as $l){
+        foreach($ws as $w){
+          array_push($pairs, array($l, $w));
+        }
+      }
+    }
+    //Handling words without transcriptions:
+    $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
+        . "FROM Words_$studyName WHERE CONCAT(IxElicitation, IxMorphologicalInstance) "
+        . "NOT IN (SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Transcriptions_$studyName)";
+    $ws = DataProvider::fetchAll($wq);
+    if(count($ws) > 0){
+      //We create pairs only for languages not selected above:
+      $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
+          . "WHERE LanguageIx IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
+      $ls = DataProvider::fetchAll($lq);
+      foreach($ls as $l){
+        foreach($ws as $w){
+          array_push($pairs, array($l, $w));
+        }
+      }
+    }
+    //Handling resulting pairs:
+    foreach($pairs as $p){
+      $l = $p[0]; $w = $p[1];
+      $files = DataProvider::findSoundFiles($studyName, $l['FilePathPart'], $w['SoundFileWordIdentifierText']);
+      if(count($files) === 0) continue;
+      array_push($dummies, array(
+        'isDummy' => true
+      , 'LanguageIx' => $l['LanguageIx']
+      , 'IxElicitation' => $w['IxElicitation']
+      , 'IxMorphologicalInstance' => $w['IxMorphologicalInstance']
+      , 'soundPaths' => $files
+      ));
+    }
+    return $dummies;
   }
   /***/
   public static function getDefaults($studyId){

@@ -25,4 +25,8 @@ var TranscriptionMap = Backbone.Model.extend({
     t.set({language: l, word: w});
     return t;
   }
+  /***/
+, getDummies: function(){
+    return _.filter(_.values(this.attributes), function(t){return t.isDummy();});
+  }
 });

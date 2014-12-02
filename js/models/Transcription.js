@@ -192,4 +192,9 @@ var Transcription = Backbone.Model.extend({
     }
     return null;
   }
+  /***/
+, isDummy: function(){
+    var d = this.get('isDummy');
+    return d || false;
+  }
 });
