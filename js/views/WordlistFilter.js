@@ -32,6 +32,13 @@ var WordlistFilter = Backbone.View.extend({
     $('#PhoneticFilter').keyup(function(){ t.phoneticFilter(); });
     $('#FilterAddMultiWords').click(function(){ t.pathfinder(true); });
     $('#FilterRefreshMultiWords').click(function(){ t.pathfinder(false); });
+    $('#FilterClearMultiWords').click(function(){
+      (function(r){
+        var fragment = r.linkCurrent({config: r.getConfig(), words: []});
+        r.navigate(fragment);
+        App.study.trackLinks(fragment);
+      })(App.router);
+    });
     //Initial triggers:
     if($('#SpellingFilter').val() !== ''){
       this.spellingFilter();
@@ -174,26 +181,26 @@ var WordlistFilter = Backbone.View.extend({
   }
 //The function that leads the way:
 , pathfinder: function(keep){
-    var newWords = '';
+    var words = keep ? App.wordCollection.getSelected() : []
+      , wIds  = {};
+    //Finding currently visible words:
     $('ul.wordList li:visible').each(function(){
       if($(this).parent().hasClass('selected'))
         return;
-      newWords += $('.color-word', this).attr('data-canonicalname') + ',';
+      var wId = $('.color-word', this).attr('data-wordId');
+      wIds[wId] = true;
     });
-    newWords = 'words=' + newWords;
-    /*
-      Now the words have to be injected into the window.location:
-      And if keep !== true, they'll overwrite the current words.
-    */
-    var url = window.App.pageWatcher.getLocation();
-    if(url.search('words=') > 0){
-      if(keep === true)
-        url = url.replace('words=', newWords);
-      else
-        url = url.replace(/words=[^&]*/, newWords.substring(0, newWords.length - 1));
-    }else // We add the whole variable if no words are selected.
-      url += '&' + newWords.substring(0, newWords.length - 1);
-    //Changing to the new page:
-    window.App.linkInterceptor.navigate(url);
+    //Adding to words:
+    App.wordCollection.each(function(w){
+      if(w.getId() in wIds){
+        words.push(w);
+      }
+    });
+    //Updating fragment:
+    (function(r){
+      var fragment = r.linkCurrent({config: r.getConfig(), words: words});
+      r.navigate(fragment);
+      App.study.trackLinks(fragment);
+    })(App.router);
   }
 });

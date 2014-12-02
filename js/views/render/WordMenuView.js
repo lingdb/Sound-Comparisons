@@ -188,9 +188,9 @@ var WordMenuView = Backbone.View.extend({
     var ws = [], isMulti = App.pageState.isMultiView();
     words.each(function(word){
       var w = {
-        cname:    word.getKey()
-      , trans:    word.getNameFor(spLang)
-      , ttip:     word.getLongName()
+        wid:   word.getId()
+      , trans: word.getNameFor(spLang)
+      , ttip:  word.getLongName()
       };
       //Deciding if a word is selected:
       if(isMulti){

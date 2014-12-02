@@ -84,12 +84,16 @@ var TopMenuView = Backbone.View.extend({
     , lw: 'lw.png'
     , wl: 'wl.png'
     };
+    var defaults = {
+      words:     App.wordCollection.getDefaultSelection()
+    , languages: App.languageCollection.getDefaultSelection()
+    };
     var links = {
       m:  App.router.linkMapView()
     , w:  App.router.linkWordView()
     , l:  App.router.linkLanguageView()
-    , lw: App.router.linkLanguageWordView()
-    , wl: App.router.linkWordLanguageView()
+    , lw: App.router.linkLanguageWordView(defaults)
+    , wl: App.router.linkWordLanguageView(defaults)
     };
     this.setModel({pageViews: _.map(_.keys(names), function(key){
       return {

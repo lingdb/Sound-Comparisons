@@ -46,7 +46,11 @@ var WordCollection = Choice.extend({
     Returns the default Words as array to be used as selection for the WordCollection.
   */
 , getDefaultSelection: function(){
-    return App.defaults.getWords();
+    var sel = App.defaults.getWords();
+    if(sel.length === 0){
+      return _.take(this.models, 5);
+    }
+    return sel;
   }
   /**
     Returns the default Word to be used as Choice for the WordCollection.
