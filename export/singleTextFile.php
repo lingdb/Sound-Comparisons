@@ -12,7 +12,6 @@ foreach($params as $p){
 //Setup:
 chdir('..');
 require_once 'config.php';
-require_once 'stopwatch.php';
 require_once 'valueManager/RedirectingValueManager.php';
 $db = Config::getConnection();
 //Values to work with:

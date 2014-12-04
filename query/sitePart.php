@@ -6,7 +6,6 @@
 //Setup:
 chdir('..');
 require_once 'config.php';
-require_once 'stopwatch.php';
 require_once 'valueManager/RedirectingValueManager.php';
 $dbConnection = Config::getConnection();
 $valueManager = RedirectingValuemanager::getInstance();

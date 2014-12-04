@@ -55,7 +55,6 @@ class Language extends Translatable{
     as HTML with a superscript that characterises the Language.
   */
   public function getShortName($superscript = true){
-    Stopwatch::start('Language:getShortName');
     $id   = $this->id;
     $sid  = $this->getValueManager()->getStudy()->getId();
     $name = $this->getKey(); // Fallback if no ShortName is found
@@ -80,7 +79,6 @@ class Language extends Translatable{
     //Fetching the superscript if requested:
     if($superscript)
       $name = $this->getSuperscript($name);
-    Stopwatch::stop('Language:getShortName');
     return $name;
   }
   /**
@@ -244,7 +242,6 @@ class Language extends Translatable{
     Returns all Regions a Language belongs to.
   */
   public function getRegions(){
-    Stopwatch::start('Language:getRegions');
     $sid = $this->getValueManager()->getStudy()->getId();
     $id = $this->id;
     $q = "SELECT CONCAT(StudyIx, FamilyIX, SubFamilyIx, RegionGpIx) "
@@ -253,7 +250,6 @@ class Language extends Translatable{
     $ret = array();
     while($row = $set->fetch_row())
       array_push($ret, new RegionFromId($this->v, $row[0]));
-    Stopwatch::stop('Language:getRegions');
     return $ret;
   }
   /**
@@ -270,7 +266,6 @@ class Language extends Translatable{
     Checks if a Language belongs to a given Region.
   */
   public function belongsToRegion($region){
-    Stopwatch::start('Language:belongsToRegion');
     $sid = $this->getValueManager()->getStudy()->getId();
     $id = $this->id;
     $regionId = $region->getId();
@@ -279,7 +274,6 @@ class Language extends Translatable{
        . "WHERE CONCAT(StudyIx, FamilyIX, SubFamilyIx, RegionGpIx) = $regionId"
        . "))";
     $r = $this->fetchOneBy($q);
-    Stopwatch::stop('Language:belongsToRegion');
     return ($r[0] == 1);
   }
   /**
@@ -471,7 +465,6 @@ class Language extends Translatable{
     Displays the detailed information of a language.
   */
   public function getDescription($t){
-    Stopwatch::start('Language:getDescription');
     $rows = array();
     //LanguageStatusType information:
     //Lst will become null|array(Status,StatusTooltip,Description,LanguageSatusType)
@@ -592,7 +585,6 @@ class Language extends Translatable{
         ));
       }
     }
-    Stopwatch::stop('Language:getDescription');
     return array('rows' => $rows);
   }
   /**
@@ -617,7 +609,6 @@ class Language extends Translatable{
     because Languages are always sorted by their Id, and never alphabetically.
   */
   private function getNeighbour($v, $next){
-    Stopwatch::start('Language:getNeighbour');
     // Setting $order and $comp depending on $next:
     $order = $next ? 'ASC' : 'DESC';
     $comp  = $next ? '>'   : '<';
@@ -629,13 +620,11 @@ class Language extends Translatable{
        . "(RegionGpIx, RegionMemberLgIx) $comp (SELECT RegionGpIx, RegionMemberLgIx FROM RegionLanguages_$sId WHERE LanguageIx = $lId) "
        . "ORDER BY RegionGpIx $order, RegionMemberLgIx $order LIMIT 1";
     if($r = Config::getConnection()->query($q)->fetch_row()){
-      Stopwatch::stop('Language:getNeighbour');
       return new LanguageFromId($v, $r[0]);
     }
     //The wrap around case:
     $q = "SELECT LanguageIx FROM RegionLanguages_$sId ORDER BY RegionGpIx $order, RegionMemberLgIx $order LIMIT 1";
     $r = Config::getConnection()->query($q)->fetch_row();
-    Stopwatch::stop('Language:getNeighbour');
     return new LanguageFromId($v, $r[0]);
   }
   /**
@@ -660,15 +649,12 @@ class Language extends Translatable{
     if IsSpellingRfcLang = 1, or $this.
   */
   public function getPhoneticLanguage(){
-    Stopwatch::start('Language:getPhoneticLanguage');
     $r = $this->fetchFields('IsSpellingRfcLang','AssociatedPhoneticsLgForThisSpellingLg');
     if($r[0] == "1" && $r[1]){
       $id  = $this->id;
       $lid = $r[1];
-      Stopwatch::stop('Language:getPhoneticLanguage');
       return new LanguageFromId($this->getValueManager(), $r[1]);
     }
-    Stopwatch::stop('Language:getPhoneticLanguage');
     return $this;
   }
   /**
@@ -691,7 +677,6 @@ class Language extends Translatable{
     in relation to the ones in all other buckets.
   */
   public static function mkRegionBuckets($languages){
-    Stopwatch::start('Language:mkRegionBuckets');
     $regions = array(); // RegionId -> Region
     $buckets = array(); // RegionId -> Language[]
     //Sorting into buckets:
@@ -722,7 +707,6 @@ class Language extends Translatable{
       $buckets[$rId] = $newBucket;
     }
     //Done:
-    Stopwatch::stop('Language:mkRegionBuckets');
     return array('regions' => $regions, 'buckets' => $buckets);
   }
 }

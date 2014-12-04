@@ -84,7 +84,6 @@ class Word extends Translatable{
     otherwise they will be imploded with ', '.
   */
   public function getWordTranslation($v, $useSpLang = false, $break = true){
-    Stopwatch::start('Word:getWordTranslation');
     if(!$v) $v = $this->getValueManager();
     if($useSpLang) // The case to use the SpellingLanguage.
       $l = $v->gwo()->getSpLang();
@@ -117,12 +116,10 @@ class Word extends Translatable{
       $ret = implode($glue, array_unique($translations));
       //Done:
       if($ret != ''){
-        Stopwatch::stop('Word:getWordTranslation');
         return $ret;
       }
     }
     /*Fallback on fail*/
-    Stopwatch::stop('Word:getWordTranslation');
     return $this->getModernName();
   }
   /**
@@ -176,7 +173,6 @@ class Word extends Translatable{
     Returns all the MeaningGroups that a Word belongs to.
   */
   public function getMeaningGroups(){
-    Stopwatch::start('Word:getMeaningGroups');
     $v   = $this->getValueManager();
     $id  = $this->getId();
     $sid = $v->getStudy()->getId();
@@ -193,7 +189,6 @@ class Word extends Translatable{
     while($r = $set->fetch_row())
       array_push($mgs, new MeaningGroupFromId($v, $r[0]));
     if(count($mgs) > 0){
-      Stopwatch::stop('Word:getMeaningGroups');
       return $mgs;
     }
     Config::error("Could not find MeaningGroups in Word:getMeaningGroups() for id:$id in study:$sid.");
@@ -266,7 +261,6 @@ class Word extends Translatable{
     of Language::mkRegionBuckets.
   */
   public static function mkMGBuckets($words){
-    Stopwatch::start('Word:mkMGBuckets');
     $mgs     = array(); // MgId -> MeaningGroup
     $buckets = array(); // MgId -> Word[]
     //Sorting into buckets:
@@ -292,7 +286,6 @@ class Word extends Translatable{
       $buckets[$mId] = $newBucket;
     }
     //Done:
-    Stopwatch::stop('Word:mkMGBuckets');
     return array('mgs' => $mgs, 'buckets' => $buckets);
   }
 }

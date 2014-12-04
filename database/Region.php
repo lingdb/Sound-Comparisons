@@ -72,7 +72,6 @@ class Region extends Translatable{
     Returns all Languages contained in a Region.
   */
   public function getLanguages($allowNoTranscriptions = false){
-    Stopwatch::start('Region:getLanguages');
     $sid = $this->getValueManager()->getStudy()->getId();
     $id  = $this->id;
     $q = "SELECT LanguageIx FROM RegionLanguages_$sid "
@@ -85,7 +84,6 @@ class Region extends Translatable{
       if($l->hasTranscriptions() || $allowNoTranscriptions)
         array_push($ret, $l);
     }
-    Stopwatch::stop('Region:getLanguages');
     return $ret;
   }
   /**

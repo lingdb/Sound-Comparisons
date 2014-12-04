@@ -41,7 +41,6 @@ class MeaningGroup extends Translatable{
     @return $words Word[]
   */
   public function getWords($s = null){
-    Stopwatch::start('MeaningGroup:getWords');
     $id  = $this->id;
     $sid = $this->v->getStudy()->getId();
     if($s)
@@ -58,7 +57,6 @@ class MeaningGroup extends Translatable{
     while($r = $set->fetch_row()){
       array_push($ret, new WordFromId($this->v, $r[0]));
     }
-    Stopwatch::stop('MeaningGroup:getWords');
     return $ret;
   }
 }

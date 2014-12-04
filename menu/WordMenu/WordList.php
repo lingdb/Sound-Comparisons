@@ -7,7 +7,6 @@
   Builds the WordList for WordMenu.php
 */
 function WordMenuBuildWordList($words, $v, $t){
-  Stopwatch::start('WordMenuBuildWordList');
   $wordList = array('words' => array());
   $multi    = $v->gpv()->isSelection();
   foreach($words as $w){
@@ -50,7 +49,6 @@ function WordMenuBuildWordList($words, $v, $t){
       )));
     }
   }
-  Stopwatch::stop('WordMenuBuildWordList');
   return $wordList;
 }
 ?>

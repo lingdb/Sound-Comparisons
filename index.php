@@ -4,10 +4,8 @@
   define('FLAGS_ENABLED', false);
   /* Requirements: */
   require_once 'config.php';
-  require_once 'stopwatch.php';
   require_once 'valueManager/RedirectingValueManager.php';
   /* Startup: */
-  Stopwatch::start('index.php');
   $dbConnection = Config::getConnection();
   require_once 'shortlink.php';
   $valueManager = RedirectingValuemanager::getInstance();
@@ -21,30 +19,6 @@
   unset($head);
   //Making sure we get our appSetup:
   $index['appSetup'] = true;
-////Building the TopMenu:
-//require_once 'menu/TopMenu.php';
-//$index['TopMenu'] = $topmenu;
-//unset($topmenu);
-////Building the LanguageMenu:
-//require_once 'menu/LanguageMenu.php';
-//$index['LanguageMenu'] = $languageMenu;
-//unset($languageMenu);
-////Building the content:
-//require_once 'content.php';
-//$index['content'] = $content;
-//unset($content);
-////Building the WordMenu:
-//require_once 'menu/WordMenu.php';
-//$index['WordMenu'] = $wordMenu;
-//unset($wordMenu);
-////Building the keyboard:
-//require_once 'ipaKeyboard.php';
-//$index['ipaKeyboard'] = $ipa;
-//unset($ipa);
-////The saveLocation:
-//$index['saveLocation'] = $valueManager->link();
-////The stopwatch:
-//$index['stopwatch'] = Stopwatch::stats();
   //Processing the Content-type:
   $headers = getallheaders();
   if(!array_key_exists('Accept', $headers)){
