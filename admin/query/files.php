@@ -229,7 +229,7 @@
         $q = 'INSERT INTO Transcriptions_'.$matches[1].' ('
            . 'StudyIx, FamilyIx, '
            . 'IxElicitation, IxMorphologicalInstance, '
-           . 'AlternativePhoneticRealisationIx, AlternativeLexemIx, '
+           . 'AlternativeLexemIx, AlternativePhoneticRealisationIx, '
            . 'LanguageIx, Phonetic, SpellingAltv1, SpellingAltv2, '
            . 'NotCognateWithMainWordInThisFamily, '
            . 'CommonRootMorphemeStructDifferent, '

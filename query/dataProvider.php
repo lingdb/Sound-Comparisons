@@ -170,6 +170,7 @@ class DataProvider {
     if($set !== false){
       while($t = $set->fetch_assoc()){
         $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
+        $t['soundPaths'] = DataProvider::soundPaths($n, $t);
         if(array_key_exists($tKey, $ret)){
           //Merging transcriptions:
           $old = $ret[$tKey];
@@ -178,11 +179,11 @@ class DataProvider {
               $o = $old[$k];
               if(isset($o) && $o !== '' && $o !== $v){
                 $t[$k] = array($o, $v);
+              }else if(is_array($v) && is_array($o)){
+                $t[$k] = array_merge($o, $v);
               }
             }
           }
-        }else{
-          $t['soundPaths'] = DataProvider::soundPaths($n, $t);
         }
         $ret[$tKey] = $t;
       }

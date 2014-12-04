@@ -70,7 +70,8 @@ var Transcription = Backbone.Model.extend({
     @returns [[String]]
   */
 , getSoundfiles: function(){
-    var sources = this.get('soundPaths'); // [[String]] || [String]
+    //We need to clone the soundPaths so that filtering and stuff can't do any harm.
+    var sources = _.clone(this.get('soundPaths')); // [[String]] || [String]
     if(!_.isArray(sources))    sources = [];
     if(sources.length === 0)   sources = [sources];
     if(_.isString(sources[0])) sources = [sources];
