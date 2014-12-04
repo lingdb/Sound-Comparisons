@@ -7,14 +7,6 @@
     $c (column) <-> Trans
   */
   class TranscrSuperscriptInfoTranslationProvider extends DynamicTranslationProvider{
-    public function migrate(){
-      $category = $this->getName();
-      $column   = $this->getColumn();
-      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
-         . "SELECT TranslationId, '$category', Ix, $column "
-         . "FROM Page_DynamicTranslation_TranscrSuperscriptInfo";
-      $this->dbConnection->query($q);
-    }
     public function getTable(){ return 'TranscrSuperscriptInfo';}
     public function searchColumn($c, $tId, $searchText){
       //Setup

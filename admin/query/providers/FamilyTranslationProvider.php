@@ -10,13 +10,6 @@
     FamilyNm                  <-> Trans
   */
   class FamilyTranslationProvider extends TranslationProvider{
-    public function migrate(){
-      $category = $this->getName();
-      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
-         . "SELECT DISTINCT TranslationId, '$category', CONCAT(StudyIx, FamilyIx), Trans "
-         . "FROM Page_DynamicTranslation_Families";
-      $this->dbConnection->query($q);
-    }
     public function search($tId, $searchText){
       //Setup:
       $ret = array();

@@ -183,11 +183,5 @@
            . "AND Category = '$category' "
            . "AND Field = '$field'";
     }
-    /**
-      This method handles the migration from the old translation schema.
-      It will be around for some time,
-      until I'm confident that the old layout is no longer in use.
-    */
-    public abstract function migrate();
   }
 ?>

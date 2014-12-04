@@ -7,14 +7,6 @@
     $c (column)                                             <-> Trans
   */
   class WordsTranslationProvider extends DynamicTranslationProvider{
-    public function migrate(){
-      $category = $this->getName();
-      $column   = $this->getColumn();
-      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
-         . "SELECT TranslationId, '$category', CONCAT(Study,'-',IxElicitation,IxMorphologicalInstance), $column "
-         . "FROM Page_DynamicTranslation_Words";
-      $this->dbConnection->query($q);
-    }
     public function getTable(){ return 'Words_';}
     public function searchColumn($c, $tId, $searchText){
       //Setup

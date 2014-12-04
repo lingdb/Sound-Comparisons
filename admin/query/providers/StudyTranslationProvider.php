@@ -2,13 +2,6 @@
   /***/
   require_once "TranslationProvider.php";
   class StudyTranslationProvider extends TranslationProvider{
-    public function migrate(){
-      $category = $this->getName();
-      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
-         . "SELECT TranslationId, '$category', Study, Trans "
-         . "FROM Page_DynamicTranslation_Studies";
-      $this->dbConnection->query($q);
-    }
     public function search($tId, $searchText){
       //Setup:
       $ret = array();

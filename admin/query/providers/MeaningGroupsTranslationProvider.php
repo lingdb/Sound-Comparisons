@@ -7,13 +7,6 @@
     Name           <-> Trans
   */
   class MeaningGroupsTranslationProvider extends TranslationProvider{
-    public function migrate(){
-      $category = $this->getName();
-      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
-         . "SELECT TranslationId, '$category', MeaningGroupIx, Trans "
-         . "FROM Page_DynamicTranslation_MeaningGroups";
-      $this->dbConnection->query($q);
-    }
     public function search($tId, $searchText){
       //Setup:
       $ret = array();

@@ -7,14 +7,6 @@
     $c (column)                                               <-> Trans
   */
   class RegionsTranslationProvider extends DynamicTranslationProvider{
-    public function migrate(){
-      $category = $this->getName();
-      $column   = $this->getColumn();
-      $q = "INSERT INTO Page_DynamicTranslation (TranslationId, Category, Field, Trans) "
-         . "SELECT TranslationId, '$category', CONCAT(Study, '-', RegionIdentifier), $column "
-         . "FROM Page_DynamicTranslation_Regions";
-      $this->dbConnection->query($q);
-    }
     public function getTable(){return 'Regions_';}
     public function searchColumn($c, $tId, $searchText){
       //Setup

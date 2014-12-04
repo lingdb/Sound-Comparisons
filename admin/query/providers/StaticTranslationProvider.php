@@ -5,9 +5,6 @@
   */
   require_once "TranslationProvider.php";
   class StaticTranslationProvider extends TranslationProvider{
-    public function migrate(){
-      //Static Translation doesn't need migration.
-    }
     public function search($tId, $searchText){
       $ret = array();
       $q = "SELECT Req, Trans, TranslationId FROM Page_StaticTranslation "
