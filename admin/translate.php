@@ -91,8 +91,11 @@
                   */
                   //Fetching all studies:
                   $set = $dbConnection->query('SELECT Name FROM Studies');
+                  $studies = array();
                   while($r = $set->fetch_row()){
-                    $study = $r[0];
+                    array_push($studies, $r[0]);
+                  }
+                  foreach($studies as $study){
                     $q = "SELECT ShortName, LanguageIx FROM Languages_$study "
                        . "WHERE LanguageIx = ANY ("
                        . "SELECT DISTINCT RfcLanguage FROM Languages_$study "
@@ -101,7 +104,7 @@
                     while($r = $set->fetch_row()){
                       $id = $r[1];
                       $shortName = $r[0];
-                      echo "<option value='$id'>$shortName</option>";
+                      echo "<option value='$id'>$study: $shortName</option>";
                     }
                   }
               ?></select>
