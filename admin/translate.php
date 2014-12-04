@@ -95,6 +95,7 @@
                   while($r = $set->fetch_row()){
                     array_push($studies, $r[0]);
                   }
+                  $options = array();
                   foreach($studies as $study){
                     $q = "SELECT ShortName, LanguageIx FROM Languages_$study "
                        . "WHERE LanguageIx = ANY ("
@@ -102,10 +103,11 @@
                        . "WHERE RfcLanguage IS NOT NULL)";
                     $set = $dbConnection->query($q);
                     while($r = $set->fetch_row()){
-                      $id = $r[1];
-                      $shortName = $r[0];
-                      echo "<option value='$id'>$study: $shortName</option>";
+                      $options[$r[1]] = $r[0];
                     }
+                  }
+                  foreach($options as $id => $shortName){
+                    echo "<option value='$id'>$shortName</option>";
                   }
               ?></select>
             </div>
