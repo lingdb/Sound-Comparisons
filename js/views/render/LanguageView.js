@@ -133,6 +133,7 @@ var LanguageView = Renderer.prototype.SubView.extend({
         desc: (lst !== null) ? lst.getDescription()
             : App.translationStorage.translateStatic('language_description_region')
       };
+      line.desc += ' ';
       line.desc += ('NearestCity' in desc)
                  ? desc.NearestCity + ' (' + desc.StateRegion + ')'
                  : desc.StateRegion;
