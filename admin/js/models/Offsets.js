@@ -45,7 +45,9 @@ Offsets = Backbone.Model.extend({
         if(offs[0]){
           save.selected = 0;
         }
-        t.set(save);
+        // We set silent, because we trigger anyway. We trigger in case set doesn't change anything.
+        t.set(save, {silent: true});
+        t.trigger('change');
       });
     }
   }
