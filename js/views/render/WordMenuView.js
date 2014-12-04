@@ -255,5 +255,11 @@ var WordMenuView = Backbone.View.extend({
         App.router.navigate($(this).find(':selected').data('href'));
       });
     });
+    //Checkboxes in MultiViews:
+    if(App.pageState.isMultiView() && App.pageState.wordOrderIsLogical()){
+      this.$('dl.meaninggroupList > dt > a[data-href]').click(function(){
+        App.router.navigate($(this).attr('data-href'));
+      });
+    }
   }
 });
