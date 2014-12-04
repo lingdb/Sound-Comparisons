@@ -93,9 +93,14 @@
     /**
       A helper function to fetch all rows from a query.
     */
-    public function fetchRows($set){
-      if(is_string($set))
-        $set = $this->dbConnection->query($set);
+    public function fetchRows($q){
+      if(is_string($q)){
+        $set = $this->dbConnection->query($q);
+        if($set === false){
+          Config::error("Problems with query: $q", true);
+          return array();
+        }
+      }else{ $set = $q; }
       $rows = array();
       while($r = $set->fetch_row())
         array_push($rows, $r);

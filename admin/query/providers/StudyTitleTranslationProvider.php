@@ -47,7 +47,7 @@
       //Page query:
       $q = "SELECT Field, Trans "
          . "FROM Page_DynamicTranslation "
-         . "WHERE TranslationId = 1"
+         . "WHERE TranslationId = 1 "
          . "AND Category = '$category' "
          . "LIMIT 30 OFFSET $offset";
       foreach($this->fetchRows($q) as $r){
