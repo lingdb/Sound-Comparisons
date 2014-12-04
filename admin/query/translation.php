@@ -22,7 +22,7 @@
   require_once 'providers/FamilyTranslationProvider.php';
   require_once 'providers/DynamicTranslationProvider.php';
   require_once 'providers/LanguageStatusTypesTranslationProvider.php';
-  require_once 'providers/LanguagesTranslationProvider.php';
+  require_once 'providers/SpellingLanguagesTranslationProvider.php';
   require_once 'providers/MeaningGroupsTranslationProvider.php';
   require_once 'providers/RegionLanguagesTranslationProvider.php';
   require_once 'providers/RegionsTranslationProvider.php';
@@ -43,14 +43,12 @@
   , new LanguageStatusTypesTranslationProvider('Trans_Status',        $dbConnection)
   , new LanguageStatusTypesTranslationProvider('Trans_Description',   $dbConnection)
   , new LanguageStatusTypesTranslationProvider('Trans_StatusTooltip', $dbConnection)
-  , new LanguagesTranslationProvider('Trans_ShortName',                   $dbConnection)
-  , new LanguagesTranslationProvider('Trans_SpellingRfcLangName',         $dbConnection)
-  , new LanguagesTranslationProvider('Trans_SpecificLanguageVarietyName', $dbConnection)
   , new MeaningGroupsTranslationProvider($dbConnection)
   , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite', $dbConnection)
   , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite',  $dbConnection)
   , new RegionsTranslationProvider('Trans_RegionGpNameShort', $dbConnection)
   , new RegionsTranslationProvider('Trans_RegionGpNameLong',  $dbConnection)
+  , new SpellingLanguagesTranslationProvider($dbConnection)
   , new StudyTranslationProvider($dbConnection)
   , new StudyTitleTranslationProvider($dbConnection)
   , new TranscrSuperscriptInfoTranslationProvider('Trans_Abbreviation',              $dbConnection)
@@ -157,8 +155,6 @@
       , 'Words'                 => '/^WordsTranslationProvider-/'
       , 'Regions'               => '/^RegionsTranslationProvider-/'
       , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'
-//FIXME This Group may be removed anyway, together with its translations.
-//    , 'Languages'             => '/^LanguagesTranslationProvider-.*(Short|Variety)Name$/'
       , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'
       , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'
       , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'
