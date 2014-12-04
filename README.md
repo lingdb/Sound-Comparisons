@@ -20,9 +20,9 @@ Setup instructions:
 3. You'll need a fitting database and soundfiles for the website to work with.
    These files will probably become accessible here soon.
    For the following steps we assume that your database is setup correctly,
-   and the soundfiles are at some part relative to the website that is also accessible via HTTP.
+   and the soundfiles are at some path relative to the website that is also accessible via HTTP.
 
-4. The website specific code lies in website/main, and you'll need to rename ``config_example.php`` to ``config.php`` and adjust it's contents:
+4. The website specific code lies in website/main, and you'll need to copy ``config_example.php`` to ``config.php`` and adjust it's contents:
    * Make sure the ``$mainDbLogin`` is filled with data fitting the mysql database
    * Set ``$soundPath`` to the location of the soundfile directory relative to config.php
    * Make sure the directory specified as ``$downloadPath`` is writeable by the webserver,
@@ -45,4 +45,4 @@ Setup instructions:
    part at the beginning, and rename the ``.htpasswd.example`` to ``.htpasswd``.
 
 6. The folder ``export/download`` is used to generate archive files for users to download.
-   To make this possible the website your webserver must be enabled to write to this directory.
+   To make this possible your webserver must be allowed to write to this directory.
