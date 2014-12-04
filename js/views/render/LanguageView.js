@@ -11,12 +11,6 @@ var LanguageView = Renderer.prototype.SubView.extend({
     Method to make it possible to check what kind of PageView this Backbone.View is.
   */
 , getKey: function(){return 'language';}
-  /**
-    Overwrites the current model with the given one performing a deep merge.
-  */
-, setModel: function(m){
-    this.model = $.extend(true, this.model, m);
-  }
   /***/
 , updateLanguageHeadline: function(){
     var language = App.languageCollection.getChoice();
@@ -53,7 +47,7 @@ var LanguageView = Renderer.prototype.SubView.extend({
     headline.contributorTooltip = App.translationStorage.translateStatic('tooltip_contributor_list');
     headline.hasContributors    = headline.contributors.length > 0;
     //Done:
-    this.setModel({languageHeadline: headline});
+    this.model.languageHeadline = headline;
   }
   /**
     Helper method for updateLanguageHeadline; generates LanguageLinks.
@@ -204,13 +198,13 @@ var LanguageView = Renderer.prototype.SubView.extend({
       });
     }, this);
     //Finish:
-    this.setModel({rows: _.chain(transcriptions).groupBy(function(x, i){
+    this.model.rows = _.chain(transcriptions).groupBy(function(x, i){
       //Creating rows as chunks of 6 transcriptions:
       return Math.floor(i/6);
     }).values().map(function(ts){
       //Adding a key to each chunk:
       return {transcriptions: ts};
-    }).value()});
+    }).value();
   }
   /***/
 , render: function(){
