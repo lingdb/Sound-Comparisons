@@ -236,9 +236,10 @@
       $req  = $dbConnection->escape_string($_GET['Req']);
       $desc = $dbConnection->escape_string($_GET['Description']);
       if(!session_mayEdit($dbConnection)) return;
-      $q = "UPDATE Page_StaticDescription "
-         . "SET Description = '$desc' WHERE Req = '$req'";
-      $dbConnection->query($q);
+      foreach(array(
+        "DELETE FROM Page_StaticDescription WHERE Req = '$req'"
+      , "INSERT INTO Page_StaticDescription (Req, Description) VALUES ('$req','$desc')"
+      ) as $q) $dbConnection->query($q);
     break;
     /**
       @param TranslationId
