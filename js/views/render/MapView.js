@@ -5,6 +5,7 @@ var MapView = Renderer.prototype.SubView.extend({
   initialize: function(){
     //Data representation created by update methods:
     this.model = {}; // Notice that we also make heavy use of App.map
+    this.renderMapFlag = false; // Hackish approach to solve the 'zoom on change word'-problem.
     //Connecting to the router
     App.router.on('route:mapView', this.route, this);
     //Abort further work if no maps:
@@ -154,8 +155,10 @@ var MapView = Renderer.prototype.SubView.extend({
       App.wordCollection.setChoiceByKey(word);
       //Setting the languages:
       App.languageCollection.setSelectedByKey(App.router.parseArray(languages));
-      //Set this pageView as active:
-      App.pageState.setPageView(pv);
+      //Handling the renderMapFlag:
+      this.renderMapFlag = App.pageState.isPageView(this);
+      //Changing pageView if necessary:
+      if(!this.renderMapFlag) App.pageState.setPageView(pv);
       //Render:
       App.views.renderer.render();
     });
@@ -168,21 +171,20 @@ var MapView = Renderer.prototype.SubView.extend({
 , renderMap: function(){
     var first = true;
     this.renderMap = function(){
-      (function(t){
-        /*
-          It would be nice to depend on events rather than a Timeout,
-          but events appeared to be rather annoying while this is simple.
-        */
+      /*
+        It would be nice to depend on events rather than a Timeout,
+        but events appeared to be rather annoying while this is simple.
+      */
+      if(first || App.studyWatcher.studyChanged()){
+        var t = this;
         window.setTimeout(function(){
+          first = false;
           t.adjustCanvasSize();
-          if(first || App.studyWatcher.studyChanged()){
-            first = false; t.centerRegion();
-          }
-        }, 10000);
-        if(!first){
           t.centerRegion();
-        }
-      })(this);
+        }, 10000);
+      }else if(this.renderMapFlag){
+        this.centerRegion();
+      }
     }
     return this.renderMap();
   }
