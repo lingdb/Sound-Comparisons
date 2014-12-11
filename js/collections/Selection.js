@@ -2,7 +2,7 @@
 /**
   Implements the aspect that several models of a collection can be marked as selected.
   If children implement 'isDefaultSelection', it will be used to find the default selection,
-  rather than selection all models per default.
+  rather than select all models per default.
 */
 var Selection = Backbone.Collection.extend({
   initialize: function(){
