@@ -223,6 +223,9 @@ var LanguageView = Renderer.prototype.SubView.extend({
   }
   /***/
 , route: function(study, language){
+    var parse = App.router.parseString;
+    study = parse(study);
+    language = parse(language);
     console.log('LanguageView.route('+study+', '+language+')');
     var pv = this.getKey();
     //Setting the study:

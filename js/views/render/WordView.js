@@ -146,6 +146,9 @@ var WordView = Renderer.prototype.SubView.extend({
   }
   /***/
 , route: function(study, word){
+    var parse = App.router.parseString;
+    study = parse(study);
+    word = parse(word);
     console.log('WordView.route('+study+', '+word+')');
     var pv = this.getKey();
     //Setting the study:

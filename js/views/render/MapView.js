@@ -147,6 +147,9 @@ var MapView = Renderer.prototype.SubView.extend({
   }
   /***/
 , route: function(study, word, languages){
+    var parse = App.router.parseString;
+    study = parse(study);
+    word = parse(word);
     console.log('MapView.route('+study+', '+word+', '+languages+')');
     var pv = this.getKey(), t = this;
     //Setting the study:

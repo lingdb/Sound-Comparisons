@@ -172,6 +172,8 @@ var LanguageWordView = Renderer.prototype.SubView.extend({
   }
   /***/
 , route: function(study, languages, words){
+    var parse = App.router.parseString;
+    study = parse(study);
     console.log('LanguageWordView.route('+study+', '+languages+', '+words+')');
     var pv = this.getKey();
     //Setting the study:

@@ -29,6 +29,7 @@ var Sanitizer = Backbone.Router.extend({
     if(o.language instanceof Language){
       o.language = o.language.getKey();
     }
+    o.language = this.sanitizeString(o.language);
     return o;
   }
   /***/
@@ -59,6 +60,7 @@ var Sanitizer = Backbone.Router.extend({
     if(!_.isString(o.study)){
       throw 'Sanitizer.sanitizeStudy() with unexpected study: '+o.study+' in '+JSON.stringify(o);
     }
+    o.study = this.sanitizeString(o.study);
     return o;
   }
   /***/
@@ -69,6 +71,7 @@ var Sanitizer = Backbone.Router.extend({
     if(o.word instanceof Word){
       o.word = o.word.getKey();
     }
+    o.word = this.sanitizeString(o.word);
     return o;
   }
   /***/
@@ -113,6 +116,11 @@ var Sanitizer = Backbone.Router.extend({
     var arr = _.map(a, encodeURIComponent).join();
     return arr === '' ? ' ' : arr;
   }
+  /***/
+, sanitizeString: function(s){
+    if(!_.isString(s)) return '';
+    return encodeURIComponent(s);
+  }
   /**
     Parses a given config String c to return the config object.
     This should be the exact antipart to sanitizeConfig, so that the following two rules hold:
@@ -138,5 +146,10 @@ var Sanitizer = Backbone.Router.extend({
     if(!_.isString(c)) return [];
     if(c === ' ')      return [];
     return _.map(c.split(','), decodeURIComponent);
+  }
+  /***/
+, parseString: function(s){
+    if(!_.isString(s)) return '';
+    return decodeURIComponent(s);
   }
 });
