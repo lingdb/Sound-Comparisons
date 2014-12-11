@@ -40,7 +40,7 @@ var WordOverlayView = function(o){
     var panes = this.getPanes();
     panes.overlayMouseTarget.appendChild(div);
     //Creating the marker:
-    var marker = new google.maps.Marker({
+    var mOpts = {
       icon: {
         fillColor:    '#000000'
       , fillOpacity:  1
@@ -48,11 +48,12 @@ var WordOverlayView = function(o){
       , scale:        5
       , strokeWeight: 0
       }
-    , map:      this.el
+    , map:      this.map_
     , position: this.model.get('position')
     , title:    this.model.get('hoverText')
     , visible:  true
-    });
+    };
+    var marker = new google.maps.Marker(mOpts);
     //Saving stuff:
     this.model.set({
       div:    div
@@ -61,7 +62,7 @@ var WordOverlayView = function(o){
     });
   };
   /**
-    The problem with getPoint is, that it depends on the map being 'ready'.
+    The problem with getPoint is that it depends on the map being 'ready'.
     To achive this, we wait for the first idle event in case getProjection is empty.
     Because of this, getPoint can only return a Promise for a Point, but not a Point itself.
   */
