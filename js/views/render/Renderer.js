@@ -55,6 +55,8 @@ var Renderer = Backbone.View.extend({
         App.study.trackLinks(fragment);
       })(App.router);
     }
+    //Making sure studyWatcher is updated :
+    App.studyWatcher.update();
   }
   /**
     Calls all methods that match /^update/ on the given Backbone.View.

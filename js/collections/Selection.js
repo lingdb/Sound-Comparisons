@@ -45,6 +45,13 @@ var Selection = Backbone.Collection.extend({
     var ms = this.filter(function(m){
       return m.getKey() in keys;
     }, this);
+    if(ms.length === 0 && App.studyWatcher.studyChanged()){
+      if('getDefaultSelection' in this){
+        ms = this.getDefaultSelection();
+      }else{
+        ms = _.take(this.models, 5);
+      }
+    }
     //Adding models that have a matching key:
     return this.setSelected(ms);
   }

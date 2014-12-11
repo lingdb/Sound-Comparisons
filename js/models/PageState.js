@@ -151,7 +151,7 @@ var PageState = Backbone.Model.extend({
         case 'l':  return this.isPageView('language');
         case 'lw': return this.isPageView('languagesXwords');
         case 'wl': return this.isPageView('wordsXlanguages');
-        case 'c': return this.isPageView('contributorView');
+        case 'c':  return this.isPageView('contributorView');
       }
     }else if(key instanceof Backbone.View){
       if(typeof(key.getKey) !== 'function')

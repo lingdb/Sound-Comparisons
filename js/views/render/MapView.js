@@ -148,7 +148,7 @@ var MapView = Renderer.prototype.SubView.extend({
   /***/
 , route: function(study, word, languages){
     console.log('MapView.route('+study+', '+word+', '+languages+')');
-    var pv = this.getKey();
+    var pv = this.getKey(), t = this;
     //Setting the study:
     App.study.setStudy(study).always(function(){
       //Setting the word:
@@ -156,9 +156,9 @@ var MapView = Renderer.prototype.SubView.extend({
       //Setting the languages:
       App.languageCollection.setSelectedByKey(App.router.parseArray(languages));
       //Handling the renderMapFlag:
-      this.renderMapFlag = App.pageState.isPageView(this);
+      t.renderMapFlag = App.pageState.isPageView(pv);
       //Changing pageView if necessary:
-      if(!this.renderMapFlag) App.pageState.setPageView(pv);
+      if(!t.renderMapFlag) App.pageState.setPageView(pv);
       //Render:
       App.views.renderer.render();
     });
@@ -175,14 +175,14 @@ var MapView = Renderer.prototype.SubView.extend({
         It would be nice to depend on events rather than a Timeout,
         but events appeared to be rather annoying while this is simple.
       */
-      if(first || App.studyWatcher.studyChanged()){
+      if(first){
         var t = this;
         window.setTimeout(function(){
           first = false;
           t.adjustCanvasSize();
           t.centerRegion();
         }, 10000);
-      }else if(this.renderMapFlag){
+      }else if(!this.renderMapFlag || App.studyWatcher.studyChanged()){
         this.centerRegion();
       }
     }

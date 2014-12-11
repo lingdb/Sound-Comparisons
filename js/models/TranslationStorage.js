@@ -244,6 +244,10 @@ var TranslationStorage = Backbone.Model.extend({
     if(!(req in data) && tId !== this.defaultTranslationId()){
       data = this.get('statics')[1];
     }
+    if(_.isUndefined(data)){
+      console.log('data is '+data+' in translateStatic!');//FIXME THIS IS A BUG, methinks
+      return 'translateStatic(FIXME)!';
+    }
     return data[req];
   }
 //Dynamic translations:

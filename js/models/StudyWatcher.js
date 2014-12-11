@@ -24,7 +24,10 @@ var StudyWatcher = Backbone.Model.extend({
     }, this);
   }
   /**
-    Called on complete setup and everytime the study changes.
+    Called on:
+    - complete setup
+    - everytime the study changes
+    - everytime Renderer.render() is called.
   */
 , update: function(){
     console.log('StudyWatcher.update()');
