@@ -231,7 +231,7 @@ var WordMenuView = Backbone.View.extend({
       }
       //Finish it:
       _.each(phonetics, function(p){
-        ws.push(_.extend(w, {phonetic: p}))
+        ws.push(_.extend({}, w, {phonetic: p}))
       }, this);
     }, this);
     return {words: ws};
