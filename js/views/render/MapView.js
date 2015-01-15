@@ -16,7 +16,7 @@ var MapView = Renderer.prototype.SubView.extend({
     //Map setup:
     this.div = document.getElementById("map_canvas");
     this.map = new google.maps.Map(this.div, App.map.get('mapOptions'));
-    this.renderMap();
+    this.fixMap().renderMap();
     //SoundControlView:
     this.soundControlView = new SoundControlView({
       el: this.map, model: this});
@@ -192,14 +192,60 @@ var MapView = Renderer.prototype.SubView.extend({
     return this.renderMap();
   }
   /**
+    @return this for chaining
+    This function was created to fix #57.
+    I've tried different approaches to make sure the map is displayed correctly,
+    but they all failed:
+    1: Listening to various map events to trigger resize when appropriate
+    2: Adjusting the bootstrap CSS to make sure images aren't distorted
+    3: Listening to combinations of events by the use of promises
+    4: Having a general timeout of 10 sec. to resize the map
+    To work around this, the following function uses a rather hackish approach,
+    but works:
+    We trigger adjustCanvasSize and centerRegion repeatedly by interval,
+    until one of two things happens:
+    1: Events are fired that indicate we've done the right thing
+    2: We've done this for 10s and nothing changed
+  */
+, fixMap: function(){
+    (function(t){
+      var i = null, j = null, ls = [];
+      //Disable the intervall:
+      var disable = function(){
+        if(i !== null){
+          window.clearInterval(i);
+          i = null;
+        }
+        if(j !== null){
+          window.clearTimeout(j);
+          j = null;
+        }
+        _.each(ls, function(l){ google.maps.event.removeListener(l); });
+      };
+      //Listen to certain events to disable:
+      _.each(['zoom_changed','center_changed'], function(e){
+        ls.push(google.maps.event.addListener(t.map, e, disable));
+      });
+      //Timeout to make sure disable is called:
+      j = window.setTimeout(disable, 10000);
+      //Getting everything running:
+      i = window.setInterval(function(){
+        t.adjustCanvasSize().centerRegion();
+      }, 1000);
+    })(this);
+    return this;
+  }
+  /**
     A method to make sure that the canvas size equals the maximum size possible in the current browser window.
   */
 , adjustCanvasSize: function(){
     var canvas = $('#map_canvas')
       , offset = canvas.offset();
-    if(canvas.length === 0) return;
-    canvas.css('height', window.innerHeight - offset.top - 1 + 'px');
-    google.maps.event.trigger(this.map, "resize");
+    if(canvas.length !== 0){
+      canvas.css('height', window.innerHeight - offset.top - 1 + 'px');
+      google.maps.event.trigger(this.map, "resize");
+    }
+    return this;
   }
   /**
     Since the render method replaces some elements,
@@ -216,20 +262,24 @@ var MapView = Renderer.prototype.SubView.extend({
     }, this);
   }
   /**
+    @return this for chaining
     Centers the Map on the given default.
   */
 , centerDefault: function(){
     this.map.fitBounds(App.map.get('defaultBounds'));
     $('#map_menu_zoomCenter').addClass('selected');
     $('#map_menu_zoomCoreRegion').removeClass('selected');
+    return this;
   }
   /**
+    @return this for chaining
     Centers the Map on the given region.
   */
 , centerRegion: function(){
     this.map.fitBounds(App.map.get('regionBounds'));
     $('#map_menu_zoomCoreRegion').addClass('selected');
     $('#map_menu_zoomCenter').removeClass('selected');
+    return this;
   }
   /**
     Fills a PlaySequence with currently displayed entries from the map in the given direction.

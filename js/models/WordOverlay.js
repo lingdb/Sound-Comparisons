@@ -138,7 +138,7 @@ var WordOverlay = Backbone.Model.extend({
   /**
     @param wos [WordOverlay]
     To find a good edge, this method works as follows:
-    1: Build a lost of possible edges/positions
+    1: Build a list of possible edges/positions
     2: Iterate all given WordOverlays,
        and eliminate edges that overlap
     3: Append the fallback edge to the reduced edges list,

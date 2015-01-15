@@ -94,12 +94,7 @@ if(typeof(google) !== 'undefined'){
       var c = this.get('notAddedWos') - 1;
       this.set({notAddedWos: c});
       if(c === 0){
-        var t = this;
-        //FIXME can I get rid of this Timeout?!
-        var tid = window.setTimeout(function(){
-          window.clearTimeout(tid);
-          t.placeWordOverlays();
-        },1000);
+        this.placeWordOverlays();
       }
       this.get('defaultBounds').extend(wo.get('position'));
     }
