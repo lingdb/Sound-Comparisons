@@ -27,6 +27,8 @@ class DataProvider {
       $p = $path.$ext;
       if(file_exists($p)){
         array_push($ret, $p);
+      }else{
+        Config::error('Missing sound file: "'.$p.'"');
       }
     }
     return $ret;

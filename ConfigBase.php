@@ -32,7 +32,7 @@ abstract class ConfigBase {
     This is the way that all parts of the website will use in the future to log their errors.
     A possible improvement will be, to let this forward to a nice error page.
   */
-  public static function error($msg, $trace = false){
+  public static function error($msg, $trace = false, $die = false){
     if($trace){
       $stack = array($msg);
       foreach(debug_backtrace() as $t){
@@ -44,7 +44,7 @@ abstract class ConfigBase {
       $msg = implode("\n", $stack);
     }
     error_log($msg);
-    if(Config::$debug) die($msg);
+    if(Config::$debug && $die) die($msg);
   }
   /**
     @return collator [Collator]
