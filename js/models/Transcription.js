@@ -61,7 +61,7 @@ var Transcription = Backbone.Model.extend({
            ,'RootSharedInAnotherFamily']
            , runOne, this);
     if(notEmpty('IsoCodeKnownDonor')){
-      ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(fields[key]));
+      ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(fields['IsoCodeKnownDonor']));
     }
     //Done:
     return ret;
@@ -126,7 +126,7 @@ var Transcription = Backbone.Model.extend({
         };
       //Not cognate:
       if(i < superScr.length){
-        var s = superScr[i];
+        var s = superScr[i] || [];
         if(s.length >= 2){
           p.notCognate = {
             sInf: s[0]
