@@ -6,6 +6,12 @@
   DataProvider assumes that config.php has been included before operation takes place.
 */
 class DataProvider {
+  /***/
+  public static $soundExtensions = array('.mp3','.ogg');
+  /***/
+  public static function error($e){
+    Config::error($e);
+  }
   /**
     @param $q SQL String
     @return [[Field => Value]]
@@ -35,12 +41,12 @@ class DataProvider {
     if($lex  !== '') $lex  = '_lex'.$lex;
     $path = Config::$soundPath."/$lang/$lang$word$lex$pron";
     $ret  = array();
-    foreach(array('.mp3', '.ogg') as $ext){
+    foreach(static::$soundExtensions as $ext){
       $p = $path.$ext;
       if(file_exists($p)){
         array_push($ret, $p);
       }else{
-        Config::error('Missing sound file: "'.$p.'"');
+        static::error('Missing sound file: "'.$p.'"');
       }
     }
     return $ret;
@@ -68,9 +74,9 @@ class DataProvider {
     $wq   = "SELECT SoundFileWordIdentifierText FROM Words_$sId "
           . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = '$wId'";
     $getFirst = function($q){
-      $set = self::fetchAll($q);
+      $set = static::fetchAll($q);
       if(count($set) === 0){
-        error_log("Problem with query: '$q'");
+        static::error("Problem with query: '$q'");
         return '';
       }
       return current(current($set));
@@ -89,13 +95,13 @@ class DataProvider {
               , IxMorphologicalInstance => String
               , AlternativePhoneticRealisationIx => String
               , AlternativeLexemIx => String]
-    @return self::findSoundFiles(…);
-    Uses self::soundPathParts to gather and sanitize data necessary for self::findSoundFiles,
+    @return static::findSoundFiles(…);
+    Uses static::soundPathParts to gather and sanitize data necessary for static::findSoundFiles,
     which is than executed and returned.
   */
   public static function soundPaths($sId, $t){
-    $pts = self::soundPathParts($sId, $t);
-    return self::findSoundFiles($pts['lang'], $pts['word'], $pts['pron'], $pts['lex']);
+    $pts = static::soundPathParts($sId, $t);
+    return static::findSoundFiles($pts['lang'], $pts['word'], $pts['pron'], $pts['lex']);
   }
   /**
     @return Studies [String]
@@ -132,10 +138,10 @@ class DataProvider {
     , 'wikipediaLinks'              => 'SELECT * FROM WikipediaLinks'
     );
     foreach($queries as $k => $q){
-      $global[$k] = self::fetchAll($q);
+      $global[$k] = static::fetchAll($q);
     }
     //Adding shortLinks:
-    foreach(self::fetchAll('SELECT Name, Target FROM Page_ShortLinks') as $s){
+    foreach(static::fetchAll('SELECT Name, Target FROM Page_ShortLinks') as $s){
       $global['shortLinks'][$s['Name']] = $s['Target'];
     }
     //Fixing contributor avatars:
@@ -177,7 +183,7 @@ class DataProvider {
     return $db->query($q)->fetch_assoc();
   }
   /**
-    @param $studyId StudyId as fetched with self::getStudyId()
+    @param $studyId StudyId as fetched with static::getStudyId()
     @return $families [{}]
     Fetches all Families that a given study belongs to,
     and returns them in order as assocs.
@@ -187,7 +193,7 @@ class DataProvider {
     $q = "SELECT * FROM Families "
        . "WHERE CONCAT(StudyIx, FamilyIx) "
        . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))";
-    return self::fetchAll($q);
+    return static::fetchAll($q);
   }
   /**
     @param $studyName String
@@ -198,7 +204,7 @@ class DataProvider {
     $db = Config::getConnection();
     $n  = $db->escape_string($studyName);
     $q  = "SELECT * FROM Regions_$n";
-    return self::fetchAll($q);
+    return static::fetchAll($q);
   }
   /**
     @param $studyName String
@@ -209,7 +215,7 @@ class DataProvider {
     $db = Config::getConnection();
     $n  = $db->escape_string($studyName);
     $q  = "SELECT * FROM RegionLanguages_$n";
-    return self::fetchAll($q);
+    return static::fetchAll($q);
   }
   /**
     @param $studyName String
@@ -220,7 +226,7 @@ class DataProvider {
     $db = Config::getConnection();
     $n  = $db->escape_string($studyName);
     $q  = "SELECT * FROM Languages_$n";
-    return self::fetchAll($q);
+    return static::fetchAll($q);
   }
   /**
     @param $studyName String
@@ -231,7 +237,7 @@ class DataProvider {
     $db = Config::getConnection();
     $n  = $db->escape_string($studyName);
     $q  = "SELECT * FROM Words_$n";
-    return self::fetchAll($q);
+    return static::fetchAll($q);
   }
   /**
     @param $studyId String
@@ -242,7 +248,7 @@ class DataProvider {
     $sId = Config::getConnection()->escape_string($studyId);
     $q   = "SELECT MeaningGroupIx, MeaningGroupMemberIx, IxElicitation, IxMorphologicalInstance FROM MeaningGroupMembers "
          . "WHERE CONCAT(StudyIx, FamilyIx) = $sId";
-    return self::fetchAll($q);
+    return static::fetchAll($q);
   }
   /**
     @param $studyName String
@@ -253,7 +259,7 @@ class DataProvider {
     but are given keys by fields that identify them precisely.
     Since there are cases where we expect transcriptions to exist,
     but they're not given by the database, this method makes use of
-    self::getDummyTranscriptions to generate DummyTranscriptions,
+    static::getDummyTranscriptions to generate DummyTranscriptions,
     and fill them in where the expected key doesn't exist.
   */
   public static function getTranscriptions($studyName){
@@ -265,7 +271,7 @@ class DataProvider {
     if($set !== false){
       while($t = $set->fetch_assoc()){
         $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
-        $t['soundPaths'] = self::soundPaths($n, $t);
+        $t['soundPaths'] = static::soundPaths($n, $t);
         if(array_key_exists($tKey, $ret)){
           //Merging transcriptions:
           $old = $ret[$tKey];
@@ -283,7 +289,7 @@ class DataProvider {
         $ret[$tKey] = $t;
       }
       //Handling dummy transcriptions:
-      foreach(self::getDummyTranscriptions($studyName) as $t){
+      foreach(static::getDummyTranscriptions($studyName) as $t){
         $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
         if(!array_key_exists($tKey, $ret)){
           $ret[$tKey] = $t;
@@ -295,9 +301,9 @@ class DataProvider {
   /**
     @param $studyName String
     @return dummyTranscriptions [{}]
-    Output has the same form as that of self::getTranscriptions,
+    Output has the same form as that of static::getTranscriptions,
     but is for transcription entries that may not exist.
-    self::getTranscriptions merges the outputs of this method
+    static::getTranscriptions merges the outputs of this method
     into its return.
   */
   public static function getDummyTranscriptions($studyName){
@@ -306,13 +312,13 @@ class DataProvider {
     //Handling languages without transcriptions:
     $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
         . "WHERE LanguageIx NOT IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
-    $ls = self::fetchAll($lq);
+    $ls = static::fetchAll($lq);
     $pairs = array();
     if(count($ls) > 0){
       //We create pairs for all words here:
       $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
           . "FROM Words_$studyName";
-      $ws = self::fetchAll($wq);
+      $ws = static::fetchAll($wq);
       foreach($ls as $l){
         foreach($ws as $w){
           array_push($pairs, array($l, $w));
@@ -323,12 +329,12 @@ class DataProvider {
     $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
         . "FROM Words_$studyName WHERE CONCAT(IxElicitation, IxMorphologicalInstance) "
         . "NOT IN (SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Transcriptions_$studyName)";
-    $ws = self::fetchAll($wq);
+    $ws = static::fetchAll($wq);
     if(count($ws) > 0){
       //We create pairs only for languages not selected above:
       $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
           . "WHERE LanguageIx IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
-      $ls = self::fetchAll($lq);
+      $ls = static::fetchAll($lq);
       foreach($ls as $l){
         foreach($ws as $w){
           array_push($pairs, array($l, $w));
@@ -338,7 +344,7 @@ class DataProvider {
     //Handling resulting pairs:
     foreach($pairs as $p){
       $l = $p[0]; $w = $p[1];
-      $files = self::findSoundFiles($l['FilePathPart'], $w['SoundFileWordIdentifierText']);
+      $files = static::findSoundFiles($l['FilePathPart'], $w['SoundFileWordIdentifierText']);
       if(count($files) === 0) continue;
       array_push($dummies, array(
         'isDummy' => true
@@ -386,7 +392,7 @@ class DataProvider {
     , 'excludeMap' => "SELECT LanguageIx FROM Default_Languages_Exclude_Map "
                     . "WHERE CONCAT(StudyIx, FamilyIx) = $sId"
     ) as $k => $q){
-      $ret[$k] = self::fetchAll($q);
+      $ret[$k] = static::fetchAll($q);
     }
     return $ret;
   }
