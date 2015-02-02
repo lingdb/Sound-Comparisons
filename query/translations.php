@@ -55,7 +55,7 @@ switch($_GET['action']){
   case 'summary':
     $q = 'SELECT TranslationId, TranslationName, BrowserMatch, ImagePath, '
        . 'RfcLanguage, UNIX_TIMESTAMP(lastChangeStatic), UNIX_TIMESTAMP(lastChangeDynamic) '
-       . 'FROM Page_Translations WHERE Active = 1';
+       . 'FROM Page_Translations WHERE Active = 1 OR TranslationId = 1';
     $set   = $dbConnection->query($q);
     $ret   = array();
     $trans = $valueManager->gtm()->getTarget();
