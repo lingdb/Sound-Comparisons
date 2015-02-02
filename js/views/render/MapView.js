@@ -276,9 +276,12 @@ var MapView = Renderer.prototype.SubView.extend({
     Centers the Map on the given region.
   */
 , centerRegion: function(){
-    this.map.fitBounds(App.map.get('regionBounds'));
-    $('#map_menu_zoomCoreRegion').addClass('selected');
-    $('#map_menu_zoomCenter').removeClass('selected');
+    var bnds = App.map.get('regionBounds');
+    if(bnds !== null){
+      this.map.fitBounds(App.map.get('regionBounds'));
+      $('#map_menu_zoomCoreRegion').addClass('selected');
+      $('#map_menu_zoomCenter').removeClass('selected');
+    }
     return this;
   }
   /**
