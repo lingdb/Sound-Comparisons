@@ -1,3 +1,0 @@
-[submodule "sound"]
-	path = sound
-	url = git@vcs.eva.mpg.de:jakob_runge/sound-comparisons-soundfiles.git
