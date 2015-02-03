@@ -74,9 +74,9 @@ class DataProvider {
     $wq   = "SELECT SoundFileWordIdentifierText FROM Words_$sId "
           . "WHERE CONCAT(IxElicitation, IxMorphologicalInstance) = '$wId'";
     $getFirst = function($q){
-      $set = static::fetchAll($q);
+      $set = self::fetchAll($q);
       if(count($set) === 0){
-        static::error("Problem with query: '$q'");
+        self::error("Problem with query: '$q'");
         return '';
       }
       return current(current($set));
