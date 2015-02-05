@@ -22,7 +22,7 @@ class Config extends ConfigBase {
   /* Login data to use for the admin area, that will overwrite values in mainDbLogin */
   private static $adminDbLogin = array();
   // Public configuration:
-  public static $debug         = true;
+  public static $debug         = false;
   public static $flags_enabled = false;
   public static $soundPath     = 'sound';
   public static $downloadPath  = 'export/download';

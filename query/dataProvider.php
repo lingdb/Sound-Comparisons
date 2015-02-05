@@ -46,7 +46,10 @@ class DataProvider {
       if(file_exists($p)){
         array_push($ret, $p);
       }else{
-        static::error('Missing sound file: "'.$p.'"');
+        if(Config::$debug){
+          //FIXME log this to admin interface somehow & instead
+          static::error('Missing sound file: "'.$p.'"');
+        }
       }
     }
     return $ret;
