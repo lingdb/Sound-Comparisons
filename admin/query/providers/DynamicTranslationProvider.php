@@ -23,9 +23,9 @@
       return "$n-$t-$c";
     }
     /*A search function depending on the Column allowes to reuse a Query for different Columns.*/
-    public abstract function searchColumn($c, $tId, $searchText);
-    public function search($tId, $searchText){
-      return $this->searchColumn($this->getColumn(), $tId, $searchText);
+    public abstract function searchColumn($c, $tId, $searchText, $searchAll = false);
+    public function search($tId, $searchText, $searchAll = false){
+      return $this->searchColumn($this->getColumn(), $tId, $searchText, $searchAll);
     }
     /*An offset function depending on a Column.*/
     public abstract function offsetsColumn($c, $tId, $study);

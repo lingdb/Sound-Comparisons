@@ -5,7 +5,7 @@
   under 'Configuration:'
 */
 require_once 'extern/underscore.php';
-require_once 'database/Database.php';
+require_once 'database/Database.php';//FIXME CAN WE REMOVE THIS?
 //Importing the Global class for Config to extend:
 require_once 'ConfigBase.php';
 //Making sure we've got a default timezone:

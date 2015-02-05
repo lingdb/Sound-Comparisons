@@ -8,7 +8,7 @@
   */
   class RegionsTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){return 'Regions_';}
-    public function searchColumn($c, $tId, $searchText){
+    public function searchColumn($c, $tId, $searchText, $searchAll = false){
       //Setup
       $ret         = array();
       $tCol        = $this->translateColumn($c);
@@ -16,7 +16,7 @@
       $origCol     = $tCol['origCol'];
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         //We need all Studies to build the search queries:
         $q   = 'SELECT Name FROM Studies';
         $set = $this->dbConnection->query($q);
@@ -69,8 +69,9 @@
       $description = $tCol['description'];
       $origCol     = $tCol['origCol'];
       //Page query:
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT $origCol, CONCAT(StudyIx, FamilyIx, SubFamilyIx, RegionGpIx) "
-         . "FROM Regions_$study LIMIT 30 OFFSET $offset";
+         . "FROM Regions_$study$o";
       foreach($this->fetchRows($q) as $r){
         $payload = implode('-', array($study, $r[1]));
         $q = $this->getTranslationQuery($payload, $tId);

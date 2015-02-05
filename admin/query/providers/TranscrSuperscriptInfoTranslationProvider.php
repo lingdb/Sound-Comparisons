@@ -8,7 +8,7 @@
   */
   class TranscrSuperscriptInfoTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){ return 'TranscrSuperscriptInfo';}
-    public function searchColumn($c, $tId, $searchText){
+    public function searchColumn($c, $tId, $searchText, $searchAll = false){
       //Setup
       $ret         = array();
       $tCol        = $this->translateColumn($c);
@@ -16,7 +16,7 @@
       $origCol     = $tCol['origCol'];
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         array_push($qs,
           "SELECT Ix, $origCol, 1 FROM TranscrSuperscriptInfo "
         . "WHERE $origCol LIKE '%$searchText%'"
@@ -60,8 +60,8 @@
       $description = $tCol['description'];
       $origCol     = $tCol['origCol'];
       //Page query:
-      $q = "SELECT Ix, $origCol "
-         . "FROM TranscrSuperscriptInfo LIMIT 30 OFFSET $offset";
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
+      $q = "SELECT Ix, $origCol FROM TranscrSuperscriptInfo$o";
       foreach($this->fetchRows($q) as $r){
         $Ix = $r[0];
         $q  = $this->getTranslationQuery($Ix, $tId);

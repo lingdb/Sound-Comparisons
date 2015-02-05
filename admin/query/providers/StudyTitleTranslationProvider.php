@@ -2,13 +2,13 @@
   /***/
   require_once "TranslationProvider.php";
   class StudyTitleTranslationProvider extends TranslationProvider{
-    public function search($tId, $searchText){
+    public function search($tId, $searchText, $searchAll = false){
       //Setup
       $ret = array();
       $description = $this->getDescription('dt_studyTitle_trans');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         array_push($qs, $this->translationSearchQuery(1, $searchText));
       }
       foreach($this->runQueries($qs) as $r){
@@ -45,11 +45,11 @@
       $description = $this->getDescription('dt_studyTitle_trans');
       $category = $this->getName();
       //Page query:
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT Field, Trans "
          . "FROM Page_DynamicTranslation "
          . "WHERE TranslationId = 1 "
-         . "AND Category = '$category' "
-         . "LIMIT 30 OFFSET $offset";
+         . "AND Category = '$category'$o";
       foreach($this->fetchRows($q) as $r){
         $sName = $r[0];
         $q = $this->getTranslationQuery($sName, $tId);

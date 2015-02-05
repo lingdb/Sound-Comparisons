@@ -1,0 +1,3 @@
+This directory was created by mushu 2015-01-16.
+It contains the image files for DataTables, because this is the expected location,
+and thus the overhead of adjusting DataTables can be ignored.

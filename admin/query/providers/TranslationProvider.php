@@ -30,7 +30,7 @@
       Translation.Translation is the current Translation in the given TranslationId.
       The data in Translation is necessary to edit a Translation.
     */
-    public abstract function search($tId, $searchText);
+    public abstract function search($tId, $searchText, $searchAll = false);
     /**
       This will save the given update as the new translation with the help
       of a translationId and a payload.
@@ -87,6 +87,7 @@
       Original is the English version of the content.
       Translation.Translation is the current Translation in the given TranslationId.
       The data in Translation is necessary to edit a Translation.
+      We shall regard offset=-1 as meaning that all data shall be returned.
     */
     public abstract function page($tId, $study, $offset);
     // HELPER FUNCTIONS BELOW
@@ -115,9 +116,12 @@
         $qs = array($qs);
       $rows = array();
       foreach($qs as $q){
-        $set  = $this->dbConnection->query($q);
-        $rs   = $this->fetchRows($set);
-        $rows = array_merge($rows, $rs);
+        $set = $this->dbConnection->query($q);
+        if($set === false){
+          Config::error("Problems with query: $q", true);
+          continue;
+        }
+        $rows = array_merge($rows, $this->fetchRows($set));
       }
       return $rows;
     }
@@ -153,17 +157,6 @@
       return $offsets;
     }
     /**
-      Information, wether all translations should be searched.
-    */
-    public function searchAllTranslations(){
-      if(array_key_exists('searchAll', $_GET)){
-        if($_GET['searchAll'] === 'true'){
-          return true;
-        }
-      }
-      return false;
-    }
-    /**
       Since all TranslationProviders have to search the Page_DynamicTranslation table,
       we can use this function to build a query for that cause at a central place.
       TODO I should be able to stop returning the $tId parameter.
@@ -182,11 +175,32 @@
     */
     protected function getTranslationQuery($field, $tId){
       $category = $this->getName();
-      return "SELECT Trans "
-           . "FROM Page_DynamicTranslation "
+      return "SELECT Trans FROM Page_DynamicTranslation "
            . "WHERE TranslationId = $tId "
            . "AND Category = '$category' "
            . "AND Field = '$field'";
+    }
+    /**
+      @param $tIds [TranslationId]
+      @return [TranslationId]
+      Fetches all translation Ids not given as parameters.
+    */
+    protected function getOtherTIds($tIds){
+      $ret = array();
+      $q = 'SELECT TranslationId FROM Page_Translations';
+      $tSet = $this->dbConnection->query($q);
+      while($r = $tSet->fetch_row()){
+        $r  = current($r);
+        $ok = true;
+        foreach($tIds as $t){
+          if($r == $t){
+            $ok = false;
+            break;
+          }
+        }
+        if($ok) array_push($ret, $r);
+      }
+      return $ret;
     }
   }
 ?>

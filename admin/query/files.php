@@ -22,7 +22,9 @@
       }
       //Enclosing lines:
       foreach($stringFields as $field){
-        $line[$field] = "'".$line[$field]."'";
+        if(array_key_exists($field, $line)){
+          $line[$field] = "'".$line[$field]."'";
+        }
       }
       //Dealing with empty fields:
       foreach($line as $k => $field){
@@ -32,7 +34,9 @@
       //Deleting fields:
       if($deleteFields){
         foreach($deleteFields as $field){
-          $line[$field] = false;
+          if(array_key_exists($field, $line)){
+            $line[$field] = false;
+          }
         }
         //Using my own filter instead of array_filter, because array_filter also filters 0.
         $nline = array();

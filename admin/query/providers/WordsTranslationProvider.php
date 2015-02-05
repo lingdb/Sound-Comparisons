@@ -8,7 +8,7 @@
   */
   class WordsTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){ return 'Words_';}
-    public function searchColumn($c, $tId, $searchText){
+    public function searchColumn($c, $tId, $searchText, $searchAll = false){
       //Setup
       $ret         = array();
       $tCol        = $this->translateColumn($c);
@@ -16,16 +16,15 @@
       $origCol     = $tCol['origCol'];
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
-        //We need all Studies to build the search queries:
-        $q   = 'SELECT Name FROM Studies';
-        $set = $this->dbConnection->query($q);
-        foreach($this->fetchRows($set) as $s){
-          $s = $s[0];
-          $q = "SELECT CONCAT('$s-', IxElicitation, IxMorphologicalInstance), $origCol, 1 "
-             . "FROM Words_$s "
-             . "WHERE $origCol LIKE '%$searchText%'";
-          array_push($qs, $q);
+      foreach(DataProvider::getStudies() as $s){
+        $q = "SELECT CONCAT('$s-', IxElicitation, IxMorphologicalInstance), $origCol, 1 "
+           . "FROM Words_$s "
+           . "WHERE $origCol LIKE '%$searchText%'";
+        array_push($qs, $q);
+      }
+      if($searchAll){
+        foreach($this->getOtherTIds(array($tId, 1)) as $oId){
+          array_push($qs, $this->translationSearchQuery($oId, $searchText));
         }
       }
       //Search results:
@@ -70,8 +69,9 @@
       $description = $tCol['description'];
       $origCol     = $tCol['origCol'];
       //Page query:
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT CONCAT('$study-', IxElicitation, IxMorphologicalInstance), $origCol "
-         . "FROM Words_$study LIMIT 30 OFFSET $offset";
+         . "FROM Words_$study$o";
       foreach($this->fetchRows($q) as $r){
         $payload = $r[0];
         $q = $this->getTranslationQuery($payload, $tId);

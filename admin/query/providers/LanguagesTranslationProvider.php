@@ -8,7 +8,7 @@
   */
   class LanguagesTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){return 'Languages_';}
-    public function searchColumn($c, $tId, $searchText){
+    public function searchColumn($c, $tId, $searchText, $searchAll = false){
       //Setup
       $ret = array();
       $tCols = $this->translateColumn($c);
@@ -16,7 +16,7 @@
       $origCol = $tCols['origCol'];
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         $q   = 'SELECT Name FROM Studies';
         $set = $this->dbConnection->query($q);
         foreach($this->fetchRows($set) as $s){
@@ -68,7 +68,8 @@
       $description = $tCols['description'];
       $origCol     = $tCols['origCol'];
       //Page query:
-      $q = "SELECT $origCol, LanguageIx FROM Languages_$study LIMIT 30 OFFSET $offset";
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
+      $q = "SELECT $origCol, LanguageIx FROM Languages_$study$o";
       foreach($this->fetchRows($q) as $r){
         $payload = implode('-', array($study, $r[1]));
         $q = $this->getTranslationQuery($payload, $tId);

@@ -7,7 +7,8 @@
   ?></title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="Stylesheet" type="text/css" href="../css/extern/bootstrap.css" media="screen" />
-  <link rel="Stylesheet" type="text/css" href="style.css" media="screen" />
+  <link rel="Stylesheet" type="text/css" href="css/style.css" media="screen" />
+  <link rel="Stylesheet" type="text/css" href="css/extern/jquery.dataTables.css" media="screen" />
   <script type='application/javascript' src='../js/extern/jquery.min.js'></script>
   <script type='application/javascript' src='../js/extern/bootstrap.js'></script>
   <script type='application/javascript' src='../js/extern/underscore-min.js'></script>

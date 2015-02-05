@@ -7,13 +7,13 @@
     Name           <-> Trans
   */
   class MeaningGroupsTranslationProvider extends TranslationProvider{
-    public function search($tId, $searchText){
+    public function search($tId, $searchText, $searchAll = false){
       //Setup:
       $ret = array();
       $description = $this->getDescription('dt_meaningGroups_trans');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         array_push($qs,
           "SELECT MeaningGroupIx, Name, 1 "
         . "FROM MeaningGroups "
@@ -55,8 +55,9 @@
       $ret = array();
       $description = $this->getDescription('dt_meaningGroups_trans');
       //Page query:
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT MeaningGroupIx, Name "
-         . "FROM MeaningGroups LIMIT 30 OFFSET $offset";
+         . "FROM MeaningGroups$o";
       foreach($this->fetchRows($q) as $r){
         $q = $this->getTranslationQuery($r[0], $tId);
         $translation = $this->querySingleRow($q);

@@ -19,6 +19,7 @@ if(get_magic_quotes_gpc()){
   }
   unset($process);
 }
+require_once "query/dataProvider.php";
 /**
   The ConfigBase class aims to provide basic methods to the Config class,
   so that the Config can focus on providing login data for the database,

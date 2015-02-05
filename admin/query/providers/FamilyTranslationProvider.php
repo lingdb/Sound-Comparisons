@@ -10,13 +10,13 @@
     FamilyNm                  <-> Trans
   */
   class FamilyTranslationProvider extends TranslationProvider{
-    public function search($tId, $searchText){
+    public function search($tId, $searchText, $searchAll = false){
       //Setup:
       $ret = array();
       $description = $this->getDescription('dt_families_trans');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         array_push($qs,
           'SELECT CONCAT(StudyIx, FamilyIx), FamilyNm, 1 '
         . "FROM Families WHERE FamilyNm LIKE '%$searchText%'");
@@ -55,8 +55,9 @@
       $ret = array();
       $description = $this->getDescription('dt_families_trans');
       //Page query:
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT CONCAT(StudyIx, FamilyIx), FamilyNm "
-         . "FROM Families LIMIT 30 OFFSET $offset";
+         . "FROM Families$o";
       foreach($this->fetchRows($q) as $r){
         $q = $this->getTranslationQuery($r[0], $tId);
         $translation = $this->dbConnection->query($q)->fetch_row();

@@ -8,7 +8,7 @@
   */
   class LanguageStatusTypesTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){return 'LanguageStatusTypes';}
-    public function searchColumn($c, $tId, $searchText){
+    public function searchColumn($c, $tId, $searchText, $searchAll = false){
       //Setup:
       $ret         = array();
       $tCols       = $this->translateColumn($c);
@@ -16,7 +16,7 @@
       $origCol     = $tCols['origCol'];
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         array_push($qs,
           "SELECT LanguageStatusType, $origCol, 1 FROM LanguageStatusTypes "
         . "WHERE $origCol LIKE '%$searchText%'"
@@ -59,8 +59,8 @@
       $description = $tCols['description'];
       $origCol = $tCols['origCol'];
       //Page query:
-      $q = "SELECT LanguageStatusType, $origCol "
-         . "FROM LanguageStatusTypes LIMIT 30 OFFSET $offset";
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
+      $q = "SELECT LanguageStatusType, $origCol FROM LanguageStatusTypes$o";
       foreach($this->fetchRows($q) as $r){
         $q = $this->getTranslationQuery($r[0], $tId);
         $translation = $this->dbConnection->query($q)->fetch_row();

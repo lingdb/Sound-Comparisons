@@ -2,13 +2,13 @@
   /***/
   require_once "TranslationProvider.php";
   class StudyTranslationProvider extends TranslationProvider{
-    public function search($tId, $searchText){
+    public function search($tId, $searchText, $searchAll = false){
       //Setup:
       $ret = array();
       $description = $this->getDescription('dt_studies_trans');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         array_push($qs,
           "SELECT Name, Name, 1 FROM Studies "
         . "WHERE Name LIKE '%$searchText%'"
@@ -45,7 +45,8 @@
       $ret = array();
       $description = $this->getDescription('dt_studies_trans');
       //Page query:
-      $q = "SELECT DISTINCT Name FROM Studies LIMIT 30 OFFSET $offset";
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
+      $q = "SELECT DISTINCT Name FROM Studies $o";
       foreach($this->fetchRows($q) as $r){
         $payload = $r[0]; // Also the original :)
         $q = $this->getTranslationQuery($payload, $tId);

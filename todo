@@ -17,11 +17,6 @@
    we want this thing to log the events that the PageWatcher currently does,
    because there is information hidden to the PageWatcher.
 
-2014-06-06:
- - Different .js parts can now be adjusted to the new LinkInterceptor/PartView style
-   - This concerns parts that draw information from the first load,
-     like soundPlays, or MapView aswell as URL parsing.
-
 2014-04-30:
  - The search all translations feature is currently implemented as nonsense.
    I should change this.

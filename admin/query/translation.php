@@ -31,6 +31,8 @@
   require_once 'providers/TranscrSuperscriptInfoTranslationProvider.php';
   require_once 'providers/TranscrSuperscriptLenderLgsTranslationProvider.php';
   require_once 'providers/WordsTranslationProvider.php';
+  require_once 'translationClass.php';
+  //
   chdir('..');
   require_once 'common.php';
   session_validate()     or Config::error('403 Forbidden');
@@ -58,52 +60,28 @@
   , new WordsTranslationProvider('Trans_FullRfcModernLg01',   $dbConnection)
   , new WordsTranslationProvider('Trans_LongerRfcModernLg01', $dbConnection)
   ) as $p) $providers[$p->getName()] = $p;
-  /**
-    @param $imagePath String
-    @return $imagePath String
-    Removes leading '../' from the $imagePath.
-  */
-  function sanitizeImagePath($imagePath){
-    return preg_replace('/^(\.\.\/)*/', '', $imagePath);
-  }
   //Actions:
   switch($_GET['action']){
     /**
-      @param TranslationName
-      @param BrowserMatch
-      @param ImagePath
-      @param RfcLanguage
-      @param Active
+      @param $_GET['TranslationName']
+      @param $_GET['BrowserMatch']
+      @param $_GET['ImagePath']
+      @param $_GET['RfcLanguage']
+      @param $_GET['Active']
       @returns TranslationId
     */
     case 'createTranslation':
-      $translationName = $dbConnection->escape_string($_GET['TranslationName']);
-      $browserMatch    = $dbConnection->escape_string($_GET['BrowserMatch']);
-      $imagePath       = sanitizeImagePath($dbConnection->escape_string($_GET['ImagePath']));
-      $rfcLanguage     = $dbConnection->escape_string($_GET['RfcLanguage']);
-      $active          = $dbConnection->escape_string($_GET['Active']);
-      $query = "INSERT INTO Page_Translations"
-        ."(TranslationName, BrowserMatch, ImagePath, RfcLanguage, Active)"
-        ." VALUES ('$translationName', '$browserMatch', '$imagePath', $rfcLanguage, $active)";
-      $dbConnection->query($query);
-      echo $dbConnection->insert_id;
+      Translation::createTranslation($_GET['TranslationName'], $_GET['BrowserMatch'], $_GET['ImagePath'], $_GET['RfcLanguage'], $_GET['Active']);
+      header('Location: '.$_SERVER['HTTP_REFERER'], 302);
     break;
     /**
       @param TranslationId
       @returns 'OK'|'FAIL'
     */
     case 'deleteTranslation':
-      $translationId = $dbConnection->escape_string($_GET['TranslationId']);
-      //Prevent deletion on default language:
-      if($translationId == '1')
-        Config::error('FAIL: Cannot delete Translation 1.');
-      foreach(array(
-        "DELETE FROM Page_DynamicTranslation WHERE TranslationId = $translationId"
-      , "DELETE FROM Page_StaticTranslation  WHERE TranslationId = $translationId"
-      , "DELETE FROM Page_Translations       WHERE TranslationId = $translationId"
-      ) as $q)
-        $dbConnection->query($q);
-      echo 'OK';
+      if(Translation::deleteTranslation($_GET['TranslationId'])){
+        header('Location: '.$_SERVER['HTTP_REFERER'], 302);
+      }else Config::error('FAIL: Cannot delete Translation 1.', false, true);
     break;
     /**
       @param $_GET['Providers'] JSON array of strings
@@ -112,15 +90,9 @@
       Delivers a JSON object that maps names of providers to their offsets.
     */
     case 'offsets':
-      $ps    = json_decode($_GET['Providers']);
-      $study = $dbConnection->escape_string($_GET['Study']);
-      $tId   = 1;
-      if(array_key_exists('TranslationId', $_GET))
-        $tId = $dbConnection->escape_string($_GET['TranslationId']);
-      $ret = array();
-      foreach($ps as $p)
-        $ret[$p] = $providers[$p]->offsets($tId, $study);
-      echo json_encode($ret);
+      $ps = json_decode($_GET['Providers']);
+      $tId = array_key_exists('TranslationId', $_GET) ? $_GET['TranslationId'] : 1;
+      echo json_encode(Translation::offsets($ps, $_GET['Study'], $tId));
     break;
     /**
       @param $_GET['Providers'] JSON array of strings
@@ -130,50 +102,15 @@
       Delivers a JSON object that maps names of providers to their pages.
     */
     case 'page':
-      $ps     = json_decode($_GET['Providers']);
-      $study  = $dbConnection->escape_string($_GET['Study']);
-      $tId    = $dbConnection->escape_string($_GET['TranslationId']);
-      $offset = $dbConnection->escape_string($_GET['Offset']);
-      $ret    = array();
-      foreach($ps as $p){
-        $ret[$p] = $providers[$p]->page($tId, $study, $offset);
-      }
-      echo json_encode($ret);
+      $ps = json_decode($_GET['Providers']);
+      echo json_encode(Translation::page($ps, $_GET['Study'], $_GET['TranslationId'], $_GET['Offset']));
     break;
     /**
       Builds a mapping of ProviderGroups to Provider Names
       and outputs this as a JSON Object.
     */
     case 'providers':
-      $providerGroups = array(
-        'General'               => '/^StaticTranslationProvider$/'
-      , 'Studies'               => '/^StudyTranslationProvider$/'
-      , 'Study title'           => '/^StudyTitleTranslationProvider$/'
-      , 'Families'              => '/^FamilyTranslationProvider$/'
-      , 'Language status types' => '/^LanguageStatusTypesTranslationProvider-/'
-      , 'Meaning sets'          => '/^MeaningGroupsTranslationProvider$/'
-      , 'Words'                 => '/^WordsTranslationProvider-/'
-      , 'Regions'               => '/^RegionsTranslationProvider-/'
-      , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'
-      , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'
-      , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'
-      , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'
-      );
-      $ret = array();
-      foreach($providerGroups as $group => $regex)
-        $ret[$group] = __(array_keys($providers))->filter(function($k) use ($regex){
-          return preg_match($regex, $k);
-        });
-      //Adding non providers (underscore prefix):
-      $ret['_dependsOnStudy'] = array(
-        'Languages'          => true
-      , 'Region languages'   => true
-      , 'Regions'            => true
-      , 'Spelling languages' => true
-      , 'Words'              => true
-      );
-      //Done:
-      echo json_encode($ret);
+      echo json_encode(Translation::providers());
     break;
     /**
       @param $_GET['TranslationId'] TranslationId to search for
@@ -181,24 +118,11 @@
       Delivers matches as produced by all providers.
     */
     case 'search':
-      $translationId = $dbConnection->escape_string($_GET['TranslationId']);
-      $searchText = $dbConnection->escape_string($_GET['SearchText']);
-      $matches = array();
-      foreach($providers as $p){
-        $ms = $p->search($translationId, $searchText);
-        $matches = array_merge($matches, $ms);
-      }
-      echo json_encode($matches);
+      echo json_encode(Translation::search($_GET['TranslationId'], $_GET['SearchText']));
     break;
     /** Returns a JSON array of all Names in the Studies table. */
     case 'studies':
-      $data = array();
-      $q    = "SELECT DISTINCT Name FROM Studies";
-      $set  = $dbConnection->query($q);
-      while($r = $set->fetch_row()){
-        array_push($data, $r[0]);
-      }
-      echo json_encode($data);
+      echo json_encode(Translation::studies());
     break;
     /**
       Fetches the complete Page_Translations table.
@@ -206,11 +130,7 @@
         Fields of contained JSON Objects are named as in db.
     */
     case 'translations':
-      $arr = array(); // The JSON Array
-      $set = $dbConnection->query('SELECT * FROM Page_Translations ORDER BY TranslationName');
-      while($row = $set->fetch_assoc())
-        array_push($arr, $row);
-      echo json_encode($arr);
+      echo json_encode(Translation::translations());
     break;
     /**
       @param $_GET['TranslationId']
@@ -219,27 +139,14 @@
       @param $_GET['Provider'] The Provider to perform the update to
     */
     case 'update':
-      $translationId = $dbConnection->escape_string($_GET['TranslationId']);
-      $payload  = $_GET['Payload'];
-      $update   = $_GET['Update'];
-      $provider = $_GET['TranslationProvider'];
-      if(array_key_exists($provider, $providers)){
-        $p = $providers[$provider];
-        $p->update($translationId, $payload, $update);
-      }else Config::error("Unsupported Provider: $provider");
+      Translation::update($_GET['TranslationId'], $_GET['Payload'], $_GET['Update'], $_GET['Provider']);
     break;
     /**
       @param Req
       @param Description
     */
     case 'updateDescription':
-      $req  = $dbConnection->escape_string($_GET['Req']);
-      $desc = $dbConnection->escape_string($_GET['Description']);
-      if(!session_mayEdit($dbConnection)) return;
-      foreach(array(
-        "DELETE FROM Page_StaticDescription WHERE Req = '$req'"
-      , "INSERT INTO Page_StaticDescription (Req, Description) VALUES ('$req','$desc')"
-      ) as $q) $dbConnection->query($q);
+      Translation::updateDescription($_GET['Req'], $_GET['Description']);
     break;
     /**
       @param TranslationId
@@ -250,20 +157,7 @@
       @param Active
     */
     case 'updateTranslation':
-      $translationId   = $dbConnection->escape_string($_GET['TranslationId']);
-      $translationName = $dbConnection->escape_string($_GET['TranslationName']);
-      $browserMatch    = $dbConnection->escape_string($_GET['BrowserMatch']);
-      $imagePath       = sanitizeImagePath($dbConnection->escape_string($_GET['ImagePath']));
-      $rfcLanguage     = $dbConnection->escape_string($_GET['RfcLanguage']);
-      $active          = $dbConnection->escape_string($_GET['Active']);
-      $query = "UPDATE Page_Translations SET"
-        ." TranslationName = '$translationName'"
-        .", BrowserMatch = '$browserMatch'"
-        .", ImagePath = '$imagePath'"
-        .", RfcLanguage = $rfcLanguage"
-        .", Active = $active"
-        ." WHERE TranslationId = $translationId";
-      $dbConnection->query($query);
+      Translation::updateTranslation($_GET['TranslationId'], $_GET['TranslationName'], $_GET['BrowserMatch'], $_GET['ImagePath'], $_GET['RfcLanguage'], $_GET['Active']);
     break;
   }
 ?>

@@ -5,10 +5,13 @@
   */
   require_once "TranslationProvider.php";
   class StaticTranslationProvider extends TranslationProvider{
-    public function search($tId, $searchText){
+    public function search($tId, $searchText, $searchAll = false){
       $ret = array();
       $q = "SELECT Req, Trans, TranslationId FROM Page_StaticTranslation "
          . "WHERE Trans LIKE '%$searchText%'";
+      if(!$searchAll){
+        $q .= " AND (TranslationId = $tId OR TranslationId = 1)";
+      }
       $set = $this->dbConnection->query($q);
       while($r = $set->fetch_row()){
         $payload = $r[0];
@@ -55,8 +58,8 @@
     }
     public function page($tId, $study, $offset){
       $ret = array();
-      $q = "SELECT Req, Trans FROM Page_StaticTranslation "
-         . "WHERE TranslationId = 1 LIMIT 30 OFFSET $offset";
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
+      $q = "SELECT Req, Trans FROM Page_StaticTranslation WHERE TranslationId = 1$o";
       foreach($this->fetchRows($q) as $r){
         $payload = $r[0];
         $description = $this->getDescription($payload);

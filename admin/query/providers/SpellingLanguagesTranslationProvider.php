@@ -8,19 +8,18 @@
   */
   class SpellingLanguagesTranslationProvider extends TranslationProvider{
     /***/
-    public function search($tId, $searchText){
+    public function search($tId, $searchText, $searchAll = false){
       //Setup
       $ret = array();
       $description = $this->getDescription('dt_languages_specificLanguageVarietyName');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         $q   = 'SELECT Name FROM Studies';
         $set = $this->dbConnection->query($q);
         foreach($this->fetchRows($set) as $s){
           $s = $s[0];
-          $q = "SELECT CONCAT('$s-', LanguageIx), SpellingRfcLangName, 1"
-             . "FROM Languages_$s "
+          $q = "SELECT CONCAT('$s-', LanguageIx), SpellingRfcLangName, 1 FROM Languages_$s "
              . "WHERE SpellingRfcLangName LIKE '%$searchText%'";
           array_push($qs, $q);
         }
@@ -67,9 +66,9 @@
       $ret         = array();
       $description = $this->getDescription('dt_languages_specificLanguageVarietyName');
       //Page query:
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT SpellingRfcLangName, LanguageIx FROM Languages_$study "
-         . "WHERE SpellingRfcLangName != '' AND SpellingRfcLangName IS NOT NULL "
-         . "LIMIT 30 OFFSET $offset";
+         . "WHERE SpellingRfcLangName != '' AND SpellingRfcLangName IS NOT NULL$o";
       foreach($this->fetchRows($q) as $r){
         $payload = implode('-', array($study, $r[1]));
         $q = $this->getTranslationQuery($payload, $tId);

@@ -8,7 +8,7 @@
   */
   class TranscrSuperscriptLenderLgsTranslationProvider extends DynamicTranslationProvider{
     public function getTable(){ return 'TranscrSuperscriptLenderLgs';}
-    public function searchColumn($c, $tId, $searchText){
+    public function searchColumn($c, $tId, $searchText, $searchAll = false){
       //Setup
       $ret         = array();
       $tCol        = $this->translateColumn($c);
@@ -16,7 +16,7 @@
       $origCol     = $tCol['origCol'];
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
-      if($this->searchAllTranslations()){
+      if($searchAll){
         array_push($qs,
           "SELECT IsoCode, $origCol, 1 "
         . "FROM TranscrSuperscriptLenderLgs "
@@ -61,8 +61,8 @@
       $description = $tCol['description'];
       $origCol     = $tCol['origCol'];
       //Page query:
-      $q = "SELECT IsoCode, $origCol "
-         . "FROM TranscrSuperscriptLenderLgs LIMIT 30 OFFSET $offset";
+      $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
+      $q = "SELECT IsoCode, $origCol FROM TranscrSuperscriptLenderLgs$o";
       foreach($this->fetchRows($q) as $r){
         $iso = $r[0];
         $q   = $this->getTranslationQuery($iso, $tId);
