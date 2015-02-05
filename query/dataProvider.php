@@ -48,7 +48,7 @@ class DataProvider {
       }else{
         if(Config::$debug){
           //FIXME log this to admin interface somehow & instead
-          static::error('Missing sound file: "'.$p.'"');
+          //static::error('Missing sound file: "'.$p.'"');
         }
       }
     }
