@@ -2,5 +2,4 @@ export/singleTextFile.php: rewrite
 index.php
 head.php
 ipaKeyboard.php
-query/translations.php
 database/*

@@ -6,10 +6,8 @@
   and may be used to generate different presentations of the site.
 */
 //Setup:
+require_once 'translationProvider.php';
 require_once '../config.php';
-require_once '../valueManager/RedirectingValueManager.php';
-$dbConnection = Config::getConnection();
-$valueManager = RedirectingValuemanager::getInstance();
 //Actual work:
 Config::setResponseJSON();
 //Defaulting our action:
@@ -20,14 +18,7 @@ if(!array_key_exists('action',$_GET)){
 switch($_GET['action']){
   case 'dynamic':
     if(array_key_exists('translationId', $_GET)){
-      $tId = $dbConnection->escape_string($_GET['translationId']);
-      $q   = "SELECT Category, Field, Trans FROM Page_DynamicTranslation WHERE TranslationId = $tId";
-      $set = $dbConnection->query($q);
-      $ret = array();
-      while($r = $set->fetch_assoc()){
-        array_push($ret, $r);
-      }
-      echo json_encode($ret);
+      echo json_encode(TranslationProvider::getDynamic($_GET['translationId']));
     }else{
       Config::setResponse(400);
       echo json_encode(array(
@@ -37,14 +28,7 @@ switch($_GET['action']){
   break;
   case 'static':
     if(array_key_exists('translationId', $_GET)){
-      $tId = $dbConnection->escape_string($_GET['translationId']);
-      $q   = "SELECT Req, Trans FROM Page_StaticTranslation WHERE TranslationId = $tId";
-      $set = $dbConnection->query($q);
-      $ret = array();
-      while($r = $set->fetch_assoc()){
-        $ret[$r['Req']] = $r['Trans'];
-      }
-      echo json_encode($ret);
+      echo json_encode(TranslationProvider::getStatic($_GET['translationId']));
     }else{
       Config::setResponse(400);
       echo json_encode(array(
@@ -53,24 +37,7 @@ switch($_GET['action']){
     }
   break;
   case 'summary':
-    $q = 'SELECT TranslationId, TranslationName, BrowserMatch, ImagePath, '
-       . 'RfcLanguage, UNIX_TIMESTAMP(lastChangeStatic), UNIX_TIMESTAMP(lastChangeDynamic) '
-       . 'FROM Page_Translations WHERE Active = 1 OR TranslationId = 1';
-    $set   = $dbConnection->query($q);
-    $ret   = array();
-    $trans = $valueManager->gtm()->getTarget();
-    while($r = $set->fetch_assoc()){
-      $ret[$r['TranslationId']] = array(
-        'TranslationId'     => $r['TranslationId']
-      , 'TranslationName'   => $r['TranslationName']
-      , 'BrowserMatch'      => $r['BrowserMatch']
-      , 'ImagePath'         => $r['ImagePath']
-      , 'RfcLanguage'       => $r['RfcLanguage']
-      , 'lastChangeStatic'  => $r['UNIX_TIMESTAMP(lastChangeStatic)']
-      , 'lastChangeDynamic' => $r['UNIX_TIMESTAMP(lastChangeDynamic)']
-      );
-    }
-    echo json_encode($ret);
+    echo json_encode(TranslationProvider::getSummary());
   break;
   default:
     Config::setResponse(400);
