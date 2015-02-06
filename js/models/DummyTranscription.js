@@ -7,7 +7,7 @@
 */
 var DummyTranscription = Transcription.extend({
   initialize: function(){
-    this.set({Phonetic: 'missing'});
+    this.set({Phonetic: 'soon'});
   }
 , isDummy: function(){return true;}
 });
