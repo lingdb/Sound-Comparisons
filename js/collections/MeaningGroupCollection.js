@@ -6,8 +6,8 @@ var MeaningGroupCollection = Selection.extend({
     Custom comparator to make sure MeaningGroups are sorted by MeaningGroupIx
   */
 , comparator: function(a, b){
-    var x = a.getId()
-      , y = b.getId()
+    var x = parseInt(a.getId(), 10)
+      , y = parseInt(b.getId(), 10)
     if(x > y) return  1;
     if(x < y) return -1;
     return 0;
