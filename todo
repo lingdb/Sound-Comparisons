@@ -1,14 +1,7 @@
-2014-11-06:
- - The italian translation is missing?
-
 2014-07-04:
  - Can we remove parts of the language table that are translated?
 
 2014-07-03:
- - HideButtons for SideMenues appear to break the page layout
-   - Map and 1L view for example
- - Display study that a translation originates from along with the search results
-   - Remember the case of Knochen/Bein in Germanic vs. Knochen in the rest of studies.
  - Maybe we can get rid of the admin/query/migrate script and the providers' migrate methods?
 
 2014-06-10:
@@ -17,10 +10,6 @@
    we want this thing to log the events that the PageWatcher currently does,
    because there is information hidden to the PageWatcher.
 
-2014-04-30:
- - The search all translations feature is currently implemented as nonsense.
-   I should change this.
-
 2014-04-24:
  - Simple TranslationProviders don't care for their study at the moment,
    but I've got the impression that they should.
@@ -28,23 +17,15 @@
 2014-02-13:
  - Show lexeme numbers >1 as subscripts for Transcriptions and Words
  - Contributors on page for translations would be nice
-   - But we need a way of building this
 
 2013-11-07:
  - Allow html or something thelike for about pages
  - Add in a home button (before 'view by')
    - Build something to allow for paul to add content
 
-2013-09-11:
- - It appears in mapview, that if 'my selection' equals 'all languages',
-   the buttons to change between them are pretty useless.
-
 2013-08-01:
- - Introduce seperate cells for items that have different variants with subscript
-   - in 1w,1l and probably even lw and wl views
- - Later on:
-   - Use Chromium Developer Tools -> Audit to streamline .css
-     - Leverage this to get rid of style.css, because we've got main.css now
+ - Use Chromium Developer Tools -> Audit to streamline .css
+   - Leverage this to get rid of style.css, because we've got main.css now
 
 From myself:
  - IsHtml field can be removed from v4.Page_StaticTranslation
