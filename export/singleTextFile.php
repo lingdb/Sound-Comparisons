@@ -12,30 +12,23 @@ foreach($params as $p){
 //Setup:
 chdir('..');
 require_once 'config.php';
-require_once 'valueManager/RedirectingValueManager.php';
-$db = Config::getConnection();
-//Values to work with:
-$w = $db->escape_string($_GET['word']);
-$l = $db->escape_string($_GET['language']);
-$s = $db->escape_string($_GET['study']);
-$n = preg_match('/^\d+$/', $_GET['n']) ? $_GET['n'] : 0;
-$v = RedirectingValuemanager::getInstance();
-//Database objects:
-$s = new StudyFromKey($v, $s);
-$v = $v->gsm()->setStudy($s);
-$w = new WordFromId($v, $w, $s);
-$l = new LanguageFromId($v, $l);
-$t = Transcription::getTranscriptionForWordLang($w, $l);
-//The transcriptions:
-$ts = $t->getTranscriptions();
-if($n >= count($ts)){
-  die('Sorry, cannot deliver n='.$n.' for values: '.implode(', ', $ts));
+//Transcription to work with:
+$ts = DataProvider::getTranscriptions($_GET['study']);
+$ts = $ts[$_GET['language'].$_GET['word']];
+//The Phonetic:
+$ps = $ts['Phonetic'];
+if(__::isArray($ps)){
+  $n = preg_match('/^\d+$/', $_GET['n']) ? $_GET['n'] : 0;
+  if($n >= count($ps)){
+    die('Sorry, cannot deliver n='.$n.' for values: '.implode(', ', $ts));
+  }else{
+    $ps = $ps[$n];
+  }
 }
 //Figuring out the filename:
-$sfs  = $t->getSoundFiles(array('.mp3'));
-$file = preg_replace('/mp3$/', 'txt', basename(current($sfs[$n])));
+$file = preg_replace('/mp3/', 'txt', basename(current($ts['soundPaths'])));
 //Delivering the content:
 header('Content-Type: text/plain; charset=utf-8');
 header('Content-Disposition: attachment;filename="'.$file.'"');
-echo $ts[$n];
+echo $ps;
 ?>
