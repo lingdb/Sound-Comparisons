@@ -1,8 +1,4 @@
 <?php
-//FIXME REMOVE DISABLE PART BELOW
-error_log('This feature is currently disabled.');
-die('This feature is currently disabled.');
-//FIXME REMOVE DISABLE PART ABOVE
 chdir('..');
 require 'common.php';
 if(php_sapi_name() === 'cli'){
@@ -16,27 +12,36 @@ if(php_sapi_name() === 'cli'){
         }
         $file = file_get_contents($argv[2]);
       break;
-      case 'update':
-      //FIXME IMPLEMENT!
-      break;
     }
   }
 }else{
-  session_validate() or Config::error('403 Forbidden');
-  session_mayEdit()  or Config::error('403 Forbidden');
+  $allowed = session_validate() && session_mayEdit();
+  if(!$allowed){//Special case for action=export:
+    if(array_key_exists('ch1', $_GET) && array_key_exists('ch2', $_GET)){
+      $db = Config::getConnection();
+      $login = $dbConnection->escape_string($_GET['ch1']);
+      $hash  = $dbConnection->escape_string($_GET['ch2']);
+      $q = "SELECT AccessEdit FROM Edit_Users"
+         . " WHERE Login = '$login' AND Hash = '$hash'";
+      if($r = $db->query($q)->fetch_row()){
+        $allowed = $r[0] == 1;
+      }
+      unset($db, $login, $hash, $q, $r);
+    }
+    if(!$allowed){
+      Config::error('403 Forbidden');
+      die('403 Forbidden');
+    }
+  }
   if(array_key_exists('action', $_GET)){
     $action = $_GET['action'];
     switch($action){
       case 'import':
         if(array_key_exists('import', $_FILES)){
-          die(var_dump($_FILES));
           $file = file_get_contents($_FILES['import']['tmp_name']);
         }else{
           die('import file missing.');
         }
-      break;
-      case 'update':
-        die('This option is only supported from cli.');
       break;
     }
   }else{
@@ -91,8 +96,6 @@ switch($action){
   break;
   case 'import':
     $dbConnection->multi_query($file);
-  break;
-  case 'update':
   break;
   default:
     echo "Unsupported action: $action\n";

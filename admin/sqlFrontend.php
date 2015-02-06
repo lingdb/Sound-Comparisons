@@ -14,13 +14,6 @@ if(!session_mayEdit($dbConnection))
   ?>
   <body>
     <?php require_once 'topmenu.php'; ?>
-    <form>
-      <legend>Perform SQL queries:</legend>
-      <textarea>KRAGEN!</textarea>
-      <br>
-      <button type="submit" class="btn btn-danger">Execute!</button>
-      </div>
-    </form>
     <div class="row-fluid">
       <div class="span6">
         <form class="form-horizontal" action="query/sql.php?action=import" method="POST" enctype="multipart/form-data">

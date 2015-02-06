@@ -16,9 +16,8 @@
       ?>
       <li><a href="userAccount.php">User account</a></li>
       <?php
-      //FIXME enable this again to solve #62
-      //if(session_mayEdit($dbConnection))
-      //  echo '<li><a href="sqlFrontend.php">SQL operations</a></li>';
+      if(session_mayEdit($dbConnection))
+        echo '<li><a href="sqlFrontend.php">SQL operations</a></li>';
       ?>
       <li><a href="index.php?action=logout">Logout</a></li>
     </ul>
