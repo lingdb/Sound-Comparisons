@@ -43,6 +43,7 @@
         $translation = $this->querySingleRow($q);
         array_push($ret, array(
           'Description' => $description
+        , 'Study'       => $study
         , 'Match'       => $match
         , 'MatchId'     => $matchId
         , 'Original'    => $original[0]

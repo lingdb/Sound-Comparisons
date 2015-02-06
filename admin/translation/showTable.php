@@ -18,14 +18,20 @@ function showTable($tdata){
       $req  = $desc['Req'];
       $desc = $desc['Description'];
       echo "<td class='description'$isAdmin data-req='$req'>$desc</td>";
-      //Match in case of search:
-      $match = '';
+      //Title in case of search:
+      $title = '';
       if(array_key_exists('Match', $value)){
-        $match = ' title="'.$value['Match'].'"';
+        if($value['Match'] !== $value['Original'] && $value['Match'] !== $value['Translation']){
+          $title = ' title="'.$value['Match'].'"';
+        }
       }
       //Original:
       $orig = $value['Original'];
-      echo '<td class="original"'.$match.'>'.$orig
+      if(array_key_exists('Study', $value)){//Study in case of search
+        $stud = $value['Study'];
+        $orig = "$stud:<code>$orig</code>";
+      }else{$orig = "<code>$orig</code>";}
+      echo '<td class="original"'.$title.'>'.$orig
          . '<a class="btn pull-right copy-over">'
          . '<i class="icon-arrow-right"></i></a></td>';
       //Translation:

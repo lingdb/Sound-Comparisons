@@ -15,7 +15,7 @@ $(document).ready(function(){
     //The copy-over buttons:
     table.on('click', '.btn.copy-over', function(){
       var btn = $(this).changeInRow()
-        , txt = btn.closest('td').text()
+        , txt = btn.closest('td').find('code').text()
         , tgt = btn.closest('tr').find('input.translation');
       tgt.val(txt);
     });
