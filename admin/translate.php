@@ -24,6 +24,12 @@
         case 'search':
           require_once 'translation/search.php';
         break;
+        case 'missing':
+          require_once 'translation/missing.php';
+        break;
+        case 'changed':
+          require_once 'translation/changed.php';
+        break;
         default:
           require_once 'translation/overview.php';
       }

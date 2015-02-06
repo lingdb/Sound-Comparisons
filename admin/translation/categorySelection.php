@@ -31,7 +31,18 @@
 <input type="hidden" name="action" value="search">
 <input type="hidden" name="tId" value="<?php echo $translationId; ?>">
 </form>
+<form class="form-inline">
+<hr><label>Special cases:</label>
+<?php
+  $missing = ($_GET[action] === 'missing') ? ' btn-inverse' : '';
+  $changed = ($_GET[action] === 'changed') ? ' btn-inverse' : '';
+  $mLnk = '?action=missing&Id='.$translationId;
+  $cLnk = '?action=changed&Id='.$translationId;
+?>
+<a href="<?php echo $mLnk; ?>" class="btn<?php echo $missing; ?>">Missing translations</a>
+<a href="<?php echo $cLnk; ?>" class="btn<?php echo $changed; ?>">Changed translations</a>
+</form>
 <?php
   // We leave translationId and providerGroup:
-  unset($btn, $sAll, $sText);
+  unset($btn, $sAll, $sText, $missing, $changed, $mLnk, $cLnk);
 ?>
