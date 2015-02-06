@@ -242,8 +242,9 @@
            . 'OtherLexemeInLanguageForMeaning, '
            . 'RootIsLoanWordFromKnownDonor, '
            . 'RootSharedInAnotherFamily, '
-           . 'IsoCodeKnownDonor) VALUES '
-           . mkTuples($csv, array(7,8,9,13,14,17));
+           . 'IsoCodeKnownDonor, DifferentMorphemeStructureNote, '
+           . 'OddPhonology, OddPhonologyNote, UsageNote, SoundProblem) VALUES '
+           . mkTuples($csv, array(7,8,9,13,14,17,18,20,21));
         array_push($queries, 'DELETE FROM Transcriptions_'.$matches[1], $q);
       break;
       case (preg_match('/^Words_(.*)\.txt$/', $fname, $matches) ? true : false):
