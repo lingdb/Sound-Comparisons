@@ -34,8 +34,8 @@
 <form class="form-inline">
 <hr><label>Special cases:</label>
 <?php
-  $missing = ($_GET[action] === 'missing') ? ' btn-inverse' : '';
-  $changed = ($_GET[action] === 'changed') ? ' btn-inverse' : '';
+  $missing = ($_GET['action'] === 'missing') ? ' btn-inverse' : '';
+  $changed = ($_GET['action'] === 'changed') ? ' btn-inverse' : '';
   $mLnk = '?action=missing&Id='.$translationId;
   $cLnk = '?action=changed&Id='.$translationId;
 ?>
