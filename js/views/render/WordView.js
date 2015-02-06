@@ -59,10 +59,12 @@ var WordView = Renderer.prototype.SubView.extend({
       console.log('WordView.updateWordTable() with no word.');
       return;
     }
+    //Words per row:
+    var wordCount = 5;
     //Calculating the maximum number of language cols:
     var maxLangCount = _.chain(App.regionCollection.models).map(function(r){
       var c = r.getLanguages().length;
-      return (c > 6) ? 6 : c;
+      return (c > wordCount) ? wordCount : c;
     }).max().value();
     //Do we color by family?
     var colorByFamily = App.study.getColorByFamily();
@@ -82,7 +84,7 @@ var WordView = Renderer.prototype.SubView.extend({
           , languages = r.getLanguages();
         if(!colorByFamily) region.color = r.getColor();
         //Calculating the rowSpan for the current region:
-        region.rowSpan  = _.max([Math.ceil(languages.length / 6), 1]);
+        region.rowSpan  = _.max([Math.ceil(languages.length / wordCount), 1]);
         family.rowSpan += region.rowSpan;
         //Further handling of languages; lss :: [[LanguageCell]]
         var cellCount = maxLangCount, lss = [], ls = [];
