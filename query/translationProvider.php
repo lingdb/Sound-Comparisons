@@ -9,6 +9,8 @@
   which is part of the ValueManager I'd like to get rid of.
 */
 class TranslationProvider {
+  //Memoization for the target TranslationId
+  private static $targetMemo = null;
   /***/
   public static $defaultTranslationId = 1;
   /**
@@ -67,30 +69,46 @@ class TranslationProvider {
   /**
     Returns the autodetected TranslationId for the current client.
     Decision is taken as follows:
-      1: Is there already info in $_GET?
-      2: Negotiate the clients preferred language
-      3: Fallback to default to allways have a target
+      1: Negotiate the clients preferred language
+      2: Fallback to default to always have a target
   */
   public static function getTarget(){
-    $db = Config::getConnection();
-    //Phase 1:
-    if(isset($_GET['hl'])){ // hl as in host language.
-      $hl = $db->escape_string($_GET['hl']);
-      $q = "SELECT TranslationId FROM Page_Translations WHERE BrowserMatch = '$hl'";
-      if($r = $db->query($q)->fetch_row()){
-        return $r[0];
+    if(self::$targetMemo === null){
+      $db = Config::getConnection();
+      //Phase1:
+      if(array_key_exists('HTTP_ACCEPT_LANGUAGE', $_SERVER)){
+        $set = $db->query('SELECT TranslationId, BrowserMatch FROM Page_Translations WHERE Active = 1');
+        while($row = $set->fetch_assoc())
+          if(preg_match('/'.$row['BrowserMatch'].'/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'])){
+            self::$targetMemo = $row['TranslationId'];
+            return self::getTarget();
+          }
       }
+      //Phase2:
+      self::$targetMemo = self::$defaultTranslationId;
     }
-    //Phase 2:
-    if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
-      $set = $db->query('SELECT TranslationId, BrowserMatch FROM Page_Translations WHERE Active = 1');
-      while($row = $set->fetch_assoc())
-        if(preg_match('/'.$row['BrowserMatch'].'/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'])){
-          return $row['TranslationId'];
-        }
+    return self::$targetMemo;
+  }
+  /**
+    Tries to translate a request via the static table.
+    @param $req String
+    @param [$t = null] TranslationId
+    @return $trans String
+  */
+  public static function staticTranslate($req, $t = null){
+    if($t === null) $t = self::getTarget();
+    $q = "SELECT Trans FROM Page_StaticTranslation "
+       . "WHERE TranslationId = $t AND Req='$req'";
+    $set = Config::getConnection()->query($q);
+    if($r = $set->fetch_assoc()){
+      return preg_replace('/\<br\>/', "\n", $r['Trans']);
     }
-    //Phase 3:
-    return self::$defaultTranslationId;
+    //Fallback on default if necessary:
+    if($t !== self::$defaultTranslationId){
+      return self::staticTranslate($req, self::$defaultTranslationId);
+    }
+    //Final Fail
+    return "MissingStaticTranslation($t,$req)";
   }
 }
 ?>

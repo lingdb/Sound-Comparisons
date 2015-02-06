@@ -4,19 +4,15 @@
   define('FLAGS_ENABLED', false);
   /* Requirements: */
   require_once 'config.php';
-  require_once 'valueManager/RedirectingValueManager.php';
+  require_once 'query/translationProvider.php';
   /* Startup: */
   $dbConnection = Config::getConnection();
   require_once 'shortlink.php';
-  $valueManager = RedirectingValuemanager::getInstance();
   $index = array(
-    'hidelinkLeft'  => $valueManager->getTranslator()->st('hidelink_left')
-  , 'hidelinkRight' => $valueManager->getTranslator()->st('hidelink_right')
+    'hidelinkLeft'  => TranslationProvider::staticTranslate('hidelink_left')
+  , 'hidelinkRight' => TranslationProvider::staticTranslate('hidelink_right')
+  , 'head' => array('title' => 'Site loading, please wait')
   );
-  //Building the head:
-  require_once 'head.php';
-  $index['head'] = $head;
-  unset($head);
   //Making sure we get our appSetup:
   $index['appSetup'] = true;
   //Processing the Content-type:
@@ -37,6 +33,5 @@
       //Done :)
       $endTime = microtime(true);
       echo "<!-- Page generated in ".round(($endTime - $startTime), 4)."s -->";
-      echo "<!-- ".$valueManager->show(false)." -->";
   }
 ?>
