@@ -8,10 +8,6 @@
 class DataProvider {
   /***/
   public static $soundExtensions = array('.mp3','.ogg');
-  /***/
-  public static function error($e){
-    Config::error($e);
-  }
   /**
     @param $q SQL String
     @return [[Field => Value]]
@@ -46,10 +42,7 @@ class DataProvider {
       if(file_exists($p)){
         array_push($ret, $p);
       }else{
-        if(Config::$debug){
-          //FIXME log this to admin interface somehow & instead
-          //static::error('Missing sound file: "'.$p.'"');
-        }
+        //FIXME log this to admin interface somehow & instead
       }
     }
     return $ret;
@@ -79,7 +72,7 @@ class DataProvider {
     $getFirst = function($q){
       $set = DataProvider::fetchAll($q);
       if(count($set) === 0){
-        DataProvider::error("Problem with query: '$q'");
+        Config::error("Problem with query: '$q'", true);
         return '';
       }
       return current(current($set));
