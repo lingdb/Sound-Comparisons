@@ -9,11 +9,12 @@
 <!DOCTYPE HTML>
 <html>
   <?php
-    $title    = "Import of .csv files.";
-    $jsFiles  = array('dbimport.js');
+    $title   = "Import of .csv files.";
+    $jsFiles = array('dbimport.js');
     require_once 'head.php';
     //<script type='application/javascript' src='js/main.js'></script>
-    $max = ini_get_all()['max_file_uploads'];
+    $max = ini_get_all();
+    $max = $max['max_file_uploads'];
     $max = __::min(array($max['global_value'],$max['local_value']));
   ?>
   <body><?php
