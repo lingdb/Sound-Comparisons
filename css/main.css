@@ -133,7 +133,7 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   margin-left: 5px;
 }
 /*Common style for left and right sides:*/
-.hidelink {padding: 0px; position: absolute;}
+.hidelink {padding: 0px; position: absolute; z-index: 10;}
   .familyList > dd
 , .regionList > dd
 , .meaninggroupList > dd {
@@ -167,8 +167,8 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   padding-top: 2px;
 }
 /*Style in leftMenu:*/
-#leftMenu {padding-top: 0px;}
-#leftMenu > h3 {text-align: center;}
+#leftMenu {padding-top: 0px; margin-bottom: 0px;}
+#leftMenu h3 {text-align: center;}
 .familyList, .regionList, .languageList {list-style: none;}
 .familyList > dt:first-child {margin-top: 0px;}
 .familyList .regionList a.colorRegion {font-size: 15px;}
@@ -180,8 +180,8 @@ dd.languageList {
   padding: 0px 0px 0px 7px;
 }
 /*Style in rightMenu:*/
-#rightMenu {padding-top: 0px;}
-#rightMenu > h3 {text-align: center;}
+#rightMenu {padding-top: 0px; margin-bottom: 0px;}
+#rightMenu h3 {text-align: center;}
 .meaninggroupList, .wordList {list-style: none; margin: 0px;}
 .meaninggroupList .wordList {margin-left: 7px;}
 .p50 {width: 50%; display: inline-block;}
@@ -215,7 +215,7 @@ dd.languageList {
 .wordList > li {height: auto; min-height: 20px;}
 /*Style in contentArea:*/
 #contentArea {overflow: hidden;}
-#contentArea > table {margin-left: auto; margin-right: auto;}
+#contentArea table {margin-left: auto; margin-right: auto; margin-bottom: 0px;}
 #tableHeader > a, #tableHeader > h1 {display: inline;}
 #prevLink {padding-left:  25px;}
 #nextLink {padding-right: 25px;}
@@ -289,4 +289,17 @@ dd.languageList {
 }
 #ipaKeyboard > .modal-body {
   max-height: none;
+}
+/*
+  Styling for nanoscroller
+  See https://jamesflorentino.github.io/nanoScrollerJS
+*/
+.nano .nano-pane {
+	background: #D8D8D8;
+	width: 8px;
+	right: 1px;
+  margin: 5px;
+}
+.nano .nano-slider {
+	background: #777;
 }

@@ -193,6 +193,6 @@ var LanguageMenuView = Backbone.View.extend({
     return regionList;
   }
 , render: function(){
-    this.$el.html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
+    this.$el.find('.nano-content').html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
   }
 });

@@ -40,9 +40,11 @@ var HideLinks = Backbone.View.extend({
       target.show();
       this.deltaSpan(this.content, -delta);
     }
-    this.saveState(t, !target.is(':visible'));
     //Telling the MapView to adjust:
-    if(window.App.views.mapView)
+    if(window.App.views.mapView){
       window.App.views.mapView.adjustCanvasSize();
+    }
+    //Adjusting nanoScrollers:
+    window.App.views.renderer.nanoScroller();
   }
 });

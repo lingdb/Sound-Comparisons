@@ -13,8 +13,10 @@
     <i class="icon-chevron-right"></i>
   </a>
   <div class="mycontent myflow row-fluid">
-    <div class="span2 well" id="leftMenu">
-      {{> LanguageMenu}}
+    <div id="leftMenu" class="span2 well nano">
+      <div class="nano-content">
+        {{> LanguageMenu}}
+      </div>
     </div>
     <div id="contentArea"{{#isMapView}} style="bottom:2em;"{{/isMapView}} class="span8">
       <div id="wordTableContainer" class="hide">
@@ -37,8 +39,10 @@
         {{> contributors}}
       </div>
     </div>
-    <div id="rightMenu" class="span2 well">
-      {{> WordMenu}}
+    <div id="rightMenu" class="span2 well nano">
+      <div class="nano-content">
+        {{> WordMenu}}
+      </div>
     </div>
   </div>
 </div>

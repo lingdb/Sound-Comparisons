@@ -239,7 +239,7 @@ var WordMenuView = Backbone.View.extend({
   /***/
 , render: function(){
     //Updating the WordMenu html representation:
-    this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
+    this.$el.find('.nano-content').html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
     //Updating soundfiles:
     App.views.audioLogic.findAudio(this.$el);
     //Reinitializing the WordlistFilter:

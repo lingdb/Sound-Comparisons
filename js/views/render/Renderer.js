@@ -20,6 +20,8 @@ var Renderer = Backbone.View.extend({
     };
     //Flag if models have been activated:
     this._activated = false;
+    //Flag if nanoScroller has been initialized:
+    this._nano = false;
   }
 , render: function(){
     console.log('Renderer.render()');
@@ -55,8 +57,26 @@ var Renderer = Backbone.View.extend({
         App.study.trackLinks(fragment);
       })(App.router);
     }
+    //Triggering nanoScroller updates:
+    this.nanoScroller();
     //Making sure studyWatcher is updated :
     App.studyWatcher.update();
+  }
+  /**
+    Makes sure nanoScroller works as expected.
+    Computes the height of .nano containers,
+    and installed/updated the scrollbars.
+    Uses a timeout the first time, to make sure rendering is ok.
+  */
+, nanoScroller: function(){
+    var height = $('#contentArea').height() + 'px';
+    $('#leftMenu,#rightMenu').each(function(){
+      $(this).css({'min-height': '600px', 'height': height});
+    }).nanoScroller();
+    if(this._nano === false){
+      this._nano = true;
+      window.setTimeout(this.nanoScroller, 500);
+    }
   }
   /**
     Calls all methods that match /^update/ on the given Backbone.View.
