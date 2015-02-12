@@ -1,4 +1,4 @@
-Setup instructions:
+Setup instructions (please read):
 ===
 
 1. When cloning the repository: If you have access to [vcs.eva.mpg.de](vcs.eva.mpg.de), execute
