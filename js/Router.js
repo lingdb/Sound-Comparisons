@@ -85,6 +85,7 @@ var Router = Linker.extend({
       https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
     */
     this.on('route:shortLink', function(shortLink){
+      //Searching shortLink in the according map:
       var slMap = App.dataStorage.getShortLinksMap();
       if(shortLink in slMap){
         var url = slMap[shortLink]
@@ -92,8 +93,14 @@ var Router = Linker.extend({
         if(matches){
           var fragment = matches[1];
           Backbone.history.loadUrl(fragment);
+          return;
         }
+      }
+      //Fallback is to test if any study matches the shortLink:
+      if(_.contains(App.study.getAllIds(), shortLink)){
+        this.navigate(this.linkCurrent({study: shortLink}));
       }else{
+        //We can still remain where we are:
         console.log('Could not route shortLink: '+shortLink);
         App.views.renderer.render();
       }

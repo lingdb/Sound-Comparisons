@@ -187,22 +187,22 @@ var DataStorage = Backbone.Model.extend({
     var key       = "Study_"+name
       , study     = this.load(key)
       , timestamp = this.get('lastUpdate')
-      , promise   = $.Deferred(), t = this;
+      , def       = $.Deferred(), t = this;
     study.done(function(s){
       if(!s || s.timestamp < timestamp){
         $.getJSON(t.get('target'), {study: name}).done(function(data){
           data.timestamp = timestamp;
           t.set({study: data});
-          promise.resolve();
+          def.resolve();
         }).fail(function(f){
-          promise.reject(f);
+          def.reject(f);
         });
       }else{
         t.set({study: s});
-        promise.resolve();
+        def.resolve();
       }
     });
-    return promise;
+    return def.promise();
   }
   /***/
 , getWikipediaLinks: function(){
