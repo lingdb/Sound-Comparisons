@@ -72,7 +72,7 @@ var WordOverlay = Backbone.Model.extend({
     it must return a Promise and cannot return a BBox immediately.
   */
 , getBBox: function(edge){
-    var promise = $.Deferred(), t = this;
+    var def = $.Deferred(), t = this;
     this.get('view').getPoint().done(function(p){
       var div  = $(t.get('div'))
         , edge = edge || t.get('edge')
@@ -103,9 +103,11 @@ var WordOverlay = Backbone.Model.extend({
         , y2: bbox.y2 - bbox.h
         });
       }
-      promise.resolve(bbox);
+      def.resolve(bbox);
+    }).fail(function(){
+      def.reject(arguments);
     });
-    return promise;
+    return def.promise();
   }
   /**
    @param a bbox

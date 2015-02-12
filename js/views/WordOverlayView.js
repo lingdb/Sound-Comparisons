@@ -73,7 +73,12 @@ var WordOverlayView = function(o){
     if(_.isEmpty(prj)){
       var t = this;
       google.maps.event.addListenerOnce(this.map_, 'idle', function(){
-        prom.resolve(t.getProjection().fromLatLngToDivPixel(pos));
+        var prj = t.getProjection();
+        if(!_.isEmpty(prj)){
+          prom.resolve(prj.fromLatLngToDivPixel(pos));
+        }else{
+          prom.reject('No projection in WordOverlayView.getPoint()');
+        }
       });
     }else{
       prom.resolve(prj.fromLatLngToDivPixel(pos));
