@@ -8,6 +8,8 @@
 class DataProvider {
   /***/
   public static $soundExtensions = array('.mp3','.ogg');
+  /***/
+  public static $missingSounds = array();
   /**
     @param $q SQL String
     @return [[Field => Value]]
@@ -41,9 +43,10 @@ class DataProvider {
       $p = $path.$ext;
       if(file_exists($p)){
         array_push($ret, $p);
-      }else{
-        //FIXME log this to admin interface somehow & instead
       }
+    }
+    if(count($ret) === 0){
+      array_push(static::$missingSounds, $path.'.{mp3,ogg}');
     }
     return $ret;
   }

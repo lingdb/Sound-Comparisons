@@ -16,8 +16,10 @@
       ?>
       <li><a href="userAccount.php">User account</a></li>
       <?php
-      if(session_mayEdit($dbConnection))
-        echo '<li><a href="sqlFrontend.php">SQL operations</a></li>';
+      if(session_mayEdit($dbConnection)){
+        echo '<li><a href="sqlFrontend.php">SQL operations</a></li>'
+           . '<li><a href="missingSounds.php">Missing sounds</a></li>';
+      }
       ?>
       <li><a href="index.php?action=logout">Logout</a></li>
     </ul>
