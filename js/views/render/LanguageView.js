@@ -64,10 +64,10 @@ var LanguageView = Renderer.prototype.SubView.extend({
       , { href: 'http://www.glottolog.org/resource/languoid/iso/'+iso
         , img:  'img/extern/glottolog.png'
         , ttip: App.translationStorage.translateStatic('tooltip_languages_link_glottolog')}
+      , { href: 'http://new.multitree.org/trees/code/'+iso
+        , img:  'http://new.multitree.org/static/images/MultiTree.ico'
+        , ttip: App.translationStorage.translateStatic('tooltip_languages_link_multitree')}
 // See https://github.com/sndcomp/website/issues/44 for information on below items:
-//    , { href: 'http://multitree.org/codes/'+iso+'.html'
-//      , img:  'http://multitree.org/images/favicon.ico'
-//      , ttip: App.translationStorage.translateStatic('tooltip_languages_link_multitree')}
 //    , { href:  'http://www.llmap.org/maps/by-code/'+iso+'.html'
 //      , style: 'width: 36px;'
 //      , img:   'img/extern/llmap.png'
