@@ -69,7 +69,7 @@ var Renderer = Backbone.View.extend({
     Uses a timeout the first time, to make sure rendering is ok.
   */
 , nanoScroller: function(){
-    var height = $('#contentArea').height() + 'px';
+    var height = _.max([$('#contentArea').height(), window.innerHeight - 55])+'px';
     $('#leftMenu,#rightMenu').each(function(){
       $(this).css({'min-height': '600px', 'height': height});
     }).nanoScroller();
