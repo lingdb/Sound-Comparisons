@@ -23,7 +23,8 @@ var WordOverlayView = function(o){
     $(div).addClass('mapAudio', 'audio')
           .html(this.model.get('content'))
           .css('background-color', color.color)
-          .find('.transcription').css('font-size','14px');
+          .find('.transcription').css('font-size','14px')
+          .attr('title', this.model.get('hoverText'));
     //Handling the callbacks:
     $('.transcription', div).each(function(){
       var audio = $(this).next().get(0);
