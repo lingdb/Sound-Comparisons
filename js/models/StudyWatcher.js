@@ -1,3 +1,4 @@
+/* global StudyWatcher: true */
 "use strict";
 var StudyWatcher = Backbone.Model.extend({
   defaults: {study: null, lastStudy: null}

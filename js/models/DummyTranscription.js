@@ -1,3 +1,4 @@
+/* global DummyTranscription: true */
 "use strict";
 /**
   Note that contrary to the Transcription model implemented in php,

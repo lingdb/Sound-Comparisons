@@ -1,3 +1,4 @@
+/* global LanguageStatusType: true */
 "use strict";
 /***/
 var LanguageStatusType = Backbone.Model.extend({

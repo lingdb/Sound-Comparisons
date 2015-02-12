@@ -1,3 +1,4 @@
+/* global Configurator: true */
 /**
   The Configurator provides means to build configuration such as used by the Linker.
 */
@@ -76,7 +77,7 @@ var Configurator = Sanitizer.extend({
       config.phLang = phLang.getKey();
     }
     //Helper function:
-    var getKeys = function(xs){return _.map(xs, function(x){return x.getKey();})};
+    var getKeys = function(xs){return _.map(xs, function(x){return x.getKey();});};
     //meaningGroups:
     config.meaningGroups = getKeys(App.meaningGroupCollection.getSelected());
     //regions:

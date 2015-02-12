@@ -1,3 +1,4 @@
+/* global SoundControlView: true, document: false */
 "use strict";
 /**
   el:    google.maps.Map

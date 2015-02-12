@@ -1,3 +1,4 @@
+/* global ContributorView: true */
 "use strict";
 /***/
 var ContributorView = Renderer.prototype.SubView.extend({

@@ -1,3 +1,4 @@
+/* global Linker: true */
 "use strict";
 /**
   The Linker extends the Configurator, which in turn extends the Sanitizer.

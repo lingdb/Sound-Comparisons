@@ -1,3 +1,4 @@
+/* global WordMenuView: true */
 "use strict";
 /**
   The WordMenuView will be used by the Renderer.
@@ -27,7 +28,6 @@ var WordMenuView = Backbone.View.extend({
       }
     }
     return path;
-    $.extend(true, this.model, {searchFilter: {soundPath: path}});
   }
   /**
     Generates the sortBy part of the model for WordMenuView.
@@ -154,6 +154,7 @@ var WordMenuView = Backbone.View.extend({
             break;
             case 'some':
               box.icon = 'icon-chkbox-half-custom';
+            /* falls through */
             case 'none':
               var additional = words.getUnion(App.wordCollection.getSelected(), words);
               box.link = 'data-href="'+App.router.linkCurrent({words: additional})+'"';
@@ -167,13 +168,13 @@ var WordMenuView = Backbone.View.extend({
         }
         data.meaningGroups.push(mg);
         if('wordList' in this.model){
-          delete this.model['wordList'];
+          delete this.model.wordList;
         }
       }, this);
     }else{
       data.wordList = this.buildWordList(App.wordCollection);
       if('meaningGroups' in this.model){
-        delete this.model['meaningGroups'];
+        delete this.model.meaningGroups;
       }
     }
     _.extend(this.model, data);
@@ -219,9 +220,7 @@ var WordMenuView = Backbone.View.extend({
         }
       }
       //Link for each word:
-      w.link = App.pageState.isMapView()
-             ? 'href="'+App.router.linkMapView({word: word})+'"'
-             : 'href="'+App.router.linkWordView({word: word})+'"';
+      w.link = App.pageState.isMapView() ? 'href="'+App.router.linkMapView({word: word})+'"' : 'href="'+App.router.linkWordView({word: word})+'"';
       //Phonetics:
       var phonetics = ['*'+word.getProtoName()]
         , phLang = App.pageState.getPhLang();
@@ -231,7 +230,7 @@ var WordMenuView = Backbone.View.extend({
       }
       //Finish it:
       _.each(phonetics, function(p){
-        ws.push(_.extend({}, w, {phonetic: p}))
+        ws.push(_.extend({}, w, {phonetic: p}));
       }, this);
     }, this);
     return {words: ws};

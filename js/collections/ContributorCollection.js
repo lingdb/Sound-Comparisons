@@ -1,3 +1,4 @@
+/* global ContributorCollection: true */
 "use strict";
 /***/
 var ContributorCollection = Backbone.Collection.extend({
@@ -11,7 +12,7 @@ var ContributorCollection = Backbone.Collection.extend({
     if(x > y) return -1;
     if(x < y) return  1;
     //Second choice is ASC by Surnames:
-    x = a.get('Surnames'), y = b.get('Surnames');
+    x = a.get('Surnames'); y = b.get('Surnames');
     if(x > y) return  1;
     if(x < y) return -1;
     return 0;

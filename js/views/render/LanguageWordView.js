@@ -1,3 +1,4 @@
+/* global LanguageWordView: true */
 "use strict";
 /***/
 var LanguageWordView = Renderer.prototype.SubView.extend({
@@ -134,8 +135,7 @@ var LanguageWordView = Renderer.prototype.SubView.extend({
             lng.transcriptions = _.map([0,1,2], function(j){
               return {
                 isFake: true
-              , fake: ((i === 1 || j === 1) && i < 3)
-                    ? App.translationStorage.translateStatic('tabulator_multi_cell'+i+j) : ''
+              , fake: ((i === 1 || j === 1) && i < 3) ? App.translationStorage.translateStatic('tabulator_multi_cell'+i+j) : ''
               };
             }, this);
           }else{//We've got words, to build our transcriptions with:

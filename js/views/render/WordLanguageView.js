@@ -1,3 +1,4 @@
+/* global WordLanguageView: true */
 "use strict";
 /***/
 var WordLanguageView = Renderer.prototype.SubView.extend({
@@ -45,7 +46,7 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
         , clearLanguagesLink: 'href="'+App.router.linkWordLanguageView({languages: []})+'"'
         , transposeLink:      'href="'+App.router.linkLanguageWordView()+'"'
         , rows: []
-        };
+        }, basic;
     /*
       The thead consists of multiple rows: regions, delete and languages, plays.
     */
@@ -58,12 +59,11 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
     //The Languages:
     var languages = _.flatten(_.values(lMap));
     if(languages.length === 0){
-      var trans = App.translationStorage.translateStatic('tabulator_multi_langrow');
       table.languages = _.map([1,2,3], function(i){
-        return {isFake: true, shortName: trans+' '+i};
+        return {isFake: true, shortName: App.translationStorage.translateStatic('tabulator_multi_langrow')+' '+i};
       }, this);
     }else{
-      var basic = _.extend({isFake: false}, App.translationStorage.translateStatic({
+      basic = _.extend({isFake: false}, App.translationStorage.translateStatic({
         deleteLanguageTtip: 'tabulator_multi_tooltip_removeLanguage'
       , playTtip:           'tabulator_multi_playlang'
       }));
@@ -95,16 +95,14 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
     }
     //Helper function for faking Transcriptions:
     var fakeTrans = function(i, j){
-      return { fake: _.all([i < 3, j < 3, i === 3 || j === 3])
-             ? App.translationStorage.translateStatic('tabulator_multi_cell'+i+j) : ''
+      return { fake: _.all([i < 3, j < 3, i === 3 || j === 3]) ? App.translationStorage.translateStatic('tabulator_multi_cell'+i+j) : ''
       };
     };
     //Faking words iff necessary:
     if(words.length === 0){
-      var trans = App.translationStorage.translateStatic('tabulator_multi_wordcol');
       words = _.map([0,1,2], function(j){
         var w = { fake: true
-                , trans: trans+' '+(j+1)
+                , trans: App.translationStorage.translateStatic('tabulator_multi_wordcol')+' '+(j+1)
                 , isLogical: table.isLogical
                 , transcriptions: [] }
           , iMax = languages.length || 3;
@@ -115,10 +113,10 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
         return w;
       }, this);
     }else{//Filling non-fake words with content:
-      var basic = _.extend({fake: false}, App.translationStorage.translateStatic({
+      basic = _.extend({fake: false}, App.translationStorage.translateStatic({
             deleteWordTtip: 'tabulator_multi_tooltip_removeWord'
-          , playTtip:       'tabulator_multi_playword' }))
-        , spLang = App.pageState.getSpLang()
+          , playTtip:       'tabulator_multi_playword' }));
+      var spLang = App.pageState.getSpLang()
         , mTtip  = App.translationStorage.translateStatic('tooltip_words_link_mapview');
       words = _.map(words, function(w, j){
         var remaining = App.wordCollection.getDifference(words, [w])

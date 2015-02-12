@@ -1,3 +1,4 @@
+/* global importScripts: false, onmessage: true, postMessage: false */
 "use strict";
 /**
   (de-)compressing strings turned out to be a rather time intensive task.

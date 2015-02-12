@@ -1,3 +1,4 @@
+/* global DataStorage: true */
 "use strict";
 /**
   Given that query/data allows us to fetch individual studies,
@@ -36,7 +37,7 @@ var DataStorage = Backbone.Model.extend({
     //Fetching initial data from target:
     var t = this;
     $.getJSON(this.get('target')).done(function(data){
-      delete data['Description'];
+      delete data.Description;
       console.log("Got target data: "+JSON.stringify(data));
       App.setupBar.addLoaded();
       t.set(data);

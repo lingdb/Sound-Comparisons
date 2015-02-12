@@ -1,3 +1,4 @@
+/* global Logger: true, ga: false */
 "use strict";
 var Logger = Backbone.Model.extend({
   defaults: {

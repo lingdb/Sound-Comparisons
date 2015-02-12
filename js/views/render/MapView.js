@@ -1,3 +1,4 @@
+/* global MapView: true, document: false */
 "use strict";
 /***/
 var MapView = Renderer.prototype.SubView.extend({
@@ -35,7 +36,7 @@ var MapView = Renderer.prototype.SubView.extend({
       view.setScrollWheel(true);
     });
     $('body').on('mousedown', function(e){
-      var onMap = $(event.target).parents('#map_canvas').length > 0;
+      var onMap = $(e.target).parents('#map_canvas').length > 0;
       if(!onMap){
         view.setScrollWheel(false);
       }
@@ -89,9 +90,7 @@ var MapView = Renderer.prototype.SubView.extend({
     , regionZoom: App.study.getMapZoomCorners()
     }, word = App.wordCollection.getChoice();
     //Iterating languages:
-    var languages = App.pageState.get('mapViewIgnoreSelection')
-                  ? App.languageCollection.models
-                  : App.languageCollection.getSelected();
+    var languages = App.pageState.get('mapViewIgnoreSelection') ? App.languageCollection.models : App.languageCollection.getSelected();
     _.each(languages, function(l){
       var latlon = l.getLocation();
       if(latlon === null) return;
@@ -188,7 +187,7 @@ var MapView = Renderer.prototype.SubView.extend({
       }else if(!this.renderMapFlag || App.studyWatcher.studyChanged()){
         this.centerRegion();
       }
-    }
+    };
     return this.renderMap();
   }
   /**

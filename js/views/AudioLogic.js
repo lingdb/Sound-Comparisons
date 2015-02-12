@@ -1,3 +1,4 @@
+/* global AudioLogic: true */
 "use strict";
 /**
   The rewrite of AudioLogic to a Backbone.View.
@@ -44,6 +45,7 @@ var AudioLogic = Backbone.View.extend({
           break;
           case 'click':
           case 'touchstart':
+          /* falls through */
           default:
             t.play(a);
         }
@@ -85,7 +87,7 @@ var AudioLogic = Backbone.View.extend({
     var t = this;
     $(audio).unbind('ended').on('ended', function(){ t.played(audio); });
     //Exit if audio lacks sources:
-    if(0 == $('source', audio).length){
+    if(0 === $('source', audio).length){
       this.played(audio);
       return;
     }

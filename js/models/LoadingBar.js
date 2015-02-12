@@ -1,3 +1,4 @@
+/* global LoadingBar: true */
 "use strict";
 var LoadingBar = Backbone.Model.extend({
   defaults: {

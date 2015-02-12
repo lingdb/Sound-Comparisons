@@ -1,3 +1,4 @@
+/* global Language: true */
 "use strict";
 /***/
 var Language = Backbone.Model.extend({

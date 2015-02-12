@@ -1,3 +1,4 @@
+/* global PageState: true */
 "use strict";
 /**
   The PageState has a variety of tasks that lie at the core of our Application.
@@ -21,7 +22,7 @@ var PageState = Backbone.Model.extend({
   */
 , activate: function(){
     //{sp,ph}Lang need resetting sometimes:
-    var reset = function(){this.set({spLang: null, phLang: null})};
+    var reset = function(){this.set({spLang: null, phLang: null});};
     App.study.on('change', reset, this);
     App.translationStorage.on('change:translationId', reset, this);
   }

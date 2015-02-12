@@ -1,3 +1,4 @@
+/* global TranscriptionMap: true */
 "use strict";
 /***/
 var TranscriptionMap = Backbone.Model.extend({

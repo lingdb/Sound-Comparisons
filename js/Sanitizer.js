@@ -1,3 +1,4 @@
+/* global Sanitizer: true */
 "use strict";
 /**
   The Sanitizer provides means to sanitize options such as used by the Linker.

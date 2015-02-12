@@ -1,3 +1,4 @@
+/* global LanguageStatusTypeCollection: true */
 "use strict";
 /***/
 var LanguageStatusTypeCollection = Backbone.Collection.extend({

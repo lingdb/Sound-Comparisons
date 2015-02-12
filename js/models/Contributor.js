@@ -1,3 +1,4 @@
+/* global Contributor: true */
 "use strict";
 /***/
 var Contributor = Backbone.Model.extend({
@@ -6,7 +7,7 @@ var Contributor = Backbone.Model.extend({
   */
   getName: function(){
     var fn = this.get('Forenames')
-      , sn = this.get('Surnames')
+      , sn = this.get('Surnames');
     return fn+' '+sn;
   }
   /***/

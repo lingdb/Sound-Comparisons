@@ -1,3 +1,4 @@
+/* global Family: true */
 "use strict";
 /***/
 var Family = Backbone.Model.extend({

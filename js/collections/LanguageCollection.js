@@ -1,3 +1,4 @@
+/* global LanguageCollection: true */
 "use strict";
 /***/
 var LanguageCollection = Choice.extend({
@@ -48,7 +49,7 @@ var LanguageCollection = Choice.extend({
     if(data && 'languages' in data){
       console.log('LanguageCollection.update()');
       if('_spellingLanguages' in this){
-        delete this['_spellingLanguages'];
+        delete this._spellingLanguages;
       }
       this.reset(data.languages);
     }

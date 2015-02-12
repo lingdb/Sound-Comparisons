@@ -1,17 +1,19 @@
+/* global PlaySequenceView: true */
 "use strict";
 var PlaySequenceView = Backbone.View.extend({
   update: function(pageView){
+    var p; // variable for PlaySequence
     //mapView and singleLanguageView ship their own solutions,
     //we care for the rest:
     switch(pageView){
       case 'word':
-        var p = new PlaySequence($('#wordHeadline_playAll'));
+        p = new PlaySequence($('#wordHeadline_playAll'));
         $('#singleWordTable audio').each(function(){
           p.add(this);
         });
       break;
       case 'language':
-        var p = new PlaySequence($('#language_playAll'));
+        p = new PlaySequence($('#language_playAll'));
         $('#languageTable td:visible audio').each(function(){
           p.add(this);
         });

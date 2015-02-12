@@ -1,3 +1,4 @@
+/* global TemplateStorage: true */
 "use strict";
 var TemplateStorage = Backbone.Model.extend({
   defaults: {
@@ -62,7 +63,7 @@ var TemplateStorage = Backbone.Model.extend({
       $.when.apply($, fetches).done(function(){
         _.each(info, storage.store, storage);
         var ps = {};
-        _.each(info, function(i){ps[i.name] = i.content});
+        _.each(info, function(i){ps[i.name] = i.content;});
         storage.set({ready: true, partials: ps});
       });
     });

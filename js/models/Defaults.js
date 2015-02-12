@@ -1,3 +1,4 @@
+/* global Defaults: true */
 "use strict";
 /***/
 var Defaults = Backbone.Model.extend({

@@ -1,3 +1,4 @@
+/* global Transcription: true */
 "use strict";
 /**
   Note that contrary to the Transcription model implemented in php,
@@ -37,7 +38,7 @@ var Transcription = Backbone.Model.extend({
     ), ret = [];
     //Helper functions:
     var addKey = function(key){
-      ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key))
+      ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key));
     }, isOne = function(key){
       return parseInt(fields[key]) === 1;
     }, runOne = function(key){
@@ -46,7 +47,7 @@ var Transcription = Backbone.Model.extend({
       return !(_.isEmpty(fields[key]));
     }, runEmpty = function(key){
       if(notEmpty(key)){
-        ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key)+key)
+        ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key)+key);
       }
     };
     //Putting helpers to use:
@@ -61,7 +62,7 @@ var Transcription = Backbone.Model.extend({
            ,'RootSharedInAnotherFamily']
            , runOne, this);
     if(notEmpty('IsoCodeKnownDonor')){
-      ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(fields['IsoCodeKnownDonor']));
+      ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(fields.IsoCodeKnownDonor));
     }
     //Done:
     return ret;

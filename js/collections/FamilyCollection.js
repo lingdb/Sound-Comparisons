@@ -1,3 +1,4 @@
+/* global FamilyCollection: true */
 "use strict";
 /***/
 var FamilyCollection = Selection.extend({

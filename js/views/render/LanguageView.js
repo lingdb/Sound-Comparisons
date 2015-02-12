@@ -1,3 +1,4 @@
+/* global LanguageView: true */
 "use strict";
 /***/
 var LanguageView = Renderer.prototype.SubView.extend({
@@ -27,8 +28,8 @@ var LanguageView = Renderer.prototype.SubView.extend({
     };
     //Neighbours:
     _.each(['tabulator_language_prev','tabulator_language_next'], function(v, k){
-      var l = (k === 0) ? language.getPrev() : language.getNext()
-        , k = (k === 0) ? 'prev' : 'next';
+      var l = (k === 0) ? language.getPrev() : language.getNext();
+      k = (k === 0) ? 'prev' : 'next';
       headline[k] = {
         title: App.translationStorage.translateStatic(v)
       , link:  'href="'+App.router.linkLanguageView({language: l})+'"'
@@ -100,14 +101,14 @@ var LanguageView = Renderer.prototype.SubView.extend({
 , buildDescription: function(lang){
     var lst   = lang.getLanguageStatusType()
       , desc  = lang.getDescriptionData()
-      , lines = [];
+      , lines = [], line;
     //Composing description lines:
     if('Tooltip' in desc){
       lines.push({desc: desc.Tooltip});
     }
     //Historical period:
     if('HistoricalPeriod' in desc){
-      var line = {
+      line = {
         link: 'http://en.wikipedia.org/wiki/'+desc.HistoricalPeriodWikipediaString
       , img:  'http://en.wikipedia.org/favicon.ico'
       };
@@ -115,8 +116,7 @@ var LanguageView = Renderer.prototype.SubView.extend({
         line.desc = lst.getDescription()+' '+desc.HistoricalPeriod;
         lst = null;
       }else{
-        line.desc = App.translationStorage.translateStatic('language_description_historical')
-                  + ': ' + desc.HistoricalPeriod;
+        line.desc = App.translationStorage.translateStatic('language_description_historical') + ': ' + desc.HistoricalPeriod;
       }
       lines.push(line);
     }
@@ -129,14 +129,12 @@ var LanguageView = Renderer.prototype.SubView.extend({
     }
     //Region:
     if('StateRegion' in desc){
-      var line = {
+      line = {
         desc: (lst !== null) ? lst.getDescription()
             : App.translationStorage.translateStatic('language_description_region')
       };
       line.desc += ' ';
-      line.desc += ('NearestCity' in desc)
-                 ? desc.NearestCity + ' (' + desc.StateRegion + ')'
-                 : desc.StateRegion;
+      line.desc += ('NearestCity' in desc) ? desc.NearestCity + ' (' + desc.StateRegion + ')' : desc.StateRegion;
       lines.push(line);
       lst = null;
     }
@@ -148,11 +146,9 @@ var LanguageView = Renderer.prototype.SubView.extend({
     }
     //Locality:
     if('PreciseLocality' in desc){
-      var spelling = ('PreciseLocalityNationalSpelling' in desc)
-                   ? ' (='+desc.PreciseLocalityNationalSpelling+')' : '';
+      var spelling = ('PreciseLocalityNationalSpelling' in desc) ? ' (='+desc.PreciseLocalityNationalSpelling+')' : '';
       lines.push({
-        desc: App.translationStorage.translateStatic('language_description_preciselocality')
-            + ': '+desc.PreciseLocality+spelling
+        desc: App.translationStorage.translateStatic('language_description_preciselocality') + ': '+desc.PreciseLocality+spelling
       });
     }
     //External Weblink:
@@ -167,8 +163,7 @@ var LanguageView = Renderer.prototype.SubView.extend({
     if('WebsiteSubgroupName' in desc){
       lines.push({
         desc: App.translationStorage.translateStatic('language_description_subgroup')+': '
-      , link: ('WebsiteSubgroupWikipediaString' in desc)
-            ? 'http://en.wikipedia.org/wiki/' + desc.WebsiteSubgroupWikipediaString : null
+      , link: ('WebsiteSubgroupWikipediaString' in desc) ? 'http://en.wikipedia.org/wiki/' + desc.WebsiteSubgroupWikipediaString : null
       , img:  'http://en.wikipedia.org/favicon.ico'
       , afterLink: desc.WebsiteSubgroupName
       });

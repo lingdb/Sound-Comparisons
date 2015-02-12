@@ -1,3 +1,4 @@
+/* global HideLinks: true */
 "use strict";
 var HideLinks = Backbone.View.extend({
   initialize: function(){

@@ -1,3 +1,4 @@
+/* global TitleView: true */
 "use strict";
 /**
   model: TranslationStorage

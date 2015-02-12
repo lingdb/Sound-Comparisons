@@ -1,3 +1,4 @@
+/* global TranslationStorage: true, navigator: false */
 "use strict";
 var TranslationStorage = Backbone.Model.extend({
   defaults: {
@@ -157,7 +158,7 @@ var TranslationStorage = Backbone.Model.extend({
         }
       }, this);
       map[tId] = fMap;
-    }, this)
+    }, this);
     this.set({fToDMap: map});
   }
   /**
@@ -170,7 +171,7 @@ var TranslationStorage = Backbone.Model.extend({
     Saving the current TranslationId to App.storage:
   */
 , saveTranslationId: function(){
-    App.storage['translationId'] = this.get('translationId');
+    App.storage.translationId = this.get('translationId');
   }
   /**
     Figuring out the TranslationId of a client,
@@ -186,13 +187,13 @@ var TranslationStorage = Backbone.Model.extend({
     if(tId !== null) return tId;
     //Is the translationId known from App.storage?
     if('translationId' in App.storage){
-      tId = App.storage['translationId'];
+      tId = App.storage.translationId;
     }else{
       //Finding the translationId via browser language:
       var lang = navigator.language || navigator.userLanguage
         , summary = _.find(this.get('summary'), function(s){
           var index = lang.indexOf(s.BrowserMatch);
-          return index >= 0
+          return index >= 0;
         }, this);
       if(summary) tId = summary.TranslationId;
     }
@@ -325,7 +326,7 @@ var TranslationStorage = Backbone.Model.extend({
       this.set({ready: true});
       console.log('TranslationStorage.init() done with setup.');
       App.setupBar.addLoaded();
-      this.chkLoadingComplete = function(){return true};
+      this.chkLoadingComplete = function(){return true;};
     }
     return ok;
   }

@@ -1,3 +1,4 @@
+/* global RegionLanguageCollection: true */
 "use strict";
 /***/
 var RegionLanguageCollection = Backbone.Collection.extend({

@@ -1,3 +1,4 @@
+/* global Region: true */
 "use strict";
 /***/
 var Region = Backbone.Model.extend({
@@ -72,7 +73,7 @@ var Region = Backbone.Model.extend({
   */
 , getFamily: function(){
     if(this._family === null){
-      var regionId = this.getId()
+      var regionId = this.getId();
       //_family becomes undefined, if not found:
       this._family = App.familyCollection.find(function(f){
         return regionId.indexOf(f.getId()) === 0;

@@ -1,3 +1,4 @@
+/* global Choice: true */
 "use strict";
 /**
   Implements the aspect that a single model of a collection may be marked as chosen.

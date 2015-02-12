@@ -1,3 +1,4 @@
+/* global RegionCollection: true */
 "use strict";
 /***/
 var RegionCollection = Selection.extend({
@@ -27,7 +28,11 @@ var RegionCollection = Selection.extend({
       if(r !== null){ // We only act on cases with regions.
         var rId = r.getId();
         if(!(rId in rMap)) rMap[rId] = r;
-        (rId in lMap) ? lMap[rId].push(l) : lMap[rId] = [l];
+        if(rId in lMap){
+          lMap[rId].push(l);
+        }else{
+          lMap[rId] = [l];
+        }
       }
     }, this);
     return {rMap: rMap, lMap: lMap};

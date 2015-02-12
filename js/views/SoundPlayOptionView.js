@@ -1,3 +1,4 @@
+/* global SoundPlayOptionView: true */
 "use strict";
 var SoundPlayOptionView = Backbone.View.extend({
   initialize: function(){
@@ -7,13 +8,13 @@ var SoundPlayOptionView = Backbone.View.extend({
 , events: {'click img': 'changeOptions'}
 , changeOptions: function(e){
     var mode = $(e.target).attr('value');
-    if(!mode || mode == '') mode = 'hover';
+    if(!mode || mode === '') mode = 'hover';
     this.model.set({playMode: mode});
   }
 , render: function(){
     this.$('img').removeClass('hide');
     var mode = this.model.get('playMode');
-    if(!mode || mode == '') mode = 'hover';
+    if(!mode || mode === '') mode = 'hover';
     this.$('img[value="'+mode+'"]').addClass('hide');
   }
 });

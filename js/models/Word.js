@@ -1,3 +1,4 @@
+/* global Word: true */
 "use strict";
 /***/
 var Word = Backbone.Model.extend({

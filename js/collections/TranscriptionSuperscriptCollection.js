@@ -1,3 +1,4 @@
+/* global TranscriptionSuperscriptCollection: true */
 "use strict";
 /***/
 var TranscriptionSuperscriptCollection = Backbone.Collection.extend({
@@ -27,16 +28,17 @@ var TranscriptionSuperscriptCollection = Backbone.Collection.extend({
   , RootSharedInAnotherFamily:         22
   }
 , getTranscriptionSuperscript: function(field){
+    var e;
     if(_.isString(field)){
       if(field in this.transcriptionFieldLookup){
         return this.getTranscriptionSuperscript(this.transcriptionFieldLookup[field]);
       }else if(field.length === 3){
-        var e = this.findWhere({ISOCode: field});
+        e = this.findWhere({ISOCode: field});
         if(e) return e.pick('Abbreviation', 'FullNameForHoverText');
       }
     }else if(_.isNumber(field)){
-      var predicate = function(e){return parseInt(e.get('Ix')) === field;}
-        , e = this.find(predicate);
+      var predicate = function(e){return parseInt(e.get('Ix')) === field;};
+      e = this.find(predicate);
       if(e) return e.pick('Abbreviation', 'HoverText');
     }
     console.log('Trans…Super…Collection.getTranscriptionSuperscript() had undefined field: '+field);

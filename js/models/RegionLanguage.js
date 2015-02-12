@@ -1,3 +1,4 @@
+/* global RegionLanguage: true */
 "use strict";
 /***/
 var RegionLanguage = Backbone.Model.extend({

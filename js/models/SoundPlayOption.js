@@ -1,3 +1,4 @@
+/* global SoundPlayOption: true */
 "use strict";
 var SoundPlayOption = Backbone.Model.extend({
   initialize: function(){

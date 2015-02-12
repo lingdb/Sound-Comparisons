@@ -1,3 +1,4 @@
+/* global WordCollection: true */
 "use strict";
 /***/
 var WordCollection = Choice.extend({
@@ -18,12 +19,13 @@ var WordCollection = Choice.extend({
     Custom comparator that sorts words by either alphabetical order or by logical order.
   */
 , comparator: function(a, b){
+    var ma, mb;
     if(App.pageState.wordOrderIsAlphabetical()){ // Alphabetical order
-      var ma = a.getModernName(), mb = b.getModernName();
+      ma = a.getModernName(); mb = b.getModernName();
       if(ma > mb) return  1;
       if(ma < mb) return -1;
     }else{ // Logical order
-      var ma = a.getMeaningGroup(), mb = b.getMeaningGroup();
+      ma = a.getMeaningGroup(); mb = b.getMeaningGroup();
       if(ma && mb){
         var maId = ma.getId(), mbId = mb.getId();
         if(maId > mbId) return  1;

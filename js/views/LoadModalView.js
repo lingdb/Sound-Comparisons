@@ -1,3 +1,4 @@
+/* global LoadModalView: true*/
 "use strict";
 /**
   el: #loadModal
@@ -23,8 +24,7 @@ var LoadModalView = Backbone.View.extend({
     this.render({
       exit: true
     , headline: 'Maps not accessable'
-    , description: 'It appears that google maps could not be loaded. '
-                  +'Please check your internet connection.'
+    , description: 'It appears that google maps could not be loaded. Please check your internet connection.'
     });
   }
 , render: function(model){

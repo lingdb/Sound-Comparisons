@@ -1,3 +1,4 @@
+/* global MeaningGroup: true */
 "use strict";
 /***/
 var MeaningGroup = Backbone.Model.extend({

@@ -1,3 +1,4 @@
+/* global WordOverlay: true */
 "use strict";
 var WordOverlay = Backbone.Model.extend({
   defaults: {
@@ -27,9 +28,7 @@ var WordOverlay = Backbone.Model.extend({
       //Building audioelements:
       var audio = "";
       if(sf.soundfiles.length > 0)
-        audio = "<audio data-onDemand='"
-              + JSON.stringify(sf.soundfiles)
-              + "' autobuffer='' preload='auto'></audio>";
+        audio = "<audio data-onDemand='" + JSON.stringify(sf.soundfiles) + "' autobuffer='' preload='auto'></audio>";
       var fileMissing = ''; //Historical entries -> no files
       if(this.get('historical') == 1 || audio === "")
         fileMissing = ' fileMissing';
@@ -38,10 +37,7 @@ var WordOverlay = Backbone.Model.extend({
         sf.phonetic = "*" + sf.phonetic;
       if(d.content !== "")
         d.content += ",";
-      d.content += "<div class='transcription"
-                 + fileMissing
-                 + "'"+smallCaps+">" + sf.phonetic + "</div>"
-                 + audio;
+      d.content += "<div class='transcription" + fileMissing + "'"+smallCaps+">" + sf.phonetic + "</div>" + audio;
     }, this);
     this.set(d);
   }
@@ -157,7 +153,7 @@ var WordOverlay = Backbone.Model.extend({
     //Filling promises with shifted BBoxes:
     _.each(edges, function(e){
       stage1.push(t.getBBox(e).done(function(box){
-        positions.push({edge: e, bbox: t.shiftBy(box, mapBox)})
+        positions.push({edge: e, bbox: t.shiftBy(box, mapBox)});
       }));
     });
     //Awaiting finish of stage1:
@@ -182,7 +178,7 @@ var WordOverlay = Backbone.Model.extend({
       //Appending the fallback edge:
       edges.push(fallback);
       //Selecting the first remaining edge:
-      t.set({edge: _.head(edges)})
+      t.set({edge: _.head(edges)});
     });
   }
 });

@@ -1,3 +1,4 @@
+/* global Selection: true */
 "use strict";
 /**
   Implements the aspect that several models of a collection can be marked as selected.
@@ -9,9 +10,8 @@ var Selection = Backbone.Collection.extend({
     this.selected = {}; // model.getId() -> model
     //Defaulting selected models:
     this.on('reset', function(){
-      var ms = ('getDefaultSelection' in this)
-             ? this.getDefaultSelection()
-             : this.models;
+      var ms = ('getDefaultSelection' in this) ? this.getDefaultSelection()
+                                               : this.models;
       this.selected = {};
       _.each(ms, function(m){
         this.selected[m.getId()] = m;

@@ -78,7 +78,7 @@ PlaySequence.prototype.rotate = function(target, mathWise){
     this.rotate(target);
     this.rotate(target);
   }
-}
+};
 /***/
 PlaySequence.prototype.showPlay = function(){
   if(this.target.hasClass('icon-eject')) return;

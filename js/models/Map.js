@@ -1,3 +1,4 @@
+/* global Map: true */
 "use strict";
 if(typeof(google) !== 'undefined'){
   var Map = Backbone.Model.extend({

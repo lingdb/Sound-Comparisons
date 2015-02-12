@@ -1,3 +1,4 @@
+/* global SetupBarView: true */
 "use strict";
 /**
   el: #appSetup
@@ -23,7 +24,7 @@ var SetupBarView = Backbone.View.extend({
   */
 , finish: function(){
     //Removing the SetupBarView from the App:
-    delete window.App.views['setupBar'];
+    delete window.App.views.setupBar;
     //No longer listen to events from model:
     this.model.off(null, null, this);
     //Remove the el from the document:

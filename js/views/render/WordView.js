@@ -1,3 +1,4 @@
+/* global WordView: true */
 "use strict";
 /***/
 var WordView = Renderer.prototype.SubView.extend({

@@ -1,3 +1,4 @@
+/* global Renderer: true */
 "use strict";
 /**
   The Renderer will coordinate an array of views as it's model.
@@ -83,7 +84,8 @@ var Renderer = Backbone.View.extend({
   */
 , callUpdates: function(v){
     if(v === null) return;
-    _.each(_.keys(v.__proto__), function(k){
+    window.foo = v;
+    _.each(_.keys(v.constructor.prototype), function(k){
       if(k.match(/^update/) !== null){
         v[k].call(v);
       }

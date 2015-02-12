@@ -1,3 +1,4 @@
+/* global SoundDownloader: true */
 "use strict";
 /**
   The SoundDownloader aids downloading a .zip of all soundfiles currently in the content area.

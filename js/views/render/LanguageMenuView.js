@@ -1,3 +1,4 @@
+/* global LanguageMenuView: true */
 "use strict";
 /**
   The LanguageMenuView will be used by the Renderer.
@@ -55,7 +56,7 @@ var LanguageMenuView = Backbone.View.extend({
         //Link building:
         var fams = selected ? fCol.getDifference(fCol.getSelected(), [f])
                             : fCol.getUnion(fCol.getSelected(), [f]);
-        data.link = 'href="'+App.router.linkConfig({Families: fams})+'"'
+        data.link = 'href="'+App.router.linkConfig({Families: fams})+'"';
         //Checkbox info:
         var languages = f.getLanguages(), lCol = App.languageCollection;
         switch(lCol.areSelected(languages)){
@@ -67,6 +68,7 @@ var LanguageMenuView = Backbone.View.extend({
           break;
           case 'some':
             data.checkbox.icon = 'icon-chkbox-half-custom';
+          /* fall through */
           case 'none':
             var additional = lCol.getUnion(lCol.getSelected(), languages);
             data.checkbox.link = 'href="'+App.router.linkCurrent({languages: additional})+'"';
@@ -91,7 +93,7 @@ var LanguageMenuView = Backbone.View.extend({
     var regionList = {
       isDl: !App.study.getColorByFamily()
     , regions: []
-    };
+    }, lCol = App.languageCollection;
     regions.each(function(r){
       var languages = r.getLanguages();
       if(languages.length === 0){
@@ -108,7 +110,7 @@ var LanguageMenuView = Backbone.View.extend({
           };
       //Filling the checkbox:
       if(isMultiView||isMapView){
-        var box = {icon: 'icon-chkbox-custom'}, lCol = App.languageCollection;
+        var box = {icon: 'icon-chkbox-custom'};
         switch(lCol.areSelected(languages)){
           case 'all':
             var removed = lCol.getDifference(lCol.getSelected(), languages);
@@ -118,6 +120,7 @@ var LanguageMenuView = Backbone.View.extend({
           break;
           case 'some':
             box.icon = 'icon-chkbox-half-custom';
+          /* falls through */
           case 'none':
             var additional = lCol.getUnion(lCol.getSelected(), languages);
             box.link = 'href="'+App.router.linkCurrent({languages: additional})+'"';
@@ -131,17 +134,14 @@ var LanguageMenuView = Backbone.View.extend({
       }
       //The link:
       var rCol = App.regionCollection
-        , rgs  = region.selected
-               ? rCol.getDifference(rCol.getSelected(), [r])
-               : rCol.getUnion(rCol.getSelected(), [r]);
+        , rgs  = region.selected ? rCol.getDifference(rCol.getSelected(), [r])
+                                 : rCol.getUnion(rCol.getSelected(), [r]);
       region.link = 'href="'+App.router.linkConfig({Regions: rgs})+'"';
       //The triangle:
-      region.triangle = region.selected
-                      ? 'icon-chevron-down'
-                      : 'icon-chevron-up rotate90';
+      region.triangle = region.selected ? 'icon-chevron-down'
+                                        : 'icon-chevron-up rotate90';
       //Languages for selected Regions:
       if(region.selected){
-        var lCol = App.languageCollection;
         languages.each(function(l){
           var language = {
             shortName: l.getSuperscript(l.getShortName())

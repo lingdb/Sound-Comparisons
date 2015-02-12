@@ -1,3 +1,4 @@
+/* global TranscriptionSuperscript: true */
 "use strict";
 /**
   TranscriptionSuperscript encapsules both, transcrSuperscriptInfo and transcrSuperscriptLenderLgs.

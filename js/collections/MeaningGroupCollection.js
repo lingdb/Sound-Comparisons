@@ -1,3 +1,4 @@
+/* global MeaningGroupCollection: true */
 "use strict";
 /***/
 var MeaningGroupCollection = Selection.extend({
@@ -7,7 +8,7 @@ var MeaningGroupCollection = Selection.extend({
   */
 , comparator: function(a, b){
     var x = parseInt(a.getId(), 10)
-      , y = parseInt(b.getId(), 10)
+      , y = parseInt(b.getId(), 10);
     if(x > y) return  1;
     if(x < y) return -1;
     return 0;
@@ -35,7 +36,11 @@ var MeaningGroupCollection = Selection.extend({
     _.each(words, function(w){
       var mg = w.getMeaningGroup(), mId = mg.getId();
       if(!(mId in mMap)) mMap[mId] = mg;
-      (mId in wMap) ? wMap[mId].push(w) : wMap[mId] = [w];
+      if(mId in wMap){
+        wMap[mId].push(w);
+      }else{
+        wMap[mId] = [w];
+      }
     }, this);
     return {mMap: mMap, wMap: wMap};
   }

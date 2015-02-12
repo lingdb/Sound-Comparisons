@@ -1,3 +1,4 @@
+/* global WordlistFilter: true */
 "use strict";
 /**
   Controls the filter box and mitigates it's effects.
@@ -111,7 +112,7 @@ var WordlistFilter = Backbone.View.extend({
     var c = $('ul.wordList li:visible').size();
     $('#FilterFoundMultiWords').text(c);
     if(c === 0){
-      var i = $('#PhoneticFilter')
+      var i = $('#PhoneticFilter');
       if(i.val() === '')
         i = $('#SpellingFilter');
       if(i.val() === '')
@@ -164,7 +165,7 @@ var WordlistFilter = Backbone.View.extend({
     this.setStorage('#FilterPhonetic', '#PhoneticFilter', input);
     var elems = $('ul.wordList .p50:nth-child(2)').map(function(i, e){
       var element = $(e)
-      var string  = element.text()
+        , string  = element.text()
         , matches = string.match(/\s*\[\s*([^\s]*)\s*\]\s*/);
       if(matches.length <= 1){
         console.log('WordlistFilter.phoneticFilter() could not find any matches for string:\n\t'+string);

@@ -1,3 +1,4 @@
+/* global Router: true */
 "use strict";
 /**
   The router for our application.

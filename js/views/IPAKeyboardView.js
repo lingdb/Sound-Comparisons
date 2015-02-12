@@ -1,3 +1,4 @@
+/* global IPAKeyboardView: true, document: false */
 "use strict";
 /**
   An onscreen keyboard to insert IPA phonetic symbols into the phonetic filter.
@@ -62,7 +63,7 @@ var IPAKeyboardView = Backbone.View.extend({
     var doc = myField.ownerDocument;
     if(doc.selection){ //IE support:
       myField.focus();
-      sel = doc.selection.createRange();
+      var sel = doc.selection.createRange();
       sel.text = symbol;
     }else if(myField.selectionStart || myField.selectionStart == '0'){
       //Replacing a selection, FF and hopefully others:

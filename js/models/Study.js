@@ -1,3 +1,4 @@
+/* global Study: true */
 "use strict";
 /***/
 var Study = Backbone.Model.extend({

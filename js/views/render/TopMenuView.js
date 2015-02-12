@@ -1,3 +1,4 @@
+/* global TopMenuView: true */
 "use strict";
 /**
   The TopMenuView will be used by the Renderer.
@@ -166,7 +167,7 @@ var TopMenuView = Backbone.View.extend({
       ls = App.languageCollection.models;
       ws = [App.wordCollection.getChoice()];
     }
-    var go = function(xs){return _.map(xs, function(x){return x.getId();}).join(',')};
+    var go = function(xs){return _.map(xs, function(x){return x.getId();}).join(',');};
     var w = go(ws), l = go(ls);
     this.setModel({csvLink: 'export/csv?study='+s+'&languages='+l+'&words='+w});
   }
@@ -196,7 +197,7 @@ var TopMenuView = Backbone.View.extend({
     });
     //The SoundPlayOption:
     var options = this.$('#topmenuSoundOptions img').click(function(){
-      App.soundPlayOption.set({playMode: this.attributes['value'].value});
+      App.soundPlayOption.set({playMode: this.attributes.value.value});
       options.each(function(){
         $(this).toggleClass('hide');
       });

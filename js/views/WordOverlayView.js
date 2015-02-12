@@ -1,3 +1,4 @@
+/* global WordOverlayView: true, document: false */
 "use strict";
 /**
   Our constructor expects the following options:
@@ -93,30 +94,30 @@ var WordOverlayView = function(o){
       div.style.left = bbox.x1 + 'px';
       div.style.top  = bbox.y1 + 'px';
     });
-  }
+  };
   //Making removal possible:
   this.remove = function(){
     this.setMap(null);
   };
   //Handling removal from the map:
   this.onRemove = function(){
-    var div = this.model.get('div')
+    var div = this.model.get('div');
     if(div instanceof Node){
       div.parentNode.removeChild(div);
-    };
+    }
     this.model.get('marker').setMap(null);
     this.model.set({div: null, marker: null});
-  }
+  };
   //Predicate to chk iff this overlay is on the screen.
   this.onScreen = function(){
     var p = this.model.get('position');
     return this.map_.getBounds().contains(p);
-  }
+  };
   //Callback to handle changed edges
   this.edgeChanged = function(){
     if(this.model.get('added'))
       this.draw();
-  }
+  };
   //Callbacks:
   this.model.on('change:edge', this.edgeChanged, this);
   //Setting the map:
