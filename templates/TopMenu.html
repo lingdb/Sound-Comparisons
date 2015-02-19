@@ -13,10 +13,7 @@
          ><i class="icon-dropdown-custom"></i>{{currentStudyName}}</a>
       <ul class="dropdown-menu">
       {{#studies}}
-        <li>
-        {{#currentStudy}}
-        <i class="icon-hand-right" style="margin-left: 3px; margin-right: 6px;"></i>
-        {{/currentStudy}}
+        <li{{#currentStudy}} class="disabled"{{/currentStudy}}>
         {{#link}}<a {{{.}}}>{{/link}}
         {{studyName}}
         {{#link}}</a>{{/link}}
