@@ -1,8 +1,4 @@
 $(document).ready(function(){
-  //Our logging function:
-  var log = function(s){
-    $('#log').prepend('<li>' + s + '</li>');
-  };
   //Function to update form fields for LanguageFamily:
   var updateLanguageFamilyForm = function(){
     var opt = $('#select_languagefamily option:selected');
@@ -36,7 +32,7 @@ $(document).ready(function(){
         $('#select_languagefamily').prepend(data);
         $('#select_languagefamily option:first-child').attr('selected', 'selected');
         updateLanguageFamilyForm();
-        log('Created new languagefamily.');
+        alert('Created new languagefamily.');
       }
     });
   });
@@ -46,15 +42,8 @@ $(document).ready(function(){
     //Trigger on iframe load:
     $('#iframe_post_form').load(function(){
       $('#iframe_post_form').unbind('load'); // No further listening
-      var uploadResult = $('#iframe_post_form').contents().text();
-      if(uploadResult != ''){
-        log("<b>Server reply:</b>\t" + uploadResult);
-      }else{ // Finalize dbimport
-        log('Files uploaded, updated db.')
-      }
     });
     //Load it up
-    log('Uploading files…');
     $('#fileform').submit();
   });
 });

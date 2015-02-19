@@ -31,3 +31,7 @@ body {
 #ResultCollectionView .saveButton {
   width: 10em;
 }
+#iframe_post_form {
+  width: 99%;
+  height: 300px;
+}
