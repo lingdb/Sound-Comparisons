@@ -395,5 +395,15 @@ class DataProvider {
     }
     return $ret;
   }
+  /***/
+  public static function getLastImport(){
+    $q = 'SELECT UNIX_TIMESTAMP(Time) FROM Edit_Imports ORDER BY TIME DESC LIMIT 1';
+    $t = static::fetchAll($q);
+    if(count($t) > 0){
+      return current(current($t));
+    }
+    Config::error('Query failed in DataProvider::getLastImport()');
+    return 0;
+  }
 }
 ?>

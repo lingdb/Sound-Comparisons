@@ -118,10 +118,8 @@ if(array_key_exists('global',$_GET)){
   //Done:
   echo json_encode($ret);
 }else{
-  $q = 'SELECT UNIX_TIMESTAMP(Time) FROM Edit_Imports ORDER BY TIME DESC LIMIT 1';
-  $time = current(current(DataProvider::fetchAll($q)));
   echo json_encode(array(
-    'lastUpdate'  => $time
+    'lastUpdate'  => DataProvider::getLastImport()
   , 'Description' => 'Add a global parameter to fetch global data, '
                    . 'and add a study parameter to fetch a study.'
   ));
