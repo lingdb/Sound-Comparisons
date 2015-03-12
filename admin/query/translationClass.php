@@ -344,5 +344,51 @@
       }
       return $ret;
     }
+    /**
+      @param $translationId
+      @return $missing [[ Description => [Req => String, Description => String]
+                       ,  Original => String
+                       ,  Translation => [TranslationId => $translationId
+                          , Translation => String, Payload => String, TranslationProvider => String]
+                       ]]
+      Returns an empty Array if $translationId === 1,
+      because there cannot be missing translations in the source translation.
+      Otherwise returns entries where $missing[*]['Translation']['Translation'] === ''.
+    */
+    public static function getMissingTranslations($translationId){
+      $missing = array();
+      if($translationId !== 1){
+        //Function to filter for missing Translations:
+        $filter = function($missing, $ps, $s) use ($translationId){
+          $pages = array_values(Translation::pageAll($ps, $s, $translationId));
+          foreach($pages as $page){
+            foreach($page as $t){
+              $orig = $t['Original'];
+              if($orig === null || $orig === '')
+                continue;
+              $trans = $t['Translation']['Translation'];
+              if($trans === null || $trans === ''){
+                array_push($missing, $t);
+              }
+            }
+          }
+          return $missing;
+        };
+        //Filtering through generalProviders:
+        $gProviders = static::generalProviders();
+        foreach($gProviders as $ps){
+          $missing = $filter($missing, $ps, '');
+        }
+        //Filtering through studyProviders:
+        $studies = static::studies();
+        $sProviders = static::studyProviders();
+        foreach($sProviders as $ps){
+          foreach($studies as $study){
+            $missing = $filter($missing, $ps, $study);
+          }
+        }
+      }
+      return $missing;
+    }
   }
 ?>

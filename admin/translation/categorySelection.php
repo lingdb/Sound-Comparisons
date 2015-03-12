@@ -36,8 +36,8 @@
 <?php
   $missing = ($_GET['action'] === 'missing') ? ' btn-inverse' : '';
   $changed = ($_GET['action'] === 'changed') ? ' btn-inverse' : '';
-  $mLnk = '?action=missing&Id='.$translationId;
-  $cLnk = '?action=changed&Id='.$translationId;
+  $mLnk = '?action=missing&tId='.$translationId;
+  $cLnk = '?action=changed&tId='.$translationId;
 ?>
 <a href="<?php echo $mLnk; ?>" class="btn<?php echo $missing; ?>">Missing translations</a>
 <a href="<?php echo $cLnk; ?>" class="btn<?php echo $changed; ?>">Changed translations</a>
