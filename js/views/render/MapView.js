@@ -185,6 +185,7 @@ var MapView = Renderer.prototype.SubView.extend({
           t.centerRegion();
         }, 10000);
       }else if(!this.renderMapFlag || App.studyWatcher.studyChanged()){
+        this.adjustCanvasSize();
         this.centerRegion();
       }
     };
