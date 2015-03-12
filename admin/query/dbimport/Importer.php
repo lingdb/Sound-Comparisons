@@ -387,7 +387,6 @@ class Importer{
       , 'Region Gp Type Ix' => 'RegionGpTypeIx'
       , 'Region Gp Nm Long' => 'RegionGpNameLong'
       , 'Region Gp Nm Short' => 'RegionGpNameShort'
-      , 'Region Gp Colour Hex Code' => 'Color'
       )
     )
   , '/^Studies\.txt$/' => array(
@@ -414,7 +413,6 @@ class Importer{
       , 'Family Ix' => 'FamilyIx'
       , 'Family Nm' => 'FamilyNm'
       , 'Family Abbr:  All FileNames' => 'FamilyAbbrAllFileNames'
-      , 'Family Colour on Website' => 'FamilyColorOnWebsite'
       )
     )
   , '/^Transcription Superscript Info.txt/' => array(

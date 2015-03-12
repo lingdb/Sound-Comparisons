@@ -8,6 +8,7 @@
   , "AudioLogic": false
   , "Backbone": false
   , "Choice": false
+  , "Colors": false
   , "Configurator": false
   , "console": false
   , "ContributorCollection": false

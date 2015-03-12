@@ -61,9 +61,12 @@ var Region = Backbone.Model.extend({
     if(App.study.getColorByFamily()){
       return this.getFamily().getColor();
     }
-    var c = this.get('Color');
-    if(typeof(c) === 'string' && c !== ''){
-      return '#'+c;
+    var rIx = this.get('RegionGpIx');
+    if(_.isString(rIx)){
+      rIx = parseInt(rIx);
+    }
+    if(_.isNumber(rIx)){
+      return App.colors.getColor(rIx - 1);
     }
     return null;
   }

@@ -4,6 +4,7 @@ $(function(){
   window.App = {storage: window.sessionStorage};
   _.extend(window.App, {
     contributorCollection: new ContributorCollection()
+  , colors: new Colors()
   , dataStorage: new DataStorage()
   , defaults: new Defaults()
   , familyCollection: new FamilyCollection()
