@@ -68,11 +68,6 @@ var LanguageView = Renderer.prototype.SubView.extend({
       , { href: 'http://new.multitree.org/trees/code/'+iso
         , img:  'http://new.multitree.org/static/images/MultiTree.ico'
         , ttip: App.translationStorage.translateStatic('tooltip_languages_link_multitree')}
-// See https://github.com/sndcomp/website/issues/44 for information on below items:
-//    , { href:  'http://www.llmap.org/maps/by-code/'+iso+'.html'
-//      , style: 'width: 36px;'
-//      , img:   'img/extern/llmap.png'
-//      , ttip:  App.translationStorage.translateStatic('tooltip_languages_link_llmap')}
       );
     }
     //Wikipedia link:
