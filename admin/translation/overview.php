@@ -136,7 +136,7 @@ $(document).ready(function(){
         , BrowserMatch: tr.find('td.match input').val()
         , ImagePath: tr.find('img.flag').attr('src')
         , RfcLanguage: tr.find('select').val()
-        , Active: tr.find('input[type="checkbox"]').is('selected') ? '1' : '0'
+        , Active: tr.find('input[type="checkbox"]').is(':checked') ? '1' : '0'
         };
       $.get('query/translation.php', q, function(){
         btn.removeClass('btn-danger').addClass('btn-success');
