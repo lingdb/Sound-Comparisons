@@ -23,13 +23,7 @@ var LanguageWordView = Renderer.prototype.SubView.extend({
   }
   /***/
 , buildStatic: function(){
-    var staticT = App.translationStorage.translateStatic({
-      deleteAll:          'tabulator_multi_clear_all'
-    , clearWordsText:     'tabulator_multi_clear_words'
-    , clearLanguagesText: 'tabulator_multi_clear_languages'
-    , transposeTtip:      'tabulator_multi_transpose'
-    });
-    _.extend(this.model, staticT);
+    App.views.renderer.model.wordLanguageView.buildStatic.call(this);
   }
   /***/
 , updateTable: function(){

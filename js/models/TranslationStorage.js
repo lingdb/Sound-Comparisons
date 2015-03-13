@@ -224,9 +224,10 @@ var TranslationStorage = Backbone.Model.extend({
     this.set({translationId: tId});
   }
   /**
-    Static translations:
-    req can either be a string that will than be translated,
-    or it can be an object, where each field will be translated.
+    @param req
+      req is a String -> String translation will be returned
+      req is an Array -> translateStatic is mapped over array, array returned
+      req is an Object -> translateStatic is mapped over values, object returned
   */
 , translateStatic: function(req){
     var type = typeof(req);
@@ -329,5 +330,22 @@ var TranslationStorage = Backbone.Model.extend({
       this.chkLoadingComplete = function(){return true;};
     }
     return ok;
+  }
+  /**
+    @param trans String
+    @param values [String]
+    @return String
+    Replaces occurences of $1,$2,… with the according fields from values.
+    Only the first occurence of $i is replaced.
+  */
+, placeInTranslation: function(trans, values){
+    if(_.isString(trans)){
+      _.each(values, function(v,i){
+        trans = trans.replace(new RegExp("\\$"+(i+1)), v);
+      }, this);
+      return trans;
+    }
+    console.log('Fail in TranslationStorage.placeInTranslation();');
+    return '';
   }
 });

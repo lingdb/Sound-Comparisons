@@ -28,7 +28,9 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
     , clearWordsText:     'tabulator_multi_clear_words'
     , clearLanguagesText: 'tabulator_multi_clear_languages'
     , transposeTtip:      'tabulator_multi_transpose'
+    , tableAlert:         'tabulator_multi_alert'
     });
+    staticT.tableAlert = App.translationStorage.placeInTranslation(staticT.tableAlert, ['<i class="icon-chevron-left"></i>','<i class="icon-chevron-right"></i>','<img src="img/transpose.png">']);
     _.extend(this.model, staticT);
   }
   /***/
