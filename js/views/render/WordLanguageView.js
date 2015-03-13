@@ -163,8 +163,18 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
       //Updating sound related stuff:
       App.views.audioLogic.findAudio(this.$el);
       App.views.playSequenceView.update(this.getKey());
+      //Checking if the alert should be shown:
+      var t = this;
+      window.setTimeout(function(){t.checkAlert();}, 1000);
     }else{
       this.$el.addClass('hide');
+    }
+  }
+, checkAlert: function(){
+    var t = Math.ceil(this.$('table').width())
+      , c = Math.ceil($('#contentArea').width())+1;
+    if(t > c){
+      this.$('div.alert').removeClass('hide');
     }
   }
   /***/
