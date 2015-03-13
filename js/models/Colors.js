@@ -9,6 +9,7 @@ var Colors = Backbone.Model.extend({
     colors: [
       '#E6E6E6'
     , '#CCCCFF'
+    , '#CCFFFF'
     , '#F2F6CA'
     , '#FFFACD'
     , '#FFCC99'
