@@ -90,6 +90,16 @@ var Transcription = Backbone.Model.extend({
     });
   }
   /**
+    We always produce something with getPhonetics,
+    but sometimes it's something like 'play'|'soon'.
+    hasPhonetics returns true, iff this is the case.
+  */
+, hasPhonetics: function(){
+    if(this.isDummy()) return false;
+    var p = this.get('Phonetic');
+    return !_.isEmpty(p);
+  }
+  /**
     Returns the Phonetics for a Transcription as an object.
     Uses getSuperscriptInfo.
   */
