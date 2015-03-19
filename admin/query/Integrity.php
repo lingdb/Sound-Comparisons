@@ -16,28 +16,142 @@ class Integrity {
     );
   }
   /**
-    @return [TableName => [JsonRow]]
+    @return [TableName => [json => JsonRow, reason => String]]
     Checks all pk entries of Integrity::$constraints.
     TableName is expected to be a complete name, not a prefix.
   */
   public static function checkPk(){
-    //FIXME IMPLEMENT
+    $ret = array();
+    foreach(self::$constraints as $tPrefix => $tDesc){
+      if(array_key_exists('pk', $tDesc)){
+        $key = 'CONCAT('.implode(',', $tDesc['pk']).')';
+        foreach(self::getTableNames($tPrefix, $tDesc) as $table){
+          $q1 = "SELECT COUNT(*) FROM $table";
+          $q2 = "SELECT COUNT(DISTINCT $key) FROM $table";
+          $r1 = current(current(DataProvider::fetchAll($q1)));
+          $r2 = current(current(DataProvider::fetchAll($q2)));
+          if($r1 !== $r2){
+            //http://forums.mysql.com/read.php?10,171410,171412#msg-171412
+            $q = "SELECT $key FROM $table GROUP BY $key HAVING COUNT($key) > 1";
+            $jsons = array();
+            foreach(DataProvider::fetchAll($q) as $row){
+              array_push($jsons, array('json'=> Config::toJSON($row), 'reason' => 'Primary key violated.'));
+            }
+            $ret[$table] = $jsons;
+          }
+        }
+      }
+    }
+    return $ret;
   }
   /**
-    @return [TableName => [JsonRow]]
+    @return [TableName => [json => JsonRow, reason => String]]
     Checks all fk entries of Integrity::$constraints.
     TableName is expected to be a complete name, not a prefix.
   */
   public static function checkFk(){
-    //FIXME IMPLEMENT
+    $ret = array();
+    foreach(self::$constraints as $tPrefix => $tDesc){
+      if(array_key_exists('fk', $tDesc)){
+        foreach($tDesc['fk'] as $fk){
+          $lKey = 'CONCAT('.implode(',',$fk['key']).')';
+          $rKey = 'CONCAT('.implode(',',$fk['ref']).')';
+          foreach(self::getTableNames($tPrefix, $tDesc) as $table){
+            $tQs = array();
+            foreach(self::getTableNamesFor($table, $fk['table']) as $t){
+              array_push($tQs, "SELECT $rKey FROM $t");
+            }
+            $q = "SELECT * FROM $table WHERE $lKey NOT IN (".implode(' UNION ',$tQs).')';
+            $rs = DataProvider::fetchAll($q);
+            if(count($rs) > 0){
+              $jsons = array();
+              foreach($rs as $r){
+                array_push($jsons, array('json' => Config::toJSON($r), 'reason' => 'Foreign key violated for '.$fk['table']));
+              }
+              $ret[$table] = $jsons;
+            }
+          }
+        }
+      }
+    }
+    return $ret;
   }
   /**
-    @return [TableName => [JsonRow]]
+    @return [TableName => [json => JsonRow, reason => String]]
     Checks all notValues entries of Integrity::$constraints.
     TableName is expected to be a complete name, not a prefix.
   */
   public static function checkNotValues(){
-    //FIXME IMPLEMENT
+    $ret = array();
+    foreach(self::$constraints as $tPrefix => $tDesc){
+      if(array_key_exists('notValues', $tDesc)){
+        $or = array();
+        foreach($tDesc['notValues'] as $k => $v){
+          array_push($or, "$k = $v");
+        }
+        $or = implode(' OR ', $or);
+        foreach(self::getTableNames($tPrefix, $tDesc) as $table){
+          $q = "SELECT * FROM $table WHERE $or";
+          $rs = DataProvider::fetchAll($q);
+          if(count($rs) > 0){
+            $jsons = array();
+            foreach($rs as $r){
+              array_push($jsons, array('json' => Config::toJSON($r), 'reason' => 'Forbidden combination of key/value occured.'));
+            }
+            $ret[$table] = $jsons;
+          }
+        }
+      }
+    }
+    return $ret;
+  }
+  /**
+    @param $key TableName | TablePrefix
+    @param $val element of array_values(self::$constraints)
+    @return $ret [TableName]
+    Takes a key=>value pair from self::$constraints, and produces an array of TableNames.
+  */
+  public static function getTableNames($key, $val){
+    if(array_key_exists('perStudy',$val)){
+      if($val['perStudy'] === true){
+        $ret = array();
+        foreach(DataProvider::getStudies() as $s){
+          array_push($ret, $key.$s);
+        }
+        return $ret;
+      }
+    }
+    return array($key);
+  }
+  /**
+    @param $table TableName
+    @param $target TableName | TablePrefix
+    @return $tNames [TableName]
+    1: If $target doesn't depend on study, its the TableName
+    2: If $table depends on study, $target should get the same
+    3: If $table doesn't depend, $target should be done for all studies.
+  */
+  public static function getTableNamesFor($table, $target){
+    $tNames = self::getTableNames($target, self::$constraints[$target]);
+    if(count($tNames) === 1) return $tNames;
+    //https://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php
+    $endsWith = function($haystack, $needle){
+      if($needle === '') return true;
+      $t = strlen($haystack) - strlen($needle);
+      if($t < 0) return false;
+      return (strpos($haystack, $needle, $t) !== false);
+    };
+    //Searching possible study suffix:
+    foreach(DataProvider::getStudies() as $s){
+      if($endsWith($table, $s)){//Searching the only one:
+        foreach($tNames as $t){
+          if($endsWith($t, $s)){
+            return array($t);
+          }
+        }
+      }
+    }
+    return $tNames;
   }
   /**
     Array tree that describes different constraints on database tables.
@@ -50,7 +164,7 @@ class Integrity {
       , ref => [ColNames] // concat of cols that are supposed to be referenced representation of foreign key.
       ]
     , notValues => [ // The or of the below combinations is not allowed.
-        [ColName => Value] // The and of the combination of ColName+Value is not allowed.
+        ColName => Value // The and of the combination of ColName+Value is not allowed.
       ]
     ]]
   */
@@ -98,27 +212,27 @@ class Integrity {
   , 'Default_Words' => array(
       'fk' => array(
         array('table' => 'Words_', 'key' => array('IxElicitation', 'IxMorphologicalInstance', 'StudyIx', 'FamilyIx'), 'ref' => array('IxElicitation', 'IxMorphologicalInstance', 'StudyIx', 'FamilyIx'))
-      , array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))
+      //, array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))//Disabled bc of how Studies works.
       )
     )
   , 'Default_Languages' => array(
       'pk' => array('LanguageIx', 'StudyIx', 'FamilyIx')
     , 'fk' => array(
         array('table' => 'Languages_', 'key' => array('LanguageIx'), 'ref' => array('LanguageIx'))
-      , array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))
+      //, array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))//Disabled bc of how Studies works.
       )
     )
   , 'Default_Multiple_Words' => array(
       'fk' => array(
-        array('table' => 'Words_', 'key' => array('IxElicitation', 'IxMorphologicalInstance', 'StudyIx', 'FamilyIx'), 'ref' => array('IxElicitation', 'IxMorphologicalInstance', 'StudyIx', 'FamilyIx')
-      , array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx')
+        array('table' => 'Words_', 'key' => array('IxElicitation', 'IxMorphologicalInstance', 'StudyIx', 'FamilyIx'), 'ref' => array('IxElicitation', 'IxMorphologicalInstance', 'StudyIx', 'FamilyIx'))
+      //, array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))//Disabled bc of how Studies works.
       )
     )
   , 'Default_Multiple_Languages' => array(
       'pk' => array('LanguageIx', 'StudyIx', 'FamilyIx')
     , 'fk' => array(
         array('table' => 'Languages_', 'key' => array('LanguageIx'), 'ref' => array('LanguageIx'))
-      , array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))
+      //, array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))//Disabled bc of how Studies works.
       )
     )
   , 'Default_Languages_Exclude_Map' => array(
@@ -130,8 +244,8 @@ class Integrity {
   , 'MeaningGroupMembers' => array(
       'pk' => array('MeaningGroupIx', 'StudyIx', 'FamilyIx', 'IxElicitation', 'IxMorphologicalInstance')
     , 'fk' => array(
-        array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))
-      , array('table' => 'MeaningGroups', 'key' => array('MeaningGroupIx'), 'ref' => array('MeaningGroupIx'))
+        array('table' => 'MeaningGroups', 'key' => array('MeaningGroupIx'), 'ref' => array('MeaningGroupIx'))
+      //, array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))//Disabled bc of how Studies works.
       )
     )
   , 'WikipediaLinks' => array(
@@ -149,7 +263,7 @@ class Integrity {
   , 'Regions_' => array(
       'pk' => array('StudyIx', 'FamilyIx', 'SubFamilyIx', 'RegionGpIx')
     , 'fk' => array(
-        array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx', 'SubFamilyIx'), 'ref' => array('StudyIx', 'FamilyIx', 'SubFamilyIx'))
+        //array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx', 'SubFamilyIx'), 'ref' => array('StudyIx', 'FamilyIx', 'SubFamilyIx'))//Disabled bc of how Studies works.
       )
     , 'perStudy' => true
     )
@@ -170,7 +284,8 @@ class Integrity {
       )
     , 'perStudy' => true
     , 'notValues' => array(
-        array('Latitude' => 0, 'Longtitude' => 0)
+        'Latitude' => 0
+      , 'Longtitude' => 0
       )
     )
   , 'RegionLanguages_' => array(
@@ -188,9 +303,9 @@ class Integrity {
   , 'Transcriptions_' => array(
       'pk' => array('StudyIx', 'FamilyIx', 'IxElicitation', 'IxMorphologicalInstance', 'AlternativePhoneticRealisationIx', 'AlternativeLexemIx', 'LanguageIx')
     , 'fk' => array(
-        array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))
-      , array('table' => 'Words_', 'key' => array('IxElicitation', 'IxMorphologicalInstance'), 'ref' => array('IxElicitation', 'IxMorphologicalInstance'))
+        array('table' => 'Words_', 'key' => array('IxElicitation', 'IxMorphologicalInstance'), 'ref' => array('IxElicitation', 'IxMorphologicalInstance'))
       , array('table' => 'Languages_', 'key' => array('LanguageIx'), 'ref' => array('LanguageIx'))
+      //, array('table' => 'Studies', 'key' => array('StudyIx', 'FamilyIx'), 'ref' => array('StudyIx', 'FamilyIx'))//Disabled bc of how Studies works.
       )
     , 'perStudy' => true
     )

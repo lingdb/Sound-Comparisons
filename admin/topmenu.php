@@ -17,8 +17,14 @@
       <li><a href="userAccount.php">User account</a></li>
       <?php
       if(session_mayEdit($dbConnection)){
-        echo '<li><a href="sqlFrontend.php">SQL operations</a></li>'
-           . '<li><a href="missingSounds.php">Missing sounds</a></li>';
+        echo '<li class="nav">'
+           . '<a class="dropdown-toggle topLink" data-toggle="dropdown">'
+           . 'Diagnostics <b class="caret"></b></a>'
+           . '<ul class="dropdown-menu">'
+           . '<li><a href="sqlFrontend.php">SQL operations</a></li>'
+           . '<li><a href="missingSounds.php">Missing sounds</a></li>'
+           . '<li><a href="integrity.php">DB Integrity</a></li>'
+           . '</ul></li>';
       }
       ?>
       <li><a href="index.php?action=logout">Logout</a></li>

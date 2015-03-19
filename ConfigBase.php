@@ -94,5 +94,16 @@ abstract class ConfigBase {
   public static function setResponseJSON(){
     header('Content-type: application/json; charset=utf-8');
   }
+  /**
+    @param $data [*] to be encoded as JSON
+    @return String
+  */
+  public static function toJSON($data){
+    $opts = 0;
+    if(defined('JSON_PRETTY_PRINT'))      $opts |= JSON_PRETTY_PRINT;
+    if(defined('JSON_UNESCAPED_UNICODE')) $opts |= JSON_UNESCAPED_UNICODE;
+    if(defined('JSON_NUMERIC_CHECK'))     $opts |= JSON_NUMERIC_CHECK;
+    return json_encode($data, $opts);
+  }
 }
 ?>
