@@ -13,7 +13,7 @@
     public function search($tId, $searchText, $searchAll = false){
       //Setup:
       $ret = array();
-      $description = $this->getDescription('dt_families_trans');
+      $description = TranslationProvider::getDescription('dt_families_trans');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
       if($searchAll){
@@ -53,7 +53,7 @@
     public function page($tId, $study, $offset){
       //Setup:
       $ret = array();
-      $description = $this->getDescription('dt_families_trans');
+      $description = TranslationProvider::getDescription('dt_families_trans');
       //Page query:
       $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT CONCAT(StudyIx, FamilyIx), FamilyNm "

@@ -10,6 +10,7 @@ function showTable($tdata){
   while(count($tdata) > 0){
     $newTZ = array();
     foreach($tdata as $key => $field){
+      if(count($field) === 0) continue;
       echo "<tr>";
       //Value to echo as row:
       $value = array_shift($field);

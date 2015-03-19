@@ -357,7 +357,7 @@
     */
     public static function getMissingTranslations($translationId){
       $missing = array();
-      if($translationId !== 1){
+      if($translationId != 1){
         //Function to filter for missing Translations:
         $filter = function($missing, $ps, $s) use ($translationId){
           $pages = array_values(Translation::pageAll($ps, $s, $translationId));
@@ -389,6 +389,41 @@
         }
       }
       return $missing;
+    }
+    /**
+      @param $translationId
+      @return $missing [[ Description => [Req => String, Description => String]
+                       ,  Original => String
+                       ,  Translation => [TranslationId => $translationId
+                          , Translation => String, Payload => String, TranslationProvider => String]
+                       ]]
+      Returns an empty Array if $translationId === 1,
+      because there cannot be changed translations in the source translation.
+      Otherwise returns entries where translation 1 has a newer change than $translationId.
+    */
+    public static function getChangedTranslations($translationId){
+      $changed = array();
+      if($translationId !== 1){
+        $static = StaticTranslationProvider::getChanged($translationId);
+        $dynamic = DynamicTranslationProvider::getChanged($translationId);
+        $changed = array_merge($static, $dynamic);
+      }
+      return $changed;
+    }
+    /**
+    */
+    public static function categoryToDescription($category){
+      if(array_key_exists($category, self::$providers)){
+        $p = self::$providers[$category];
+        if($p instanceof DynamicTranslationProvider){
+          return $p->translateColumn($p->getColumn())['description'];
+        }else if($category === 'StudyTitleTranslationProvider'){
+          return TranslationProvider::getDescription('dt_studyTitle_trans');
+        }else{
+          Config::error("Unexpected case in Translation::categoryToDescription for $category");
+        }
+      }
+      return '';
     }
   }
 ?>

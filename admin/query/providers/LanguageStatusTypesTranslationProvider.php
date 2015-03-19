@@ -80,15 +80,15 @@
     public function translateColumn($c){
       switch($c){
         case 'Trans_Status':
-          $description = $this->getDescription('dt_languageStatusTypes_status');
+          $description = TranslationProvider::getDescription('dt_languageStatusTypes_status');
           $origCol     = 'Status';
         break;
         case 'Trans_Description':
-          $description = $this->getDescription('dt_languageStatusTypes_description');
+          $description = TranslationProvider::getDescription('dt_languageStatusTypes_description');
           $origCol     = 'Description';
         break;
         case 'Trans_StatusTooltip':
-          $description = $this->getDescription('dt_languageStatusTypes_statusTooltip');
+          $description = TranslationProvider::getDescription('dt_languageStatusTypes_statusTooltip');
           $origCol     = 'StatusTooltip';
       }
       return array('description' => $description, 'origCol' => $origCol);

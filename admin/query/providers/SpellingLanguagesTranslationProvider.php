@@ -11,7 +11,7 @@
     public function search($tId, $searchText, $searchAll = false){
       //Setup
       $ret = array();
-      $description = $this->getDescription('dt_languages_specificLanguageVarietyName');
+      $description = TranslationProvider::getDescription('dt_languages_specificLanguageVarietyName');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
       if($searchAll){
@@ -65,7 +65,7 @@
     public function page($tId, $study, $offset){
       //Setup
       $ret         = array();
-      $description = $this->getDescription('dt_languages_specificLanguageVarietyName');
+      $description = TranslationProvider::getDescription('dt_languages_specificLanguageVarietyName');
       //Page query:
       $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT SpellingRfcLangName, LanguageIx FROM Languages_$study "

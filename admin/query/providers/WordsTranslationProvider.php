@@ -93,11 +93,11 @@
     public function translateColumn($c){
       switch($c){
         case 'Trans_FullRfcModernLg01':
-          $description = $this->getDescription('dt_words_fullRfcModernLg01');
+          $description = TranslationProvider::getDescription('dt_words_fullRfcModernLg01');
           $origCol = 'FullRfcModernLg01';
         break;
         case 'Trans_LongerRfcModernLg01':
-          $description = $this->getDescription('dt_words_longerRfcModernLg01');
+          $description = TranslationProvider::getDescription('dt_words_longerRfcModernLg01');
           $origCol = 'LongerRfcModernLg01';
         break;
       }

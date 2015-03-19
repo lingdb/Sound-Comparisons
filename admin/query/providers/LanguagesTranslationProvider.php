@@ -91,15 +91,15 @@
     public function translateColumn($c){
       switch($c){
         case 'Trans_ShortName':
-          $description = $this->getDescription('dt_languages_shortName');
+          $description = TranslationProvider::getDescription('dt_languages_shortName');
           $origCol = 'ShortName';
         break;
         case 'Trans_SpellingRfcLangName':
-          $description = $this->getDescription('dt_languages_specificLanguageVarietyName');
+          $description = TranslationProvider::getDescription('dt_languages_specificLanguageVarietyName');
           $origCol = 'SpellingRfcLangName';
         break;
         case 'Trans_SpecificLanguageVarietyName':
-          $description = $this->getDescription('dt_languages_spellingRfcLangName');
+          $description = TranslationProvider::getDescription('dt_languages_spellingRfcLangName');
           $origCol = 'SpecificLanguageVarietyName';
         break;
       }

@@ -93,11 +93,11 @@
     public function translateColumn($c){
       switch($c){
         case 'Trans_RegionGpNameShort':
-          $description = $this->getDescription('dt_regions_regionGpNameShort');
+          $description = TranslationProvider::getDescription('dt_regions_regionGpNameShort');
           $origCol = 'RegionGpNameShort';
         break;
         case 'Trans_RegionGpNameLong':
-          $description = $this->getDescription('dt_regions_regionGpNameLong');
+          $description = TranslationProvider::getDescription('dt_regions_regionGpNameLong');
           $origCol = 'RegionGpNameLong';
         break;
       }

@@ -45,5 +45,34 @@
       and once was a part of search only, before page was introduced.
     */
     public abstract function translateColumn($c);
+    /***/
+    public static function getChanged($tId){
+      $ret = array();
+      if($tId !== 1){
+        $q = "SELECT Category, Field, Trans FROM Page_DynamicTranslation WHERE TranslationId = 1";
+        foreach(DataProvider::fetchAll($q) as $r){
+          $c = $r['Category'];
+          $f = $r['Field'];
+          $q = "SELECT Trans FROM Page_DynamicTranslation "
+             . "WHERE Category = '$c' AND Field = '$f' AND TranslationId = $tId "
+             . "AND Time < (SELECT Time FROM Page_DynamicTranslation "
+             . "WHERE Category = '$c' AND Field = '$f' AND TranslationId = 1)";
+          foreach(DataProvider::fetchAll($q) as $x){
+            $desc = Translation::categoryToDescription($c);
+            array_push($ret, array(
+              'Description' => $desc
+            , 'Original'    => $r['Trans']
+            , 'Translation' => array(
+                'TranslationId'       => $tId
+              , 'Translation'         => $x['Trans']
+              , 'Payload'             => $f
+              , 'TranslationProvider' => $c
+              )
+            ));
+          }
+        }
+      }
+      return $ret;
+    }
   }
 ?>

@@ -5,7 +5,7 @@
     public function search($tId, $searchText, $searchAll = false){
       //Setup:
       $ret = array();
-      $description = $this->getDescription('dt_studies_trans');
+      $description = TranslationProvider::getDescription('dt_studies_trans');
       //Search queries:
       $qs = array($this->translationSearchQuery($tId, $searchText));
       if($searchAll){
@@ -43,7 +43,7 @@
     public function page($tId, $study, $offset){
       //Setup:
       $ret = array();
-      $description = $this->getDescription('dt_studies_trans');
+      $description = TranslationProvider::getDescription('dt_studies_trans');
       //Page query:
       $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
       $q = "SELECT DISTINCT Name FROM Studies $o";

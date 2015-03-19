@@ -83,11 +83,11 @@
     public function translateColumn($c){
       switch($c){
         case 'Trans_Abbreviation':
-          $description = $this->getDescription('dt_superscriptLenderLgs_abbreviation');
+          $description = TranslationProvider::getDescription('dt_superscriptLenderLgs_abbreviation');
           $origCol = 'Abbreviation';
         break;
         case 'Trans_FullNameForHoverText':
-          $description = $this->getDescription('dt_superscriptLenderLgs_fullNameForHoverText');
+          $description = TranslationProvider::getDescription('dt_superscriptLenderLgs_fullNameForHoverText');
           $origCol = 'FullNameForHoverText';
         break;
       }

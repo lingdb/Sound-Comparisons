@@ -129,11 +129,11 @@
       Translation field come with descriptions to aid work in the translation interface.
       This method fetches such descriptions.
     */
-    public function getDescription($req){
+    public static function getDescription($req){
       $q = "SELECT Description "
          . "FROM Page_StaticDescription "
          . "WHERE Req = '$req'";
-      $rst = $this->dbConnection->query($q);
+      $rst = Config::getConnection()->query($q);
       if($r = $rst->fetch_row())
         return array('Req' => $req, 'Description' => $r[0]);
       return array('Req' => $req, 'Description' => 'Description not found in database.');

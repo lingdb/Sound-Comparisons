@@ -95,11 +95,11 @@
     public function translateColumn($c){
       switch($c){
         case 'Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite':
-          $description = $this->getDescription('dt_regionLanguages_RegionGpMemberLgNameShortInThisSubFamilyWebsite');
+          $description = TranslationProvider::getDescription('dt_regionLanguages_RegionGpMemberLgNameShortInThisSubFamilyWebsite');
           $origCol = 'RegionGpMemberLgNameShortInThisSubFamilyWebsite';
         break;
         case 'Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite':
-          $description = $this->getDescription('dt_regionLanguages_RegionGpMemberLgNameLongInThisSubFamilyWebsite');
+          $description = TranslationProvider::getDescription('dt_regionLanguages_RegionGpMemberLgNameLongInThisSubFamilyWebsite');
           $origCol = 'RegionGpMemberLgNameLongInThisSubFamilyWebsite';
         break;
       }

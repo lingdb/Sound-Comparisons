@@ -17,7 +17,7 @@
         $payload = $r[0];
         $match   = $r[1];
         $matchId = $r[2];
-        $description = $this->getDescription($payload);
+        $description = TranslationProvider::getDescription($payload);
         $q = "SELECT Trans FROM Page_StaticTranslation "
            . "WHERE TranslationId = 1 AND Req = '$payload'";
         $original = $this->dbConnection->query($q)->fetch_row();
@@ -62,7 +62,7 @@
       $q = "SELECT Req, Trans FROM Page_StaticTranslation WHERE TranslationId = 1$o";
       foreach($this->fetchRows($q) as $r){
         $payload = $r[0];
-        $description = $this->getDescription($payload);
+        $description = TranslationProvider::getDescription($payload);
         $q = "SELECT Trans FROM Page_StaticTranslation "
            . "WHERE TranslationId = $tId AND Req = '$payload'";
         $translation = $this->dbConnection->query($q)->fetch_row();
@@ -76,6 +76,33 @@
           , 'TranslationProvider' => $this->getName()
           )
         ));
+      }
+      return $ret;
+    }
+    /***/
+    public static function getChanged($tId){
+      $ret = array();
+      if($tId !== 1){
+        $q = "SELECT Req, Trans FROM Page_StaticTranslation WHERE TranslationId = 1";
+        foreach(DataProvider::fetchAll($q) as $r){
+          $req = $r['Req'];
+          $q = "SELECT Trans FROM Page_StaticTranslation WHERE "
+             . "Req = '$req' AND TranslationId = $tId AND Time < ("
+             . "SELECT Time FROM Page_StaticTranslation "
+             . "WHERE Req = '$req' AND TranslationId = 1)";
+          foreach(DataProvider::fetchAll($q) as $x){
+            array_push($ret, array(
+              'Description' => TranslationProvider::getDescription($req)
+            , 'Original'    => $r['Trans']
+            , 'Translation' => array(
+                'TranslationId'       => $tId
+              , 'Translation'         => $x['Trans']
+              , 'Payload'             => $req
+              , 'TranslationProvider' => 'StaticTranslationProvider'
+              )
+            ));
+          }
+        }
       }
       return $ret;
     }
