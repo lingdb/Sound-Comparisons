@@ -265,5 +265,9 @@ var WordMenuView = Backbone.View.extend({
         App.router.navigate($(this).attr('data-href'));
       });
     }
+    //IPAKeyboard:
+    this.$('#IPAOpenKeyboard').click(function(){
+      $('#ipaKeyboard').toggleClass('hide').trigger('shown');
+    });
   }
 });

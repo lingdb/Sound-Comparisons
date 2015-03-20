@@ -294,6 +294,9 @@ dd.languageList {
 #ipaKeyboard {
   margin-left: 0px;
 }
+#ipaKeyboard > .modal-header {
+  height: 20px;
+}
 #ipaKeyboard > .modal-body {
   max-height: none;
 }
