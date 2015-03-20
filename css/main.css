@@ -110,6 +110,10 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topMenu .brand, #topMenu .topLink {
   text-shadow: none;
 }
+#topMenu .topLink {
+  padding-left: 10px;
+  padding-right: 10px;
+}
 .topLink > .inline, #topMenu li.active .inline {text-shadow: none; margin: 0px;}
 #topMenu .pvImg {margin-right: .5em;}
 #topmenuFamilies a.topLink {padding-left: 0px; font-size: 17.5px;}
@@ -131,6 +135,9 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   width: 30px;
   margin-top: 2.5px;
   margin-left: 5px;
+}
+#topMenuInfo {
+  margin-top: -2px;
 }
 /*Common style for left and right sides:*/
 .hidelink {padding: 0px; position: absolute; z-index: 10;}
