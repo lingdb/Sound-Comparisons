@@ -416,7 +416,8 @@
       if(array_key_exists($category, self::$providers)){
         $p = self::$providers[$category];
         if($p instanceof DynamicTranslationProvider){
-          return $p->translateColumn($p->getColumn())['description'];
+          $tCol = $p->translateColumn($p->getColumn());
+          return $tCol['description'];
         }else if($category === 'StudyTitleTranslationProvider'){
           return TranslationProvider::getDescription('dt_studyTitle_trans');
         }else{
