@@ -38,7 +38,13 @@ var Transcription = Backbone.Model.extend({
     ), ret = [];
     //Helper functions:
     var addKey = function(key){
-      ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key));
+      var x = App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key);
+      if('FullNameForHoverText' in x){
+        x = [x.Abbreviation, x.FullNameForHoverText];
+      }else if('HoverText' in x){
+        x = [x.Abbreviation, x.HoverText];
+      }else {x = [];}
+      ret.push(x);
     }, isOne = function(key){
       return parseInt(fields[key]) === 1;
     }, runOne = function(key){
@@ -46,9 +52,7 @@ var Transcription = Backbone.Model.extend({
     }, notEmpty = function(key){
       return !(_.isEmpty(fields[key]));
     }, runEmpty = function(key){
-      if(notEmpty(key)){
-        ret.push(App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key)+key);
-      }
+      if(notEmpty(key)){addKey(key);}
     };
     //Putting helpers to use:
     _.each(['NotCognateWithMainWordInThisFamily'
