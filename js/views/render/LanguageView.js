@@ -217,9 +217,11 @@ var LanguageView = Renderer.prototype.SubView.extend({
     study = parse(study);
     language = parse(language);
     console.log('LanguageView.route('+study+', '+language+')');
-    var pv = this.getKey();
+    var pv = this.getKey(), t = this;
     //Setting the study:
-    App.study.setStudy(study).always(function(){
+    App.study.setStudy(study).fail(function(){
+      t.noStudy(study);
+    }).always(function(){
       //Setting the word:
       App.languageCollection.setChoiceByKey(language);
       //Set this pageView as active:

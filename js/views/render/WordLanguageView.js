@@ -182,9 +182,11 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
     var parse = App.router.parseString;
     study = parse(study);
     console.log('WordLanguageView.route('+study+', '+words+', '+languages+')');
-    var pv = this.getKey();
+    var pv = this.getKey(), t = this;
     //Setting the study:
-    App.study.setStudy(study).always(function(){
+    App.study.setStudy(study).fail(function(){
+      t.noStudy(study);
+    }).always(function(){
       //Setting the words:
       App.wordCollection.setSelectedByKey(App.router.parseArray(words));
       //Setting the languages:

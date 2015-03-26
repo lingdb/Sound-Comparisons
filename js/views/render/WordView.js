@@ -153,9 +153,11 @@ var WordView = Renderer.prototype.SubView.extend({
     study = parse(study);
     word = parse(word);
     console.log('WordView.route('+study+', '+word+')');
-    var pv = this.getKey();
+    var pv = this.getKey(), t = this;
     //Setting the study:
-    App.study.setStudy(study).always(function(){
+    App.study.setStudy(study).fail(function(){
+      t.noStudy(study);
+    }).always(function(){
       //Setting the word:
       App.wordCollection.setChoiceByKey(word);
       //Set this pageView as active:

@@ -152,7 +152,9 @@ var MapView = Renderer.prototype.SubView.extend({
     console.log('MapView.route('+study+', '+word+', '+languages+')');
     var pv = this.getKey(), t = this;
     //Setting the study:
-    App.study.setStudy(study).always(function(){
+    App.study.setStudy(study).fail(function(){
+      t.noStudy(study);
+    }).always(function(){
       //Setting the word:
       App.wordCollection.setChoiceByKey(word);
       //Setting the languages:
