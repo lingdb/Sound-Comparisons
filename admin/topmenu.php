@@ -24,6 +24,7 @@
            . '<li><a href="sqlFrontend.php">SQL operations</a></li>'
            . '<li><a href="missingSounds.php">Missing sounds</a></li>'
            . '<li><a href="integrity.php">DB Integrity</a></li>'
+           . '<li><a href="clearCache.php">Clear cache</a></li>'
            . '</ul></li>';
       }
       ?>
