@@ -84,7 +84,6 @@ var Renderer = Backbone.View.extend({
   */
 , callUpdates: function(v){
     if(v === null) return;
-    window.foo = v;
     _.each(_.keys(v.constructor.prototype), function(k){
       if(k.match(/^update/) !== null){
         v[k].call(v);

@@ -156,8 +156,6 @@ var LanguageMenuView = Backbone.View.extend({
           }else{
             language.selected = false;
           }
-          //TODO implement flags if wanted!
-          //language.flag = l.getFlag();
           //Building the icon for a language:
           if(isMultiView||isMapView){
             var icon = {
