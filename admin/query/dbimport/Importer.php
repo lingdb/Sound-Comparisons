@@ -197,6 +197,9 @@ class Importer{
         );
       }
     }
+    if(preg_match('/^Index_.*\.txt$/',$file)){
+      return null; // This is a file that we want to ignore.
+    }
     $keys = '{'.implode(', ', array_keys(self::$fileDescriptions)).'}';
     array_push(self::$log, "Importer::descFile found no match for the fileName $file."
                          , " - Make sure $file matches one of $keys.");
