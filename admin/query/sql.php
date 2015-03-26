@@ -1,6 +1,7 @@
 <?php
 chdir('..');
 require 'common.php';
+require_once '../query/cacheProvider.php';
 if(php_sapi_name() === 'cli'){
   //Translating $argv to $_GET,$_POST:
   if(count($argv) > 1){
@@ -95,7 +96,17 @@ switch($action){
     echo implode("\n",$qs)."\n";
   break;
   case 'import':
+    CacheProvider::cleanCache('../');
     $dbConnection->multi_query($file);
+    ?><!DOCTYPE HTML>
+    <html><?php
+      $title = "SQL file processed.";
+      require 'head.php';
+    ?><body>
+      <h3>File processed.</h3>
+      <a href="..">Go back!</a>
+      </body>
+    </html><?php
   break;
   default:
     echo "Unsupported action: $action\n";
