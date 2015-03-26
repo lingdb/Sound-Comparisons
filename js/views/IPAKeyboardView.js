@@ -34,6 +34,8 @@ var IPAKeyboardView = Backbone.View.extend({
         t.$el.modal('hide');
       }
     });
+    //Closing IPAKeyboard on click outside:
+    $('body').click(function(e){t.closeOnClick(e);});
   }
 , render: function(){
     var current = this.$('.modal-body > div:visible > table');
@@ -75,5 +77,11 @@ var IPAKeyboardView = Backbone.View.extend({
       myField.value += symbol;
     }
     pFilter.keyup();
+  }
+, closeOnClick: function(e){
+    if(this.$el.is(':visible')){
+      var close = $(e.target).parents('#ipaKeyboard,#IPAOpenKeyboard').length === 0;
+      if(close){ this.$el.modal('hide'); }
+    }
   }
 });
