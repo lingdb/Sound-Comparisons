@@ -33,7 +33,7 @@ var TranscriptionSuperscriptCollection = Backbone.Collection.extend({
       if(field in this.transcriptionFieldLookup){
         return this.getTranscriptionSuperscript(this.transcriptionFieldLookup[field]);
       }else if(field.length === 3){
-        e = this.findWhere({ISOCode: field});
+        e = this.findWhere({IsoCode: field});
         if(e) return e.pick('Abbreviation', 'FullNameForHoverText');
       }
     }else if(_.isNumber(field)){
