@@ -2,6 +2,8 @@
 $(function(){
   //Building the App singleton:
   window.App = {storage: window.sessionStorage};
+  _.extend(window.App, {pageState: new PageState()});
+  //PageState before rest bc Selection needs it
   _.extend(window.App, {
     contributorCollection: new ContributorCollection()
   , colors: new Colors()
@@ -12,7 +14,6 @@ $(function(){
   , languageStatusTypeCollection: new LanguageStatusTypeCollection()
   , logger: new Logger()
   , meaningGroupCollection: new MeaningGroupCollection()
-  , pageState: new PageState()
   , regionCollection: new RegionCollection()
   , regionLanguageCollection: new RegionLanguageCollection()
   , router: new Router()

@@ -7,23 +7,33 @@
 */
 var Selection = Backbone.Collection.extend({
   initialize: function(){
-    this.selected = {}; // model.getId() -> model
+    this.selected = this.mkSelectionMap();
     //Defaulting selected models:
     this.on('reset', function(){
       var ms = ('getDefaultSelection' in this) ? this.getDefaultSelection()
                                                : this.models;
-      this.selected = {};
-      _.each(ms, function(m){
-        this.selected[m.getId()] = m;
-      }, this);
+      this.selected = this.mkSelectionMap();
+      this.setSelected(ms);
     }, this);
+  }
+  /**
+    Generates an empty selection map.
+    It maps pageViewKey -> model.getId() -> model
+  */
+, mkSelectionMap: function(){
+    var selected = {};
+    _.each(App.pageState.get('pageViews'), function(pvk){
+      selected[pvk] = {};
+    });
+    return selected;
   }
   /**
     Returns the selected models as an array,
     because the final collection for them is not known.
   */
 , getSelected: function(){
-    return _.values(this.selected);
+    var pvk = App.pageState.getPageViewKey();
+    return _.values(this.selected[pvk]);
   }
   /**
     Changes the selected models to the given array or Backbone.Collection.
@@ -33,11 +43,14 @@ var Selection = Backbone.Collection.extend({
       ms = ms.models;
     }
     if(_.isArray(ms)){
-      this.selected = {};
+      this.selected = this.mkSelectionMap();
       _.each(ms, this.select, this);
     }
   }
-  /***/
+  /**
+    @param ks [String]
+    Selects models by their getKey method.
+  */
 , setSelectedByKey: function(ks){
     var keys = {}; // Hash map for faster finding of keys
     _.each(ks, function(k){keys[k] = true;}, this);
@@ -59,14 +72,16 @@ var Selection = Backbone.Collection.extend({
     Predicate to check selection of a model.
   */
 , isSelected: function(m){
-    return m.getId() in this.selected;
+    var pvk = App.pageState.getPageViewKey();
+    return m.getId() in (this.selected[pvk]);
   }
   /**
     Adds a model to the selection.
     Returns self for chaining.
   */
 , select: function(m){
-    this.selected[m.getId()] = m;
+    var pvk = App.pageState.getPageViewKey();
+    this.selected[pvk][m.getId()] = m;
     return this;
   }
   /**
@@ -74,7 +89,8 @@ var Selection = Backbone.Collection.extend({
     Returns self for chaining.
   */
 , unselect: function(m){
-    delete this.selected[m.getId()];
+    var pvk = App.pageState.getPageViewKey();
+    delete this.selected[pvk][m.getId()];
     return this;
   }
   /**
