@@ -30,7 +30,7 @@ var TranscriptionSuperscriptCollection = Backbone.Collection.extend({
 , getTranscriptionSuperscript: function(field){
     var e;
     if(_.isString(field)){
-      if(field in this.transcriptionFieldLookup){
+      if(field in (this.transcriptionFieldLookup || {})){
         return this.getTranscriptionSuperscript(this.transcriptionFieldLookup[field]);
       }else if(field.length === 3){
         e = this.findWhere({IsoCode: field});

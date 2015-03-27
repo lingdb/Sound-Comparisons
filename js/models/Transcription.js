@@ -38,7 +38,7 @@ var Transcription = Backbone.Model.extend({
     ), ret = [];
     //Helper functions:
     var addKey = function(key){
-      var x = App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key);
+      var x = App.transcriptionSuperscriptCollection.getTranscriptionSuperscript(key) || {};
       if('FullNameForHoverText' in x){
         x = [x.Abbreviation, x.FullNameForHoverText];
       }else if('HoverText' in x){
