@@ -30,10 +30,10 @@ var MeaningGroup = Backbone.Model.extend({
   */
 , getWords: function(){
     if(this._words === null){
-      var query = {MeaningGroupIx: this.getId()}
-        , words = App.wordCollection.where(query);
-      _.each(words, function(w){w._meaningGroup = this;}, this);
-      this._words = new WordCollection(words);
+      var mId = this.getId();
+      this._words = new WordCollection(App.wordCollection.filter(function(w){
+        return w.getMgId() == mId;
+      }));
     }
     return this._words;
   }
