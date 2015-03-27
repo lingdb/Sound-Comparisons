@@ -89,8 +89,10 @@ var Word = Backbone.Model.extend({
   */
 , getMeaningGroup: function(){
     if(this._meaningGroup === null){
-      var query = {MeaningGroupIx: this.get('MeaningGroupIx')};
-      this._meaningGroup = App.meaningGroupCollection.findWhere(query);
+      var mId = this.get('MeaningGroupIx');
+      this._meaningGroup = App.meaningGroupCollection.find(function(m){
+        return m.getId() == mId;
+      });
     }
     return this._meaningGroup;
   }
