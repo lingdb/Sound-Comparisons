@@ -115,13 +115,15 @@ var MapView = Renderer.prototype.SubView.extend({
       , languageLink:       'href="'+App.router.linkLanguageView({language: l})+'"'
       , familyIx:           l.getFamilyIx()
       , color:              l.getColor()
+      , languageIx:         l.getId()
       });
     }, this);
     //Done:
     _.extend(this.model, {mapsData: data});
   }
   /***/
-, render: function(){
+, render: function(o){
+    o = _.extend({renderMap: true}, o);
     if(App.pageState.isPageView(this)){
       if(typeof(google) === 'undefined'){
         App.views.loadModalView.noMap();
@@ -137,7 +139,9 @@ var MapView = Renderer.prototype.SubView.extend({
         //Displaying stuff:
         this.$el.removeClass('hide');
         $('#map_canvas').removeClass('hide');
-        this.renderMap();
+        if(o.renderMap){
+          this.renderMap();
+        }
       }
     }else{
       this.$el.addClass('hide');

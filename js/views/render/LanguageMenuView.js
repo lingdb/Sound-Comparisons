@@ -196,11 +196,40 @@ var LanguageMenuView = Backbone.View.extend({
     this.$el.find('.nano-content').html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
     //Bindings MapView:zoomLanguage
     if(App.pageState.isMapView()){
+      var t = this;
       this.$('a.color-language[data-languageIx]').click(function(e){
-        var lId = $(e.target).data('languageix')
-          , l = App.languageCollection.find(function(x){return x.getId() == lId;});
-        if(l){App.views.renderer.model.mapView.zoomLanguage(l);}
+        t.highlight($(e.target));
       });
+    }
+  }
+  /**
+    https://github.com/sndcomp/website/issues/105#issuecomment-86913963
+  */
+, highlight: function(tgt){
+    var lId = tgt.data('languageix')
+      , l = App.languageCollection.find(function(x){return x.getId() == lId;})
+      , map = App.views.renderer.model.mapView
+      , isH = tgt.hasClass('highlighted');
+    //Removing all from highlighted:
+    $('#leftMenu .highlighted').removeClass('highlighted');
+    if(!isH){//Add to highlighted if it wasn't
+      //Selecting the language:
+      var add = !App.languageCollection.isSelected(l);
+      if(add){
+        App.languageCollection.select(l);
+        map.updateMapsData();
+        map.render({renderMap: false});
+        tgt.parent().find('.icon-chkbox-custom').addClass('icon-check').removeClass('icon-chkbox-custom');
+      }
+      //Highlighting in LanguageMenu:
+      tgt.toggleClass('highlighted');
+      //Zoom+center map:
+      map.zoomLanguage(l);
+      //Color the marker:
+      var color = function(){App.map.highlight(l);};
+      if(add){
+        window.setTimeout(color, 500);
+      }else{color();}
     }
   }
 });

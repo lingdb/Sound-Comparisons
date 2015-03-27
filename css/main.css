@@ -186,6 +186,12 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 dd.languageList {
   padding: 0px 0px 0px 7px;
 }
+.languageList .highlighted {
+  background-color: #FFE993;
+  color: black;
+}
+.languageLink {display: none;}
+.highlighted + .languageLink {display: inline;}
 /*Style in rightMenu:*/
 #rightMenu {padding-top: 0px; margin-bottom: 0px;}
 #rightMenu h3 {text-align: center;}
