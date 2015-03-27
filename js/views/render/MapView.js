@@ -341,4 +341,14 @@ var MapView = Renderer.prototype.SubView.extend({
 , setScrollWheel: function(use){
     return this.map.setOptions({scrollwheel: use});
   }
+  /**
+    @param l Language
+    Method to zoom in on the location of a single language.
+  */
+, zoomLanguage: function(l){
+    var pos = l.getLocation()
+      , ll  = new google.maps.LatLng(pos[0], pos[1]);
+    this.map.setCenter(ll);
+    this.map.setZoom(8);
+  }
 });

@@ -147,6 +147,8 @@ var LanguageMenuView = Backbone.View.extend({
             shortName: l.getSuperscript(l.getShortName())
           , longName:  l.getLongName()
           , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
+          , isMapView: isMapView
+          , languageIx : l.getId()
           };
           //Deciding if the language is selected:
           if(isMultiView||isMapView){
@@ -192,5 +194,13 @@ var LanguageMenuView = Backbone.View.extend({
   }
 , render: function(){
     this.$el.find('.nano-content').html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
+    //Bindings MapView:zoomLanguage
+    if(App.pageState.isMapView()){
+      this.$('a.color-language[data-languageIx]').click(function(e){
+        var lId = $(e.target).data('languageix')
+          , l = App.languageCollection.find(function(x){return x.getId() == lId;});
+        if(l){App.views.renderer.model.mapView.zoomLanguage(l);}
+      });
+    }
   }
 });

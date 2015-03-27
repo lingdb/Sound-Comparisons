@@ -14,9 +14,15 @@
       {{#icon}}
         <a title="{{ttip}}" {{{link}}}><i class="{{checked}}"></i></a>
       {{/icon}}
-      <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}" {{{link}}}>
+      <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}"
+        {{^isMapView}}{{{link}}}{{/isMapView}} data-languageix="{{languageIx}}">
         {{#shortName}}{{> LanguageSuperscript}}{{/shortName}}
       </a>
+      {{#isMapView}}
+      <a title="{{longName}}" {{{link}}}>
+      <img src="img/1l.png" class="icon">
+      </a>
+      {{/isMapView}}
       </li>
     {{/languages}}
   </dd>
@@ -39,9 +45,15 @@
         {{#icon}}
           <a title="{{ttip}}" {{{link}}}><i class="{{checked}}"></i></a>
         {{/icon}}
-        <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}" {{{link}}}>
+        <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}"
+          {{^isMapView}}{{{link}}}{{/isMapView}} data-languageix="{{languageIx}}">
           {{#shortName}}{{> LanguageSuperscript}}{{/shortName}}
         </a>
+        {{#isMapView}}
+        <a title="{{longName}}" {{{link}}}>
+        <img src="img/1l.png" class="icon">
+        </a>
+        {{/isMapView}}
         </li>
       {{/languages}}
     </ul>
