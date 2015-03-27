@@ -92,7 +92,7 @@
     case 'offsets':
       $ps = json_decode($_GET['Providers']);
       $tId = array_key_exists('TranslationId', $_GET) ? $_GET['TranslationId'] : 1;
-      echo json_encode(Translation::offsets($ps, $_GET['Study'], $tId));
+      echo Config::toJSON(Translation::offsets($ps, $_GET['Study'], $tId));
     break;
     /**
       @param $_GET['Providers'] JSON array of strings
@@ -103,14 +103,14 @@
     */
     case 'page':
       $ps = json_decode($_GET['Providers']);
-      echo json_encode(Translation::page($ps, $_GET['Study'], $_GET['TranslationId'], $_GET['Offset']));
+      echo Config::toJSON(Translation::page($ps, $_GET['Study'], $_GET['TranslationId'], $_GET['Offset']));
     break;
     /**
       Builds a mapping of ProviderGroups to Provider Names
       and outputs this as a JSON Object.
     */
     case 'providers':
-      echo json_encode(Translation::providers());
+      echo Config::toJSON(Translation::providers());
     break;
     /**
       @param $_GET['TranslationId'] TranslationId to search for
@@ -118,11 +118,11 @@
       Delivers matches as produced by all providers.
     */
     case 'search':
-      echo json_encode(Translation::search($_GET['TranslationId'], $_GET['SearchText']));
+      echo Config::toJSON(Translation::search($_GET['TranslationId'], $_GET['SearchText']));
     break;
     /** Returns a JSON array of all Names in the Studies table. */
     case 'studies':
-      echo json_encode(Translation::studies());
+      echo Config::toJSON(Translation::studies());
     break;
     /**
       Fetches the complete Page_Translations table.
@@ -130,7 +130,7 @@
         Fields of contained JSON Objects are named as in db.
     */
     case 'translations':
-      echo json_encode(Translation::translations());
+      echo Config::toJSON(Translation::translations());
     break;
     /**
       @param $_GET['TranslationId']

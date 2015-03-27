@@ -49,7 +49,7 @@ require_once 'config.php';
       - Defaults for the Study
 */
 if(array_key_exists('global',$_GET)){
-  echo json_encode(array(
+  echo Config::toJSON(array(
     'studies' => DataProvider::getStudies()
   , 'global'  => DataProvider::getGlobal()
   ));

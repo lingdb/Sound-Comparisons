@@ -24,7 +24,7 @@
   switch($cType){
     case (preg_match('/application\/json/i', $cType) ? true : false):
       header('Content-type: application/json');
-      echo json_encode($index);
+      Config::toJSON($index);
     break;
     case (preg_match('/text\/html/i', $cType) ? true : false):
     default:

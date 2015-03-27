@@ -49,7 +49,7 @@ class Importer{
       $dCount = count($data);
       if($dCount < $hCount){
         $index = $i+1;
-        array_push(self::$log, "Row $index has $dCount instead of $hCount fields. Ignoring row: ".json_encode($data));
+        array_push(self::$log, "Row $index has $dCount instead of $hCount fields. Ignoring row: ".Config::toJSON($data));
         unset($csv['data'][$i]);
       }
     }

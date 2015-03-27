@@ -71,9 +71,5 @@
   Config::setResponseJSON();
   $filename = 'translations_'.date('Y-m-d-h:i', time()).'.json';
   header('Content-Disposition: attachment;filename="'.$filename.'"');
-  $opts = 0;
-  if(defined('JSON_PRETTY_PRINT'))      $opts |= JSON_PRETTY_PRINT;
-  if(defined('JSON_UNESCAPED_UNICODE')) $opts |= JSON_UNESCAPED_UNICODE;
-  if(defined('JSON_NUMERIC_CHECK'))     $opts |= JSON_NUMERIC_CHECK;
-  echo json_encode($info, $opts);
+  echo Config::toJSON($info, $opts);
 ?>

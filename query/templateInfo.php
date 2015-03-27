@@ -13,5 +13,5 @@ foreach($lines as $l){
   $file = substr($x[1], 3);
   $info[$file] = $x[0];
 }
-echo json_encode($info);
+echo Config::toJSON($info);
 ?>

@@ -18,30 +18,30 @@ if(!array_key_exists('action',$_GET)){
 switch($_GET['action']){
   case 'dynamic':
     if(array_key_exists('translationId', $_GET)){
-      echo json_encode(TranslationProvider::getDynamic($_GET['translationId']));
+      echo Config::toJSON(TranslationProvider::getDynamic($_GET['translationId']));
     }else{
       Config::setResponse(400);
-      echo json_encode(array(
+      echo Config::toJSON(array(
         'msg' => 'You need to specify a translationId for action=dynamic.'
       ));
     }
   break;
   case 'static':
     if(array_key_exists('translationId', $_GET)){
-      echo json_encode(TranslationProvider::getStatic($_GET['translationId']));
+      echo Config::toJSON(TranslationProvider::getStatic($_GET['translationId']));
     }else{
       Config::setResponse(400);
-      echo json_encode(array(
+      echo Config::toJSON(array(
         'msg' => 'You need to specify a translationId for action=static.'
       ));
     }
   break;
   case 'summary':
-    echo json_encode(TranslationProvider::getSummary());
+    echo Config::toJSON(TranslationProvider::getSummary());
   break;
   default:
     Config::setResponse(400);
-    echo json_encode(array(
+    echo Config::toJSON(array(
       'msg'    => '"action" variable must be specified, '
                 . 'carrying one of the action values.'
     , 'action' => array('summary', 'static', 'dynamic')

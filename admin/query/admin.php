@@ -91,7 +91,7 @@
       header("Content-Type: application/json; charset=utf-8");
       header("Content-Disposition: attachment;filename=\"users.json\"");
       header("Content-Transfer-Encoding: binary");
-      die(json_encode($export));
+      die(Config::toJSON($export));
     break;
     case 'import':
       if(count($_FILES) === 1){
