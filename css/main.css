@@ -359,7 +359,7 @@ input#FilterAddMultiWords {}
 #toggleMeaningGroups img.icon {margin-top: 0.25em; margin-left: 0.25em;}
 /*Audio*/
 td.transcription {text-align: center;}
-div.audio {white-space: nowrap; display: inline-block;}
+div.audio {white-space: nowrap;}
 div.transcription { /*The color of phonetics that can be played with hover*/
   color:         #00F;
   display:       inline-block;
