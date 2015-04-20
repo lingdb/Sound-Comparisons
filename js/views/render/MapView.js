@@ -358,7 +358,7 @@ var MapView = Renderer.prototype.SubView.extend({
     var ll = l.getLatLng();
     if(!this.map.getBounds().contains(ll)){
       var bounds = new google.maps.LatLngBounds()
-        , xs = window.App.languageCollection.map(function(l){return l.getLatLng()});
+        , xs = window.App.languageCollection.map(function(l){return l.getLatLng();});
       xs = _.sortBy(xs, function(x){
         return google.maps.geometry.spherical.computeDistanceBetween(ll,x);
       });

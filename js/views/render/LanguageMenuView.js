@@ -240,7 +240,7 @@ var LanguageMenuView = Backbone.View.extend({
     }
   }
   /***/
-, zoomLanguage(tgt){
+, zoomLanguage: function(tgt){
     var lId = tgt.closest('a').parent()
             .find('a[data-languageix]').data('languageix')
       , l = App.languageCollection.find(function(x){return x.getId() == lId;});
