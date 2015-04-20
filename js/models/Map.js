@@ -120,5 +120,16 @@ if(typeof(google) !== 'undefined'){
         return prec;
       }, [], this);
     }
+    /**
+      @param l Language
+      Searches the WordOverlays and highlights the correct one.
+    */
+  , highlight: function(l){
+      var lId = l.getId();
+      _.each(this.get('wordOverlays'), function(wol){
+        var cond = (wol.get('languageIx') == lId);
+        wol.highlight(cond);
+      }, this);
+    }
   });
 }

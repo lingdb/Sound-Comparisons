@@ -40,7 +40,7 @@ $(document).ready(function(){
     });
     //The Save All button:
     table.on('click', '.btn.saveAll', function(){
-      table.find('.btn.save.btn-warning').trigger('click');
+      table.$('.btn.save.btn-warning').trigger('click');
     });
     //Editing descriptions:
     table.on('dblclick', 'td.description', function(){

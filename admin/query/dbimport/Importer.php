@@ -465,6 +465,8 @@ class Importer{
       , 'TSI 42:  Txt: Odd Phonology Note' => 'OddPhonologyNote'
       , 'TSI 13:  Txt: Usage Note' => 'UsageNote'
       , 'TSI 81:  Bn: Sound Problem' => 'SoundProblem'
+      , 'TSI 05:  Bn: Reconstructed or Historical Form Questionable?' => 'ReconstructedOrHistQuestionable'
+      , 'TSI 06:  Txt: Reconstructed or Historical Form Questionable Note' => 'ReconstructedOrHistQuestionableNote'
       )
     )
   , '/^Words_(.*)\.txt$/' => array(

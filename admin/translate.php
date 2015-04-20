@@ -11,7 +11,7 @@
 <html>
   <?php
     $title   = "The new translation…";
-    $jsFiles = array('extern/jquery.dataTables.js','dataTables.js','extern/autoresize.jquery.js');
+    $jsFiles = array('extern/jquery.dataTables.js','dataTables.js');
     require_once 'head.php';
   ?>
   <body>

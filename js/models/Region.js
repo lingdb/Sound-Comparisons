@@ -85,6 +85,7 @@ var Region = Backbone.Model.extend({
     return this._family;
   }
   /**
+    @return languages LanguageCollection
     Returns the languages that belong to the current Region.
     The field _languages is used for memoization.
   */

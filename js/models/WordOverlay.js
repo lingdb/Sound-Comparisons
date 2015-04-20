@@ -181,4 +181,30 @@ var WordOverlay = Backbone.Model.extend({
       t.set({edge: _.head(edges)});
     });
   }
+  /**
+    @param cond Bool
+    If cond we will have a red marker, otherwise it'll be black.
+    If cond we will also play the sound.
+  */
+, highlight: function(cond){
+    if(cond){
+      this.get('marker').setIcon({
+        fillColor:    '#FF0000'
+      , fillOpacity:  1
+      , path:         google.maps.SymbolPath.CIRCLE
+      , scale:        7
+      , strokeWeight: 2
+      });
+      //Playing audio:
+      window.App.views.audioLogic.play($(this.get('div')).find('audio').get(0));
+    }else{
+      this.get('marker').setIcon({
+        fillColor:    '#000000'
+      , fillOpacity:  1
+      , path:         google.maps.SymbolPath.CIRCLE
+      , scale:        5
+      , strokeWeight: 0
+      });
+    }
+  }
 });

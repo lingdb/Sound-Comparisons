@@ -115,13 +115,15 @@ var MapView = Renderer.prototype.SubView.extend({
       , languageLink:       'href="'+App.router.linkLanguageView({language: l})+'"'
       , familyIx:           l.getFamilyIx()
       , color:              l.getColor()
+      , languageIx:         l.getId()
       });
     }, this);
     //Done:
     _.extend(this.model, {mapsData: data});
   }
   /***/
-, render: function(){
+, render: function(o){
+    o = _.extend({renderMap: true}, o);
     if(App.pageState.isPageView(this)){
       if(typeof(google) === 'undefined'){
         App.views.loadModalView.noMap();
@@ -137,7 +139,9 @@ var MapView = Renderer.prototype.SubView.extend({
         //Displaying stuff:
         this.$el.removeClass('hide');
         $('#map_canvas').removeClass('hide');
-        this.renderMap();
+        if(o.renderMap){
+          this.renderMap();
+        }
       }
     }else{
       this.$el.addClass('hide');
@@ -173,16 +177,17 @@ var MapView = Renderer.prototype.SubView.extend({
     This method also calls adjustCanvasSize.
   */
 , renderMap: function(){
-    var first = true;
+    this.renderMapFirst = true; // Tracking if we want the first case of renderMap.
     this.renderMap = function(){
       /*
         It would be nice to depend on events rather than a Timeout,
         but events appeared to be rather annoying while this is simple.
       */
-      if(first){
+      if(this.renderMapFirst){
         var t = this;
         window.setTimeout(function(){
-          first = false;
+          if(!t.renderMapFirst) return;
+          t.renderMapFirst = false;
           t.adjustCanvasSize();
           t.centerRegion();
         }, 10000);
@@ -343,11 +348,31 @@ var MapView = Renderer.prototype.SubView.extend({
   }
   /**
     @param l Language
+    If the language is not on the map,
+    we zoom/center to the bounding box of all the languages
+    that belong to the same region as l.
+    Otherwise nothing happens.
+  */
+, boundLanguage: function(l){
+    this.renderMapFirst = false;//Making sure no timeout zooms along.
+    var ll = l.getLatLng();
+    if(!this.map.getBounds().contains(ll)){
+      var bounds = new google.maps.LatLngBounds()
+        , xs = window.App.languageCollection.map(function(l){return l.getLatLng()});
+      xs = _.sortBy(xs, function(x){
+        return google.maps.geometry.spherical.computeDistanceBetween(ll,x);
+      });
+      _.each(_.first(xs, 11), function(x){bounds.extend(x);});
+      this.map.fitBounds(bounds);
+    }
+  }
+  /**
+    @param l Language
     Method to zoom in on the location of a single language.
   */
 , zoomLanguage: function(l){
-    var pos = l.getLocation()
-      , ll  = new google.maps.LatLng(pos[0], pos[1]);
+    this.renderMapFirst = false;//Making sure no timeout zooms along.
+    var ll = l.getLatLng();
     this.map.setCenter(ll);
     this.map.setZoom(8);
   }

@@ -346,11 +346,23 @@ var Language = Backbone.Model.extend({
     }
     return null;
   }
-  /***/
+  /**
+    @return latlng [Double] || null
+  */
 , getLocation: function(){
     var data = _.values(this.pick('Latitude', 'Longtitude'));
     if(data.length === 2)
       return data;
+    return null;
+  }
+  /**
+    @return google.maps.LatLng || null
+  */
+, getLatLng: function(){
+    var pos = this.getLocation();
+    if(pos !== null){
+      return new google.maps.LatLng(pos[0], pos[1]);
+    }
     return null;
   }
   /***/
