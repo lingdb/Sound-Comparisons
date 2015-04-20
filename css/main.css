@@ -190,8 +190,9 @@ dd.languageList {
   background-color: #FFE993;
   color: black;
 }
-.languageLink {display: none;}
-.highlighted + .languageLink {display: inline;}
+.languageLink, .zoomLanguage {display: none;}
+.highlighted + .zoomLanguage, .highlighted + .zoomLanguage + .languageLink {display: inline;}
+.languageLink > img, .zoomLanguage > i {margin-left: 0px; margin-right: 0px;}
 /*Style in rightMenu:*/
 #rightMenu {padding-top: 0px; margin-bottom: 0px;}
 #rightMenu h3 {text-align: center;}

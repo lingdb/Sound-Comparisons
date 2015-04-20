@@ -194,11 +194,16 @@ var LanguageMenuView = Backbone.View.extend({
   }
 , render: function(){
     this.$el.find('.nano-content').html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
-    //Bindings MapView:zoomLanguage
+    //Bindings for MapView:
     if(App.pageState.isMapView()){
       var t = this;
+      //highlighting:
       this.$('a.color-language[data-languageIx]').click(function(e){
         t.highlight($(e.target));
+      });
+      //zooming:
+      this.$('a.zoomLanguage').click(function(e){
+        t.zoomLanguage($(e.target));
       });
     }
   }
@@ -219,17 +224,26 @@ var LanguageMenuView = Backbone.View.extend({
         App.languageCollection.select(l);
         map.updateMapsData();
         map.render({renderMap: false});
-        tgt.parent().find('.icon-chkbox-custom').addClass('icon-check').removeClass('icon-chkbox-custom');
+        tgt.parent().find('.icon-chkbox-custom')
+           .addClass('icon-check')
+           .removeClass('icon-chkbox-custom');
       }
       //Highlighting in LanguageMenu:
       tgt.toggleClass('highlighted');
       //Zoom+center map:
-      map.zoomLanguage(l);
+      map.boundLanguage(l);
       //Color the marker:
       var color = function(){App.map.highlight(l);};
       if(add){
         window.setTimeout(color, 500);
       }else{color();}
     }
+  }
+  /***/
+, zoomLanguage(tgt){
+    var lId = tgt.closest('a').parent()
+            .find('a[data-languageix]').data('languageix')
+      , l = App.languageCollection.find(function(x){return x.getId() == lId;});
+    App.views.renderer.model.mapView.zoomLanguage(l);
   }
 });

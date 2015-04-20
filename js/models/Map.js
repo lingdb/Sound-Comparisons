@@ -130,7 +130,6 @@ if(typeof(google) !== 'undefined'){
         var cond = (wol.get('languageIx') == lId);
         wol.highlight(cond);
       }, this);
-      if(wol){wol.highlight();}
     }
   });
 }

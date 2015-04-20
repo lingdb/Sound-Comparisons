@@ -184,6 +184,7 @@ var WordOverlay = Backbone.Model.extend({
   /**
     @param cond Bool
     If cond we will have a red marker, otherwise it'll be black.
+    If cond we will also play the sound.
   */
 , highlight: function(cond){
     if(cond){
@@ -194,6 +195,8 @@ var WordOverlay = Backbone.Model.extend({
       , scale:        7
       , strokeWeight: 2
       });
+      //Playing audio:
+      window.App.views.audioLogic.play($(this.get('div')).find('audio').get(0));
     }else{
       this.get('marker').setIcon({
         fillColor:    '#000000'
