@@ -58,7 +58,8 @@ var Configurator = Sanitizer.extend({
     The reverse operation to configure.
     It shall generate an object describing the whole configuration.
   */
-, getConfig: function(){
+, getConfig: function(pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     var config = {}, ps = App.pageState;
     //wordOrder:
     if(ps.wordOrderIsAlphabetical()){
@@ -79,11 +80,11 @@ var Configurator = Sanitizer.extend({
     //Helper function:
     var getKeys = function(xs){return _.map(xs, function(x){return x.getKey();});};
     //meaningGroups:
-    config.meaningGroups = getKeys(App.meaningGroupCollection.getSelected());
+    config.meaningGroups = getKeys(App.meaningGroupCollection.getSelected(pvk));
     //regions:
-    config.regions = getKeys(App.regionCollection.getSelected());
+    config.regions = getKeys(App.regionCollection.getSelected(pvk));
     //families:
-    config.families = getKeys(App.familyCollection.getSelected());
+    config.families = getKeys(App.familyCollection.getSelected(pvk));
     //translation:
     config.translation = App.translationStorage.getTranslationId();
     //mapViewIgnoreSelection:

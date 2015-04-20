@@ -5,25 +5,37 @@
 */
 var Sanitizer = Backbone.Router.extend({
   /**
+    @param suffixes [String]
+    @param o Object
+    @param pvk String, PageViewKey
     A proxy for the other sanitize methods.
     It chains all sanitize methods with the given suffixes,
     threading the given object trough all of them,
     to finally return the sanitized version.
   */
-  sanitize: function(suffixes, o){
+  sanitize: function(suffixes, o, pvk){
+    if(_.isEmpty(pvk) || !_.isString(pvk)){
+      console.log('Router.sanitize() called without pvk!');
+      pvk = App.pageState.getPageViewKey();
+    }
     o = o || {};
     _.each(suffixes, function(s){
       var key = 'sanitize'+s;
       if(key in this){
-        o = this[key](o);
+        o = this[key](o, pvk);
       }else{
         console.log('Router.sanitize() cannot sanitize with key: '+key);
       }
     }, this);
     return o;
   }
-  /***/
-, sanitizeLanguage: function(o){
+  /**
+    @param o Object to sanitize language field for
+    @param pvk pageViewKey to sanitize with
+    @return o Object
+    Ignores pvk parameter, because it doesn't deal with selections.
+  */
+, sanitizeLanguage: function(o, pvk){
     if(!('language' in o)){
       o.language = App.languageCollection.getChoice();
     }
@@ -33,10 +45,15 @@ var Sanitizer = Backbone.Router.extend({
     o.language = this.sanitizeString(o.language);
     return o;
   }
-  /***/
-, sanitizeLanguages: function(o){
+  /**
+    @param o Object to sanitize languages for
+    @param pvk pageViewKey to sanitize with
+    @return o Object
+  */
+, sanitizeLanguages: function(o, pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     if(!('languages' in  o)){
-      o.languages = App.languageCollection.getSelected();
+      o.languages = App.languageCollection.getSelected(pvk);
     }
     if(o.languages instanceof Backbone.Collection){
       o.languages = o.languages.models;
@@ -50,8 +67,13 @@ var Sanitizer = Backbone.Router.extend({
     }
     return o;
   }
-  /***/
-, sanitizeStudy: function(o){
+  /**
+    @param o Object to sanitize study for
+    @param pvk pageViewKey to sanitize with
+    @return o Object
+    Ignores pvk parameter, because it doesn't deal with selections.
+  */
+, sanitizeStudy: function(o, pvk){
     if(!('study' in o)){
       o.study = App.study;
     }
@@ -64,8 +86,13 @@ var Sanitizer = Backbone.Router.extend({
     o.study = this.sanitizeString(o.study);
     return o;
   }
-  /***/
-, sanitizeWord: function(o){
+  /**
+    @param o Object to sanitize word for
+    @param pvk pageViewKey to sanitize with
+    @return o Object
+    Ignores pvk parameter, because it doesn't deal with selections.
+  */
+, sanitizeWord: function(o, pvk){
     if(!('word' in o)){
       o.word = App.wordCollection.getChoice();
     }
@@ -75,10 +102,14 @@ var Sanitizer = Backbone.Router.extend({
     o.word = this.sanitizeString(o.word);
     return o;
   }
-  /***/
-, sanitizeWords: function(o){
+  /**
+    @param o Object to sanitize words for
+    @param pvk pageViewKey to sanitize with
+    @return o Object
+  */
+, sanitizeWords: function(o, pvk){
     if(!('words' in o)){
-      o.words = App.wordCollection.getSelected();
+      o.words = App.wordCollection.getSelected(pvk);
     }
     if(o.words instanceof Backbone.Collection){
       o.words = o.words.models;
@@ -92,8 +123,13 @@ var Sanitizer = Backbone.Router.extend({
     }
     return o;
   }
-  /***/
-, sanitizeConfig: function(o){
+  /**
+    @param o Object to sanitize config for
+    @param pvk pageViewKey to sanitize with
+    @return o Object
+    Ignores pvk parameter, because it doesn't deal with selections.
+  */
+, sanitizeConfig: function(o, pvk){
     if('config' in o){
       if(o.config !== null){
         var vals = _.map(o.config, function(v, k){

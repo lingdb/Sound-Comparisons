@@ -36,7 +36,7 @@ var Linker = Configurator.extend({
     Option parameters are {word,languages,study,config}.
   */
 , linkMapView: function(options){
-    var o = this.sanitize(['Config','Study','Languages','Word'], options);
+    var o = this.sanitize(['Config','Study','Languages','Word'], options, 'map');
     //Building route:
     var route = '#/'+o.study+'/map/'+o.word+'/'+o.languages;
     if(_.isString(o.config)){
@@ -49,7 +49,7 @@ var Linker = Configurator.extend({
     Option parameters are {word,study,config}, all of which are optional.
   */
 , linkWordView: function(options){
-    var o = this.sanitize(['Config','Study','Word'], options);
+    var o = this.sanitize(['Config','Study','Word'], options, 'word');
     //Building route:
     var route = '#/'+o.study+'/word/'+o.word;
     if(_.isString(o.config)){
@@ -62,7 +62,7 @@ var Linker = Configurator.extend({
     Option parameters are {config,study,language}, all of which are optional.
   */
 , linkLanguageView: function(options){
-    var o = this.sanitize(['Config','Study','Language'], options);
+    var o = this.sanitize(['Config','Study','Language'], options, 'language');
     //Building route:
     var route = '#/'+o.study+'/language/'+o.language;
     if(_.isString(o.config)){
@@ -75,7 +75,7 @@ var Linker = Configurator.extend({
     Option parameters are {config,study,words,languages}, all of which are optional.
   */
 , linkLanguageWordView: function(options){
-    var o = this.sanitize(['Config','Study','Words','Languages'], options);
+    var o = this.sanitize(['Config','Study','Words','Languages'], options, 'languagesXwords');
     //Building route:
     var route = '#/'+o.study+'/languagesXwords/'+o.languages+'/'+o.words;
     if(_.isString(o.config)){
@@ -88,7 +88,7 @@ var Linker = Configurator.extend({
     Option parameters are {config,study,words,languages}, all of which are optional.
   */
 , linkWordLanguageView: function(options){
-    var o = this.sanitize(['Config','Study','Words','Languages'], options);
+    var o = this.sanitize(['Config','Study','Words','Languages'], options, 'wordsXlanguages');
     //Building route:
     var route = '#/'+o.study+'/wordsXlanguages/'+o.words+'/'+o.languages;
     if(_.isString(o.config)){

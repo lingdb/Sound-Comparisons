@@ -28,23 +28,27 @@ var Selection = Backbone.Collection.extend({
     return selected;
   }
   /**
+    @param [pvk] String
+    @return selected [Backbone.Model]
     Returns the selected models as an array,
     because the final collection for them is not known.
+    If pvk is given, it is used as the pageView to retrieve the selection for.
+    Otherwise the current pageView will be used.
   */
-, getSelected: function(){
-    var pvk = App.pageState.getPageViewKey();
+, getSelected: function(pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     return _.values(this.selected[pvk]);
   }
   /**
     Changes the selected models to the given array or Backbone.Collection.
   */
-, setSelected: function(ms){
+, setSelected: function(ms, pvk){
     if(ms instanceof Backbone.Collection){
       ms = ms.models;
     }
     if(_.isArray(ms)){
       this.selected = this.mkSelectionMap();
-      _.each(ms, this.select, this);
+      _.each(ms, function(m){this.select(m, pvk);}, this);
     }
   }
   /**
@@ -69,39 +73,47 @@ var Selection = Backbone.Collection.extend({
     return this.setSelected(ms);
   }
   /**
-    Predicate to check selection of a model.
+    @param m Model to check selection for
+    @param [pvk] String pageView to use instead of current pageView.
+    @return boolean True if m is selected with respect to the pageView.
   */
-, isSelected: function(m){
-    var pvk = App.pageState.getPageViewKey();
+, isSelected: function(m, pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     return m.getId() in (this.selected[pvk]);
   }
   /**
-    Adds a model to the selection.
-    Returns self for chaining.
+    @param m model to add to the selection
+    @param [pvk] String
+    @return self for chaining
+    If pvk is given, that will be used as the pageView to determine the selection.
   */
-, select: function(m){
-    var pvk = App.pageState.getPageViewKey();
+, select: function(m, pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     this.selected[pvk][m.getId()] = m;
     return this;
   }
   /**
-    Removes a model from the selection.
-    Returns self for chaining.
+    @param m model to add to the selection
+    @param [pvk] String
+    @return self for chaining
+    If pvk is given, that will be used as the pageView to determine the selection.
   */
-, unselect: function(m){
-    var pvk = App.pageState.getPageViewKey();
+, unselect: function(m, pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     delete this.selected[pvk][m.getId()];
     return this;
   }
   /**
+    @param models [Model]|| Backbone.Collection<Model>
+    @param pvk String to use as pageView instead of current one.
+    @return String from the set {'all','some','none'}
     Method to tell if multiple models are selected.
     It works on both, collections and arrays.
-    Returns {'all','some','none'}
   */
-, areSelected: function(models){
+, areSelected: function(models, pvk){
     var all = true, none = true
       , iterator = function(m){
-          if(this.isSelected(m)){
+          if(this.isSelected(m, pvk)){
             none = false;
           }else{
             all = false;
