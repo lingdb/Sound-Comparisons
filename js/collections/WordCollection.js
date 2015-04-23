@@ -63,8 +63,8 @@ var WordCollection = Choice.extend({
   /**
     Overwriting Selection:getSelected to sort elements according to WordCollection:comparator.
   */
-, getSelected: function(){
-    var selected = Selection.prototype.getSelected.call(this);
+, getSelected: function(pvk){
+    var selected = Selection.prototype.getSelected.call(this, pvk);
     selected.sort(this.comparator);
     return selected;
   }

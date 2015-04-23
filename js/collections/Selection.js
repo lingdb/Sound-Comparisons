@@ -1,9 +1,12 @@
 /* global Selection: true */
 "use strict";
 /**
-  Implements the aspect that several models of a collection can be marked as selected.
-  If children implement 'isDefaultSelection', it will be used to find the default selection,
-  rather than select all models per default.
+  Implements the aspect that several models of a collection can be marked as selected per PageView.
+  If children implement 'getDefaultSelection', it will be used to find the default selection,
+  otherwise all models will be marked as selected per default.
+  The getDefaultSelection method may present two kinds of return values:
+  - Either an Object mapping PageViewKeys to arrays of models,
+  - Or an array of models that will be used for all PageViewKeys.
 */
 var Selection = Backbone.Collection.extend({
   initialize: function(){
@@ -13,7 +16,15 @@ var Selection = Backbone.Collection.extend({
       var ms = ('getDefaultSelection' in this) ? this.getDefaultSelection()
                                                : this.models;
       this.selected = this.mkSelectionMap();
-      this.setSelected(ms);
+      if(_.isArray(ms)){//Default selection is an array
+        _.each(App.pageState.get('pageViews'), function(pvk){
+          this.setSelected(ms, pvk);
+        }, this);
+      }else if(_.isObject(ms)){//Default selection maps PageViewKeys to arrays of models
+        _.each(ms, function(ms, pvk){
+          this.setSelected(ms, pvk);
+        }, this);
+      }
     }, this);
   }
   /**
@@ -43,11 +54,12 @@ var Selection = Backbone.Collection.extend({
     Changes the selected models to the given array or Backbone.Collection.
   */
 , setSelected: function(ms, pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     if(ms instanceof Backbone.Collection){
       ms = ms.models;
     }
+    this.selected[pvk] = {};
     if(_.isArray(ms)){
-      this.selected = this.mkSelectionMap();
       _.each(ms, function(m){this.select(m, pvk);}, this);
     }
   }
@@ -55,7 +67,8 @@ var Selection = Backbone.Collection.extend({
     @param ks [String]
     Selects models by their getKey method.
   */
-, setSelectedByKey: function(ks){
+, setSelectedByKey: function(ks, pvk){
+    pvk = pvk || App.pageState.getPageViewKey();
     var keys = {}; // Hash map for faster finding of keys
     _.each(ks, function(k){keys[k] = true;}, this);
     //Finding selected:
@@ -64,13 +77,13 @@ var Selection = Backbone.Collection.extend({
     }, this);
     if(ms.length === 0 && App.studyWatcher.studyChanged()){
       if('getDefaultSelection' in this){
-        ms = this.getDefaultSelection();
+        ms = this.getDefaultSelection(pvk);
       }else{
         ms = _.take(this.models, 5);
       }
     }
     //Adding models that have a matching key:
-    return this.setSelected(ms);
+    return this.setSelected(ms, pvk);
   }
   /**
     @param m Model to check selection for

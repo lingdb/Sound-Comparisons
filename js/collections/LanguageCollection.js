@@ -74,14 +74,23 @@ var LanguageCollection = Choice.extend({
     Returns the default Languages as array to be used as selection for the LanguageCollection.
     Note that this method depends on the current PageView.
   */
-, getDefaultSelection: function(){
-    var isMap = App.pageState.isMapView()
-      , sel   = isMap ? App.defaults.getMapLanguages()
-                      : App.defaults.getLanguages();
-    if(sel.length === 0){
-      return _.take(this.models, 5);
+, getDefaultSelection: function(pvk){
+    if(_.isString(pvk) && !_.isEmpty(pvk)){
+      pvk = pvk || App.pageState.getPageViewKey();
+      var isMap = App.pageState.isMapView(pvk)
+        , sel   = isMap ? App.defaults.getMapLanguages()
+                        : App.defaults.getLanguages();
+      if(sel.length === 0){
+        return _.take(this.models, 5);
+      }
+      return sel;
+    }else{
+      var ret = {};
+      _.each(App.pageState.get('pageViews'), function(pvk){
+        ret[pvk] = this.getDefaultSelection(pvk);
+      }, this);
+      return ret;
     }
-    return sel;
   }
   /**
     Returns the default Language to be used as Choice for the LanguageCollection.

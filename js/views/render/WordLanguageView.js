@@ -46,7 +46,10 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
           isLogical:          App.pageState.wordOrderIsLogical()
         , clearWordsLink:     'href="'+App.router.linkWordLanguageView({words: []})+'"'
         , clearLanguagesLink: 'href="'+App.router.linkWordLanguageView({languages: []})+'"'
-        , transposeLink:      'href="'+App.router.linkLanguageWordView()+'"'
+        , transposeLink:      'href="'+App.router.linkLanguageWordView({
+            words: App.wordCollection.getSelected()
+          , languages: App.languageCollection.getSelected()
+          })+'"'
         , rows: []
         }, basic;
     /*
@@ -188,9 +191,9 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
       t.noStudy(study);
     }).always(function(){
       //Setting the words:
-      App.wordCollection.setSelectedByKey(App.router.parseArray(words));
+      App.wordCollection.setSelectedByKey(App.router.parseArray(words),pv);
       //Setting the languages:
-      App.languageCollection.setSelectedByKey(App.router.parseArray(languages));
+      App.languageCollection.setSelectedByKey(App.router.parseArray(languages),pv);
       //Set this pageView as active:
       App.pageState.setPageView(pv);
       //Render:

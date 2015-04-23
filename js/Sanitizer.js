@@ -15,7 +15,7 @@ var Sanitizer = Backbone.Router.extend({
   */
   sanitize: function(suffixes, o, pvk){
     if(_.isEmpty(pvk) || !_.isString(pvk)){
-      console.log('Router.sanitize() called without pvk!');
+      console.log('Router.sanitize() called without PageViewKey!');
       pvk = App.pageState.getPageViewKey();
     }
     o = o || {};

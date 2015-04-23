@@ -85,16 +85,18 @@ var TopMenuView = Backbone.View.extend({
     , lw: 'lw.png'
     , wl: 'wl.png'
     };
-    var defaults = {
-      words:     App.wordCollection.getDefaultSelection()
-    , languages: App.languageCollection.getDefaultSelection()
+    var getDefaults = function(pvk){
+      return {
+        words:     App.wordCollection.getSelected(pvk)
+      , languages: App.languageCollection.getSelected(pvk)
+      };
     };
     var links = {
       m:  App.router.linkMapView()
     , w:  App.router.linkWordView()
     , l:  App.router.linkLanguageView()
-    , lw: App.router.linkLanguageWordView(defaults)
-    , wl: App.router.linkWordLanguageView(defaults)
+    , lw: App.router.linkLanguageWordView(getDefaults('languagesXwords'))
+    , wl: App.router.linkWordLanguageView(getDefaults('wordsXlanguages'))
     };
     this.setModel({pageViews: _.map(_.keys(names), function(key){
       return {

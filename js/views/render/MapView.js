@@ -162,7 +162,7 @@ var MapView = Renderer.prototype.SubView.extend({
       //Setting the word:
       App.wordCollection.setChoiceByKey(word);
       //Setting the languages:
-      App.languageCollection.setSelectedByKey(App.router.parseArray(languages));
+      App.languageCollection.setSelectedByKey(App.router.parseArray(languages), pv);
       //Handling the renderMapFlag:
       t.renderMapFlag = App.pageState.isPageView(pv);
       //Changing pageView if necessary:

@@ -95,6 +95,9 @@ var Configurator = Sanitizer.extend({
     return config;
   }
   /**
+    @param calls [Suffix -> Args]
+    @param config Object
+    @return config' Object
     Takes a calls Object that maps Suffixes to args,
     where Suffix is the match of /configSet(.+)/ for methods of Router,
     and args will be supplied to the Router method as second argument,

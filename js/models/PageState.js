@@ -91,14 +91,16 @@ var PageState = Backbone.Model.extend({
   /**
     Predicate to tell if the current pageView is a multiView.
   */
-, isMultiView: function(){
-    return _.contains(['languagesXwords','wordsXlanguages'], this.get('pageView'));
+, isMultiView: function(pvk){
+    pvk = pvk || this.get('pageView');
+    return _.contains(['languagesXwords','wordsXlanguages'], pvk);
   }
   /**
     Predicate to tell if the current pageView is the mapView.
   */
-, isMapView: function(){
-    return this.get('pageView') === 'map';
+, isMapView: function(pvk){
+    pvk = pvk || this.get('pageView');
+    return pvk === 'map';
   }
   /**
     Returns the currently active pageView as a Backbone.View
