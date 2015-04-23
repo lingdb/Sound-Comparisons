@@ -51,12 +51,7 @@ var Renderer = Backbone.View.extend({
     }, this);
     //We only update the fragment, if we're in one of the 'typical' views.
     if(!App.pageState.isPageView('c')){
-      //Updating fragment:
-      (function(r){
-        var fragment = r.linkCurrent({config: r.getConfig()});
-        r.navigate(fragment, {trigger: false});
-        App.study.trackLinks(fragment);
-      })(App.router);
+      App.router.updateFragment();
     }
     //Triggering nanoScroller updates:
     this.nanoScroller();

@@ -114,4 +114,15 @@ var Router = Linker.extend({
       App.views.renderer.render();
     }, this);
   }
+  /**
+    Updates the fragment without triggering.
+    This is useful to refresh the URL,
+    and bring it up to the current state.
+    Usually we call this from Renderer.render.
+  */
+, updateFragment: function(){
+    var fragment = this.linkCurrent({config: this.getConfig()});
+    this.navigate(fragment, {trigger: false});
+    App.study.trackLinks(fragment);
+  }
 });

@@ -146,6 +146,7 @@ var LanguageMenuView = Backbone.View.extend({
           var language = {
             shortName: l.getSuperscript(l.getShortName())
           , longName:  l.getLongName()
+          , zoomLanguage: App.translationStorage.translateStatic('menu_zoomLanguage')
           , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
           , isMapView: isMapView
           , languageIx : l.getId()
@@ -224,9 +225,11 @@ var LanguageMenuView = Backbone.View.extend({
         App.languageCollection.select(l);
         map.updateMapsData();
         map.render({renderMap: false});
+        tgt.addClass('selected');
         tgt.parent().find('.icon-chkbox-custom')
            .addClass('icon-check')
            .removeClass('icon-chkbox-custom');
+        App.router.updateFragment();
       }
       //Highlighting in LanguageMenu:
       tgt.toggleClass('highlighted');
