@@ -9,8 +9,8 @@ var ContributorCollection = Backbone.Collection.extend({
 , comparator: function(a, b){
     //First choice is DESC by SortIx:
     var x = a.get('SortIxForAboutPage'), y = b.get('SortIxForAboutPage');
-    if(x > y) return -1;
-    if(x < y) return  1;
+    if(x > y) return  1;
+    if(x < y) return -1;
     //Second choice is ASC by Surnames:
     x = a.get('Surnames'); y = b.get('Surnames');
     if(x > y) return  1;
