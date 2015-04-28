@@ -295,7 +295,10 @@ dd.languageList {
 #multitabletrans .icons, #multitable .icons {white-space: nowrap;}
 /* Contributors page: */
 .contributor:target {
-  border-color: #B94A48;
+  background-color: #F2F6CA;
+}
+.contributor a {
+  color: #005580;
 }
 /* IPA Keyboard: */
 #ipaKeyboard {
