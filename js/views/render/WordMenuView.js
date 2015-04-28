@@ -79,6 +79,11 @@ var WordMenuView = Backbone.View.extend({
       , name: App.translationStorage.getName()
       });
     }
+    //Separator item:
+    data.spList.options.push({
+      disabled: true
+    , name: '⸻⸻⸻'
+    });
     //Other items:
     var spId = spLang ? spLang.getId() : -1;
     App.languageCollection.getSpellingLanguages().each(function(l){

@@ -25,7 +25,7 @@
       <select>
         <option selected="selected">{{current}}</option>
         {{#options}}
-        <option {{{link}}}>{{name}}</option>
+        <option{{#disabled}} disabled="disabled"{{/disabled}} {{{link}}}>{{name}}</option>
         {{/options}}
       </select>
       {{/spList}}
