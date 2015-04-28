@@ -21,7 +21,8 @@ var WordCollection = Choice.extend({
 , comparator: function(a, b){
     var ma, mb;
     if(App.pageState.wordOrderIsAlphabetical()){ // Alphabetical order
-      ma = a.getModernName(); mb = b.getModernName();
+      ma = a.getModernName().toLowerCase();
+      mb = b.getModernName().toLowerCase();
       if(ma > mb) return  1;
       if(ma < mb) return -1;
     }else{ // Logical order
