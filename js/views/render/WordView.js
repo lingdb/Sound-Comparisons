@@ -126,7 +126,10 @@ var WordView = Renderer.prototype.SubView.extend({
       var row = {cells: []};
       if(parseInt(f.getId()) !== 0) row.spaceRow = true;
       _.each(regions, function(cells, i){
-        if(i === 0) cells.unshift(family);
+        if(i === 0){
+          if(App.familyCollection.length > 1)
+          cells.unshift(family);
+        }
         row.cells = cells;
         table.rows.push(row);
         row = {cells: []};
