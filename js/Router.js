@@ -122,7 +122,7 @@ var Router = Linker.extend({
   */
 , updateFragment: function(){
     var fragment = this.linkCurrent({config: this.getConfig()});
-    this.navigate(fragment, {trigger: false});
+    this.navigate(fragment, {trigger: false, replace: true});
     App.study.trackLinks(fragment);
   }
 });
