@@ -12,7 +12,7 @@ var AudioLogic = Backbone.View.extend({
     // Currently playing audio
     this.current = null;
     // Milliseconds to wait before starting to play an audio
-    this.hoverDelay = 100;
+    this.hoverDelay = 200;
     /**
       Used for hover, to check if the mouse rests over an audio for a while.
     */
