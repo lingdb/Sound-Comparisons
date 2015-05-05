@@ -1,5 +1,6 @@
 {
   "laxcomma": true
+, "laxbreak": true
 , "globalstrict": true
 , "globals": {
     "_": false

@@ -26,7 +26,7 @@ onmessage = function(e){
     //Generating the filename:
     if(fname === ''){
       var date = new Date();
-      fname = 'Soundfiles.'+date.toISOString()
+      fname = 'Soundfiles.'+date.toISOString();
       folder = zip.folder(fname);
     }
     //Investigating the task:
@@ -87,12 +87,12 @@ if(!Date.prototype.toISOString){
 
     Date.prototype.toISOString = function(){
       return this.getUTCFullYear()
-      + '-' + pad( this.getUTCMonth() + 1 )
-      + '-' + pad( this.getUTCDate() )
-      + 'T' + pad( this.getUTCHours() )
-      + ':' + pad( this.getUTCMinutes() )
-      + ':' + pad( this.getUTCSeconds() )
-      + '.' + String( (this.getUTCMilliseconds()/1000).toFixed(3) ).slice( 2, 5 )
+      + '-' + pad(this.getUTCMonth() + 1)
+      + '-' + pad(this.getUTCDate())
+      + 'T' + pad(this.getUTCHours())
+      + ':' + pad(this.getUTCMinutes())
+      + ':' + pad(this.getUTCSeconds())
+      + '.' + String((this.getUTCMilliseconds()/1000).toFixed(3)).slice(2, 5)
       + 'Z';
     };
   }());

@@ -183,7 +183,7 @@ var TopMenuView = Backbone.View.extend({
       }).fail(function(f){
         var msg = 'An error occured when trying to download sound files:\n'+f;
         console.log(msg);
-        alert(msg);
+        window.alert(msg);
       });
       sndBtn.addClass('btn-danger');
     });
