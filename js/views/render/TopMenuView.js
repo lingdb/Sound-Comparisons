@@ -1,4 +1,4 @@
-/* global TopMenuView: true */
+/* global TopMenuView: true, Date: true */
 "use strict";
 /**
   The TopMenuView will be used by the Renderer.
@@ -147,15 +147,6 @@ var TopMenuView = Backbone.View.extend({
 , updatePlayOption: function(){
     this.setModel({soundOptionHover: App.soundPlayOption.playOnHover()});
   }
-  /**
-    Link to download the current soundfiles:
-  */
-, updateSoundLink: function(){
-    var d = App.soundDownloader.mkPathDesc()
-      , s = App.study.getId()
-      , x = App.pageState.get('wordByWordFormat');
-    this.setModel({sndLink: 'export/soundfiles?study='+s+'&files='+d+'&suffix='+x});
-  }
   /***/
 , updateCsvLink: function(){
     var s = App.study.getId(), ls = [], ws = [];
@@ -184,6 +175,18 @@ var TopMenuView = Backbone.View.extend({
     if(App.pageState.get('wordByWord')){
       wordByWord.prop('checked', true);
     }
+    //Download sounds:
+    var sndBtn = this.$('a.soundFile').click(function(){
+      App.soundDownloader.download().done(function(msg){
+        sndBtn.removeClass('btn-danger');
+        window.saveAs(msg.data, msg.name);
+      }).fail(function(f){
+        var msg = 'An error occured when trying to download sound files:\n'+f;
+        console.log(msg);
+        alert(msg);
+      });
+      sndBtn.addClass('btn-danger');
+    });
     //The wordByWordFormat selection:
     var radios = this.$('input[name="wordByWordFormat"]').click(function(){
       var val = $(this).val();

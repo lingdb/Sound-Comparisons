@@ -23,5 +23,9 @@ if(!file_exists($file)){
 //Setting headers:
 header('Content-Disposition: attachment;filename="'.basename($file).'"');
 //Handing over the file:
-readfile($file);
+if(isset($_GET['base64'])){
+  echo base64_encode(file_get_contents($file));
+}else{
+  readfile($file);
+}
 ?>
