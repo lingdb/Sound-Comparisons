@@ -36,6 +36,10 @@ var Renderer = Backbone.View.extend({
       }, this);
       //Rerender on changing templates:
       App.templateStorage.on('change:partials', this.render, this);
+      //Making sure we adjust nanoScrollers on resize/zoom change:
+      $(window).resize(function(){
+        App.views.renderer.nanoScroller();
+      });
       //Renderer is activated now:
       this._activated = true;
     }
