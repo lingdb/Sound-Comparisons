@@ -36,7 +36,7 @@ var Contributor = Backbone.Model.extend({
   }
   /***/
 , getAvatar: function(){
-    return this.get('Avatar') || null;
+    return this.get('Avatar') || 'img/contributors/dummy.png';
   }
   /***/
 , getPersonalWebsite: function(){
