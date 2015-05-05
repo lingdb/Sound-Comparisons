@@ -45,6 +45,8 @@ var LanguageMenuView = Backbone.View.extend({
         //Checking if we got regions:
         var regions = f.getRegions();
         if(regions.length === 0) return;
+        //Checking if we got languages:
+        if(!f.hasLanguages()) return;
         var selected = fCol.isSelected(f)
           , data = { // Basic information for a family
               name:  f.getName()

@@ -64,4 +64,17 @@ var Family = Backbone.Model.extend({
     }
     return this._languages;
   }
+  /**
+    Check if there are any languages in this family.
+  */
+, hasLanguages: function(){
+    var rCol = this.getRegions();
+    for(var i = 0; i < rCol.models.length; i++){
+      var r = rCol.models[i];
+      if(r.getLanguages().length > 0){
+        return true;
+      }
+    }
+    return false;
+  }
 });
