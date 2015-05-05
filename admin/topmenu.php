@@ -10,7 +10,7 @@
       if(session_mayTranslate($dbConnection))
         echo '<li><a href="translate.php">Translate</a></li>';
       if(session_mayEdit($dbConnection))
-        echo '<li><a href="dbimport.php">Import</a></li>';
+        echo '<li><a href="dbimport.php">Upload</a></li>';
       if(session_mayTranslate($dbConnection))
         echo '<li><a href="shortlinks.php">Shortlinks</a></li>';
       ?>
