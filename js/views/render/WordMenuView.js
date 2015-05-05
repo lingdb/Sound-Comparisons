@@ -53,7 +53,6 @@ var WordMenuView = Backbone.View.extend({
       sfby:             'menu_words_filter_head'
     , spelling:         'menu_words_filterspelling'
     , phonetics:        'menu_words_filterphonetics'
-    , soundFile:        'menu_words_filter_fonetics_file'
     , fonetics:         'menu_words_filter_fonetics'
     , psTarget:         'menu_words_filter_regex_link'
     , psHover:          'menu_words_filter_regex_hover'
@@ -67,7 +66,6 @@ var WordMenuView = Backbone.View.extend({
     _.extend(data, {
       spList: {options: []}
     , phList: {}
-    , soundPath: this.buildSoundPath()
     });
     //Filling spList:
     var spLang = App.pageState.getSpLang();
