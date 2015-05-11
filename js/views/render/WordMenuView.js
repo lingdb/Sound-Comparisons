@@ -83,14 +83,17 @@ var WordMenuView = Backbone.View.extend({
     , name: '---------------'
     });
     //Other items:
-    var spId = spLang ? spLang.getId() : -1;
+    var spId = spLang ? spLang.getId() : -1, entries = [];
     App.languageCollection.getSpellingLanguages().each(function(l){
       if(l.getId() === spId) return;
-      data.spList.options.push({
+      entries.push({
         link: 'data-href="'+App.router.linkConfig({SpLang: l})+'"'
       , name: l.getSpellingName()
       });
     }, this);
+    //Sort entries, and push them into options:
+    entries = _.sortBy(entries, function(e){return e.name;}, this);
+    data.spList.options.push.apply(data.spList.options, entries);
     //Filling phList:
     var phLang = App.pageState.getPhLang();
     if(phLang){
