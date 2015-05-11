@@ -102,17 +102,23 @@ var WordMenuView = Backbone.View.extend({
       data.phList.current = phLang.getShortName();
       data.phList.options = [];
       //Other phLangs:
-      App.languageCollection.each(function(l){
-        if(l.getId() === phId) return;
-        //Checking if we have transcriptions, first word decides.
-        var w = App.wordCollection.models[0]
-          , t = l.getTranscription(w);
-        if(!t.hasPhonetics()) return;
-        //Adding as phLang:
+      App.regionCollection.each(function(r){
         data.phList.options.push({
-          link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
-        , name: l.getShortName()
+          disabled: true
+        , name: '---------------'
         });
+        r.getLanguages().each(function(l){
+          if(l.getId() === phId) return;
+          //Checking if we have transcriptions, first word decides.
+          var w = App.wordCollection.models[0]
+            , t = l.getTranscription(w);
+          if(!t.hasPhonetics()) return;
+          //Adding as phLang:
+          data.phList.options.push({
+            link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
+          , name: l.getShortName()
+          });
+        }, this);
       }, this);
     }
     //Use App.pageState.get{Sp,Ph}Lang
