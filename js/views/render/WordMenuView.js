@@ -80,7 +80,7 @@ var WordMenuView = Backbone.View.extend({
     //Separator item:
     data.spList.options.push({
       disabled: true
-    , name: '⸻⸻⸻'
+    , name: '---------------'
     });
     //Other items:
     var spId = spLang ? spLang.getId() : -1;
