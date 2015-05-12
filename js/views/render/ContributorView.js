@@ -14,19 +14,6 @@ var ContributorView = Renderer.prototype.SubView.extend({
     Method to make it possible to check what kind of PageView this Backbone.View is.
   */
 , getKey: function(){return 'contributorView';}
-  /**
-    Function to call non /^update.+/ methods that are necessary for the model, and to setup their callbacks.
-  */
-, activate: function(){
-    //Setting callbacks to update model:
-    App.translationStorage.on('change:translationId', this.buildStatic, this);
-    //Building statics the first time:
-    this.buildStatic();
-  }
-  /***/
-, buildStatic: function(){
-    this.model.citedTitle = App.translationStorage.translateStatic('whoarewe_citecontributors_title');
-  }
   /***/
 , updateContributors: function(){
     var sumContributor = function(c){
