@@ -72,7 +72,9 @@ var Word = Backbone.Model.extend({
 , getProtoName: function(){
     return this.get('FullRfcProtoLg01');
   }
-  /***/
+  /**
+    @return [String]|String
+  */
 , getNameFor: function(language){
     if(language){
       var t = App.transcriptionMap.getTranscription(language, this);

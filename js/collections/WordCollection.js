@@ -16,25 +16,50 @@ var WordCollection = Choice.extend({
     }
   }
   /**
-    Custom comparator that sorts words by either alphabetical order or by logical order.
+    Placeholder, to mark that this is overwritten by WordCollection.sort()
   */
 , comparator: function(a, b){
-    var ma, mb;
-    if(App.pageState.wordOrderIsAlphabetical()){ // Alphabetical order
-      var toName = (function(){
-        var spLang = App.pageState.getSpLang();
-        return function(w){
+    throw "Unexpected call to WordCollection.comparator()";
+  }
+  /**
+    Produces a function that compares two words for their alphabetical order and returns their ordering.
+    @return (Word,Word)->{-1,0,1}
+  */
+, getAlphaComparator: function(){
+    var spLang = App.pageState.getSpLang()
+      , toName = function(w){
           var s = w.getNameFor(spLang);
           if(_.isArray(s)){ s = _.head(s); }
-          return s.toLowerCase();
+          s = s.toLowerCase();
+          //Test for magic pattern (#140):
+          var matches = s.match(/\((.+)\) ?(.+)/);
+          if(_.isArray(matches)){
+            return [matches[2], matches[1]];
+          }
+          return [s];
         };
-      })();
-      ma = toName(a);
-      mb = toName(b);
-      if(ma > mb) return  1;
-      if(ma < mb) return -1;
-    }else{ // Logical order
-      ma = a.getMeaningGroup(); mb = b.getMeaningGroup();
+    return function(a, b){
+      var na = toName(a), nb = toName(b), iMax = Math.min(na.length, nb.length);
+      //Compare fieldwise:
+      for(var i = 0; i < iMax; i++){
+        if(na > nb) return  1;
+        if(na < nb) return -1;
+      }
+      //Fallback on length:
+      if(na.length > nb.length) return  1;
+      if(na.length < nb.length) return -1;
+      //When in doubt, words are equal:
+      return 0;
+    };
+  }
+  /**
+    Produces a function that compares two words for their logical order and returns their ordering.
+    @return (Word,Word)->{-1,0,1}
+  */
+, getLogicComparator: function(){
+    var aComp = this.getAlphaComparator();
+    return function(a,b){
+      var ma = a.getMeaningGroup(), mb = b.getMeaningGroup();
       if(ma && mb){
         var maId = ma.getId(), mbId = mb.getId();
         if(maId > mbId) return  1;
@@ -43,9 +68,16 @@ var WordCollection = Choice.extend({
         if(aId > bId) return  1;
         if(aId < bId) return -1;
       }
-    }
-    //When in doubt, words are equal.
-    return 0;
+      //When in doubt, use alphabetical order:
+      return aComp(a,b);
+    };
+  }
+  /***/
+, sort: function(){
+    var isAlpha = App.pageState.wordOrderIsAlphabetical();
+    this.comparator = isAlpha ? this.getAlphaComparator()
+                              : this.getLogicComparator();
+    Backbone.Collection.prototype.sort.apply(this, arguments);
   }
   /**
     Called by App, to make sure wordCollection is sorted by the current WordOrder.
