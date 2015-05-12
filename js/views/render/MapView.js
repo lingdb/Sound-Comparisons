@@ -349,8 +349,8 @@ var MapView = Renderer.prototype.SubView.extend({
   /**
     @param l Language
     If the language is not on the map,
-    we zoom/center to the bounding box of all the languages
-    that belong to the same region as l.
+    we zoom/center to the bounding box of
+    the 11 closest languages to the given one.
     Otherwise nothing happens.
   */
 , boundLanguage: function(l){
@@ -375,5 +375,15 @@ var MapView = Renderer.prototype.SubView.extend({
     var ll = l.getLatLng();
     this.map.setCenter(ll);
     this.map.setZoom(8);
+  }
+  /**
+    @param ls [Language]
+    Method to zoom in on the bounding box of an array of languages.
+  */
+, zoomLanguages: function(ls){
+    this.renderMapFirst = false;//Making sure no timeout zooms along.
+    var bounds = new google.maps.LatLngBounds();
+    _.each(ls, function(l){bounds.extend(l.getLatLng());});
+    this.map.fitBounds(bounds);
   }
 });

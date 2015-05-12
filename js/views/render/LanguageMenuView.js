@@ -144,6 +144,11 @@ var LanguageMenuView = Backbone.View.extend({
                                         : 'icon-chevron-up rotate90';
       //Languages for selected Regions:
       if(region.selected){
+        if(isMapView){//Zooming in on a Region
+          region.isMapView = isMapView;
+          region.zoomRegion = App.translationStorage.translateStatic('menu_zoomRegion');
+          region.rid = r.getId();
+        }
         languages.each(function(l){
           var language = {
             shortName: l.getSuperscript(l.getShortName())
@@ -208,6 +213,10 @@ var LanguageMenuView = Backbone.View.extend({
       this.$('a.zoomLanguage').click(function(e){
         t.zoomLanguage($(e.target));
       });
+      this.$('a.zoomRegion').click(function(e){
+        var rId = $(e.target).closest('.zoomRegion').data('rid');
+        t.zoomRegion($(e.target));
+      });
     }
   }
   /**
@@ -244,11 +253,21 @@ var LanguageMenuView = Backbone.View.extend({
       }else{color();}
     }
   }
-  /***/
+  /**
+    @param tgt jQuery Object
+  */
 , zoomLanguage: function(tgt){
     var lId = tgt.closest('a').parent()
             .find('a[data-languageix]').data('languageix')
       , l = App.languageCollection.find(function(x){return x.getId() == lId;});
     App.views.renderer.model.mapView.zoomLanguage(l);
+  }
+  /**
+    @param tgt jQuery Object
+  */
+, zoomRegion: function(tgt){
+    var rId = tgt.closest('.zoomRegion').data('rid')
+      , r = App.regionCollection.find(function(r){return r.getId() == rId;});
+    App.views.renderer.model.mapView.zoomLanguages(r.getLanguages().models);
   }
 });

@@ -6,6 +6,9 @@
     <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
     {{/checkbox}}
     <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
+    {{#isMapView}}
+    <a title="{{zoomRegion}}" class="zoomRegion" data-rid="{{rid}}"><i class="icon-screenshot"></i></a>
+    {{/isMapView}}
   </dt>
   {{#selected}}
   <dd class="languageList">
@@ -39,6 +42,9 @@
     <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
     {{/checkbox}}
     <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
+    {{#isMapView}}
+    <a title="{{zoomRegion}}" class="zoomRegion" data-rid="{{rid}}"><i class="icon-screenshot"></i></a>
+    {{/isMapView}}
     {{#selected}}
     <ul class="languageList">
       {{#languages}}
