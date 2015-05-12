@@ -21,8 +21,16 @@ var WordCollection = Choice.extend({
 , comparator: function(a, b){
     var ma, mb;
     if(App.pageState.wordOrderIsAlphabetical()){ // Alphabetical order
-      ma = a.getModernName().toLowerCase();
-      mb = b.getModernName().toLowerCase();
+      var toName = (function(){
+        var spLang = App.pageState.getSpLang();
+        return function(w){
+          var s = w.getNameFor(spLang);
+          if(_.isArray(s)){ s = _.head(s); }
+          return s.toLowerCase();
+        };
+      })();
+      ma = toName(a);
+      mb = toName(b);
       if(ma > mb) return  1;
       if(ma < mb) return -1;
     }else{ // Logical order
@@ -44,6 +52,7 @@ var WordCollection = Choice.extend({
   */
 , listenWordOrder: function(){
     App.pageState.on('change:wordOrder', this.sort, this);
+    App.pageState.on('change:spLang', this.sort, this);
   }
   /**
     Returns the default Words as array to be used as selection for the WordCollection.
