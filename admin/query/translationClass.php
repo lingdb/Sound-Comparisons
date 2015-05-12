@@ -19,6 +19,7 @@
   */
   require_once 'providers/TranslationProvider.php';
   require_once 'providers/StaticTranslationProvider.php';
+  require_once 'providers/ContributorCategoriesTranslationProvider.php';
   require_once 'providers/FamilyTranslationProvider.php';
   require_once 'providers/DynamicTranslationProvider.php';
   require_once 'providers/LanguageStatusTypesTranslationProvider.php';
@@ -39,6 +40,7 @@
         $dbConnection = Config::getConnection();
         foreach(array(
           new StaticTranslationProvider($dbConnection)
+        , new ContributorCategoriesTranslationProvider($dbConnection)
         , new FamilyTranslationProvider($dbConnection)
         , new LanguageStatusTypesTranslationProvider('Trans_Status', $dbConnection)
         , new LanguageStatusTypesTranslationProvider('Trans_Description', $dbConnection)
@@ -73,6 +75,7 @@
     , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'
     , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'
     , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'
+    , 'Contributors'          => '/^ContributorCategoriesTranslationProvider$/'
     );
     /**
       @param $imagePath String

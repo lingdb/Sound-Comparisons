@@ -17,49 +17,12 @@
     In addition to the now completely modular, unified approach to translation,
     the site also got a new JavaScript interface, which uses the methods supplied by this file.
   */
-  require_once 'providers/TranslationProvider.php';
-  require_once 'providers/StaticTranslationProvider.php';
-  require_once 'providers/FamilyTranslationProvider.php';
-  require_once 'providers/DynamicTranslationProvider.php';
-  require_once 'providers/LanguageStatusTypesTranslationProvider.php';
-  require_once 'providers/SpellingLanguagesTranslationProvider.php';
-  require_once 'providers/MeaningGroupsTranslationProvider.php';
-  require_once 'providers/RegionLanguagesTranslationProvider.php';
-  require_once 'providers/RegionsTranslationProvider.php';
-  require_once 'providers/StudyTranslationProvider.php';
-  require_once 'providers/StudyTitleTranslationProvider.php';
-  require_once 'providers/TranscrSuperscriptInfoTranslationProvider.php';
-  require_once 'providers/TranscrSuperscriptLenderLgsTranslationProvider.php';
-  require_once 'providers/WordsTranslationProvider.php';
   require_once 'translationClass.php';
   //
   chdir('..');
   require_once 'common.php';
   session_validate()     or Config::error('403 Forbidden');
   session_mayTranslate() or Config::error('403 Forbidden');
-  /* Providers: */
-  $providers = array();
-  foreach(array(
-    new StaticTranslationProvider($dbConnection)
-  , new FamilyTranslationProvider($dbConnection)
-  , new LanguageStatusTypesTranslationProvider('Trans_Status',        $dbConnection)
-  , new LanguageStatusTypesTranslationProvider('Trans_Description',   $dbConnection)
-  , new LanguageStatusTypesTranslationProvider('Trans_StatusTooltip', $dbConnection)
-  , new MeaningGroupsTranslationProvider($dbConnection)
-  , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite', $dbConnection)
-  , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite',  $dbConnection)
-  , new RegionsTranslationProvider('Trans_RegionGpNameShort', $dbConnection)
-  , new RegionsTranslationProvider('Trans_RegionGpNameLong',  $dbConnection)
-  , new SpellingLanguagesTranslationProvider($dbConnection)
-  , new StudyTranslationProvider($dbConnection)
-  , new StudyTitleTranslationProvider($dbConnection)
-  , new TranscrSuperscriptInfoTranslationProvider('Trans_Abbreviation',              $dbConnection)
-  , new TranscrSuperscriptInfoTranslationProvider('Trans_HoverText',                 $dbConnection)
-  , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_Abbreviation',         $dbConnection)
-  , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_FullNameForHoverText', $dbConnection)
-  , new WordsTranslationProvider('Trans_FullRfcModernLg01',   $dbConnection)
-  , new WordsTranslationProvider('Trans_LongerRfcModernLg01', $dbConnection)
-  ) as $p) $providers[$p->getName()] = $p;
   //Actions:
   switch($_GET['action']){
     /**
