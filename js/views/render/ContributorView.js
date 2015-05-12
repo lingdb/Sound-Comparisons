@@ -38,11 +38,12 @@ var ContributorView = Renderer.prototype.SubView.extend({
       , website:  c.getPersonalWebsite()
       , role:     c.getFullRoleDescription()
       };
-    }, cs = App.contributorCollection;
-    _.extend(this.model, {
-      mainContributors:  {contributors: _.map(cs.mainContributors(), sumContributor)}
-    , citedContributors: {contributors: _.map(cs.citeContributors(), sumContributor)}
-    });
+    }, cats = [];
+    App.contributorCategories.each(function(h,cs){
+      if(cs.length === 0) return;
+      cats.push({headline: h, contributors: cs.map(sumContributor)});
+    }, this);
+    this.model.categories = cats;
   }
   /***/
 , render: function(){

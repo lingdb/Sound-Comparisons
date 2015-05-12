@@ -129,6 +129,7 @@ class DataProvider {
     );
     $queries = array(
       'contributors'                => 'SELECT * FROM Contributors'
+    , 'contributorCategories'       => 'SELECT * FROM ContributorCategories'
     , 'flagTooltip'                 => "SELECT * FROM FlagTooltip WHERE FLAG != ''"
     , 'languageStatusTypes'         => 'SELECT * FROM LanguageStatusTypes'
     , 'meaningGroups'               => 'SELECT * FROM MeaningGroups'

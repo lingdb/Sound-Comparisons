@@ -47,4 +47,8 @@ var Contributor = Backbone.Model.extend({
     var desc = this.get('FullRoleDescription');
     return desc.replace("\n", '<br>');
   }
+  /***/
+, getSortGroup: function(){
+    return this.get('SortGroup');
+  }
 });

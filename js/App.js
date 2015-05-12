@@ -5,7 +5,8 @@ $(function(){
   _.extend(window.App, {pageState: new PageState()});
   //PageState before rest bc Selection needs it
   _.extend(window.App, {
-    contributorCollection: new ContributorCollection()
+    contributorCategories: new ContributorCategories()
+  , contributorCollection: new ContributorCollection()
   , colors: new Colors()
   , dataStorage: new DataStorage()
   , defaults: new Defaults()
@@ -37,7 +38,7 @@ $(function(){
   //Making sure TranslationStorage does it's thing:
   App.translationStorage.init();
   //Listening for changing global data:
-  _.each(['contributorCollection','languageStatusTypeCollection','meaningGroupCollection','transcriptionSuperscriptCollection'], function(l){
+  _.each(['contributorCategories','contributorCollection','languageStatusTypeCollection','meaningGroupCollection','transcriptionSuperscriptCollection'], function(l){
     this.dataStorage.on('change:global', this[l].update, this[l]);
   }, App);
   //Listening for changing studies:
