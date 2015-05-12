@@ -15,7 +15,11 @@ function PlaySequence(target){
   Adds the given audio tag to the sequence.
 */
 PlaySequence.prototype.add = function(audio){
-  this.sequence.push(audio);
+  if(_.isArray(audio)){
+    _.each(audio, this.add, this);
+  }else{
+    this.sequence.push(audio);
+  }
 };
 /***/
 PlaySequence.prototype.clear = function(){

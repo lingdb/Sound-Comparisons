@@ -37,7 +37,7 @@ var WordOverlay = Backbone.Model.extend({
         sf.phonetic = "*" + sf.phonetic;
       if(d.content !== "")
         d.content += ",<br>";
-      d.content += "<div class='transcription" + fileMissing + "'"+smallCaps+">" + sf.phonetic + "</div>" + audio;
+      d.content += "<div style=\"display:inline;\"><div class='transcription" + fileMissing + "'"+smallCaps+">" + sf.phonetic + "</div>" + audio+'</div>';
     }, this);
     this.set(d);
   }
@@ -51,9 +51,11 @@ var WordOverlay = Backbone.Model.extend({
         return 'Invalid edge: ' + attrs.edge;
     }
   }
+  /**
+  */
 , getAudio: function(){
     var d = this.get('div');
-    return d ? $('audio', d).get(0) : null;
+    return d ? $('audio', d).get() : [];
   }
 , getDistance: function(wo){
     var p1 = this.get('position')
