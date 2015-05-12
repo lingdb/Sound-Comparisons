@@ -232,12 +232,12 @@ class Importer{
       , 'Full Role Description for About page' => 'FullRoleDescription'
       )
     )
-  , '^ContributorCategories.txt$' => array(
+  , '/^ContributorCategories.txt$/' => array(
       'study' => false
     , 'table' => 'ContributorCategories'
     , 'colMapping' => array(
         'Sort Group' => 'SortGroup'
-        'Heading Text for this Sort Group' => 'Headline'
+      , 'Heading Text for this Sort Group' => 'Headline'
       )
     )
   , '/^DefaultSingleLanguage\.txt$/' => array(
