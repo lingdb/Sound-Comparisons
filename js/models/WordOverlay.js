@@ -36,7 +36,7 @@ var WordOverlay = Backbone.Model.extend({
       if(this.get('historical') == 1)
         sf.phonetic = "*" + sf.phonetic;
       if(d.content !== "")
-        d.content += ",";
+        d.content += ",<br>";
       d.content += "<div class='transcription" + fileMissing + "'"+smallCaps+">" + sf.phonetic + "</div>" + audio;
     }, this);
     this.set(d);
