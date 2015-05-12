@@ -10,22 +10,23 @@ var LoadModalView = Backbone.View.extend({
   }
 , loadStudy: function(promise){
     //Showing the modal:
-    var data = {
-      exit: true
-    , headline: 'Loading…'
-    , description: 'The site is currently loading family data, this may take a moment.'
-    };
+    var data = App.translationStorage.translateStatic({
+      headline: 'LoadModalView_studyHeadline'
+    , description: 'LoadModalView_studyText'
+    });
+    data.exit = true;
     this.render(data);
     //Making sure we hide the modal again:
     var view = this;
     promise.always(function(){view.render();});
   }
 , noMap: function(){
-    this.render({
-      exit: true
-    , headline: 'Maps not accessable'
-    , description: 'It appears that google maps could not be loaded. Please check your internet connection.'
+    var data = App.translationStorage.translateStatic({
+      headline: 'LoadModalView_mapHeadline'
+    , description: 'LoadModalView_mapText'
     });
+    data.exit = true;
+    this.render(data);
   }
 , render: function(model){
     if(!_.isObject(model)){
