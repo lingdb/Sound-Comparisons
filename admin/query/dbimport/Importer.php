@@ -221,6 +221,7 @@ class Importer{
     , 'table' => 'Contributors'
     , 'colMapping' => array(
         'Contributor Ix' => 'ContributorIx'
+      , 'Sort Group' => 'SortGroup'
       , 'Sort Ix for About page' => 'SortIxForAboutPage'
       , 'Forenames' => 'Forenames'
       , 'Surnames' => 'Surnames'
@@ -229,6 +230,14 @@ class Importer{
       , 'Email after AT sign' => 'EmailAfterAt'
       , 'Personal Website Text to link to' => 'PersonalWebsite'
       , 'Full Role Description for About page' => 'FullRoleDescription'
+      )
+    )
+  , '^ContributorCategories.txt$' => array(
+      'study' => false
+    , 'table' => 'ContributorCategories'
+    , 'colMapping' => array(
+        'Sort Group' => 'SortGroup'
+        'Heading Text for this Sort Group' => 'Headline'
       )
     )
   , '/^DefaultSingleLanguage\.txt$/' => array(
