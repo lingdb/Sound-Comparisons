@@ -31,7 +31,7 @@ var TranslationStorage = Backbone.Model.extend({
     //Step 1:
     var storage = this;
     $.getJSON('query/translations', {action: 'summary'}).done(function(summary){
-      storage.set({'summary': summary}); // Maybe premature true?
+      storage.set({'summary': summary});
       var  promises = [], fetchError = false;
       _.each(summary, function(translation){
         var tId = translation.TranslationId;
@@ -58,6 +58,8 @@ var TranslationStorage = Backbone.Model.extend({
         if(fetchError){
           console.log('TranslationStorage.init could not fetch all translations!');
           window.alert('Problem fetching translations, try again?');
+        }else{
+          storage.set({ready: true});
         }
       });
     }).fail(function(){
@@ -215,9 +217,11 @@ var TranslationStorage = Backbone.Model.extend({
     }
     //Translation not found:
     if(tIds.length > 1){//Only log if we tried more than tId = 1
-      console.log('Could not find translation:\n'+JSON.stringify({
-        tIds: tIds, category: category, field: field
-      }));
+      if(this.get('ready')){//Only log if we're ready
+        console.log('Could not find translation:\n'+JSON.stringify({
+          tIds: tIds, category: category, field: field
+        }));
+      }
     }
     return fallback;
   }

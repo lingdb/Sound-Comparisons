@@ -177,36 +177,30 @@ var Language = Backbone.Model.extend({
     Returns the short name of the current language in the current translation.
   */
 , getShortName: function(){
-    var field    = this.getField()
-      , suffixes = [ 'RegionGpMemberLgNameShortInThisSubFamilyWebsite'
-                   , 'RegionGpMemberLgNameLongInThisSubFamilyWebsite'
-                   , 'ShortName' ];
-    for(var i = 0; i < suffixes.length; i++){
-      var category = this.getCategory(suffixes[i])
-        , trans    = App.translationStorage.translateDynamic(category, field, null);
-      if(trans !== null)
-        return trans;
+    var rl = this.getRegionLanguage(), trans = null;
+    if(rl){
+      trans = rl.getLgNameShort();
+      if(trans && trans !== '') return trans;
+      trans = rl.getLgNameLong();
+      if(trans && trans !== '') return trans;
     }
-    return this.get('ShortName');
+    var suffix = 'ShortName'
+      , field = this.getField()
+      , category = this.getCategory(suffix)
+      , fb = this.get(suffix);
+    return App.translationStorage.translateDynamic(category,field, fb);
   }
   /**
     Returns the long name of the current language in the current translation.
     If no long name is found, this function falls back to getShortName.
   */
 , getLongName: function(){
-    var category = this.getCategory('RegionGpMemberLgNameLongInThisSubFamilyWebsite')
-      , field    = this.getField()
-      , trans    = App.translationStorage.translateDynamic(category, field, null);
-    if(trans === null){
-      var rl = this.getRegionLanguage();
-      if(rl){
-        trans = this.getRegionLanguage().get('RegionGpMemberLgNameLongInThisSubFamilyWebsite');
-      }else{
-        console.log('Language.getLongName(): no RegionLanguage for LanguageIx: '+this.get('LanguageIx'));
-      }
-      if(!trans || trans === ''){
-        trans = this.getShortName();
-      }
+    var rl = this.getRegionLanguage(), trans = null;
+    if(rl){
+      trans = rl.getLgNameLong();
+    }
+    if(!trans || trans === ''){
+      trans = this.getShortName();
     }
     return trans;
   }
