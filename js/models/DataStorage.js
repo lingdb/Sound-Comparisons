@@ -10,7 +10,7 @@
 var DataStorage = Backbone.Model.extend({
   defaults: {
     global: null
-  , lastUpdate: 0
+  , lastUpdate: 0 // timestamp aquired by fetching target in initialize
   , study: null
   , target: 'query/data'
   }
@@ -18,9 +18,6 @@ var DataStorage = Backbone.Model.extend({
     initialize accounts for 3 segments of App.setupBar
   */
 , initialize: function(){
-    //Self dependant events:
-    this.on('change:global', this.saveGlobal, this);
-    this.on('change:study', this.saveStudy, this);
     //Compressor setup, if possible:
     this.compressor = null;
     if(_.isFunction(window.Worker)){
@@ -56,152 +53,27 @@ var DataStorage = Backbone.Model.extend({
       App.setupBar.addLoaded(3);
     });
   }
-  /*
-    Cleans up App.storage a little to see that we get some space back.
-    Returns true iff some cleanup was performed.
-    We work in two stages here:
-    1.: Try to find outdated studies and remove them.
-    2.: Find studies different from the current one,
-        and remove them.
-    We only perform stage 2 cleanup, iff stage 1 didn't free any space.
-  */
-, collectGarbadge: function(){
-    //Setup:
-    var collected = false
-      , current   = this.get('study')
-      , studies   = this.get('global').studies
-      , timestamp = this.get('lastUpdate');
-    //We only want not-current studies:
-    studies = _.filter(studies, function(study){
-      return study !== current.study.Name;
-    }, this);
-    //Stage 1:
-    _.each(studies, function(study){
-      var key = "Study_"+study
-        , s   = this.load("Study_"+study);
-      if(s && s.timestamp < timestamp){
-        console.log('DataStorage.collectGarbadge() outdated: '+study);
-        delete App.storage[key];
-        collected = true;
-      }
-    }, this);
-    if(collected) return true;
-    //Stage 2:
-    _.each(studies, function(study){
-      var key = "Study_"+study;
-      if(key in App.storage){
-        console.log('DataStorage.collectGarbadge() unused: '+study);
-        delete App.storage[key];
-        collected = true;
-      }
-    }, this);
-    return collected;
-  }
-  /**
-    The generalized save function of DataStorage, it handles compression and the key name.
-    This method triggers collectGarbadge, iff storing doesn't work as it should,
-    so that hopefully some storage will be freed, and storing can occur anyway.
-  */
-, save: function(name, data){
-    var key   = "DataStorage_"+name
-      , msg   = {label: 'save'+key, data: data, task: 'compressBase64'}
-      , saved = false, def = $.Deferred();
-    if(this.compressor){
-      this.onCompressor(msg.label, function(m){
-        msg.data = m.data;
-        def.resolve();
-      }, this);
-      this.compressor.postMessage(msg);
-    }else{
-      msg.data = LZString.compressToBase64(JSON.stringify(msg.data));
-      def.resolve();
-    }
-    def.done(function(){
-      do{
-        try{
-          App.storage[key] = msg.data;
-          saved = true;
-        }catch(e){
-          //We cancel saving and say it's true, iff we couldn't free any space:
-          saved = App.dataStorage.collectGarbadge() ? false : true;
-        }
-      }while(saved !== true);
-    });
-  }
-  /***/
-, saveGlobal: function(){
-    this.save('global', this.get('global'));
-  }
-  /***/
-, saveStudy: function(){
-    var data = this.get('study')
-      , name = "Study_"+data.study.Name;
-    this.save(name, data);
-  }
-  /**
-    The generalized load function of DataStorage, it handles compression and the key name.
-    The more specialized load functions only bother the server,
-    iff nothing is found by the load function,
-    or the information given by load is outdated.
-  */
-, load: function(name){
-    var key = "DataStorage_"+name, def = $.Deferred();
-    if(key in App.storage){
-      var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompressBase64'};
-      if(this.compressor){
-        this.onCompressor(msg.label, function(m){
-          def.resolve(m.data);
-        }, this);
-        this.compressor.postMessage(msg);
-      }else{
-        def.resolve($.parseJSON(LZString.decompressFromBase64(msg.data)));
-      }
-    }else{
-      def.resolve(null);
-    }
-    return def;
-  }
   /***/
 , loadGlobal: function(){
-    var timestamp = this.get('lastUpdate')
-      , current   = this.load('global')
-      , promise   = $.Deferred(), t = this;
-    current.done(function(c){
-      if(c === null || c.timestamp < timestamp){
-        $.getJSON(t.get('target'), {global: null}).done(function(data){
-          data.timestamp = timestamp;
-          t.set({global: data});
-          promise.resolve();
-        }).fail(function(f){
-          promise.reject(f);
-        });
-      }else{
-        t.set({global: c});
-        promise.resolve();
-      }
+    var promise = $.Deferred(), t = this;
+    $.getJSON(t.get('target'), {global: null}).done(function(data){
+      t.set({global: data});
+      promise.resolve();
+    }).fail(function(f){
+      promise.reject(f);
     });
     return promise;
   }
   /***/
 , loadStudy: function(name){
     name = name || App.studyWatcher.get('study');
-    var key       = "Study_"+name
-      , study     = this.load(key)
-      , timestamp = this.get('lastUpdate')
-      , def       = $.Deferred(), t = this;
-    study.done(function(s){
-      if(!s || s.timestamp < timestamp){
-        $.getJSON(t.get('target'), {study: name}).done(function(data){
-          data.timestamp = timestamp;
-          t.set({study: data});
-          def.resolve();
-        }).fail(function(f){
-          def.reject(f);
-        });
-      }else{
-        t.set({study: s});
-        def.resolve();
-      }
+    var key = "Study_"+name
+      , def = $.Deferred(), t = this;
+    $.getJSON(t.get('target'), {study: name}).done(function(data){
+      t.set({study: data});
+      def.resolve();
+    }).fail(function(f){
+      def.reject(f);
     });
     return def.promise();
   }

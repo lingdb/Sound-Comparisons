@@ -6,8 +6,6 @@ var TranslationStorage = Backbone.Model.extend({
   , summary:      {}    // TranslationId -> Translation
   , statics:      {}    // TranslationId -> Req -> Trans
   , dynamics:     {}    // TranslationId -> [dynamics]
-  , staticTimes:  {}    // TranslationId -> Timestamp
-  , dynamicTimes: {}    // TranslationId -> Timestamp
   , nToTMap:      {}    // BrowserMatch  -> Translation
   , cToDMap:      {}    // TranslationId -> Category -> [dynamics]
   , fToDMap:      {}    // TranslationId -> Field    -> [dynamics]
@@ -23,101 +21,49 @@ var TranslationStorage = Backbone.Model.extend({
     this.on('change:summary',  this.mkNToTMap, this);
     this.on('change:dynamics', this.mkCToDMap, this);
     this.on('change:dynamics', this.mkFToDMap, this);
-    //Load already known Translaton data:
+    /*
+      Fetching information from the server works in several steps:
+      1.: Get the current summary, iterate all existing translations.
+      For iteration:
+      2.: Fetch static translations
+      3.: Fetch dynamic translations
+    */
+    //Step 1:
     var storage = this;
-    this.load().done(function(){
-      storage.chkLoadingComplete();
-      /*
-        Cases to save TranslationStorage:
-        Save will not be triggered by first load, because load has already finished.
-      */
-      storage.saveFields = ['summary', 'staticTimes', 'statics', 'dynamicTimes', 'dynamics'];
-      _.each(storage.saveFields, function(f){
-        this.on('change:'+f, this.save, this);
+    $.getJSON('query/translations', {action: 'summary'}).done(function(summary){
+      storage.set({'summary': summary}); // Maybe premature true?
+      var  promises = [], fetchError = false;
+      _.each(summary, function(translation){
+        var tId = translation.TranslationId;
+        //Step 2:
+        var promStatic = $.getJSON('query/translations', {action: 'static', translationId: tId}).done(function(elems){
+          var stats  = storage.get('statics');
+          stats[tId] = elems;
+          storage.set({statics: stats});
+        }).fail(function(){fetchError = true;});
+        //Step 3:
+        var promDynamic = $.getJSON('query/translations', {action: 'dynamic', translationId: tId}).done(function(elems){
+          var stats  = storage.get('dynamics');
+          stats[tId] = elems;
+          storage.set({dynamics: stats});
+          storage.trigger('change:dynamics');
+        }).fail(function(){fetchError = true;});
+        //Push promises
+        promises.push(promStatic, promDynamic);
       }, storage);
-      /*
-        Fetching information from the server works in several steps:
-        1.: Get the current summary
-        2.: Update static  translations, iff outdated
-        3.: Update dynamic translations, iff outdated
-      */
-      //Step 1:
-      $.getJSON('query/translations', {action: 'summary'}).done(function(summary){
-        storage.set({'summary': summary}); // Maybe premature true?
-        var sTimes = storage.get('staticTimes'),  _sTimes = {}
-          , dTimes = storage.get('dynamicTimes'), _dTimes = {};
-        _.each(summary, function(translation){
-          var tId = translation.TranslationId
-            , cS  = translation.lastChangeStatic
-            , cD  = translation.lastChangeDynamic;
-          //Step 2: Inequality is enough; we don't know from the future.
-          if(sTimes[tId] != cS || !storage.chkLoadingComplete()){
-            $.getJSON('query/translations', {action: 'static', translationId: tId}).done(function(elems){
-              var stats  = storage.get('statics');
-              stats[tId] = elems;
-              storage.set({statics: stats});
-              storage.chkLoadingComplete();
-            });
-          }
-          _sTimes[tId] = cS;
-          //Step 3:
-          if(dTimes[tId] != cD || !storage.chkLoadingComplete()){
-            $.getJSON('query/translations', {action: 'dynamic', translationId: tId}).done(function(elems){
-              var stats  = storage.get('dynamics');
-              stats[tId] = elems;
-              storage.set({dynamics: stats});
-              storage.chkLoadingComplete();
-              storage.trigger('change:dynamics');
-            });
-          }
-          _dTimes[tId] = cD;
-        }, storage);
-        storage.set({staticTimes: _sTimes, dynamicTimes: _dTimes});
-      }).fail(function(){
-        App.linkInterceptor.set({enabled: false});
-        console.log('Could not fetch translation summary from host -> LinkInterceptor disabled.');
-      });
-    });
-  }
-, load: function(){
-    var key = 'TranslationStorage', def = $.Deferred()
-      , msg = {label: key+'.load', data: App.storage[key], task: 'decompressBase64'};
-    if(msg.data){
-      var handle = function(d){
-        if(_.isObject(d)){
-          this.set(d);
-          this.trigger('change:dynamics');
+      //Once fetches are completed, we acknowledge progress:
+      $.when.apply($, promises).done(function(){
+        App.setupBar.addLoaded();
+      }).always(function(){
+        if(fetchError){
+          console.log('TranslationStorage.init could not fetch all translations!');
+          alert('Problem fetching translations, try again?');
         }
-        def.resolve();
-      };
-      if(App.dataStorage.compressor){
-        App.dataStorage.onCompressor(msg.label, function(m){
-          handle.call(this, m.data);
-        }, this);
-        App.dataStorage.compressor.postMessage(msg);
-      }else{
-        var d = $.parseJSON(LZString.decompressFromBase64(msg.data));
-        handle.call(this, d);
-      }
-    }else{
-      def.resolve();
-    }
-    return def;
-  }
-, save: function(){
-    var key    = 'TranslationStorage'
-      , params = _.clone(this.saveFields);
-    params.unshift(this.attributes);
-    var data = _.pick.apply(_, params);
-    if(App.dataStorage.compressor){
-      var msg = {label: key+'.save', data: data, task: 'compressBase64'};
-      App.dataStorage.onCompressor(msg.label, function(m){
-        App.storage[key] = m.data;
-      }, this);
-      App.dataStorage.compressor.postMessage(msg);
-    }else{
-      App.storage[key] = LZString.compressToBase64(JSON.stringify(data));
-    }
+      });
+    }).fail(function(){
+      App.linkInterceptor.set({enabled: false});
+      console.log('Could not fetch translation summary from host -> LinkInterceptor disabled.');
+    });
   }
 , mkNToTMap: function(){
     var map = {};
@@ -315,21 +261,6 @@ var TranslationStorage = Backbone.Model.extend({
 , getBrowserMatch: function(){
     var tId = this.getTranslationId();
     return this.get('summary')[tId].BrowserMatch;
-  }
-  /**
-    chkLoadingComplete accounts for 1 segment of App.setupBar
-  */
-, chkLoadingComplete: function(){
-    var ok = _.all(this.pick('statics','dynamics'), function(d){
-      return _.keys(d).length > 0;
-    }, this);
-    if(ok){
-      this.set({ready: true});
-      console.log('TranslationStorage.init() done with setup.');
-      App.setupBar.addLoaded();
-      this.chkLoadingComplete = function(){return true;};
-    }
-    return ok;
   }
   /**
     @param trans String
