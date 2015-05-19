@@ -7,10 +7,12 @@ var RegionLanguageCollection = Backbone.Collection.extend({
 , comparator: function(a, b){
     var as = a.sortValues()
       , bs = b.sortValues();
+    //DESC on first:
     if(as[0] > bs[0]) return -1;
     if(as[0] < bs[0]) return  1;
-    if(as[1] > bs[1]) return -1;
-    if(as[1] < bs[1]) return  1;
+    //ASC on second:
+    if(as[1] > bs[1]) return  1;
+    if(as[1] < bs[1]) return -1;
     return 0;
   }
   /**

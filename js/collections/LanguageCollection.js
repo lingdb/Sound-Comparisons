@@ -98,4 +98,29 @@ var LanguageCollection = Choice.extend({
 , getDefaultChoice: function(){
     return App.defaults.getLanguage();
   }
+  /**
+    Sort languages after their RegionLanguages, iff possible.
+    Otherwise sort them after their LanguageIx.
+  */
+, comparator: function(a, b){
+    var arl = a.getRegionLanguage()
+      , brl = b.getRegionLanguage();
+    if(_.isEmpty(arl) || _.isEmpty(brl)){
+      var aIx = a.get('LanguageIx')
+        , bIx = b.get('LanguageIx');
+      if(aIx > bIx) return  1;
+      if(aIx < bIx) return -1;
+      return 0;
+    }
+    return RegionLanguageCollection.prototype.comparator(arl,brl);
+  }
+  /**
+    Wrapper for Selection.getSelected,
+    that makes sure to sort returned array as expeceted.
+  */
+, getSelected: function(){
+    var sel = Selection.prototype.getSelected.apply(this, arguments);
+    sel.sort(this.comparator);
+    return sel;
+  }
 });

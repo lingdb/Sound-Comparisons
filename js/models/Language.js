@@ -76,10 +76,12 @@ var Language = Backbone.Model.extend({
   */
 , getRegionLanguage: function(){
     if(this._regionLanguage === null){
-      var lId = this.get('LanguageIx');
-      this._regionLanguage = App.regionLanguageCollection.findWhere({LanguageIx: lId});
-      if(this._regionLanguage){
-        this._regionLanguage._language = this;
+      var rl = App.regionLanguageCollection.findWhere({
+        LanguageIx: this.get('LanguageIx')
+      });
+      if(rl instanceof RegionLanguage){
+        this._regionLanguage = rl;
+        rl._language = this;
       }
     }
     return this._regionLanguage;
