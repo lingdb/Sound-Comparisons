@@ -57,7 +57,7 @@ var TranslationStorage = Backbone.Model.extend({
       }).always(function(){
         if(fetchError){
           console.log('TranslationStorage.init could not fetch all translations!');
-          alert('Problem fetching translations, try again?');
+          window.alert('Problem fetching translations, try again?');
         }
       });
     }).fail(function(){

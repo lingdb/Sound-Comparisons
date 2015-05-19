@@ -13,6 +13,7 @@
   , "Configurator": false
   , "console": false
   , "ContributorCollection": false
+  , "ContributorCategories": false
   , "Contributor": false
   , "ContributorView": false
   , "DataStorage": false

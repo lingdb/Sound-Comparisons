@@ -1,7 +1,7 @@
 /* global: ContributorCategories: true */
 "use strict";
 /***/
-var ContributorCategories = Backbone.Model.extend({
+window.ContributorCategories = Backbone.Model.extend({
   initialize: function(){
     this.sortGroups = [];
     this.sgCMap = {};// sortGroup -> ContributorCollection, filled lazily
@@ -33,7 +33,7 @@ var ContributorCategories = Backbone.Model.extend({
     if(data && 'contributorCategories' in data){
       //Resetting some stuff:
       this.sortGroups = [];
-      this.sgCMap = {}
+      this.sgCMap = {};
       //Iterating categories:
       _.each(data.contributorCategories, function(cat){
         this.sortGroups.push(cat.SortGroup);
