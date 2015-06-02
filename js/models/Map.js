@@ -9,11 +9,63 @@ if(typeof(google) !== 'undefined'){
       , mapTypeId:         google.maps.MapTypeId.TERRAIN
       , scrollwheel:       false
       , streetViewControl: false
-      , styles:            [{
-        featureType: "administrative.country"
-        , elementType: "labels"
-        , stylers: [{visibility: "off"}]
-        }]
+      , styles:            [
+        { "featureType": "poi",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "featureType": "road",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "elementType": "labels",
+          "featureType": "administrative.locality",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "elementType": "labels",
+          "featureType": "water",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "elementType": "labels",
+          "featureType": "administrative.country",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "elementType": "geometry",
+          "featureType": "administrative.province",
+          "stylers": [{"weight": 0.1}, {"visibility": "off"}]
+        },
+        { "featureType": "administrative.country",
+          "stylers": [{"weight": 0.4}]
+        },
+        { "elementType": "labels",
+          "featureType": "administrative",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "elementType": "geometry.fill",
+          "featureType": "landscape.man_made",
+          "stylers": [{"visibility": "on"}, {"color": "#999999"}]
+        },
+        { "featureType": "transit",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "elementType": "labels",
+          "featureType": "landscape",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "featureType": "landscape.natural.terrain",
+          "stylers": [{"visibility": "on"}]
+        },
+        { "elementType": "geometry",
+          "featureType": "administrative",
+          "stylers": [{"visibility": "off"}]
+        },
+        { "elementType": "geometry",
+          "featureType": "administrative.country",
+          "stylers": [{"visibility": "on"}, {"weight": 0.4}]
+        },
+        { "elementType": "geometry.stroke",
+          "featureType": "administrative.province",
+          "stylers": [{"visibility": "on"}, {"weight": 0.4}, {"color": "#000000"}]
+        }
+        ]
       }
     , defaultBounds: null // LatLngBounds, filled with all words.
     , regionBounds:  null // LatLngBounds, filled with regionZoom.
