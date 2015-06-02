@@ -22,7 +22,11 @@ var WordView = Renderer.prototype.SubView.extend({
       return;
     }
     var spLang   = App.pageState.getSpLang()
-      , headline = {name: word.getLongName() || word.getNameFor(spLang)};
+      , headline = {name: word.getNameFor(spLang)}
+      , longName = word.getLongName();
+    if(_.isString(longName) && longName !== ''){
+      headline.name = word.getModernName()+' '+longName;
+    }
     //Sanitize name:
     if(_.isArray(headline.name))
       headline.name = headline.name.join(', ');
