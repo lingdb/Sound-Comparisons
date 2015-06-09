@@ -10,6 +10,7 @@ $(document).ready(function(){
       , {searchable: true}
       , {searchable: true}
       ]
+    , iDisplayLength: 100
     });
     tables.push(table);
     //The copy-over buttons:
