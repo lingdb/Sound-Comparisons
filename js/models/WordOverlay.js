@@ -218,15 +218,15 @@ var WordOverlay = Backbone.Model.extend({
 , playing: function(isPlaying, target){
     this._playing = this._playing || {};
     var animation = isPlaying ? google.maps.Animation.BOUNCE : null
-      , div = $(this.get('div')), key = 'border-color';
+      , div = $(this.get('div'));
     this.get('marker').setAnimation(animation);
     if(isPlaying){//Changing the background-color
       if(!this._playing.origBG){
         _.extend(this._playing, {origBG: div.css(key)});
-        div.css(key,'#FF0000');
+        div.css({'border-color': '#FF0000'});
       }
     }else{
-      div.css(key, this._playing.origBG);
+      div.css({'border-color': this._playing.origBG});
       this._playing.origBG = null;
     }
   }

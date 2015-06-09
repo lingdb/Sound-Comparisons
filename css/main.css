@@ -425,7 +425,11 @@ div.mapAudio {
   white-space:    nowrap;
 }
 div.mapAudio .transcription {
+  font-size:     14px;
   display:       inline;
   padding-left:  0.25em;
   padding-right: 0.25em;
+}
+.mapAudio .transcription.playing, .mapAudio .transcription:hover{
+  font-size: 20px;
 }
