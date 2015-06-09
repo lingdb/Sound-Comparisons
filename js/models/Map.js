@@ -158,7 +158,7 @@ if(typeof(google) !== 'undefined'){
           from the edges they 'like' best,
           to the ones they 'like' least.
           This order is ['sw','se','nw','ne'].
-        - WordOverlays are progressed from north to south.
+        - WordOverlays are processed from north to south.
         - The first WordOverlay keeps it's edge
         - The second WordOverlay chooses it's edge,
           so that it doesn't overlap with the first.
