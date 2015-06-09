@@ -36,6 +36,12 @@ var WordOverlayView = function(o){
               return;
           window.App.views.audioLogic.play(audio);
         });
+        //Logic to set WordOverlay.playing accordingly:
+        $(audio).on('play', function(){
+          o.model.playing(true);
+        }).on('ended pause', function(){
+          o.model.playing(false);
+        });
       }
     });
     //Adding the div to the panes:

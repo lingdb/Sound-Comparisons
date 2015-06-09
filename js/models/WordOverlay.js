@@ -209,4 +209,22 @@ var WordOverlay = Backbone.Model.extend({
       });
     }
   }
+  /**
+    @param isPlaying Bool
+    Change the appearance of the marker on the map similar to highlight,
+    to make it easier for clients to spot 'where' sound is playing.
+    Modifies this._playing for fun and profit.
+  */
+, playing: function(isPlaying, target){
+    this._playing = this._playing || {};
+    var animation = isPlaying ? google.maps.Animation.BOUNCE : null
+      , div = $(this.get('div')), key = 'background-color';
+    this.get('marker').setAnimation(animation);
+    if(isPlaying){//Changing the background-color
+      _.extend(this._playing, {origBG: div.css(key)});
+      div.css(key,'#00AA00');
+    }else{
+      div.css(key, this._playing.origBG);
+    }
+  }
 });
