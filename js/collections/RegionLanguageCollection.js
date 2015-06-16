@@ -6,13 +6,13 @@ var RegionLanguageCollection = Backbone.Collection.extend({
   /***/
 , comparator: function(a, b){
     var as = a.sortValues()
-      , bs = b.sortValues();
-    //DESC on first:
-    if(as[0] > bs[0]) return -1;
-    if(as[0] < bs[0]) return  1;
-    //ASC on second:
-    if(as[1] > bs[1]) return  1;
-    if(as[1] < bs[1]) return -1;
+      , bs = b.sortValues()
+      , i  = 0;
+    while(!_.isEmpty(as) && !_.isEmpty(bs)){
+      var a = as.shift(), b = bs.shift();
+      if(a > b) return  1;
+      if(a < b) return -1;
+    }
     return 0;
   }
   /**
