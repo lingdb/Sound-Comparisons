@@ -49,7 +49,7 @@ $(document).ready(function(){
       if(td.data('isadmin') != 1) return;
       if(td.find('textarea').length > 0) return;
       td.html('<textarea style="width: 90%; height: 90%; min-height: 15em;">'
-        +td.html()+'</textarea>');
+        +td.data('title')+'</textarea>');
       var ta = td.find('textarea').blur(function(){
         var q = {
           action: 'updateDescription'
@@ -59,15 +59,19 @@ $(document).ready(function(){
         $.get('query/translation.php', q, function(){
           //Replacing all Descriptions locally:
           $(tables).each(function(i, table){
+            var newDesc = q.Description.replace(/<[^<>]+>/g, '');
+            if(newDesc.length > 42){ newDesc = newDesc.substr(0,42); }
             var nodes = table.column(0, {page: 'all'}).nodes();
             $(nodes).each(function(i, node){
               var n = $(node);
               if(n.data('req') !== q.Req) return;
-              n.html(q.Description);
+              n.html(newDesc);
+              n.data('title', q.Description);
             });
           });
         });
       });
     });
   });
+  $('.description').tooltip()
 })

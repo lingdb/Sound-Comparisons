@@ -18,7 +18,14 @@ function showTable($tdata){
       $desc = $value['Description'];
       $req  = $desc['Req'];
       $desc = $desc['Description'];
-      echo "<td class='description'$isAdmin data-req='$req'>$desc</td>";
+      //Shortening:
+      $maxLen = 42;
+      $short = preg_replace('/<[^<>]+>/','',$desc);
+      if(strlen($short) > $maxLen){$short = substr($short, 0, $maxLen).'…';}
+      //Encoding tooltip contents:
+      $desc = preg_replace("/'/",'"',$desc);
+      $desc = htmlspecialchars($desc);
+      echo "<td class='description'$isAdmin' data-req='$req' data-html='true' data-container='body' data-title='$desc'>$short</td>";
       //Title in case of search:
       $title = '';
       if(array_key_exists('Match', $value)){
