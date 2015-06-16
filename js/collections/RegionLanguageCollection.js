@@ -9,7 +9,8 @@ var RegionLanguageCollection = Backbone.Collection.extend({
       , bs = b.sortValues()
       , i  = 0;
     while(!_.isEmpty(as) && !_.isEmpty(bs)){
-      var a = as.shift(), b = bs.shift();
+      var a = parseInt(as.shift(), 10)
+        , b = parseInt(bs.shift(), 10);
       if(a > b) return  1;
       if(a < b) return -1;
     }
