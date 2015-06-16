@@ -40,6 +40,8 @@ if(php_sapi_name() === 'cli'){
       case 'import':
         if(array_key_exists('import', $_FILES)){
           $file = file_get_contents($_FILES['import']['tmp_name']);
+          error_log('Got some data:');
+          error_log($file);
         }else{
           die('import file missing.');
         }
@@ -97,7 +99,19 @@ switch($action){
   break;
   case 'import':
     CacheProvider::cleanCache('../');
-    $dbConnection->multi_query($file);
+    //Executing multiple queries:
+    $report = array(); $i = 1;
+    $worked = $dbConnection->multi_query($file);
+    if(!$worked){
+      array_push($report, $i);
+    }
+    while($dbConnection->more_results()){
+      $worked = $dbConnection->next_result();
+      $i++;
+      if(!$worked){
+        array_push($report, $i);
+      }
+    }
     ?><!DOCTYPE HTML>
     <html><?php
       $title = "SQL file processed.";
@@ -105,6 +119,12 @@ switch($action){
     ?><body>
       <h3>File processed.</h3>
       <a href="..">Go back!</a>
+        <?php if(count($report) > 0){ ?>
+        <div class="well">
+          There have been errors with the following query numbers:
+          <code><?php echo implode(' ,', $report); ?></code>
+        </div>
+        <?php } ?>
       </body>
     </html><?php
   break;
