@@ -9,6 +9,6 @@ var TitleView = Backbone.View.extend({
     var x = this.model.translateStatic('website_title_prefix')
       , y = App.study.getTitle() || App.study.getId()
       , z = this.model.translateStatic('website_title_suffix');
-    this.$el.text(x+' '+y+' '+z);
+    this.$el.text(y+' - '+x+' - '+z);
   }
 });
