@@ -2,6 +2,14 @@
   <title>{{title}}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {{!
+    Favicon madness:
+    See https://stackoverflow.com/questions/23849377/html-5-favicon-support
+  }}
+  <!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
+  <!--[if IE]><link rel="shortcut icon" href="img/favicon.ico"><![endif]-->
+  <link rel="icon" href="img/favicon.png" type="image/png" sizes="16x16">
+  <link rel="icon" href="img/favicon.gif" type="image/gif" sizes="16x16">
   {{! CSS before scripts: }}
   <link href="css/extern/bootstrap.min.css" rel="stylesheet">
   <link href="css/extern/nanoscroller.css" rel="stylesheet">
