@@ -10,7 +10,13 @@
       if(session_mayTranslate($dbConnection))
         echo '<li><a href="translate.php">Translate</a></li>';
       if(session_mayEdit($dbConnection))
-        echo '<li><a href="dbimport.php">Upload</a></li>';
+        echo '<li class="nav">'
+           . '<a class="dropdown-toggle topLink" data-toggle="dropdown">'
+           . 'Upload <b class="caret"></b></a>'
+           . '<ul class="dropdown-menu">'
+           . '<li><a href="dbimport.php">CSV</a></li>'
+           . '<li><a href="sqlFrontend.php">SQL</a></li>'
+           . '</ul></li>';
       if(session_mayTranslate($dbConnection))
         echo '<li><a href="shortlinks.php">Shortlinks</a></li>';
       ?>
@@ -21,7 +27,6 @@
            . '<a class="dropdown-toggle topLink" data-toggle="dropdown">'
            . 'Diagnostics <b class="caret"></b></a>'
            . '<ul class="dropdown-menu">'
-           . '<li><a href="sqlFrontend.php">SQL operations</a></li>'
            . '<li><a href="missingSounds.php">Missing sounds</a></li>'
            . '<li><a href="integrity.php">DB Integrity</a></li>'
            . '<li><a href="clearCache.php">Clear cache</a></li>'
