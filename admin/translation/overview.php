@@ -16,7 +16,7 @@
   <?php
     $thead = '<tr>'
            . '<th>Translation name</th>'
-           . '<th>Browsermatch</th>'
+           . '<th><a href="http://www.w3schools.com/tags/ref_language_codes.asp" target="_blank">Browsermatch</a></th>'
            . '<th>Flag</th>'
            . '<th>Equivalent language in database</th>'
            . '<th>Active</th>'
