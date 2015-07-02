@@ -4,17 +4,11 @@
   <thead>
     <tr>
       <th></th><th></th>
-      {{#isLogical}}
-      <th></th>
-      {{/isLogical}}
       {{#regions}}
       <th colspan="{{cspan}}" style="background-color: {{{color}}};">{{name}}</th>
       {{/regions}}
     </tr>
     <tr>
-      {{#isLogical}}
-      <th></th>
-      {{/isLogical}}
       <th>{{deleteAll}}
         <a {{{clearLanguagesLink}}} class="color-language">{{clearLanguagesText}}<i class="icon-arrow-right"></i></a>
       </th>
@@ -32,9 +26,6 @@
       {{/languages}}
     </tr>
     <tr>
-      {{#isLogical}}
-      <th></th>
-      {{/isLogical}}
       <th>{{deleteAll}}
         <a {{{clearWordsLink}}} class="color-word">{{clearWordsText}}<i class="icon-arrow-down"></i></a>
       </th>
@@ -53,17 +44,8 @@
   <tbody>
     {{#rows}}
     <tr>
-      {{#meaningGroup}}
-      {{#clearRow}}
-      <td colspan="{{clearRow}}" class="spaceRow"></td></tr><tr>
-      {{/clearRow}}
-      <td class="regionCell color-region" rowspan="{{rSpan}}">{{name}}</td>
-      {{/meaningGroup}}
       {{#words}}
       {{#fake}}
-      {{#isLogical}}
-      <td></td>
-      {{/isLogical}}
       <td class="color-word">
         {{trans}}
       </td>

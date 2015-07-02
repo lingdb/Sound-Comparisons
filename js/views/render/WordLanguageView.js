@@ -43,8 +43,7 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
       , mMap  = wBkts.mMap // MgId -> MeaningGroup
       , wMap  = wBkts.wMap // MgId -> [Word]
       , table = {
-          isLogical:          App.pageState.wordOrderIsLogical()
-        , clearWordsLink:     'href="'+App.router.linkWordLanguageView({words: []})+'"'
+          clearWordsLink:     'href="'+App.router.linkWordLanguageView({words: []})+'"'
         , clearLanguagesLink: 'href="'+App.router.linkWordLanguageView({languages: []})+'"'
         , transposeLink:      'href="'+App.router.linkLanguageWordView({
             words: App.wordCollection.getSelected()
@@ -108,7 +107,6 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
       words = _.map([0,1,2], function(j){
         var w = { fake: true
                 , trans: App.translationStorage.translateStatic('tabulator_multi_wordcol')+' '+(j+1)
-                , isLogical: table.isLogical
                 , transcriptions: [] }
           , iMax = languages.length || 3;
         //Transcriptions:
@@ -149,7 +147,6 @@ var WordLanguageView = Renderer.prototype.SubView.extend({
       var count = m.rSpan;
       _.each(_.first(words, count), function(w, i){
         var row = {words: [w]};
-        if(i === 0) row.meaningGroup = m;
         table.rows.push(row);
       }, this);
       words = _.rest(words, count);

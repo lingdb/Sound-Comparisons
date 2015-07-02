@@ -33,21 +33,13 @@ var LanguageWordView = Renderer.prototype.SubView.extend({
       , rMap  = rBkts.rMap
       , lMap  = rBkts.lMap
       , table = {
-          displayMGs:         App.pageState.wordOrderIsLogical() && words.length !== 0
-        , clearWordsLink:     'href="'+App.router.linkLanguageWordView({words: []})+'"'
+          clearWordsLink:     'href="'+App.router.linkLanguageWordView({words: []})+'"'
         , clearLanguagesLink: 'href="'+App.router.linkLanguageWordView({languages: []})+'"'
         , transposeLink:      'href="'+App.router.linkWordLanguageView({
             words: words
           , languages: App.languageCollection.getSelected()
           })+'"'
         };
-    //The MeaningGroups:
-    if(table.displayMGs){
-      var mgBkts = App.meaningGroupCollection.getMeaningGroupBuckets(words);
-      table.meaningGroups = _.map(mgBkts.mMap, function(mg, mId){
-        return {name: mg.getName(), span: mgBkts.wMap[mId].length};
-      }, this);
-    }
     //The Words:
     if(words.length === 0){//Faking words, if none selected:
       var tStart = App.translationStorage.translateStatic('tabulator_multi_wordcol');
