@@ -1,42 +1,43 @@
-/* global MeaningGroup: true */
 "use strict";
-/***/
-var MeaningGroup = Backbone.Model.extend({
-  initialize: function(){
-    //Field for memoization of the Words that belong to this MeaningGroup.
-    this._words = null;
-  }
-  /**
-    Necessary so that MeaningGroupCollection can extend Selection.
-  */
-, getId: function(){
-    return this.get('MeaningGroupIx');
-  }
+define(['backbone'], function(Backbone){
   /***/
-, getKey: function(){return this.get('Name');}
-  /**
-    Returns the name of a MeaningGroup in the current translation.
-  */
-, getName: function(){
-    var category = 'MeaningGroupsTranslationProvider'
-      , field    = this.getId()
-      , fallback = this.get('Name');
-    return App.translationStorage.translateDynamic(category, field, fallback);
-  }
-  /**
-    Returns a collection of words connected to this meaningGroup.
-    Note, that the MeaningGroup cannot take advantage of memoization,
-    as it isn't exchanged when switching studies.
-  */
-, getWords: function(){
-    if(this._words === null){
-      var mId = this.getId(), ws = [];
-      App.wordCollection.each(function(w){
-        var m = w.getMeaningGroup();
-        if(m && m.getId() == mId) ws.push(w);
-      });
-      this._words = new WordCollection(ws);
+  return Backbone.Model.extend({
+    initialize: function(){
+      //Field for memoization of the Words that belong to this MeaningGroup.
+      this._words = null;
     }
-    return this._words;
-  }
+    /**
+      Necessary so that MeaningGroupCollection can extend Selection.
+    */
+  , getId: function(){
+      return this.get('MeaningGroupIx');
+    }
+    /***/
+  , getKey: function(){return this.get('Name');}
+    /**
+      Returns the name of a MeaningGroup in the current translation.
+    */
+  , getName: function(){
+      var category = 'MeaningGroupsTranslationProvider'
+        , field    = this.getId()
+        , fallback = this.get('Name');
+      return App.translationStorage.translateDynamic(category, field, fallback);
+    }
+    /**
+      Returns a collection of words connected to this meaningGroup.
+      Note, that the MeaningGroup cannot take advantage of memoization,
+      as it isn't exchanged when switching studies.
+    */
+  , getWords: function(){
+      if(this._words === null){
+        var mId = this.getId(), ws = [];
+        App.wordCollection.each(function(w){
+          var m = w.getMeaningGroup();
+          if(m && m.getId() == mId) ws.push(w);
+        });
+        this._words = new WordCollection(ws);
+      }
+      return this._words;
+    }
+  });
 });
