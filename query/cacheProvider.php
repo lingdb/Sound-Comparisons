@@ -60,4 +60,3 @@ class CacheProvider {
     return $prefix.self::$target.$study.'.json';
   }
 }
-?>

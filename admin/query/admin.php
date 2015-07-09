@@ -116,4 +116,3 @@
     break;
     default: Config::error('Call to unsupported action.');
   }
-?>

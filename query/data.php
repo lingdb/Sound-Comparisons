@@ -133,4 +133,3 @@ if(array_key_exists('global',$_GET)){
                    . 'and add a study parameter to fetch a study.'
   ));
 }
-?>

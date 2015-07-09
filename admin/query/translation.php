@@ -123,4 +123,3 @@
       Translation::updateTranslation($_GET['TranslationId'], $_GET['TranslationName'], $_GET['BrowserMatch'], $_GET['ImagePath'], $_GET['RfcLanguage'], $_GET['Active']);
     break;
   }
-?>

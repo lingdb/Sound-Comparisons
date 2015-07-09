@@ -28,4 +28,3 @@ if(isset($_GET['base64'])){
 }else{
   readfile($file);
 }
-?>

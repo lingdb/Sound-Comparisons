@@ -111,4 +111,3 @@ class TranslationProvider {
     return "MissingStaticTranslation($t,$req)";
   }
 }
-?>

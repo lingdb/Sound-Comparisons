@@ -31,4 +31,3 @@
     }
     unset($sLink, $q, $parts, $pair, $key, $val, $forwarded);
   }
-?>

@@ -25,4 +25,3 @@
     $log = Importer::processFiles($fs, $uId, $merge);
     echo '<ul><li>'.implode($log,'</li><li>').'</li></ul>';
   }
-?>

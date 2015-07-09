@@ -71,4 +71,3 @@ class ContributorCategoriesTranslationProvider extends TranslationProvider {
     return $ret;
   }
 }
-?>

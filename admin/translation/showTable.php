@@ -62,4 +62,3 @@ function showTable($tdata){
   }
   echo "</tbody><tfoot>$head</tfoot></table>";
 }
-?>

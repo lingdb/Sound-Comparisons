@@ -72,4 +72,3 @@
   $filename = 'translations_'.date('Y-m-d-h:i', time()).'.json';
   header('Content-Disposition: attachment;filename="'.$filename.'"');
   echo Config::toJSON($info, $opts);
-?>

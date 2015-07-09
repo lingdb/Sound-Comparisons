@@ -55,4 +55,3 @@
       $dbConnection->query($q);
     }
   }
-?>

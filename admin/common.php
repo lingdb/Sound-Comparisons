@@ -5,4 +5,3 @@
   $dbConnection = Config::getConnection();
   require_once 'validate.php';
   session_start();
-?>

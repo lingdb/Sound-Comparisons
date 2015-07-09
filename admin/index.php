@@ -81,4 +81,4 @@
           require 'loginForm.php';
         ?></body>
         </html>
-<?php }} /*Closing if and case blocks*/ ?>
+<?php }} /*Closing if and case blocks*/

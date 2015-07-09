@@ -407,4 +407,3 @@ class DataProvider {
     return 0;
   }
 }
-?>

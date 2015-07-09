@@ -26,4 +26,3 @@ function git_info(){
   }
   return null;
 }
-?>

@@ -14,4 +14,3 @@ foreach($lines as $l){
   $info[$file] = $x[0];
 }
 echo Config::toJSON($info);
-?>

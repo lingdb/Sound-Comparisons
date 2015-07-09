@@ -47,4 +47,3 @@ switch($_GET['action']){
     , 'action' => array('summary', 'static', 'dynamic')
     ));
 }
-?>

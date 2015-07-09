@@ -49,4 +49,3 @@ class Config extends ConfigBase {
     self::$debug = true; // In the admin area, errors lead to death.
   }
 }
-?>

@@ -12,4 +12,3 @@ $sources = array(
   'glottolog' => function($id){return "http://glottolog.org/resource/languoid/id/$id.json";}
 );
 //FIXME this part is on hold, until I understand how glottolog does things.
-?>

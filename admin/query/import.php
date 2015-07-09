@@ -176,4 +176,3 @@
   }else{ // On cli we only output the script.
     echo implode(";\n", $sql);
   }
-?>

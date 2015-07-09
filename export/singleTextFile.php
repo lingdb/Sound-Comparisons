@@ -31,4 +31,3 @@ $file = preg_replace('/mp3/', 'txt', basename(current($ts['soundPaths'])));
 header('Content-Type: text/plain; charset=utf-8');
 header('Content-Disposition: attachment;filename="'.$file.'"');
 echo $ps;
-?>

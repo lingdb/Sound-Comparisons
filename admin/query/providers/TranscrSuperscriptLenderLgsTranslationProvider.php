@@ -94,4 +94,3 @@
       return array('description' => $description, 'origCol' => $origCol);
     }
   }
-?>

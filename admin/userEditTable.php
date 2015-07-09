@@ -29,4 +29,3 @@ while($r = $set->fetch_row()){
      . "<td><button class='btn update'>Update</button>"
      . "<button class='btn delete'>Delete</button></td></tr>";
 }
-?>

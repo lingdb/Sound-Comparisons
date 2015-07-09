@@ -131,4 +131,3 @@ switch($action){
   default:
     echo "Unsupported action: $action\n";
 }
-?>

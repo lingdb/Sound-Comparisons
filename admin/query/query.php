@@ -51,4 +51,3 @@
          . " data-familyix='$familyix' data-subfamilyix='$subfamilyix'>$name</option>";
     break;
   }
-?>

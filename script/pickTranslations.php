@@ -60,4 +60,3 @@
     if(defined('JSON_NUMERIC_CHECK'))     $opts |= JSON_NUMERIC_CHECK;
     echo json_encode($data, $opts);
   }
-?>

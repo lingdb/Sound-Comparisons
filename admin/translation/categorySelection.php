@@ -45,4 +45,3 @@
 <?php
   // We leave translationId and providerGroup:
   unset($btn, $sAll, $sText, $missing, $changed, $mLnk, $cLnk);
-?>

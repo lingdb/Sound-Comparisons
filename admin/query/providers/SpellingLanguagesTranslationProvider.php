@@ -96,4 +96,3 @@
       return 'LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName';
     }
   }
-?>

@@ -34,4 +34,3 @@
       $endTime = microtime(true);
       echo "<!-- Page generated in ".round(($endTime - $startTime), 4)."s -->";
   }
-?>

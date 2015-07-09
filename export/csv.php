@@ -99,4 +99,3 @@ foreach($languages as $lIx => $l){
   }
 }
 buildCSV($filename, $headline, $rows);
-?>

@@ -106,4 +106,3 @@ abstract class ConfigBase {
     return json_encode($data, $opts);
   }
 }
-?>
