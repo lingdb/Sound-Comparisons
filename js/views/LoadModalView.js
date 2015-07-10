@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','bootstrap'], function(Backbone){
   /**
     el: #loadModal
     model: undefined

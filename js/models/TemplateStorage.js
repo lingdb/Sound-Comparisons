@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','Mustache'], function(Backbone, Mustache){
   return Backbone.Model.extend({
     defaults: {
       ready:    false // true iff partials and render method are ready.

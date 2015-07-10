@@ -159,24 +159,27 @@ requirejs([
       //Setting up callbacks for PageState:
       App.wordCollection.listenWordOrder();
       App.pageState.activate();
+      //Function to create views:
+      var createViews = function(){
+        App.views.hideLinks = new HideLinks();
+        App.views.ipaKeyboardView = new IPAKeyboardView({
+          el: $('#ipaKeyboard')});
+        App.views.soundPlayOptionView = new SoundPlayOptionView({
+          el: $('#topmenuSoundOptions')
+        , model: App.soundPlayOption
+        });
+        App.views.audioLogic = new AudioLogic({el: $('#audioLogic')});
+        App.views.setupBar = new SetupBarView({
+          el: $('#appSetup'), model: App.setupBar
+        });
+        App.views.playSequenceView = new PlaySequenceView();
+        App.views.renderer = new Renderer({el: $('body')});
+        App.views.loadModalView = new LoadModalView({el: $('#loadModal')});
+      };
       //Start routing once setup finishes:
       App.setupBar.onFinish(function(){
+        createViews();
         Backbone.history.start();
       });
-      //Creating views:
-      App.views.hideLinks = new HideLinks();
-      App.views.ipaKeyboardView = new IPAKeyboardView({
-        el: $('#ipaKeyboard')});
-      App.views.soundPlayOptionView = new SoundPlayOptionView({
-        el: $('#topmenuSoundOptions')
-      , model: App.soundPlayOption
-      });
-      App.views.audioLogic = new AudioLogic({el: $('#audioLogic')});
-      App.views.setupBar = new SetupBarView({
-        el: $('#appSetup'), model: App.setupBar
-      });
-      App.views.playSequenceView = new PlaySequenceView();
-      App.views.renderer = new Renderer({el: $('body')});
-      App.views.loadModalView = new LoadModalView({el: $('#loadModal')});
     });
   });

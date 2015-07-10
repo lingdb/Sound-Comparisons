@@ -1,5 +1,5 @@
 "use strict";
-define(['collections/Selection'], function(Selection){
+define(['backbone','collections/Selection'], function(Backbone, Selection){
   /**
     Implements the aspect that a single model of a collection may be marked as chosen.
     If children implement 'getDefaultChoice', it will be used instead of null as default choice.

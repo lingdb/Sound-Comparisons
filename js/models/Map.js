@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','models/WordOverlay','views/WordOverlayView'], function(Backbone,WordOverlay,WordOverlayView){
   if(typeof(google) !== 'undefined'){
     return Backbone.Model.extend({
       defaults: {

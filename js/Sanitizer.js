@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','models/Study','models/Word','models/Language','QueryString'], function(Backbone, Study, Word, Language, QueryString){
   /**
     The Sanitizer provides means to sanitize options such as used by the Linker.
   */

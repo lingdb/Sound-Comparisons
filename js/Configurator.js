@@ -1,5 +1,5 @@
 "use strict";
-define(['Sanitizer'], function(Sanitizer){
+define(['Sanitizer','models/Language'], function(Sanitizer, Language){
   /**
     The Configurator provides means to build configuration such as used by the Linker.
   */

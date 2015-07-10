@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','collections/RegionCollection','collections/LanguageCollection'], function(Backbone, RegionCollection, LanguageCollection){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

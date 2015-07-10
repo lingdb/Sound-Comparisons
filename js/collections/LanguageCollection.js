@@ -1,7 +1,7 @@
 "use strict";
-define(['collections/Choice', 'models/Language'], function(Choice, Language){
+define(['collections/Choice', 'models/Language', 'collections/RegionLanguageCollection', 'collections/Selection'], function(Choice, Language, RegionLanguageCollection, Selection){
   /***/
-  return Choice.extend({
+  var LanguageCollection = Choice.extend({
     model: Language
     /**
       LanguageCollection get's its own initialize so that it can handle language keys on reset.
@@ -124,4 +124,5 @@ define(['collections/Choice', 'models/Language'], function(Choice, Language){
       return sel;
     }
   });
+  return LanguageCollection;
 });

@@ -11,6 +11,7 @@ define([
   , 'views/render/LanguageWordView'
   , 'views/render/WordLanguageView'
   , 'views/render/ContributorView'
+  , 'jquery.nanoscroller'
   ], function(
     Backbone
   , TitleView
@@ -36,12 +37,12 @@ define([
       , topMenuView:      new TopMenuView({el: this.$('#topMenu')})
       , languageMenuView: new LanguageMenuView({el: this.$('#leftMenu')})
       , wordMenuView:     new WordMenuView({el: this.$('#rightMenu')})
-      , mapView:          new MapView(this.SubView)({el: this.$('#mapViewContainer')})
-      , wordView:         new WordView(this.SubView)({el: this.$('#wordTableContainer')})
-      , languageView:     new LanguageView(this.SubView)({el: this.$('#languageTableContainer')})
-      , languageWordView: new LanguageWordView(this.SubView)({el: this.$('#multitableContainer')})
-      , wordLanguageView: new WordLanguageView(this.SubView)({el: this.$('#multitableTransposedContainer')})
-      , contributorView:  new ContributorView(this.SubView)({el: this.$('#contributors')})
+      , mapView:          new MapView({el: this.$('#mapViewContainer')})
+      , wordView:         new WordView({el: this.$('#wordTableContainer')})
+      , languageView:     new LanguageView({el: this.$('#languageTableContainer')})
+      , languageWordView: new LanguageWordView({el: this.$('#multitableContainer')})
+      , wordLanguageView: new WordLanguageView({el: this.$('#multitableTransposedContainer')})
+      , contributorView:  new ContributorView({el: this.$('#contributors')})
       };
       //Flag if models have been activated:
       this._activated = false;
@@ -113,23 +114,5 @@ define([
         }
       }, this);
     }
-    /**
-      To be extended by views that are used as models for the Renderer.
-    */
-  , SubView: Backbone.View.extend({
-      getKey: function(){throw 'Renderer.SubView:getKey should be overwritten!';}
-    , render: function(){throw 'Renderer.SubView:render should be overwritten!';}
-    , isActive: function(){return App.pageState.isPageView(this);}
-    /**
-      Function to be called when loading a study failes.
-      Default implementation will cause a translated alert
-      explaining the situation.
-      Afterwards the SubView may do what it likes.
-    */
-    , noStudy: function(study){
-        var t = App.translationStorage, msg = t.translateStatic('failedFetchStudy');
-        window.alert(t.placeInTranslation(msg, [study]));
-      }
-    })
   });
 });

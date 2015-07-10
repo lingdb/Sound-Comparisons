@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','collections/WordCollection'], function(Backbone, WordCollection){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

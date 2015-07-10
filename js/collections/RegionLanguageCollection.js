@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone','models/RegionLanguage'], function(Backbone, RegionLanguage){
+define(['require','backbone','models/RegionLanguage'], function(require, Backbone, RegionLanguage){
   /***/
   return Backbone.Collection.extend({
     model: RegionLanguage
@@ -49,6 +49,7 @@ define(['backbone','models/RegionLanguage'], function(Backbone, RegionLanguage){
       var langs = App.languageCollection.filter(function(l){
         return l.getId() in lSet;
       });
+      var LanguageCollection = require('collections/LanguageCollection');
       return new LanguageCollection(langs);
     }
     /**
@@ -70,6 +71,7 @@ define(['backbone','models/RegionLanguage'], function(Backbone, RegionLanguage){
         var rId = r.getId();
         return rId in rSet;
       });
+      var RegionCollection = require('collections/RegionCollection');
       return new RegionCollection(regions);
     }
   });

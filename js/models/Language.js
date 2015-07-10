@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone','models/RegionLanguage'], function(Backbone, RegionLanguage){
+define(['require','backbone','models/RegionLanguage'], function(require, Backbone, RegionLanguage){
   /***/
   return Backbone.Model.extend({
     initialize: function(){
@@ -60,6 +60,7 @@ define(['backbone','models/RegionLanguage'], function(Backbone, RegionLanguage){
   , getRfcLanguages: function(){
       if(this._rfcLanguages === null){
         var ls = App.languageCollection.where({RfcLanguage: this.get('LanguageIx')});
+        var LanguageCollection = require('collections/LanguageCollection');
         this._rfcLanguages = new LanguageCollection(ls);
       }
       return this._rfcLanguages;
