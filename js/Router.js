@@ -1,5 +1,5 @@
 "use strict";
-define(['Linker'], function(Linker){
+define(['Linker','backbone'], function(Linker, Backbone){
   /**
     The router for our application.
     See http://backbonetutorials.com/what-is-a-router for basic info.

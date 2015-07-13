@@ -222,7 +222,7 @@ define(['backbone'],function(Backbone){
       this.get('marker').setAnimation(animation);
       if(isPlaying){//Changing the background-color
         if(!this._playing.origBG){
-          _.extend(this._playing, {origBG: div.css(key)});
+          _.extend(this._playing, {origBG: div.css('border-color')});
           div.css({'border-color': '#FF0000'});
         }
       }else{

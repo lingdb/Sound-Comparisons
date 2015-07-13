@@ -11,5 +11,6 @@
   , "App": false
   , "console": false
   , "google": false
+  , "Worker": false
   }
 }

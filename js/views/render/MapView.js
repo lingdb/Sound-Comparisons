@@ -1,6 +1,6 @@
 /* global document: false */
 "use strict";
-define(['views/render/SubView','views/SoundControlView','views/render/WordView'], function(SubView,SoundControlView, WordView){
+define(['views/render/SubView','views/SoundControlView','views/render/WordView','views/MouseTrackView'], function(SubView,SoundControlView, WordView, MouseTrackView){
   return SubView.extend({
     /***/
     initialize: function(){

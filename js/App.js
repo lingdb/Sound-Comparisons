@@ -39,6 +39,7 @@ requirejs.config({
 requirejs([
     'jquery'
   , 'views/AudioLogic'
+  , 'backbone'
   , 'models/Colors'
   , 'models/ContributorCategories'
   , 'collections/ContributorCollection'
@@ -74,6 +75,7 @@ requirejs([
   ], function(
     $
   , AudioLogic
+  , Backbone
   , Colors
   , ContributorCategories
   , ContributorCollection

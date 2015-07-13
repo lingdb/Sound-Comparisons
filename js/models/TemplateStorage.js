@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone','Mustache'], function(Backbone, Mustache){
+define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString){
   return Backbone.Model.extend({
     defaults: {
       ready:    false // true iff partials and render method are ready.

@@ -1,5 +1,5 @@
 "use strict";
-define(['require','backbone','models/RegionLanguage'], function(require, Backbone, RegionLanguage){
+define(['require','backbone','models/RegionLanguage','models/Contributor'], function(require, Backbone, RegionLanguage, Contributor){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

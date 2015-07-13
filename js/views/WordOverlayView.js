@@ -1,4 +1,4 @@
-/* global document: false */
+/* global document: false, Node: false */
 "use strict";
 define([], function(){
   /**

@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','collections/ContributorCollection'], function(Backbone, ContributorCollection){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

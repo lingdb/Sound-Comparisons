@@ -1,4 +1,4 @@
-/* global importScripts: false, onmessage: true, postMessage: false */
+/* global importScripts: false, onmessage: true, postMessage: false, LZString: false */
 "use strict";
 /**
   (de-)compressing strings turned out to be a rather time intensive task.

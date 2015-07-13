@@ -11,7 +11,7 @@ define([],function(){
     this.target = target;
     var t = this;
     target.click(function(){ t.togglePlay(); });
-  }
+  };
   /**
     Adds the given audio tag to the sequence.
   */

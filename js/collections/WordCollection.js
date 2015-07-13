@@ -1,5 +1,5 @@
 "use strict";
-define(['collections/Choice','models/Word','collections/Selection'], function(Choice, Word, Selection){
+define(['collections/Choice','models/Word','collections/Selection','backbone'], function(Choice, Word, Selection, Backbone){
   /***/
   return Choice.extend({
     model: Word

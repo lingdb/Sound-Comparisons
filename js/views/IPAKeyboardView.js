@@ -1,3 +1,4 @@
+/* global document: false */
 "use strict";
 define(['backbone'], function(Backbone){
   /**
