@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>{{title}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{!
+      Favicon madness:
+      See https://stackoverflow.com/questions/23849377/html-5-favicon-support
+    }}
+    <!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
+    <!--[if IE]><link rel="shortcut icon" href="img/favicon.ico"><![endif]-->
+    <link rel="icon" href="img/favicon.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="img/favicon.gif" type="image/gif" sizes="16x16">
+    <link href="../css/extern/bootstrap.min.css" rel="stylesheet">
+    <style>
+      html, body {height: 100%;}
+      body {margin: 0px;}
+      #backlink {
+        z-index: 5;
+        position: absolute;
+        width: 190px;
+        height: 20px;
+        top: 0px;
+        left: -170px;
+        white-space: nowrap;
+      }
+      #backlink:hover {
+        left: 0px;
+      }
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        position: absolute;
+      }
+    </style>
+    {{! Analytics: }}
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-28740209-1', '127.0.0.1');
+      ga('send', 'pageview');
+    </script>
+  {{! RequireJS to provide module magic: }}
+  <script data-main="../js/Projects" src="../js/extern/require.js"></script>
+  </head>
+  <body>
+    <a id="backlink" class="well" href=".."><i class="icon-backward"></i>{{backlink}}<i class="icon-backward"></i></a>
+    <iframe id="projectFrame" src="{{{ url }}}" seamless="seamless">
+  </body>
+</html>

@@ -18,6 +18,9 @@ RewriteRule ^(admin|css|export|img|js|query|sound|templates).* - [L]
 # Rule to match usual requests:
 RewriteCond %{QUERY_STRING} (.+)
 RewriteRule ^$ - [L]
+# Rule to match project routes:
+RewriteCond %{QUERY_STRING} ^$
+RewriteRule ^projects/(.*)$ query/projects?name=$1 [L]
 # We use shortLinks if the query is empty, except for hl:
 RewriteCond %{QUERY_STRING} ^$
 RewriteRule ^(.+)$ ?shortLink=$1 [L]
