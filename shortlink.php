@@ -1,8 +1,8 @@
 <?php
   /**
-    Implementatin of the shortLink feature.
+    Implementation of the shortLink feature.
     This file reads $_GET[] for a shortLink,
-    and injects the according values into $_GET.
+    and redirects the browser to where it needs to be.
   */
   if(isset($_GET['shortLink'])){
     $forwarded = false;
