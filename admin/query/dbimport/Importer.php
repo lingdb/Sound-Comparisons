@@ -426,6 +426,8 @@ class Importer{
       , 'Family Ix' => 'FamilyIx'
       , 'Family Nm' => 'FamilyNm'
       , 'Family Abbr:  All FileNames' => 'FamilyAbbrAllFileNames'
+      , 'Project About URL' => 'ProjectAboutUrl'
+      , 'Bn:  Project Active?' => 'ProjectActive'
       )
     )
   , '/^Transcription Superscript Info.txt/' => array(
