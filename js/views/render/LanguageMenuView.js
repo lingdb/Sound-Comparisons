@@ -103,15 +103,15 @@ define(['backbone'], function(Backbone){
           return;
         }
         var isMultiView = App.pageState.isMultiView()
-          , isMapView   = App.pageState.isMapView()
           , region      = {
               selected: App.regionCollection.isSelected(r)
             , name: r.getShortName()
             , ttip: r.getLongName()
             , languages: []
+            , isMapView: App.pageState.isMapView()
             };
         //Filling the checkbox:
-        if(isMultiView||isMapView){
+        if(isMultiView||region.isMapView){
           var box = {icon: 'icon-chkbox-custom'};
           switch(lCol.areSelected(languages)){
             case 'all':
@@ -142,24 +142,24 @@ define(['backbone'], function(Backbone){
         //The triangle:
         region.triangle = region.selected ? 'icon-chevron-down'
                                           : 'icon-chevron-up rotate90';
-        //Languages for selected Regions:
-        if(region.selected){
-          if(isMapView){//Zooming in on a Region
-            region.isMapView = isMapView;
+        //Zooming in on a Region:
+        if(region.isMapView){
             region.zoomRegion = App.translationStorage.translateStatic('menu_zoomRegion');
             region.rid = r.getId();
-          }
+        }
+        //Languages for selected Regions:
+        if(region.selected){
           languages.each(function(l){
             var language = {
               shortName: l.getSuperscript(l.getShortName())
             , longName:  l.getLongName()
             , zoomLanguage: App.translationStorage.translateStatic('menu_zoomLanguage')
             , link:      'href="'+App.router.linkLanguageView({language: l})+'"'
-            , isMapView: isMapView
+            , isMapView: region.isMapView
             , languageIx : l.getId()
             };
             //Deciding if the language is selected:
-            if(isMultiView||isMapView){
+            if(isMultiView||region.isMapView){
               language.selected = lCol.isSelected(l);
             }else if(App.pageState.isPageView('l')){
               language.selected = lCol.isChoice(l);
@@ -167,13 +167,13 @@ define(['backbone'], function(Backbone){
               language.selected = false;
             }
             //Building the icon for a language:
-            if(isMultiView||isMapView){
+            if(isMultiView||region.isMapView){
               var icon = {
                 checked: language.selected ? 'icon-check' : 'icon-chkbox-custom'
               , ttip: language.longName+"\n"
               };
               if(language.selected){
-                if(isMapView){
+                if(region.isMapView){
                   icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_del_map');
                 }else{
                   icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_del');
@@ -181,7 +181,7 @@ define(['backbone'], function(Backbone){
                 var removed = lCol.getDifference(lCol.getSelected(), [l]);
                 icon.link = 'href="'+App.router.linkCurrent({languages: removed})+'"';
               }else{
-                if(isMapView){
+                if(region.isMapView){
                   icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_add_map');
                 }else{
                   icon.ttip += App.translationStorage.translateStatic('multimenu_tooltip_add');
