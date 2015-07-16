@@ -24,7 +24,7 @@ define(['views/render/SubView'], function(SubView){
         , headline = {name: word.getNameFor(spLang)}
         , longName = word.getLongName();
       if(_.isString(longName) && longName !== ''){
-        headline.name = word.getModernName()+' '+longName;
+        headline.name = longName;
       }
       //Sanitize name:
       if(_.isArray(headline.name))
