@@ -37,5 +37,10 @@ define(['collections/Selection','models/Region'], function(Selection, Region){
       }, this);
       return {rMap: rMap, lMap: lMap};
     }
+    /**
+      @return regions [Region]
+      The default selection for a RegionCollection is that no regions are selected.
+    */
+  , getDefaultSelection: function(){ return []; }
   });
 });
