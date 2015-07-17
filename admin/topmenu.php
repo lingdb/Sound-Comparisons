@@ -36,8 +36,8 @@
       <li><a href="index.php?action=logout">Logout</a></li>
     </ul>
     <?php
-      require_once 'git.php';
-      if($g = git_info()){
+      require_once '../Git.php';
+      if($g = Git::getCommit('../.git')){
     ?>
     <ul class="nav pull-right" id="topMenu" data-isadmin="<?php echo $isAdmin; ?>">
       <li><a href="<?php echo $g['link']; ?>" target="_blank"><?php echo $g['text']; ?></a></li>

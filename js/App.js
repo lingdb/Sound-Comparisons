@@ -10,7 +10,7 @@ requirejs.config({
   , 'jquery.json': 'extern/jquery.json-2.3.min'
   , 'underscore': 'extern/underscore-min'
   , 'backbone': 'extern/backbone-min'
-  , 'bootstrap': 'extern/bootstrap'
+  , 'bootstrap': 'extern/bootstrap.min'
   , 'Blob': 'extern/Blob'
   , 'FileSaver': 'extern/FileSaver.min'
   , 'Mustache': 'extern/mustache'
