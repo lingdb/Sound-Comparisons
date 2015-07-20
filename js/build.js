@@ -2,5 +2,5 @@
   baseUrl: '.'
 , mainConfigFile: 'App.js'
 , name: "App"
-, out: "App-magic.js"
+, out: "App-minified.js"
 })

@@ -11,8 +11,19 @@
   $index = array(
     'hidelinkLeft'  => TranslationProvider::staticTranslate('hidelink_left')
   , 'hidelinkRight' => TranslationProvider::staticTranslate('hidelink_right')
-  , 'head' => array('title' => 'Site loading, please wait')
+  , 'head' => array(
+      'title' => 'Site loading, please wait'
+    , 'requirejs' => 'js/App'
+    )
   );
+  //Checking for minified js/App setup:
+  require_once 'Git.php';
+  if(Git::getBranch() === 'master'){
+    $app = 'js/App-minified';
+    if(file_exists('./'.$app.'.js')){
+      $index['head']['requirejs'] = $app;
+    }
+  }
   //Making sure we get our appSetup:
   $index['appSetup'] = true;
   //Processing the Content-type:
