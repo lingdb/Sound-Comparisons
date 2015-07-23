@@ -1,4 +1,5 @@
 <?php
+require_once 'dataProvider.php';
 /**
   This is mostly a helper class for query/translations.php.
   Since some of it's parts shall be used in other places,
@@ -20,13 +21,7 @@ class TranslationProvider {
     $dbConnection = Config::getConnection();
     $tId = $dbConnection->escape_string($tId);
     $q   = "SELECT Category, Field, Trans FROM Page_DynamicTranslation WHERE TranslationId = $tId";
-    $set = $dbConnection->query($q);
-    $ret = array();
-    //FIXME use DataProvider::fetchAll
-    while($r = $set->fetch_assoc()){
-      array_push($ret, $r);
-    }
-    return $ret;
+    return DataProvider::fetchAll($q);
   }
   /**
     @param $tId TranslationId
@@ -35,10 +30,8 @@ class TranslationProvider {
     $dbConnection = Config::getConnection();
     $tId = $dbConnection->escape_string($tId);
     $q   = "SELECT Req, Trans FROM Page_StaticTranslation WHERE TranslationId = $tId";
-    $set = $dbConnection->query($q);
     $ret = array();
-    //FIXME use DataProvider::fetchAll
-    while($r = $set->fetch_assoc()){
+    foreach(DataProvider::fetchAll($q) as $r){
       $ret[$r['Req']] = $r['Trans'];
     }
     return $ret;
@@ -49,11 +42,8 @@ class TranslationProvider {
     $q = 'SELECT TranslationId, TranslationName, BrowserMatch, ImagePath, '
        . 'RfcLanguage, UNIX_TIMESTAMP(lastChangeStatic), UNIX_TIMESTAMP(lastChangeDynamic) '
        . 'FROM Page_Translations WHERE Active = 1 OR TranslationId = 1';
-    $set   = $dbConnection->query($q);
     $ret   = array();
-    $trans = self::getTarget();
-    //FIXME use DataProvider::fetchAll
-    while($r = $set->fetch_assoc()){
+    foreach(DataProvider::fetchAll($q) as $r){
       $ret[$r['TranslationId']] = array(
         'TranslationId'     => $r['TranslationId']
       , 'TranslationName'   => $r['TranslationName']
