@@ -1,6 +1,18 @@
 /* global navigator: false */
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','i18n'], function(Backbone, i18n){
+  window.i18n = i18n;//FIXME DEBUG. λ!
+  //Initializing i18n:
+  var i18nOptions = {
+    resGetPath: 'query/translations?lng=__lng__&ns=__ns__'
+  , dynamicLoad: true
+  , fallbackLng: 'en'
+  , useCookie: false
+  , useLocalStorage: false
+  , lng: 'en'//To be changed to local BrowserMatch
+  , load: 'unspecific'
+  };
+  //Building and returning Backbone.Model for TranslationStorage:
   return Backbone.Model.extend({
     defaults: {
       ready:        false // Ready as soon, as a translation is usable.
@@ -14,6 +26,7 @@ define(['backbone'], function(Backbone){
     }
     /**
       Cannot be named initialize, bacause we have to call it once App.dataStorage is available.
+      FIXME maybe I can improve this situation together with #182
     */
   , init: function(){
       //Saving translationId on change:
