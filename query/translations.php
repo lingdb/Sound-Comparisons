@@ -12,7 +12,11 @@ require_once '../config.php';
 Config::setResponseJSON();
 //Defaulting our action:
 if(!array_key_exists('action',$_GET)){
-  $_GET['action'] = '';
+  if(array_key_exists('lng', $_GET)){
+    $_GET['action'] = 'i18n';
+  }else{
+    $_GET['action'] = '';
+  }
 }
 //Acting depeding on action:
 switch($_GET['action']){
@@ -38,6 +42,9 @@ switch($_GET['action']){
   break;
   case 'summary':
     echo Config::toJSON(TranslationProvider::getSummary());
+  break;
+  case 'i18n':
+    echo Config::toJSON(TranslationProvider::getI18n($_GET['lng']));
   break;
   default:
     Config::setResponse(400);

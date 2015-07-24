@@ -16,6 +16,7 @@ class TranslationProvider {
   public static $defaultTranslationId = 1;
   /**
     @param $tId TranslationId
+    @return $dynamic :: [[Category => …, Field => …, Trans => …]]
   */
   public static function getDynamic($tId){
     $dbConnection = Config::getConnection();
@@ -25,6 +26,7 @@ class TranslationProvider {
   }
   /**
     @param $tId TranslationId
+    @return $static :: [[Req => Trans]]
   */
   public static function getStatic($tId){
     $dbConnection = Config::getConnection();
@@ -99,5 +101,28 @@ class TranslationProvider {
     }
     //Final Fail
     return "MissingStaticTranslation($t,$req)";
+  }
+  /**
+    @param lng String as BrowserMatch from v4.Page_Translations table.
+    @return $i18n :: [[Req => Trans],[Category.Field => Trans]]
+  */
+  public static function getI18n($lng){
+    $db = Config::getConnection();
+    $q = 'SELECT TranslationId FROM Page_Translations WHERE BrowserMatch = ?';
+    $stmt = $db->prepare($q);
+    $stmt->bind_param('s', $lng);
+    $stmt->execute();
+    $stmt->bind_result($tId);
+    if(!$stmt->fetch()){
+      //BrowserMatch not found -> empty array
+      error_log('TranslationProvider::getI18n('.$lng.') returns empty.');
+      return array();
+    }
+    $stmt->close();
+    $i18n = self::getStatic($tId);
+    foreach(self::getDynamic($tId) as $dynamic){
+      $i18n[$dynamic['Category'].$dynamic['Field']] = $dynamic['Trans'];
+    }
+    return $i18n;
   }
 }
