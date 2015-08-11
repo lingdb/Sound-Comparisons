@@ -5,3 +5,6 @@ App-minified.js: $(JS_FILES)
 	node extern/r.js -o build.js
 
 main: App-minified.js
+
+chkSyntax:
+	find -type f -regex .*js | grep -v extern | xargs jshint
