@@ -7,7 +7,7 @@ define(['backbone'], function(Backbone){
   */
   return Backbone.View.extend({
     initialize: function(){
-      if(typeof(google) !== 'undefined'){
+      if(!_.isUndefined(google)){
         var view = this;
         google.maps.event.addListener(this.el, 'click', function(e){
           view.mouseAtLatLng(e.latLng);

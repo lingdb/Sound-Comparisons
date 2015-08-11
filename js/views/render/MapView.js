@@ -10,7 +10,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       //Connecting to the router
       App.router.on('route:mapView', this.route, this);
       //Abort further work if no maps:
-      if(typeof(google) === 'undefined'){
+      if(_.isUndefined(google)){
         console.log('MapView.initialize() aborts, google undefined.');
         return;
       }
@@ -21,7 +21,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       //SoundControlView:
       this.soundControlView = new SoundControlView({
         el: this.map, model: this});
-      if(typeof(MouseTrackView) !== 'undefined'){
+      if(!_.isUndefined(MouseTrackView)){
         this.mouseTrackView = new MouseTrackView({
         el: this.map, model: this});
       }
@@ -125,7 +125,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
   , render: function(o){
       o = _.extend({renderMap: true}, o);
       if(App.pageState.isPageView(this)){
-        if(typeof(google) === 'undefined'){
+        if(_.isUndefined(google)){
           App.views.loadModalView.noMap();
         }else{
           //Rendering the template:

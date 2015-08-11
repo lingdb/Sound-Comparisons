@@ -1,5 +1,5 @@
 # See https://github.com/jrburke/r.js/blob/master/build/example.build.js
-JS_FILES = $(filter-out App-minified.js, $(wildcard *js))
+JS_FILES = $(shell find -type f -name "*.js" | grep -v App-minified.js)
 
 App-minified.js: $(JS_FILES)
 	node extern/r.js -o build.js

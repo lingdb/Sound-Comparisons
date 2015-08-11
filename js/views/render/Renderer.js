@@ -56,7 +56,7 @@ define([
         //Installing update methods of contained views:
         _.each(this.model, function(m){
           if(m === null) return;
-          if(typeof(m.activate) === 'function')
+          if(_.isFunction(m.activate))
             m.activate();
         }, this);
         //Rerender on changing templates:

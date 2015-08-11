@@ -71,7 +71,7 @@ define(['backbone'], function(Backbone){
     }
     //Extends the input string so that it matches IPA Symbols.
   , enhanceIPA: function(input){
-      if(input === null || typeof(input) === 'undefined' || input === '')
+      if(input === null || _.isUndefined(input) || input === '')
         return input;
       var vMust  = 'iyɨʉɯuɪʏʊeøɘɵɤoəɛœɜɞʌɔæɐaɶɑɒɚɝ'; // All from vowels section
       var vMay   = '˥˦˧˨˩↓↑↗↘̋́̄̀̏᷈᷅᷄̂̌ˈˌːˑ̆|‖.‿̃˔̟̹̜̠̝˕˞̞̰̤̥̈̽';           // All from tone
@@ -126,7 +126,7 @@ define(['backbone'], function(Backbone){
   //The magic filter function:
   , filter: function(set, input){
       //General rewriting of input:
-      if(typeof(input) === 'string'){
+      if(_.isString(input)){
         input = input.replace(/^#/, '^');
         input = input.replace(/#$/, '$');
       }

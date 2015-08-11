@@ -50,7 +50,7 @@ define(['backbone'], function(Backbone){
       var category = this.getCategory('FullRfcModernLg01')
         , fallback = this.get('FullRfcModernLg01')
         , fallbac_ = this.get('FullRfcModernLg02');
-      if(typeof(fallback) !== 'string' || fallback === '')
+      if(!_.isString(fallback) || fallback === '')
         fallback = fallbac_;
       return App.translationStorage.translateDynamic(category, this.getField(), fallback);
     }

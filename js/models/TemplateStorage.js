@@ -109,7 +109,7 @@ define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString
   */
   , render: function(name, view){
       var ps = this.get('partials');
-      if(ps === null || typeof(ps) === 'undefined'){
+      if(ps === null || _.isUndefined(ps)){
         console.log('TemplateStorage.render() called before partials were ready :(');
         return null;
       }

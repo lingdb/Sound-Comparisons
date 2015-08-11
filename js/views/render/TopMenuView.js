@@ -226,10 +226,10 @@ define(['backbone'], function(Backbone){
       , lw: {c1: 'color-language', c2: 'color-word'}
       , wl: {c1: 'color-word', c2: 'color-language'}
       };
-      var color = modes[mode], cType = typeof(color);
-      if(cType === 'string'){
+      var color = modes[mode];
+      if(_.isString(color)){
         return '<div class="inline '+color+'">'+content+'</div>';
-      }else if(cType === 'object'){
+      }else if(_.isObject(color)){
         var matches = content.match(/^(.*) [Xx×] (.*)$/);
         if(matches){
           var m1 = matches[1], m2 = matches[2];

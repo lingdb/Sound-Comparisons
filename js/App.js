@@ -107,7 +107,7 @@ requirejs([
       , views: {}
       , wordCollection: new (require('collections/WordCollection'))()
       });
-      if(typeof(Map) !== 'undefined'){
+      if(!_.isUndefined(Map)){
         _.extend(window.App, {map: new (require('models/Map'))()});
       }
       //Making sure TranslationStorage does it's thing:

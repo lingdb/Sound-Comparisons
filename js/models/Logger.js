@@ -17,7 +17,7 @@ define(['backbone'], function(Backbone){
     }
   //Checks, if ga is available, and if so runs stack.
   , ready: function(){
-      var rdy = (typeof(window.ga) === "function");
+      var rdy = (_.isFunction(window.ga));
       if(rdy) this.runStack();
       return rdy;
     }
@@ -38,7 +38,7 @@ define(['backbone'], function(Backbone){
   , logEvent: function(category, action, label, value){
       //See https://developers.google.com/analytics/devguides/collection/analyticsjs/events
       this.pushStack(function(c,a,l,v){
-        if(typeof(v) === 'number'){
+        if(_.isNumber(v)){
           ga('send', 'event', c, a, l, v);
         }else{
           ga('send', 'event', c, a, l);

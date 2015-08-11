@@ -131,7 +131,7 @@ define(['backbone'], function(Backbone){
           console.log('PageState.setPageView() refuses to set pageView: '+pv);
         }
       }else if(pv instanceof Backbone.View){
-        if(typeof(pv.getKey) === 'function'){
+        if(_.isFunction(pv.getKey)){
           this.setPageView(pv.getKey());
         }
       }else{
@@ -157,7 +157,7 @@ define(['backbone'], function(Backbone){
           case 'c':  return this.isPageView('contributorView');
         }
       }else if(key instanceof Backbone.View){
-        if(typeof(key.getKey) !== 'function')
+        if(!_.isFunction(key.getKey))
           return false;
         return this.isPageView(key.getKey());
       }

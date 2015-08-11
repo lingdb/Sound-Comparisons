@@ -44,7 +44,12 @@ switch($_GET['action']){
     echo Config::toJSON(TranslationProvider::getSummary());
   break;
   case 'i18n':
-    echo Config::toJSON(TranslationProvider::getI18n($_GET['lng']));
+    $lngs = explode(' ', $_GET['lng']);
+    $ret = array();
+    foreach($lngs as $lng){
+      $ret[$lng] = array('translation' => TranslationProvider::getI18n($lng));
+    }
+    echo Config::toJSON($ret);
   break;
   default:
     Config::setResponse(400);

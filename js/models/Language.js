@@ -44,7 +44,7 @@ define(['require','backbone','models/RegionLanguage','models/Contributor'], func
   , getRfcLanguage: function(){
       if(this._rfcLanguage === null){
         var rfcId = this.get('RfcLanguage');
-        if(typeof(rfcId) === 'string'){
+        if(_.isString(rfcId)){
           var rs = App.languageCollection.where({LanguageIx: rfcId});
           this._rfcLanguage = rs[0];
         }else{
