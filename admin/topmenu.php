@@ -14,8 +14,8 @@
            . '<a class="dropdown-toggle topLink" data-toggle="dropdown">'
            . 'Upload <b class="caret"></b></a>'
            . '<ul class="dropdown-menu">'
-           . '<li><a href="dbimport.php">CSV</a></li>'
-           . '<li><a href="sqlFrontend.php">SQL</a></li>'
+           . '<li><a href="dbimport.php">Data Tables (CSV format)</a></li>'
+           . '<li><a href="sqlFrontend.php">Transcription Records (SQL format)</a></li>'
            . '</ul></li>';
       if(session_mayTranslate($dbConnection))
         echo '<li><a href="shortlinks.php">Shortlinks</a></li>';
