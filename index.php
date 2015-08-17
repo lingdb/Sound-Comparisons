@@ -7,7 +7,6 @@
   require_once 'query/translationProvider.php';
   /* Startup: */
   $dbConnection = Config::getConnection();
-  require_once 'shortlink.php';
   $index = array(
     'hidelinkLeft'  => TranslationProvider::staticTranslate('hidelink_left')
   , 'hidelinkRight' => TranslationProvider::staticTranslate('hidelink_right')

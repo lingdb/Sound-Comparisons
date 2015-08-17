@@ -23,10 +23,7 @@ RewriteCond %{QUERY_STRING} ^$
 RewriteRule ^projects/(.*)$ query/projects?name=$1 [L]
 # We use shortLinks if the query is empty, except for hl:
 RewriteCond %{QUERY_STRING} ^$
-RewriteRule ^(.+)$ ?shortLink=$1 [L]
-# shortLinks are allowed with hl parameters:
-RewriteCond %{QUERY_STRING} ^(hl=.+)$
-RewriteRule ^(.+)$ ?shortLink=$1&%1 [L]
+RewriteRule ^(.+)$ #/$1 [R,NE]
 # If we've got a query, we redirect to root:
 RewriteCond %{QUERY_STRING} (.+)
 RewriteRule ^.+$ ?%1 [R,NE]
