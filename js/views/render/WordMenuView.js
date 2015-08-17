@@ -77,11 +77,19 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
         , name: App.translationStorage.getName()
         });
       }
+      //Function to add a seperator:
+      var addSeparator = function(options){
+        var last = _.last(options);
+        if(last && last.disabled){
+          return;
+        }
+        options.push({
+          disabled: true
+        , name: '---------------'
+        });
+      };
       //Separator item:
-      data.spList.options.push({
-        disabled: true
-      , name: '---------------'
-      });
+      addSeparator(data.spList.options);
       //Other items:
       var spId = spLang ? spLang.getId() : -1, entries = [];
       App.languageCollection.getSpellingLanguages().each(function(l){
@@ -103,10 +111,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
         data.phList.options = [];
         //Other phLangs:
         App.regionCollection.each(function(r){
-          data.phList.options.push({
-            disabled: true
-          , name: '---------------'
-          });
+          addSeparator(data.phList.options);
           r.getLanguages().each(function(l){
             if(l.getId() === phId) return;
             //Checking if we have transcriptions, first word decides.
