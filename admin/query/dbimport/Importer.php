@@ -400,6 +400,7 @@ class Importer{
       , 'Region Gp Type Ix' => 'RegionGpTypeIx'
       , 'Region Gp Nm Long' => 'RegionGpNameLong'
       , 'Region Gp Nm Short' => 'RegionGpNameShort'
+      , 'Bn: Default Expanded State' => 'DefaultExpandedState'
       )
     )
   , '/^Studies\.txt$/' => array(
