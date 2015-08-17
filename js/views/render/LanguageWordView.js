@@ -22,6 +22,7 @@ define(['views/render/SubView'], function(SubView){
     }
     /***/
   , buildStatic: function(){
+      //We reuse WordLanguageView.buildStatic:
       App.views.renderer.model.wordLanguageView.buildStatic.call(this);
     }
     /***/
@@ -166,6 +167,8 @@ define(['views/render/SubView'], function(SubView){
         , c = Math.ceil($('#contentArea').width())+1;
       if(t > c){
         this.$('div.alert').removeClass('hide');
+        //Making sure proxyHideLinks are useful:
+        window.App.views.hideLinks.handleProxyHideLinks();
       }
     }
     /***/

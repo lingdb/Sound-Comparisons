@@ -20,7 +20,18 @@ define(['views/render/SubView'], function(SubView){
       //Building statics the first time:
       this.buildStatic();
     }
-    /***/
+    /**
+      @return href String 'href="…"'
+    */
+  , getTransposeLink: function(){
+      return 'href="'+App.router.linkLanguageWordView({
+        words: App.wordCollection.getSelected()
+      , languages: App.languageCollection.getSelected()
+      })+'"';
+    }
+    /**
+      Also used for LanguageWordView.buildStatic
+    */
   , buildStatic: function(){
       var staticT = App.translationStorage.translateStatic({
         deleteAll:          'tabulator_multi_clear_all'
@@ -29,7 +40,12 @@ define(['views/render/SubView'], function(SubView){
       , transposeTtip:      'tabulator_multi_transpose'
       , tableAlert:         'tabulator_multi_alert'
       });
-      staticT.tableAlert = App.translationStorage.placeInTranslation(staticT.tableAlert, ['<i class="icon-chevron-left"></i>','<i class="icon-chevron-right"></i>','<img src="img/transpose.png">']);
+      var tLink = App.views.renderer.model.wordLanguageView.getTransposeLink();
+      staticT.tableAlert = App.translationStorage.placeInTranslation(staticT.tableAlert, [
+        '<a class="proxyHideLink" data-name="hidelink_left"><i class="icon-chevron-left"></i></a>'
+      , '<a class="proxyHideLink" data-name="hidelink_right"><i class="icon-chevron-right"></i></a>'
+      , '<a '+tLink+'><img src="img/transpose.png"></a>'
+      ]);
       _.extend(this.model, staticT);
     }
     /***/
@@ -44,10 +60,7 @@ define(['views/render/SubView'], function(SubView){
         , table = {
             clearWordsLink:     'href="'+App.router.linkWordLanguageView({words: []})+'"'
           , clearLanguagesLink: 'href="'+App.router.linkWordLanguageView({languages: []})+'"'
-          , transposeLink:      'href="'+App.router.linkLanguageWordView({
-              words: App.wordCollection.getSelected()
-            , languages: App.languageCollection.getSelected()
-            })+'"'
+          , transposeLink:      this.getTransposeLink()
           , rows: []
           }, basic;
       /*
@@ -174,6 +187,8 @@ define(['views/render/SubView'], function(SubView){
         , c = Math.ceil($('#contentArea').width())+1;
       if(t > c){
         this.$('div.alert').removeClass('hide');
+        //Making sure proxyHideLinks are useful:
+        window.App.views.hideLinks.handleProxyHideLinks();
       }
     }
     /***/

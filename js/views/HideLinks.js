@@ -48,5 +48,23 @@ define(['backbone'], function(Backbone){
       //Adjusting nanoScrollers:
       window.App.views.renderer.nanoScroller();
     }
+    /**
+      It is possible to have a.proxyHideLink, which only have a data-name.
+      If they are clicked, we shall act as if the original hidelink with the same data-name was clicked.
+      To safeguard against being called multiple times without sense,
+      the data-handleProxy attributes are used.
+    */
+  , handleProxyHideLinks: function(){
+      //Proxy hideLinks as used in MultiTables for #171:
+      var view = this;
+      $('a.proxyHideLink').each(function(){
+        var a = $(this);
+        if(a.data('handleProxy')) return; // Safeguard
+        a.data('handleProxy', 1).click(function(){
+          var n = $(this).data('name');
+          view.links[n].trigger('click');
+        });
+      });
+    }
   });
 });
