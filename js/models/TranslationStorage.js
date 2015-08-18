@@ -65,6 +65,10 @@ define(['backbone','i18n'], function(Backbone, i18n){
         console.log('Could not fetch translation summary from host -> LinkInterceptor disabled.');
       });
     }
+    /**
+      Gets executed via Backbone event system, every time that TranslationStorage summary changes.
+      Updates the nToTMap.
+    */
   , mkNToTMap: function(){
       var map = {};
       _.each(this.get('summary'), function(t){
@@ -72,8 +76,17 @@ define(['backbone','i18n'], function(Backbone, i18n){
       }, this);
       this.set({nToTMap: map});
     }
+    /**
+      @param bm String, BrowserMatch
+      @return translation Object, Translation || null
+      Tries to return the translation that corresponds to the given BrowserMatch.
+    */
   , translationFromBrowserMatch: function(bm){
-      return this.get('nToTMap')[bm];
+      var map = this.get('nToTMap');
+      if(bm in map){
+        return map[bm];
+      }
+      return null;
     }
     /**
       function to produce the default TranslationId
@@ -122,6 +135,7 @@ define(['backbone','i18n'], function(Backbone, i18n){
       return tId;
     }
     /**
+      @return tIds [TranslationId]
       Returns an array of TranslationIds that can be tried to try
       and get a translation for something.
       Usually this will be [tId, defaultTid].
@@ -134,12 +148,28 @@ define(['backbone','i18n'], function(Backbone, i18n){
       }));
     }
     /**
+      @param tId TranslationId
+      Set the translation using a given TranslationId.
       Returns a promise to check if i18n loading completed.
       This will most likely succeed immediately, because of preload.
     */
   , setTranslationId: function(tId){
-      var bm   = this.get('summary')[tId].BrowserMatch
-        , prom = $.Deferred();
+      var prom = $.Deferred();
+      //Checking if tId is different than current translationId:
+      if(tId == this.getTranslationId()){
+        //Produce accepting promise as tId is already set:
+        prom.resolve();
+        return prom;
+      }
+      //Checking if given tId is known at all::
+      var summary = this.get('summary');
+      if(!(tId in summary)){
+        //Produce failing promise as tId is not okay:
+        prom.reject('Cannot TranslationStorage.setTranslationId('+tId+')');
+        return prom;
+      }
+      //Updating translationId:
+      var bm = summary[tId].BrowserMatch;
       i18n.setLng(bm, function(err, t){
         if(err === null){
           prom.resolve();
@@ -149,6 +179,22 @@ define(['backbone','i18n'], function(Backbone, i18n){
       });
       this.set({translationId: tId});
       return prom;
+    }
+    /**
+      @param bm String, BrowserMatch || TranslationId
+      @return prom Deferred
+      Set the translation using a given BrowserMatch.
+      Returns a promise to check if i18n loading completed.
+      This will most likely succeed immediately, because of preload.
+      Also accepts a TranslationId instead of a BrowserMatch to aid routing.
+    */
+  , setTranslation: function(bm){
+      var t = this.translationFromBrowserMatch(bm);
+      if(t === null){
+        //Maybe our 'BrowserMatch' is a TranslationId?
+        return this.setTranslationId(bm);
+      }
+      return this.setTranslationId(t.TranslationId);
     }
     /**
       @param req
@@ -185,6 +231,8 @@ define(['backbone','i18n'], function(Backbone, i18n){
       return ret;
     }
     /**
+      @param [tId TranslationId]
+      @return path String, ImagePath
       Method to produce the path to the flag for the current translation.
     */
   , getFlag: function(tId){
@@ -192,13 +240,19 @@ define(['backbone','i18n'], function(Backbone, i18n){
       var summary = this.get('summary');
       return summary[tId].ImagePath;
     }
-    /***/
+    /**
+      @param [tId TranslationId]
+      @return name String
+      Returns the name of the current translation.
+    */
   , getName: function(tId){
       tId = tId || this.getTranslationId();
       var summary = this.get('summary');
       return summary[tId].TranslationName;
     }
     /**
+      @param [tId TranslationId]
+      @return tId [TranslationId]
       Returns all translationIds that are not the current or the one passed as parameter.
     */
   , getOthers: function(tId){
@@ -213,6 +267,7 @@ define(['backbone','i18n'], function(Backbone, i18n){
       return ret;
     }
     /**
+      @return language Language || null
       Returns the RfcLanguage for the current translationId, or null.
     */
   , getRfcLanguage: function(){
