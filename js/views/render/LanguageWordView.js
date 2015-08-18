@@ -172,15 +172,14 @@ define(['views/render/SubView'], function(SubView){
       }
     }
     /***/
-  , route: function(study, languages, words){
+  , route: function(siteLanguage, study, languages, words){
       var parse = App.router.parseString;
       study = parse(study);
       console.log('LanguageWordView.route('+study+', '+languages+', '+words+')');
-      var pv = this.getKey(), t = this;
-      //Setting the study:
-      App.study.setStudy(study).fail(function(){
-        t.noStudy(study);
-      }).always(function(){
+      var t = this;
+      //Setting siteLanguage and study:
+      this.loadBasic(siteLanguage, study).always(function(){
+        var pv = t.getKey();
         //Setting the languages:
         App.languageCollection.setSelectedByKey(App.router.parseArray(languages),pv);
         //Setting the words:

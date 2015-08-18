@@ -76,6 +76,7 @@ define(['Linker','backbone'], function(Linker, Backbone){
         The Router handles shortLinks and triggers navigating them.
         We don't want the URL to change, but we'd like the router to act as if it changed.
         https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
+        FIXME shortLink route currently doesn't exist
       */
       this.on('route:shortLink', function(shortLink){
         //Searching shortLink in the according map:

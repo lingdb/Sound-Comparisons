@@ -154,20 +154,18 @@ define(['views/render/SubView'], function(SubView){
       }
     }
     /***/
-  , route: function(study, word){
+  , route: function(siteLanguage, study, word){
       var parse = App.router.parseString;
       study = parse(study);
       word = parse(word);
       console.log('WordView.route('+study+', '+word+')');
-      var pv = this.getKey(), t = this;
-      //Setting the study:
-      App.study.setStudy(study).fail(function(){
-        t.noStudy(study);
-      }).always(function(){
+      var t = this;
+      //Setting siteLanguage and study:
+      this.loadBasic(siteLanguage, study).always(function(){
         //Setting the word:
         App.wordCollection.setChoiceByKey(word);
         //Set this pageView as active:
-        App.pageState.setPageView(pv);
+        App.pageState.setPageView(t.getKey());
         //Render:
         App.views.renderer.render();
       });

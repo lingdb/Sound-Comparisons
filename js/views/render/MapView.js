@@ -149,16 +149,15 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       }
     }
     /***/
-  , route: function(study, word, languages){
+  , route: function(siteLanguage, study, word, languages){
       var parse = App.router.parseString;
       study = parse(study);
       word = parse(word);
       console.log('MapView.route('+study+', '+word+', '+languages+')');
-      var pv = this.getKey(), t = this;
-      //Setting the study:
-      App.study.setStudy(study).fail(function(){
-        t.noStudy(study);
-      }).always(function(){
+      var t = this;
+      //Setting siteLanguage and study:
+      this.loadBasic(siteLanguage, study).always(function(){
+        var pv = t.getKey();
         //Setting the word:
         App.wordCollection.setChoiceByKey(word);
         //Setting the languages:
