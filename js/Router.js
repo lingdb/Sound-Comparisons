@@ -9,50 +9,42 @@ define(['Linker','backbone'], function(Linker, Backbone){
   */
   return Linker.extend({
     routes: {
-      //Basic routes for pageViews:
-      ":study/map/:word/:languages":                      "mapView"
-    , ":study/map/:word/":                                "mapView"
-    , ":study/map/:word":                                 "mapView"
-    , ":study/map//":                                     "mapView"
-    , ":study/map/":                                      "mapView"
-    , ":study/map":                                       "mapView"
-    , ":study/word/:word":                                "wordView"
-    , ":study/word/":                                     "wordView"
-    , ":study/word":                                      "wordView"
-    , ":study/language/:language":                        "languageView"
-    , ":study/language/":                                 "languageView"
-    , ":study/language":                                  "languageView"
-    , ":study/languagesXwords/:languages/:words":         "languageWordView"
-    , ":study/languagesXwords/:languages/":               "languageWordView"
-    , ":study/languagesXwords/:languages":                "languageWordView"
-    , ":study/languagesXwords//:words":                   "languageWordView_" // Flipped parameters
-    , ":study/languagesXwords//":                         "languageWordView"
-    , ":study/languagesXwords/":                          "languageWordView"
-    , ":study/languagesXwords":                           "languageWordView"
-    , ":study/wordsXlanguages/:words/:languages":         "wordLanguageView"
-    , ":study/wordsXlanguages/:words/":                   "wordLanguageView"
-    , ":study/wordsXlanguages/:words":                    "wordLanguageView"
-    , ":study/wordsXlanguages//:languages":               "wordLanguageView_" // Flipped parameters
-    , ":study/wordsXlanguages//":                         "wordLanguageView"
-    , ":study/wordsXlanguages/":                          "wordLanguageView"
-    , ":study/wordsXlanguages":                           "wordLanguageView"
-      //pageView routes with config info (config routes):
-    , ":study/map/:word/:languages/*config":              "mapViewConfig"
-    , ":study/word/:word/*config":                        "wordViewConfig"
-    , ":study/language/:language/*config":                "languageViewConfig"
-    , ":study/languagesXwords/:languages/:words/*config": "languageWordViewConfig"
-    , ":study/wordsXlanguages/:words/:languages/*config": "wordLanguageViewConfig"
-      //Various other routes:
-    , 'whoAreWe/:initials':                               "contributorView"
-    , 'whoAreWe/':                                        "contributorView"
-    , 'whoAreWe':                                         "contributorView"
+      //mapView:
+      ':siteLanguage/:study/map/:word/:languageSelection': 'mapView'
+    , ':siteLanguage/:study/map/:word/':                   'mapView'
+    , ':siteLanguage/:study/map/':                         'mapView'
+    , ':siteLanguage/:study/map':                          'mapView'
+      //wordView:
+    , ':siteLanguage/:study/word/:word': 'wordView'
+    , ':siteLanguage/:study/word/':      'wordView'
+    , ':siteLanguage/:study/word':       'wordView'
+      //languageView:
+    , ':siteLanguage/:study/language/:language': 'languageView'
+    , ':siteLanguage/:study/language/':          'languageView'
+    , ':siteLanguage/:study/language':           'languageView'
+      //languageWordView:
+    , ':siteLanguage/:study/languagesXwords/:languageSelection/:wordSelection': 'languageWordView'
+    , ':siteLanguage/:study/languagesXwords/:languageSelection/':               'languageWordView'
+    , ':siteLanguage/:study/languagesXwords/:languageSelection':                'languageWordView'
+    , ':siteLanguage/:study/languagesXwords/':                                  'languageWordView'
+    , ':siteLanguage/:study/languagesXwords':                                   'languageWordView'
+    , ':siteLanguage/:study/languagesXwords//:wordSelection':                   'languageWordView_' // Flipped parameters
+      //wordLanguageView:
+    , ':siteLanguage/:study/wordsXlanguages/:wordSelection/:languageSelection': 'wordLanguageView'
+    , ':siteLanguage/:study/wordsXlanguages/:wordSelection/':                   'wordLanguageView'
+    , ':siteLanguage/:study/wordsXlanguages/:wordSelection':                    'wordLanguageView'
+    , ':siteLanguage/:study/wordsXlanguages/':                                  'wordLanguageView'
+    , ':siteLanguage/:study/wordsXlanguages':                                   'wordLanguageView'
+    , ':siteLanguage/:study/wordsXlanguages//:languageSelection':               'wordLanguageView_' // Flipped parameters
+      //contributorView:
+    , 'whoAreWe/:initials': 'contributorView'
+    , 'whoAreWe/':          'contributorView'
+    , 'whoAreWe':           'contributorView'
       //Route for missing implementations of links:
-    , "FIXME":                                            "missingRoute"
-    , "FIXME/*infos":                                     "missingRoute"
-      //ShortLinks:
-    , ":shortLink":                                       "shortLink"
-      //Catch all route:
-    , "*actions":                                         "defaultRoute"
+    , "FIXME":        "missingRoute"
+    , "FIXME/*infos": "missingRoute"
+      //defaultRoute:
+    , '*actions':           'defaultRoute'
     }
   , initialize: function(){
       //The Router looks for missing routes itself:
@@ -108,6 +100,18 @@ define(['Linker','backbone'], function(Linker, Backbone){
       }, this);
       /**
         We should at least render on defaultRoute.
+      */
+      /*
+        FIXME IMPLEMENT!
+        defaultRoute shall process these cases:
+        0.: detect config directive
+        1.: detect siteLanguage
+        2.: detect study
+        3.: detect ISOcode
+        4.: detect Glottocode
+        5.: detect shortLink
+        6.: detect language
+        7.: detect word
       */
       this.on('route:defaultRoute', function(r){
         console.log('Router.defaultRoute('+r+')');
