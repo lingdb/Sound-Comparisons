@@ -65,8 +65,12 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
         proms.push(App.translationStorage.setTranslation(config.siteLanguage));
       }
       if('study' in config){
-        //FIXME study may not be defined o.O
-        //proms.push(App.study.setStudy(study));
+        var study = App.study;
+        if(study){
+          proms.push(study.setStudy(config.study));
+        }else{
+          console.log('App.study missing in Configurator.configure: '+study);
+        }
       }
       if('language' in config){//Choice
         App.languageCollection.setChoice(config.language);

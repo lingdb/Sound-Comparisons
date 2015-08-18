@@ -157,6 +157,9 @@ define(['Linker','backbone'], function(Linker, Backbone){
               delete toChange[selection];
             }
           }, this);
+          console.log('Marderschaden!');//FIXME DEBUG
+          console.log(toChange);//FIXME DEBUG
+          //FIXME routing appears to be some kind of problem.
           //Applying toChange:
           this.configure(toChange).always(function(){
             App.views.renderer.render();
