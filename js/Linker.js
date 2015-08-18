@@ -33,68 +33,47 @@ define(['Configurator'], function(Configurator){
     }
     /**
       Creates the link structure for map view that can be placed in a href attribute.
-      Option parameters are {word,languages,study,config}.
+      Option parameters are {word,languages,study,siteLanguage}.
     */
   , linkMapView: function(options){
-      var o = this.sanitize(['Config','Study','Languages','Word'], options, 'map');
-      //Building route:
-      var route = '#/'+o.study+'/map/'+o.word+'/'+o.languages;
-      if(_.isString(o.config)){
-        route += '/'+o.config;
-      }
-      return route;
+      var suffixes = ['SiteLanguage','Study','Languages','Word']
+        , o = this.sanitize(suffixes, options, 'map');
+      return ['#',o.siteLanguage,o.study,'map',o.word,o.languages].join('/');
     }
     /**
       Creates the link structure for single word view that can be placed in a href attribute.
-      Option parameters are {word,study,config}, all of which are optional.
+      Option parameters are {word,study,siteLanguage}, all of which are optional.
     */
   , linkWordView: function(options){
-      var o = this.sanitize(['Config','Study','Word'], options, 'word');
-      //Building route:
-      var route = '#/'+o.study+'/word/'+o.word;
-      if(_.isString(o.config)){
-        route += '/'+o.config;
-      }
-      return route;
+      var o = this.sanitize(['SiteLanguage','Study','Word'], options, 'word');
+      return ['#',o.siteLanguage,o.study,'word',o.word].join('/');
     }
     /**
       Creates the link structure for single language view that can be placed in a href attribute.
-      Option parameters are {config,study,language}, all of which are optional.
+      Option parameters are {siteLanguage,study,language}, all of which are optional.
     */
   , linkLanguageView: function(options){
-      var o = this.sanitize(['Config','Study','Language'], options, 'language');
-      //Building route:
-      var route = '#/'+o.study+'/language/'+o.language;
-      if(_.isString(o.config)){
-        route += '/'+o.config;
-      }
-      return route;
+      var suffixes = ['SiteLanguage','Study','Language']
+        , o = this.sanitize(suffixes, options, 'language');
+      return ['#',o.siteLanguage,o.study,'language',o.language].join('/');
     }
     /**
       Creates the link structure for languagesXwords view that can be placed in a href attribute.
-      Option parameters are {config,study,words,languages}, all of which are optional.
+      Option parameters are {siteLanguage,study,words,languages}, all of which are optional.
     */
   , linkLanguageWordView: function(options){
-      var o = this.sanitize(['Config','Study','Words','Languages'], options, 'languagesXwords');
-      //Building route:
-      var route = '#/'+o.study+'/languagesXwords/'+o.languages+'/'+o.words;
-      if(_.isString(o.config)){
-        route += '/'+o.config;
-      }
-      return route;
+      var suffixes = ['SiteLanguage','Study','Words','Languages']
+        , o = this.sanitize(suffixes, options, 'languagesXwords');
+      return ['#',o.siteLanguage,o.study,'languagesXwords',o.languages,o.words].join('/');
     }
     /**
       Creates the link structure for wordsXlanguages view that can be placed in a href attribute.
-      Option parameters are {config,study,words,languages}, all of which are optional.
+      Option parameters are {siteLanguage,study,words,languages}, all of which are optional.
     */
   , linkWordLanguageView: function(options){
-      var o = this.sanitize(['Config','Study','Words','Languages'], options, 'wordsXlanguages');
-      //Building route:
-      var route = '#/'+o.study+'/wordsXlanguages/'+o.words+'/'+o.languages;
-      if(_.isString(o.config)){
-        route += '/'+o.config;
-      }
-      return route;
+      var suffixes = ['SiteLanguage','Study','Words','Languages']
+        , o = this.sanitize(suffixes, options, 'wordsXlanguages');
+      return ['#',o.siteLanguage,o.study,'wordsXlanguages',o.words,o.languages].join('/');
     }
   });
 });
