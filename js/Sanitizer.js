@@ -140,6 +140,25 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @param o Object to sanitize config for
       @param pvk pageViewKey to sanitize with
       @return o Object
+      Makes sure a valid o.siteLanguage is set.
+    */
+  , sanitizeSiteLanguage(o, pvk){
+      //Function to set siteLanguage to currently choosen one:
+      var setBM = function(){
+        o.siteLanguage = App.translationStorage.getBrowserMatch();
+      };
+      //Making sure siteLanguage is set:
+      if(!('siteLanguage' in o)){ setBM(); }
+      //Making sure siteLanguage is a string:
+      if(!_.isString(o.siteLanguage)){ setBM(); }
+      //Sanitizing o.siteLanguage:
+      o.siteLanguage = this.sanitizeString(o.siteLanguage);
+      return o;
+    }
+    /**
+      @param o Object to sanitize config for
+      @param pvk pageViewKey to sanitize with
+      @return o Object
       Ignores pvk parameter, because it doesn't deal with selections.
     */
   , sanitizeConfig: function(o, pvk){
@@ -161,12 +180,18 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       }
       return o;
     }
-    /***/
+    /**
+      @param a [String] to encode
+      @return arr String ',' delimited, encoded fields.
+    */
   , sanitizeArray: function(a){
       var arr = _.map(a, encodeURIComponent).join();
       return arr === '' ? ' ' : arr;
     }
-    /***/
+    /**
+      @param s String to encode
+      @return s encoded String
+    */
   , sanitizeString: function(s){
       if(!_.isString(s)) return '';
       return encodeURIComponent(s);

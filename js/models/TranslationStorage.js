@@ -220,7 +220,10 @@ define(['backbone','i18n'], function(Backbone, i18n){
         , query = {LanguageIx: this.get('summary')[tId].RfcLanguage};
       return App.languageCollection.findWhere(query) || null;
     }
-    /***/
+    /**
+      @return b String, BrowserMatch
+      Returns the BrowserMatch for the current translation.
+    */
   , getBrowserMatch: function(){
       var tId = this.getTranslationId();
       return this.get('summary')[tId].BrowserMatch;
