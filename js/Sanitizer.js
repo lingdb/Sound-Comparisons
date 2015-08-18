@@ -47,11 +47,12 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
     }
     /**
       @param o Object to sanitize languages for
-      @param pvk pageViewKey to sanitize with
+      @param [pvk pageViewKey] to sanitize with
       @return o Object
+      After sanitizeLanguages, the following shall hold:
+      o.languages ∈ {'Lgs_All','Lgs_Sln','Lgs_None'}
     */
   , sanitizeLanguages: function(o, pvk){
-      pvk = pvk || App.pageState.getPageViewKey();
       if(!('languages' in  o)){
         o.languages = App.languageCollection.getSelected(pvk);
       }
@@ -59,11 +60,16 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
         o.languages = o.languages.models;
       }
       if(_.isArray(o.languages)){
-        var ls = _.map(o.languages, function(l){
-          if(_.isString(l)) return l;
-          return l.getKey();
-        }, this);
-        o.languages = this.sanitizeArray(ls);
+        var selCount = o.languages.length;
+        if(selCount === 0){
+          o.languages = 'Lgs_None';
+        }else if(selCount === App.languageCollection.length){
+          o.languages = 'Lgs_All';
+        }else{
+          o.languages = 'Lgs_Sln';
+        }
+      }else{
+        o.languages = 'Lgs_Sln';
       }
       return o;
     }
@@ -104,8 +110,10 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
     }
     /**
       @param o Object to sanitize words for
-      @param pvk pageViewKey to sanitize with
+      @param [pvk pageViewKey] to sanitize with
       @return o Object
+      After sanitizeWords, the following shall hold:
+      o.words ∈ {'Wds_All','Wds_Sln','Wds_None'}
     */
   , sanitizeWords: function(o, pvk){
       if(!('words' in o)){
@@ -115,11 +123,16 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
         o.words = o.words.models;
       }
       if(_.isArray(o.words)){
-        var ws = _.map(o.words, function(w){
-          if(_.isString(w)) return w;
-          return w.getKey();
-        }, this);
-        o.words = this.sanitizeArray(ws);
+        var selCount = o.words.length;
+        if(selCount === 0){
+          o.words = 'Wds_None';
+        }else if(selCount === App.wordCollection.length){
+          o.words = 'Wds_All';
+        }else{
+          o.words = 'Wds_Sln';
+        }
+      }else{
+        o.words = 'Wds_Sln';
       }
       return o;
     }
