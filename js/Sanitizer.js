@@ -50,7 +50,9 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @param [pvk pageViewKey] to sanitize with
       @return o Object
       After sanitizeLanguages, the following shall hold:
-      o.languages ∈ {'Lgs_All','Lgs_Sln','Lgs_None'}
+      * 'languages' in o
+      * o.shortSelections === true → o.languages ∈ {'Lgs_All','Lgs_Sln','Lgs_None'}
+      * o.shortSelections !== true → o.languages ∈ [String]
     */
   , sanitizeLanguages: function(o, pvk){
       if(!('languages' in  o)){
@@ -60,13 +62,17 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
         o.languages = o.languages.models;
       }
       if(_.isArray(o.languages)){
-        var selCount = o.languages.length;
-        if(selCount === 0){
-          o.languages = 'Lgs_None';
-        }else if(selCount === App.languageCollection.length){
-          o.languages = 'Lgs_All';
+        if(o.shortSelections === true){
+          var selCount = o.languages.length;
+          if(selCount === 0){
+            o.languages = 'Lgs_None';
+          }else if(selCount === App.languageCollection.length){
+            o.languages = 'Lgs_All';
+          }else{
+            o.languages = 'Lgs_Sln';
+          }
         }else{
-          o.languages = 'Lgs_Sln';
+          o.languages = this.sanitizeArray(o.languages);
         }
       }else{
         o.languages = 'Lgs_Sln';
@@ -114,6 +120,9 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @return o Object
       After sanitizeWords, the following shall hold:
       o.words ∈ {'Wds_All','Wds_Sln','Wds_None'}
+      * 'words' in o
+      * o.shortSelections === true → o.words ∈ {'Wds_All','Wds_Sln','Wds_None'}
+      * o.shortSelections !== true → o.words ∈ [String]
     */
   , sanitizeWords: function(o, pvk){
       if(!('words' in o)){
@@ -123,13 +132,17 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
         o.words = o.words.models;
       }
       if(_.isArray(o.words)){
-        var selCount = o.words.length;
-        if(selCount === 0){
-          o.words = 'Wds_None';
-        }else if(selCount === App.wordCollection.length){
-          o.words = 'Wds_All';
+        if(o.shortSelections === true){
+          var selCount = o.words.length;
+          if(selCount === 0){
+            o.words = 'Wds_None';
+          }else if(selCount === App.wordCollection.length){
+            o.words = 'Wds_All';
+          }else{
+            o.words = 'Wds_Sln';
+          }
         }else{
-          o.words = 'Wds_Sln';
+          o.words = this.sanitizeArray(o.words);
         }
       }else{
         o.words = 'Wds_Sln';
@@ -160,6 +173,7 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @param pvk pageViewKey to sanitize with
       @return o Object
       Ignores pvk parameter, because it doesn't deal with selections.
+      FIXME rewrite for #188!
     */
   , sanitizeConfig: function(o, pvk){
       if('config' in o){

@@ -126,7 +126,7 @@ define(['Linker','backbone'], function(Linker, Backbone){
       Usually we call this from Renderer.render.
     */
   , updateFragment: function(){
-      var fragment = this.linkCurrent({config: this.getConfig()});
+      var fragment = this.linkCurrent({shortSelections: true});
       this.navigate(fragment, {trigger: false, replace: true});
       App.study.trackLinks(fragment);
     }

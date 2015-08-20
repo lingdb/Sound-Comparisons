@@ -57,6 +57,7 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
     /**
       The reverse operation to configure.
       It shall generate an object describing the whole configuration.
+      FIXME rebuild/check this method and Configurator for #188.
     */
   , getConfig: function(pvk){
       pvk = pvk || App.pageState.getPageViewKey();
