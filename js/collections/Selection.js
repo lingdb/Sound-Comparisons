@@ -51,6 +51,7 @@ define(['backbone'], function(Backbone){
       return _.values(this.selected[pvk]);
     }
     /**
+      @return self for chaining
       Changes the selected models to the given array or Backbone.Collection.
     */
   , setSelected: function(ms, pvk){
@@ -62,28 +63,58 @@ define(['backbone'], function(Backbone){
       if(_.isArray(ms)){
         _.each(ms, function(m){this.select(m, pvk);}, this);
       }
+      return this;
     }
     /**
       @param ks [String]
       Selects models by their getKey method.
+      Must allow '{Lgs,Wds}_{All,Sln,None}' for #188.
     */
   , setSelectedByKey: function(ks, pvk){
       pvk = pvk || App.pageState.getPageViewKey();
-      var keys = {}; // Hash map for faster finding of keys
-      _.each(ks, function(k){keys[k] = true;}, this);
-      //Finding selected:
-      var ms = this.filter(function(m){
-        return m.getKey() in keys;
-      }, this);
-      if(ms.length === 0 && App.studyWatcher.studyChanged()){
-        if('getDefaultSelection' in this){
-          ms = this.getDefaultSelection(pvk);
+      var keys = {} // Hash map for faster finding of keys
+        , special = null;// null || {All,Sln,None}
+      //Adds k to keys if it's not a special case.
+      _.each(ks, function(k){
+        var matches = k.match(/[^_]+_(.+)/);
+        if(matches){
+          special = matches[1];
         }else{
-          ms = _.take(this.models, 5);
+          keys[k] = true;
         }
+      }, this);
+      //Special case found, processing:
+      if(special !== null){
+        switch(special){
+          case 'All'://Selects all models:
+            return this.setSelected(this.models, pvk);
+          break;
+          case 'Sln'://Doesn't modify selection:
+            return this;
+          break;
+          case 'None'://Selects no models:
+            return this.setSelected([], pvk);
+          break;
+          default://Like Sln, but with debug output:
+            console.log('Unexpected selection shortcut: '+special);
+            return this;
+          break;
+        }
+      }else{
+        //Finding selected:
+        var ms = this.filter(function(m){
+          return m.getKey() in keys;
+        }, this);
+        if(ms.length === 0 && App.studyWatcher.studyChanged()){
+          if('getDefaultSelection' in this){
+            ms = this.getDefaultSelection(pvk);
+          }else{
+            ms = _.take(this.models, 5);
+          }
+        }
+        //Adding models that have a matching key:
+        return this.setSelected(ms, pvk);
       }
-      //Adding models that have a matching key:
-      return this.setSelected(ms, pvk);
     }
     /**
       @param m Model to check selection for
