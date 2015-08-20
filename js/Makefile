@@ -8,3 +8,6 @@ main: App-minified.js
 
 chkSyntax:
 	find -type f -regex .*js | grep -v extern | xargs jshint
+
+fixme:
+	find -type f -regex .*js | grep -v extern | grep -v App-minified.js | xargs grep FIXME
