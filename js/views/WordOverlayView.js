@@ -1,6 +1,6 @@
 /* global document: false, Node: false */
 "use strict";
-define([], function(){
+define(['underscore'], function(_){
   /**
     Our constructor expects the following options:
     el:    google.maps.Map
