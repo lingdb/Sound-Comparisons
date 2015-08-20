@@ -93,23 +93,78 @@ define(['Linker','backbone'], function(Linker, Backbone){
 //        App.views.renderer.render();
 //      }
 //    }, this);
-      /**
-        We should at least render on defaultRoute.
-      */
       /*
-        FIXME IMPLEMENT!
         defaultRoute shall process these cases:
-        1.: detect siteLanguage
-        2.: detect study
-        3.: detect ISOcode
         4.: detect Glottocode
-        5.: detect shortLink
-        6.: detect language
-        7.: detect word
+        5.: detect shortLink FIXME maybe ommit this and provide specialized route.
       */
-      this.on('route:defaultRoute', function(r){
-        console.log('Router.defaultRoute('+r+')');
-        App.views.renderer.render();
+      this.on('route:defaultRoute', function(route){
+        console.log('Router.defaultRoute('+route+')');
+        if(_.isString(route)){//route may also be null…
+          //Route parts when splitting route by '/' and than by ',':
+          var parts = _.flatten(_.map(route.split('/'), function(p){
+            return p.split(',');
+          }));
+          //Parts that can be changed:
+          var toChange = {
+            siteLanguage: null//String || null
+          , study: null//String || null
+            //languages will be filled via {iso,glotto}code and language detection.
+          , languages: []//[Language]
+            //words will be filled by word detection.
+          , words: []//[Word]
+          };
+          //Running detection:
+          _.each(parts, function(part){
+            //Detection for siteLanguage:
+            if(toChange.siteLanguage === null){
+              if(App.translationStorage.isBrowserMatch(part)){
+                toChange.siteLanguage = part;
+                return;//Stop detection for current part
+              }
+            }
+            //Detection for study:
+            if(toChange.study === null){
+              if(_.contains(App.study.getAllIds(), part)){
+                toChange.study = part;
+                return;//Stop detection for current part
+              }
+            }
+            //Detection for iso code:
+            var lang = App.languageCollection.getLanguageByIso(part);
+            if(lang !== null){
+              toChange.languages.push(lang);
+              return;//Stop detection for current part
+            }
+            //Detection for glotto codes:
+            lang = App.languageCollection.getLanguageByGlotto(part);
+            if(lang !== null){
+              toChange.languages.push(lang);
+              return;//Stop detection for current part
+            }
+            //FIXME what about detection of language/word names?
+          }, this);
+          //Converting selections to choices if possible:
+          _.each([['languages','language'],['words','word']], function(pair){
+            var selection = pair[0], choice = pair[1]
+              , length = toChange[selection].length;
+            //Empty or single element selections:
+            if(length <= 1){
+              if(length === 1){
+                toChange[choice] = _.head(toChange[selection]);
+              }
+              //Removing useless selection:
+              delete toChange[selection];
+            }
+          }, this);
+          //Applying toChange:
+          this.configure(toChange).always(function(){
+            App.views.renderer.render();
+          });
+        }else{
+          //Making sure something is rendered:
+          App.views.renderer.render();
+        }
       }, this);
     }
     /**

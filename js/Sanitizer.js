@@ -163,7 +163,7 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @return o Object
       Makes sure a valid o.siteLanguage is set.
     */
-  , sanitizeSiteLanguage(o, pvk){
+  , sanitizeSiteLanguage: function(o, pvk){
       //Function to set siteLanguage to currently choosen one:
       var setBM = function(){
         o.siteLanguage = App.translationStorage.getBrowserMatch();

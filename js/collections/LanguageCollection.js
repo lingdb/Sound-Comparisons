@@ -9,10 +9,19 @@ define(['collections/Choice', 'models/Language', 'collections/RegionLanguageColl
       For the language to decide if the ShortName is enough, it needs to know if another language has the same key.
       Therefore we build a map of ShortNames to counts, that will be accessible for languages.
       To support this, the LanguageCollection offers a 'shortNameCount' method.
+      With #188 it's also necessary to find languages by their iso and glottocodes.
+      To aid this we have the isoCodeMap and the glottoCodeMap.
     */
   , initialize: function(){
+      //ShortNameMap :: ShortName -> Int:
       this.shortNameMap = null;
       this.on('reset', this.countShortNames, this);
+      //isoCodeMap :: iso code -> Language
+      this.isoCodeMap = null;
+      this.on('reset', this.mapIsoCodes, this);
+      //glottoCodeMap :: glotto code -> Language
+      this.glottoCodeMap = null;
+      this.on('reset', this.mapGlottoCodes, this);
       //Calling superconstrucor:
       Choice.prototype.initialize.apply(this, arguments);
     }
@@ -38,6 +47,45 @@ define(['collections/Choice', 'models/Language', 'collections/RegionLanguageColl
         this.mapShortNames();
       }
       return this.shortNameMap[name] || 0;
+    }
+    /**
+      Builds the isoCodeMap that maps iso codes to their languages.
+      If multiple languages carry the same iso code,
+      than the last write will win.
+    */
+  , mapIsoCodes: function(){
+      this.isoCodeMap = {};
+      this.each(function(l){
+        var iso = l.getISO();
+        if(iso !== null){
+          this.isoCodeMap[iso] = l;
+        }
+      }, this);
+    }
+    /**
+      Builds the glottoCodeMap that maps glotto codes to their languages.
+      If multiple languages carry the same glotto code,
+      than the last write will win.
+    */
+  , mapGlottoCodes: function(){
+      //FIXME IMPLEMENT
+      //See https://github.com/sndcomp/website/issues/188#issuecomment-133339598
+    }
+    /**
+      @param iso String iso code
+      @return language Language || null
+      Tries to fetch a Language from the isoCodeMap.
+    */
+  , getLanguageByIso: function(iso){
+      return this.isoCodeMap[iso] || null;
+    }
+    /**
+      @param glotto String glotto code
+      @return language Language || null
+      Tries to fetch a Language from the glottoCodeMap.
+    */
+  , getLanguageByGlotto: function(glotto){
+      return this.glottoCodeMap[glotto] || null;
     }
     /**
       The update method is connected by the App,

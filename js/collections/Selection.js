@@ -51,8 +51,11 @@ define(['backbone'], function(Backbone){
       return _.values(this.selected[pvk]);
     }
     /**
+      @param ms [Backbone.Model] || Backbone.Collection
+      @param [pvk String PageViewKey]
       @return self for chaining
       Changes the selected models to the given array or Backbone.Collection.
+      The pvk parameter may be omitted.
     */
   , setSelected: function(ms, pvk){
       pvk = pvk || App.pageState.getPageViewKey();
@@ -88,17 +91,13 @@ define(['backbone'], function(Backbone){
         switch(special){
           case 'All'://Selects all models:
             return this.setSelected(this.models, pvk);
-          break;
           case 'Sln'://Doesn't modify selection:
             return this;
-          break;
           case 'None'://Selects no models:
             return this.setSelected([], pvk);
-          break;
           default://Like Sln, but with debug output:
             console.log('Unexpected selection shortcut: '+special);
             return this;
-          break;
         }
       }else{
         //Finding selected:

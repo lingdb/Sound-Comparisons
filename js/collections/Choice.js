@@ -32,7 +32,15 @@ define(['backbone','collections/Selection'], function(Backbone, Selection){
       }
       return false;
     }
-    /***/
+    /**
+      @param m Backbone.Model || Number || String
+      @return choice Backbone.Model || null
+      Sets a single choice given a model, or a Number/String.
+      If m is a Number/String, this method will use getId on it's models
+      to find the choice.
+      If the search for a choice fails, the choice will become null.
+      Finally the choice will be returned.
+    */
   , setChoice: function(m){
       if(m instanceof Backbone.Model){
         this.choice = m;

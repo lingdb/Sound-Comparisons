@@ -22,7 +22,7 @@ define(['backbone','i18n'], function(Backbone, i18n){
     , translationId: null
     }
     /**
-      Cannot be named initialize, bacause we have to call it once App.dataStorage is available.
+      Cannot be named initialize, because we have to call it once App.dataStorage is available.
       FIXME maybe I can improve this situation together with #182
     */
   , init: function(){
@@ -283,6 +283,13 @@ define(['backbone','i18n'], function(Backbone, i18n){
   , getBrowserMatch: function(){
       var tId = this.getTranslationId();
       return this.get('summary')[tId].BrowserMatch;
+    }
+    /**
+      @param bm String BrowserMatch
+      @return is Bool
+    */
+  , isBrowserMatch: function(bm){
+      return (bm in this.get('nToTMap'));
     }
     /**
       @param trans String

@@ -5,12 +5,19 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
   */
   return Sanitizer.extend({
     /**
-      @param config String
+      @param config String || Object
+      @return promise Deferred
       This method parses a config String and adjusts different page setttings accordingly.
+      The given config is also allowed to be an object, in which case parsing will be omitted.
+      Fields added for #188 are {siteLanguage,study,language{,s},word{,s}}
     */
     configure: function(config){
       //Parsing config:
-      config = this.parseConfig(config);
+      if(_.isString(config)){
+        config = this.parseConfig(config);
+      }
+      //Promises from inside this method:
+      var proms = [];
       //Configuring different fields:
       if('wordOrder' in config){
         var callMap = { alphabetical: 'wordOrderSetAlphabetical'
@@ -54,11 +61,45 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       if('wordByWord' in config){
         App.pageState.set({wordByWord: config.wordByWord === 'true'});
       }
+      if('siteLanguage' in config){
+        proms.push(App.translationStorage.setTranslation(config.siteLanguage));
+      }
+      if('study' in config){
+        //FIXME study may not be defined o.O
+        //proms.push(App.study.setStudy(study));
+      }
+      if('language' in config){//Choice
+        App.languageCollection.setChoice(config.language);
+      }
+      if('languages' in config){//Selection
+        //languages are expected to be of [Language]
+        App.languageCollection.setSelected(config.languages);
+      }
+      if('word' in config){//Choice
+        App.wordCollection.setChoice(config.word);
+      }
+      if('words' in config){//Selection
+        //words are expected to be of [Word]
+        App.wordCollection.setSelected(config.words);
+      }
+      //Handling promises:
+      var prom = $.Deferred();
+      if(prom.length > 0){
+        $.when.apply($, proms).then(function(){
+          //All promises worked out:
+          prom.resolve(arguments);
+        }, function(){
+          //Some promise failed:
+          prom.reject(arguments);
+        });
+      }else{
+        prom.resolve();
+      }
+      return prom;
     }
     /**
       The reverse operation to configure.
       It shall generate an object describing the whole configuration.
-      FIXME rebuild/check this method and Configurator for #188.
     */
   , getConfig: function(pvk){
       pvk = pvk || App.pageState.getPageViewKey();
