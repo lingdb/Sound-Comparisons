@@ -43,6 +43,8 @@ define(['Linker','backbone'], function(Linker, Backbone){
       //Route for missing implementations of links:
     , "FIXME":        "missingRoute"
     , "FIXME/*infos": "missingRoute"
+      //Routes for configuration directives:
+    , 'config/*directives': 'configDirective'
       //defaultRoute:
     , '*actions':           'defaultRoute'
     }
@@ -56,56 +58,47 @@ define(['Linker','backbone'], function(Linker, Backbone){
         }
         App.views.renderer.render();
       }, this);
-      /**
-        The Router acts as a proxy in that it processes all config routes,
-        and afterwards triggers the basic routes.
-      */
-      var configRoutes = ["mapView", "wordView", "languageView", "languageWordView", "wordLanguageView"];
-      _.each(configRoutes, function(r){
-        var c = r+'Config';
-        this.on('route:'+c, function(){
-          //Process configuration:
-          this.configure(_.last(arguments));
-          //Triger non config route:
-          var forward = _.take(arguments, arguments.length - 1);
-          forward.unshift('route:'+r);
-          this.trigger.apply(this, forward);
-        }, this);
+      //The Router processes the config directives:
+      this.on('route:configDirective', function(){
+        var directives = _.last(arguments);
+        //Applying configuration directives:
+        this.configure(directives);
+        //Rendering page:
+        App.views.renderer.render();
       }, this);
-      /**
-        The Router handles shortLinks and triggers navigating them.
-        We don't want the URL to change, but we'd like the router to act as if it changed.
-        https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
-        FIXME shortLink route currently doesn't exist
-      */
-      this.on('route:shortLink', function(shortLink){
-        //Searching shortLink in the according map:
-        var slMap = App.dataStorage.getShortLinksMap();
-        if(shortLink in slMap){
-          var url = slMap[shortLink]
-            , matches = url.match(/^[^#]*#(.+)$/);
-          if(matches){
-            var fragment = matches[1];
-            Backbone.history.loadUrl(fragment);
-            return;
-          }
-        }
-        //Fallback is to test if any study matches the shortLink:
-        if(_.contains(App.study.getAllIds(), shortLink)){
-          this.navigate(this.linkCurrent({study: shortLink}));
-        }else{
-          //We can still remain where we are:
-          console.log('Could not route shortLink: '+shortLink);
-          App.views.renderer.render();
-        }
-      }, this);
+//    /**
+//      The Router handles shortLinks and triggers navigating them.
+//      We don't want the URL to change, but we'd like the router to act as if it changed.
+//      https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
+//      FIXME shortLink route currently doesn't exist
+//    */
+//    this.on('route:shortLink', function(shortLink){
+//      //Searching shortLink in the according map:
+//      var slMap = App.dataStorage.getShortLinksMap();
+//      if(shortLink in slMap){
+//        var url = slMap[shortLink]
+//          , matches = url.match(/^[^#]*#(.+)$/);
+//        if(matches){
+//          var fragment = matches[1];
+//          Backbone.history.loadUrl(fragment);
+//          return;
+//        }
+//      }
+//      //Fallback is to test if any study matches the shortLink:
+//      if(_.contains(App.study.getAllIds(), shortLink)){
+//        this.navigate(this.linkCurrent({study: shortLink}));
+//      }else{
+//        //We can still remain where we are:
+//        console.log('Could not route shortLink: '+shortLink);
+//        App.views.renderer.render();
+//      }
+//    }, this);
       /**
         We should at least render on defaultRoute.
       */
       /*
         FIXME IMPLEMENT!
         defaultRoute shall process these cases:
-        0.: detect config directive
         1.: detect siteLanguage
         2.: detect study
         3.: detect ISOcode

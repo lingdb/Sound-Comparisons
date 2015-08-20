@@ -12,8 +12,9 @@ define(['Configurator'], function(Configurator){
       This shortens the code at several other places.
     */
     linkConfig: function(calls){
-      var options = {config: this.configSet(calls)};
-      return this.linkCurrent(options);
+      var config = this.configSet(calls);
+      config = this.sanitizeConfig({config: config}).config;
+      return ['#','config',config].join('/');
     }
     /**
       Creates a link in the current view using the given options.

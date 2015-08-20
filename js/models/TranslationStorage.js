@@ -225,7 +225,8 @@ define(['backbone','i18n'], function(Backbone, i18n){
       var key = category+field
         , ret = i18n.t(category+field, fallback);
       if(ret === key || _.isUndefined(ret)){
-        console.log('Could not find translation:\n'+key);
+        //FIXME re-enable below log!
+        //console.log('Could not find translation:\n'+key);
         return fallback;
       }
       return ret;

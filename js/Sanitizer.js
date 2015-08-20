@@ -72,7 +72,11 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
             o.languages = 'Lgs_Sln';
           }
         }else{
-          o.languages = this.sanitizeArray(o.languages);
+          var ls = _.map(o.languages, function(l){
+            if(_.isString(l)) return l;
+            return l.getKey();
+          }, this);
+          o.languages = this.sanitizeArray(ls);
         }
       }else{
         o.languages = 'Lgs_Sln';
@@ -142,7 +146,11 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
             o.words = 'Wds_Sln';
           }
         }else{
-          o.words = this.sanitizeArray(o.words);
+          var ws = _.map(o.words, function(w){
+            if(_.isString(w)) return w;
+            return w.getKey();
+          }, this);
+          o.words = this.sanitizeArray(ws);
         }
       }else{
         o.words = 'Wds_Sln';
@@ -173,7 +181,6 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @param pvk pageViewKey to sanitize with
       @return o Object
       Ignores pvk parameter, because it doesn't deal with selections.
-      FIXME rewrite for #188!
     */
   , sanitizeConfig: function(o, pvk){
       if('config' in o){
@@ -211,6 +218,8 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       return encodeURIComponent(s);
     }
     /**
+      @param c String
+      @return config Object
       Parses a given config String c to return the config object.
       This should be the exact antipart to sanitizeConfig, so that the following two rules hold:
       sanitizeConfig(parseConfig(s)) === s, parseConfig(sanitizeConfig(config)) === config

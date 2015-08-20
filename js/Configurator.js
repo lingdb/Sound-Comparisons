@@ -5,7 +5,8 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
   */
   return Sanitizer.extend({
     /**
-      This method shall modify different page settings that can be conveyed via the config routes.
+      @param config String
+      This method parses a config String and adjusts different page setttings accordingly.
     */
     configure: function(config){
       //Parsing config:
