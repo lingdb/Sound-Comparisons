@@ -318,12 +318,23 @@ define(['require','backbone','models/RegionLanguage','models/Contributor'], func
       return _.any(names, function(n){return _.isArray(n.match(/^Proto-/));});
     }
     /**
-      Returns the ISO code for this Language as String || null.
+      @return iso String || null
+      Returns the ISO code for this Language.
     */
   , getISO: function(){
       var iso = this.get('ISOCode');
       if(_.isString(iso) && iso.length === 3)
         return iso;
+      return null;
+    }
+    /**
+      @return gc String || null
+      Returns the glottocode for this Language.
+    */
+  , getGlottoCode: function(){
+      var gc = this.get('GlottoCode');
+      if(_.isString(gc) && gc.length === 8)
+        return gc;
       return null;
     }
     /**

@@ -68,8 +68,13 @@ define(['collections/Choice', 'models/Language', 'collections/RegionLanguageColl
       than the last write will win.
     */
   , mapGlottoCodes: function(){
-      //FIXME IMPLEMENT
-      //See https://github.com/sndcomp/website/issues/188#issuecomment-133339598
+      this.glottoCodeMap = {};
+      this.each(function(l){
+        var gc = l.getGlottoCode();
+        if(gc !== null){
+          this.glottoCodeMap[gc] = l;
+        }
+      }, this);
     }
     /**
       @param iso String iso code
