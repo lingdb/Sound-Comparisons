@@ -325,6 +325,7 @@ class Importer{
       , 'LatitudeAsString' => 'Latitude'
       , 'LongitudeAsString' => 'Longtitude'
       , 'ISO 639-3 code' => 'ISOCode'
+      , 'Glottolog code' => 'GlottoCode'
       , 'Wikipedia Atv Text more precise than ISO' => 'WikipediaLinkPart'
       , 'Contributor:  Spoken By' => 'ContributorSpokenBy'
       , 'Contributor:  Recorded By 1' => 'ContributorRecordedBy1'
