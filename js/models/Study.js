@@ -25,7 +25,17 @@ define(['backbone'], function(Backbone){
         App.setupBar.addLoaded();
       }
     }
-    /***/
+    /**
+      @return ready Boolean
+      Returns true if the first update already happened.
+    */
+  , isReady: function(){
+      return !this._firstUpdate;
+    }
+    /**
+      @return id String
+      Returns the name of a Study.
+    */
   , getId: function(){
       if(this._firstUpdate === true){
         throw {obj: this, msg: 'Study.getId() before first update'};
@@ -33,7 +43,10 @@ define(['backbone'], function(Backbone){
       return this.get('Name');
     }
     /**
-      Returns the ids of all other studies.
+      @return ids [String]
+      Returns the ids of all studies.
+      In case that the expected data are not found in DataStorage,
+      an empty array is returned.
     */
   , getAllIds: function(){
       var g = App.dataStorage.get('global');
@@ -67,20 +80,27 @@ define(['backbone'], function(Backbone){
   , getColorByFamily: function(){
       return parseInt(this.get('ColorByFamily')) === 1;
     }
-    /***/
+    /**
+      @param id String
+      @return promise Deferred
+      Sets the study to the one with the given id.
+      Method checks that id is not ∈ {null, 'undefined', ''}
+    */
   , setStudy: function(id){
-      var promise = $.Deferred();
+      var def = $.Deferred();
       if(_.any([!_.isString(id), id === 'undefined', _.isEmpty(id)])){
-        promise.reject('Study.setStudy with invalid id: '+id);
+        def.reject('Study.setStudy with invalid id: '+id);
       }else if(id === this.get('Name')){
-        promise.resolve(); // No change to the study
+        def.resolve(); // No change to the study
       }else{ // We need to load the study via DataStorage:
         App.dataStorage.loadStudy(id).done(function(){
-          promise.resolve(arguments);
+          def.resolve(arguments);
         }).fail(function(){
-          promise.reject(arguments);
+          def.reject(arguments);
         });
       }
+      //Hiding Deferred.{reject,resolve}():
+      var promise = def.promise();
       //Showing that a study is loaded:
       var state = App.setupBar.pick('loaded','segments');
       if(state.loaded === 0 || state.loaded === state.segments){

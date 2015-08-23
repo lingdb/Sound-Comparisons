@@ -18,6 +18,8 @@ define(['backbone'], function(Backbone){
       initialize accounts for 3 segments of App.setupBar
     */
   , initialize: function(){
+      //Map name -> Promise for DataStorage.loadStudy()
+      this._loadStudyMap = {};
       //Compressor setup, if possible:
       this.compressor = null;
       if(_.isFunction(window.Worker)){
@@ -55,24 +57,55 @@ define(['backbone'], function(Backbone){
     }
     /***/
   , loadGlobal: function(){
-      var promise = $.Deferred(), t = this;
+      var def = $.Deferred(), t = this;
       $.getJSON(t.get('target'), {global: null}).done(function(data){
         t.set({global: data});
-        promise.resolve();
+        def.resolve();
       }).fail(function(f){
-        promise.reject(f);
+        def.reject(f);
       });
-      return promise;
+      return def.promise();
     }
-    /***/
+    /**
+      @param [name String]
+      @return def Deferred
+      This method makes use of this._loadStudyMap
+      to make sure that the same study isn't requested twice at the same time.
+      The name parameter may be omitted and will be replaced with the current study
+      according to the StudyWatcher.
+      If Study.isReady() is true, this method tests if name
+      is different than the current study id.
+    */
   , loadStudy: function(name){
+      //Checking name parameter:
       name = name || App.studyWatcher.get('study');
+      //Setup:
       var key = "Study_"+name
         , def = $.Deferred(), t = this;
+      //Study already getting loaded:
+      if(name in this._loadStudyMap){
+        return this._loadStudyMap[name];
+      }
+      //Prevent reloading current study:
+      if(App.study.isReady()){
+        if(App.study.getId() === name){
+          def.resolve();
+          return def.promise();
+        }
+      }
+      //Adding def to _loadStudyMap:
+      this._loadStudyMap[name] = def;
+      /*
+        Fetching study:
+        delete is not in always to make sure it happens
+        before further propagation.
+      */
       $.getJSON(t.get('target'), {study: name}).done(function(data){
+        delete t._loadStudyMap[name];
         t.set({study: data});
         def.resolve();
       }).fail(function(f){
+        delete t._loadStudyMap[name];
         def.reject(f);
       });
       return def.promise();

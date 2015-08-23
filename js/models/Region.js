@@ -55,11 +55,16 @@ define(['backbone'], function(Backbone){
       return App.translationStorage.translateDynamic(category, field, fallback);
     }
     /**
-      Returns a color string in the form of /#{[0-9a-fA-F]}6/, or null.
+      @return color String || null
+      Tries to find the color for a Region.
+      Color strings are expected to match /#{[0-9a-fA-F]}6/
     */
   , getColor: function(){
       if(App.study.getColorByFamily()){
-        return this.getFamily().getColor();
+        var f = this.getFamily();
+        if(f !== null){
+          return f.getColor();
+        }
       }
       var rIx = this.get('RegionGpIx');
       if(_.isString(rIx)){
@@ -71,6 +76,7 @@ define(['backbone'], function(Backbone){
       return null;
     }
     /**
+      @return family Family || null
       Returns the Family that the current Region belongs to.
       The field _family is used for memoization.
     */
@@ -78,9 +84,13 @@ define(['backbone'], function(Backbone){
       if(this._family === null){
         var regionId = this.getId();
         //_family becomes undefined, if not found:
-        this._family = App.familyCollection.find(function(f){
+        var f = App.familyCollection.find(function(f){
           return regionId.indexOf(f.getId()) === 0;
         });
+        //Checking for undefined:
+        if(!_.isUndefined(f)){
+          this._family = f;
+        }
       }
       return this._family;
     }

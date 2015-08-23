@@ -157,7 +157,7 @@ define(['Linker','backbone'], function(Linker, Backbone){
               delete toChange[selection];
             }
           }, this);
-          console.log('Marderschaden!');//FIXME DEBUG
+          //FIXME what about pageViewKeys?
           console.log(toChange);//FIXME DEBUG
           //FIXME routing appears to be some kind of problem.
           //Applying toChange:

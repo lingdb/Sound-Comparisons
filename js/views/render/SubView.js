@@ -38,7 +38,7 @@ define(['backbone'], function(Backbone){
           prom.resolve();
         });
       });
-      return prom;
+      return prom.promise();
     }
   });
 });

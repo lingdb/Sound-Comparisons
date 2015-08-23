@@ -132,7 +132,7 @@ define(['backbone'], function(Backbone){
           });
         }
       }
-      return p;
+      return p.promise();
     }
   });
 });

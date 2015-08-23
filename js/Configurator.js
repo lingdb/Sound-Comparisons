@@ -99,7 +99,7 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       }else{
         prom.resolve();
       }
-      return prom;
+      return prom.promise();
     }
     /**
       The reverse operation to configure.

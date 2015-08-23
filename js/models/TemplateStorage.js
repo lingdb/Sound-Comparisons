@@ -84,7 +84,7 @@ define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString
       }else{
         def.resolve(null);
       }
-      return def;
+      return def.promise();
     }
   //Stores a template object in App.storage.
   , store: function(tmpl){

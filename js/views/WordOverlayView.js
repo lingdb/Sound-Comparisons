@@ -92,7 +92,7 @@ define(['underscore'], function(_){
       }else{
         prom.resolve(prj.fromLatLngToDivPixel(pos));
       }
-      return prom;
+      return prom.promise();
     };
     //The draw method:
     this.draw = function(){
