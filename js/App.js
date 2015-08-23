@@ -118,9 +118,6 @@ requirejs([
       }, App);
       //Listening for changing studies:
       App.studyWatcher.listen();
-      App.studyWatcher.on('change:study', function(){
-        App.dataStorage.loadStudy(App.studyWatcher.get('study'));
-      });
       _.each(['defaults','study','familyCollection','languageCollection','meaningGroupCollection','regionCollection','regionLanguageCollection','transcriptionMap','wordCollection']
         , function(l){this.dataStorage.on('change:study', this[l].update, this[l]);}, App);
       //Setting up callbacks for PageState:

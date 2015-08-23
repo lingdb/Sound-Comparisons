@@ -94,9 +94,8 @@ define(['Linker','backbone'], function(Linker, Backbone){
 //      }
 //    }, this);
       /*
-        defaultRoute shall process these cases:
-        4.: detect Glottocode
-        5.: detect shortLink FIXME maybe ommit this and provide specialized route.
+        The defaultRoute provides detection as described in
+        https://github.com/sndcomp/website/issues/188
       */
       this.on('route:defaultRoute', function(route){
         console.log('Router.defaultRoute('+route+')');
@@ -157,11 +156,12 @@ define(['Linker','backbone'], function(Linker, Backbone){
               delete toChange[selection];
             }
           }, this);
-          //FIXME what about pageViewKeys?
+          //FIXME what about detection for pageViewKeys?
           console.log(toChange);//FIXME DEBUG
           //FIXME routing appears to be some kind of problem.
           //Applying toChange:
           this.configure(toChange).always(function(){
+            //FIXME this happens too soon!
             App.views.renderer.render();
           });
         }else{

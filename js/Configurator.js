@@ -10,15 +10,52 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       This method parses a config String and adjusts different page setttings accordingly.
       The given config is also allowed to be an object, in which case parsing will be omitted.
       Fields added for #188 are {siteLanguage,study,language{,s},word{,s}}
+      Since the study and siteLanguage fields may require loading some things first,
+      the configure method may run in several stages building on top of each other.
     */
     configure: function(config){
       //Parsing config:
       if(_.isString(config)){
         config = this.parseConfig(config);
       }
-      //Promises from inside this method:
-      var proms = [];
-      //Configuring different fields:
+      //Promise to be returned by this method:
+      var def = $.Deferred();
+      //Stage 1 if study and/or siteLanguage are in config:
+      if(_.any(['siteLanguage','study'], function(field){return (field in config);})){
+        var proms = [];//Stack of promises for this case:
+        if('siteLanguage' in config){
+          proms.push(App.translationStorage.setTranslation(config.siteLanguage));
+          delete config.siteLanguage;
+        }
+        if('study' in config){
+          var study = App.study;
+          if(study){
+            proms.push(study.setStudy(config.study));
+          }else{
+            console.log('App.study missing in Configurator.configure: '+study);
+          }
+          delete config.study;
+        }
+        //Handling promises:
+        if(proms.length > 0){
+          var t = this;
+          $.when.apply($, proms).always(function(){
+            if(_.isEmpty(config)){
+              def.resolve();
+            }else{
+              t.configure(config).done(function(){
+                def.resolve(arguments);
+              }).fail(function(){
+                def.reject(arguments);
+              });
+            }
+          });
+        }else{
+          def.resolve();
+        }
+        return def.promise();
+      }
+      //Stage 2 - other fields:
       if('wordOrder' in config){
         var callMap = { alphabetical: 'wordOrderSetAlphabetical'
                       , logical:      'wordOrderSetLogical'};
@@ -61,17 +98,6 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       if('wordByWord' in config){
         App.pageState.set({wordByWord: config.wordByWord === 'true'});
       }
-      if('siteLanguage' in config){
-        proms.push(App.translationStorage.setTranslation(config.siteLanguage));
-      }
-      if('study' in config){
-        var study = App.study;
-        if(study){
-          proms.push(study.setStudy(config.study));
-        }else{
-          console.log('App.study missing in Configurator.configure: '+study);
-        }
-      }
       if('language' in config){//Choice
         App.languageCollection.setChoice(config.language);
       }
@@ -86,20 +112,9 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
         //words are expected to be of [Word]
         App.wordCollection.setSelected(config.words);
       }
-      //Handling promises:
-      var prom = $.Deferred();
-      if(prom.length > 0){
-        $.when.apply($, proms).then(function(){
-          //All promises worked out:
-          prom.resolve(arguments);
-        }, function(){
-          //Some promise failed:
-          prom.reject(arguments);
-        });
-      }else{
-        prom.resolve();
-      }
-      return prom.promise();
+      //Promises solved automatically:
+      def.resolve();
+      return def.promise();
     }
     /**
       The reverse operation to configure.

@@ -104,6 +104,7 @@ define([
       }
     }
     /**
+      @param v Backbone.View
       Calls all methods that match /^update/ on the given Backbone.View.
     */
   , callUpdates: function(v){

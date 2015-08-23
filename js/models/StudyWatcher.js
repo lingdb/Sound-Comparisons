@@ -6,12 +6,6 @@ define(['backbone'], function(Backbone){
       var l  = App.storage.lastStudy
         , s  = (l) ? l : 'Germanic'
         , ls = s;
-      //Check if a study is given in the fragment:
-      var fragment = window.location.hash
-        , matches  = fragment.match(/#\/([^\/]+)\/(map|word|language|languagesXwords|wordsXlanguages)/);
-      if(_.isArray(matches)){
-        s = matches[1];
-      }
       //The current study will become the last study:
       App.storage.lastStudy = s;
       //Setting the vals:
@@ -27,8 +21,8 @@ define(['backbone'], function(Backbone){
     /**
       Called on:
       - complete setup
-      - everytime the study changes
-      - everytime Renderer.render() is called.
+      - every time the study changes
+      - every time Renderer.render() is called.
     */
   , update: function(){
       console.log('StudyWatcher.update()');

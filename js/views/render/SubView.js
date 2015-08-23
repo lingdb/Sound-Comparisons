@@ -27,18 +27,10 @@ define(['backbone'], function(Backbone){
       Returns Deferred to allow for further handling.
     */
   , loadBasic: function(siteLanguage, study){
-      var prom = $.Deferred(), t = this;
-      App.translationStorage.setTranslation(siteLanguage).fail(function(err){
-        console.log('Error setting siteLanguage in SubView.loadBasic('+siteLanguage+',…)\n'+err);
-      }).always(function(){
-        App.study.setStudy(study).fail(function(){
-          t.noStudy(study);
-          prom.reject();
-        }).done(function(){
-          prom.resolve();
-        });
+      return App.router.configure({
+        siteLanguage: siteLanguage
+      , study: study
       });
-      return prom.promise();
     }
   });
 });
