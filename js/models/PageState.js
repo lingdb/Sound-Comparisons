@@ -13,6 +13,14 @@ define(['backbone'], function(Backbone){
     , phLang: null
     , pageView: 'map'
     , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView']
+    , pageViewShortcuts: {
+        'm':  'map'
+      , 'w':  'word'
+      , 'l':  'language'
+      , 'lw': 'languagesXwords'
+      , 'wl': 'wordsXlanguages'
+      , 'c':  'contributorView'
+      }
     , mapViewIgnoreSelection: false // On true all languages shall be displayed
     , wordByWord: false // Should wordByWord downloads be displayed?
     , wordByWordFormat: 'mp3' // Initially set by views/AudioLogic
@@ -148,13 +156,9 @@ define(['backbone'], function(Backbone){
         if(_.contains(this.get('pageViews'), key)){
           return this.get('pageView') === key;
         }
-        switch(key){
-          case 'm':  return this.isPageView('map');
-          case 'w':  return this.isPageView('word');
-          case 'l':  return this.isPageView('language');
-          case 'lw': return this.isPageView('languagesXwords');
-          case 'wl': return this.isPageView('wordsXlanguages');
-          case 'c':  return this.isPageView('contributorView');
+        var shortcuts = this.get('pageViewShortcuts');
+        if(key in shortcuts){
+          return this.isPageView(shortcuts[key]);
         }
       }else if(key instanceof Backbone.View){
         if(!_.isFunction(key.getKey))
@@ -163,6 +167,19 @@ define(['backbone'], function(Backbone){
       }
       console.log('PageState.isPageState() with unexpected key: '+key);
       return false;
+    }
+    /**
+      @param key String
+      @return is String || null
+      Tests if the given key is a valid key for a PageView.
+      This is useful for detection in Router.
+    */
+  , validatePageViewKey: function(key){
+      if(!_.isString(key)) return null;
+      var shortcuts = this.get('pageViewShortcuts');
+      if(key in shortcuts) return shortcuts[key];
+      if(_.contains(this.get('pageViews'), key)) return key;
+      return null;
     }
   });
 });

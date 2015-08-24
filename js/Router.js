@@ -92,6 +92,8 @@ define(['Linker','backbone'], function(Linker, Backbone){
           , languages: []//[Language]
             //words will be filled by word detection.
           , words: []//[Word]
+            //pageView if detection decides to set it
+          , pageView: null//String
           };
           //Running detection:
           _.each(parts, function(part){
@@ -122,6 +124,12 @@ define(['Linker','backbone'], function(Linker, Backbone){
               return;//Stop detection for current part
             }
             //FIXME what about detection of language/word names?
+            //Detection of pageViewKeys:
+            var pv = App.pageState.validatePageViewKey(part);
+            if(pv !== null){
+              toChange.pageView = pv;
+              return;//Stop detection for current part
+            }
           }, this);
           //Converting selections to choices if possible:
           _.each([['languages','language'],['words','word']], function(pair){
@@ -137,11 +145,15 @@ define(['Linker','backbone'], function(Linker, Backbone){
             }
           }, this);
           //FIXME what about detection for pageViewKeys?
+          //Removing useless keys from toChange:
+          _.each(_.keys(toChange), function(key){
+            if(_.isEmpty(toChange[key])){
+              delete toChange[key];
+            }
+          }, this);
           console.log(toChange);//FIXME DEBUG
-          //FIXME routing appears to be some kind of problem.
           //Applying toChange:
           this.configure(toChange).always(function(){
-            //FIXME this happens too soon!
             App.views.renderer.render();
           });
         }else{

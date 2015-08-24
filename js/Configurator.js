@@ -118,6 +118,12 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
         //words are expected to be of [Word]
         App.wordCollection.setSelected(config.words);
       }
+      if('pageView' in config){
+        var pv = config.pageView, ps = App.pageState;
+        if(!ps.isPageView(pv)){//Only set if it's not the current one.
+          ps.setPageView(pv);
+        }
+      }
       //Promises solved automatically:
       def.resolve();
       return def.promise();
