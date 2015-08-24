@@ -43,7 +43,6 @@ define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString
           if(current && current.hash === i.hash){
             i.content = current.content;
           }else{
-            console.log('Fetching template: '+i.name);
             fetches.push($.get(i.path, function(c){
               i.content = c;
             }));
