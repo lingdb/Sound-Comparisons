@@ -24,15 +24,21 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       if(_.any(['siteLanguage','study'], function(field){return (field in config);})){
         var proms = [];//Stack of promises for this case:
         if('siteLanguage' in config){
-          proms.push(App.translationStorage.setTranslation(config.siteLanguage));
+          var siteLanguage = config.siteLanguage;
+          if(_.isString(siteLanguage) && !_.isEmpty(siteLanguage)){
+            proms.push(App.translationStorage.setTranslation(siteLanguage));
+          }
           delete config.siteLanguage;
         }
         if('study' in config){
-          var study = App.study;
-          if(study){
-            proms.push(study.setStudy(config.study));
-          }else{
-            console.log('App.study missing in Configurator.configure: '+study);
+          var cStudy = config.study;
+          if(_.isString(cStudy) && !_.isEmpty(cStudy)){
+            var study = App.study;
+            if(study){
+              proms.push(study.setStudy(config.study));
+            }else{
+              console.log('App.study missing in Configurator.configure: '+study);
+            }
           }
           delete config.study;
         }

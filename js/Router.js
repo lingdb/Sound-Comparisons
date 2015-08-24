@@ -40,24 +40,12 @@ define(['Linker','backbone'], function(Linker, Backbone){
     , 'whoAreWe/:initials': 'contributorView'
     , 'whoAreWe/':          'contributorView'
     , 'whoAreWe':           'contributorView'
-      //Route for missing implementations of links:
-    , "FIXME":        "missingRoute"
-    , "FIXME/*infos": "missingRoute"
       //Routes for configuration directives:
     , 'config/*directives': 'configDirective'
       //defaultRoute:
     , '*actions':           'defaultRoute'
     }
   , initialize: function(){
-      //The Router looks for missing routes itself:
-      this.on('route:missingRoute', function(infos){
-        if(infos){
-          console.log('Router found missing route with infos: '+infos);
-        }else{
-          console.log('Router found missing route.');
-        }
-        App.views.renderer.render();
-      }, this);
       //The Router processes the config directives:
       this.on('route:configDirective', function(){
         var directives = _.last(arguments);
@@ -66,33 +54,25 @@ define(['Linker','backbone'], function(Linker, Backbone){
         //Rendering page:
         App.views.renderer.render();
       }, this);
-//    /**
-//      The Router handles shortLinks and triggers navigating them.
-//      We don't want the URL to change, but we'd like the router to act as if it changed.
-//      https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
-//      FIXME shortLink route currently doesn't exist
-//    */
-//    this.on('route:shortLink', function(shortLink){
-//      //Searching shortLink in the according map:
-//      var slMap = App.dataStorage.getShortLinksMap();
-//      if(shortLink in slMap){
-//        var url = slMap[shortLink]
-//          , matches = url.match(/^[^#]*#(.+)$/);
-//        if(matches){
-//          var fragment = matches[1];
-//          Backbone.history.loadUrl(fragment);
-//          return;
-//        }
-//      }
-//      //Fallback is to test if any study matches the shortLink:
-//      if(_.contains(App.study.getAllIds(), shortLink)){
-//        this.navigate(this.linkCurrent({study: shortLink}));
-//      }else{
-//        //We can still remain where we are:
-//        console.log('Could not route shortLink: '+shortLink);
-//        App.views.renderer.render();
-//      }
-//    }, this);
+      /**
+        The Router handles shortLinks and triggers navigating them.
+        We don't want the URL to change, but we'd like the router to act as if it changed.
+        https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
+      */
+      this.on('route:shortLink', function(shortLink){
+        //Searching shortLink in the according map:
+        var slMap = App.dataStorage.getShortLinksMap();
+        if(shortLink in slMap){
+          var url = slMap[shortLink]
+            , matches = url.match(/^[^#]*#(.+)$/)
+            , fragment = (matches) ? matches[1] : url;
+          Backbone.history.loadUrl(fragment);
+        }else{
+          //We can still remain where we are:
+          console.log('Could not route shortLink: '+shortLink);
+          App.views.renderer.render();
+        }
+      }, this);
       /*
         The defaultRoute provides detection as described in
         https://github.com/sndcomp/website/issues/188
