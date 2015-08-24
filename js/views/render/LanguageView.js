@@ -39,7 +39,7 @@ define(['views/render/SubView'], function(SubView){
       headline.contributors = _.map(language.getContributors(), function(c, col){
         return {
           cdesc: c.getColumnDescription(col)
-        , link: 'href="#/whoAreWe/'+c.getInitials()+'"'
+        , link: 'href="#/Contributors/'+c.getInitials()+'"'
         , name: c.getName()
         , info: c.getYearPages()
         };

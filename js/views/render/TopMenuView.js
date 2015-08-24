@@ -137,7 +137,7 @@ define(['backbone'], function(Backbone){
       ]);
       _.each(entries, function(e){e.link = 'href="'+e.link+'"';});
       entries.unshift({
-        link:  'href="#/whoAreWe"'
+        link:  'href="#/Contributors"'
       , about: App.translationStorage.translateStatic('topmenu_about_whoarewe') 
       });
       this.setModel({aboutEntries: entries});

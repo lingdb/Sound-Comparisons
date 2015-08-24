@@ -37,9 +37,9 @@ define(['Linker','backbone'], function(Linker, Backbone){
     , ':siteLanguage/:study/wordsXlanguages':                                   'wordLanguageView'
     , ':siteLanguage/:study/wordsXlanguages//:languageSelection':               'wordLanguageView_' // Flipped parameters
       //contributorView:
-    , 'whoAreWe/:initials': 'contributorView'
-    , 'whoAreWe/':          'contributorView'
-    , 'whoAreWe':           'contributorView'
+    , 'Contributors/:initials': 'contributorView'
+    , 'Contributors/':          'contributorView'
+    , 'Contributors':           'contributorView'
       //Routes for configuration directives:
     , 'config/*directives': 'configDirective'
       //defaultRoute:
