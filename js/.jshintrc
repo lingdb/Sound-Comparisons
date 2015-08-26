@@ -12,5 +12,6 @@
   , "console": false
   , "google": false
   , "Worker": false
+  , "Map": false
   }
 }
