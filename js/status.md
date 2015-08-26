@@ -23,7 +23,6 @@ Interesting to look at:
 Important to check:
 ---
 
-* ```load.js```
 * ```models/DownloadOptions.js```
 * ```views/DownloadOptionView.js```
 
