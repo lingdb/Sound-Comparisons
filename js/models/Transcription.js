@@ -115,7 +115,7 @@ define(['backbone'], function(Backbone){
         , aLogic    = App.views.audioLogic
         , ps        = [];
       //Sanitizing phonetics:
-      if(_.isEmpty(phonetics))  phonetics = 'play';
+      if(_.isEmpty(phonetics))  phonetics = '<i class="icon-play"></i>';
       if(!_.isArray(phonetics)) phonetics = [phonetics];
       //WordByWord logic:
       var wordByWord = App.pageState.get('wordByWord');
