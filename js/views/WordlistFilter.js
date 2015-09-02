@@ -166,12 +166,17 @@ define(['backbone'], function(Backbone){
       var elems = $('ul.wordList .p50:nth-child(2)').map(function(i, e){
         var element = $(e)
           , string  = element.text()
-          , matches = string.match(/\s*\[\s*([^\s]*)\s*\]\s*/);
-        if(matches.length <= 1){
-          console.log('WordlistFilter.phoneticFilter() could not find any matches for string:\n\t'+string);
+          , matches = string.match(/\s*\[\s*(.*)\s*\]\s*/);
+        if(matches !== null){
+          if(matches.length <= 1){
+            console.log('WordlistFilter.phoneticFilter() could not find any matches for string:\n\t'+string);
+            return null;
+          }
+          return {text: matches[1], target: element.closest('li')};
+        }else{
+          console.log('WordlistFilter.phoneticFilter() failed regex for string: '+string);
           return null;
         }
-        return {text: matches[1], target: element.closest('li')};
       });
       this.filter(elems, this.enhanceIPA(input));
       if(this.hasLanguageTable){
