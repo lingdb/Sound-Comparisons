@@ -17,10 +17,15 @@ class CacheProvider {
     @param $study String
     @param $prefix String to help locate the $target
     @return $has Bool
-    Checks, if setCache was called for the given study.
+    Returns true, iff setCache was called for the given study,
+    and none of the sound files have been modified since.
   */
   public static function hasCache($study, $prefix = ''){
-    return file_exists(self::getPath($study, $prefix));
+    $path = self::getPath($study, $prefix);
+    if(!file_exists($path)) return false;
+    $time = filemtime($path);
+    $last = self::lastSoundDirChange();
+    return ($time > $last);
   }
   /**
     @param $study String
@@ -58,5 +63,29 @@ class CacheProvider {
   */
   public static function getPath($study, $prefix){
     return $prefix.self::$target.$study.'.json';
+  }
+  /**
+    @return $last int timestamp
+    Returns the biggest timestamp modification time
+    found among the directories for sound files.
+    This is useful for self::hasCache().
+  */
+  public static function lastSoundDirChange(){
+    //Changing working directory to website toplevel:
+    $originDir = getcwd();
+    chdir(__DIR__);
+    chdir('..');
+    //Figuring out $last:
+    $last = 0;
+    $dirs = explode("\n", `find sound -type d`);
+    foreach($dirs as $dir){
+      if($dir === ''){ continue; }
+      $time = filemtime($dir);
+      if($time > $last){ $last = $time; }
+    }
+    //Resetting earlier working directory:
+    chdir($originDir);
+    //Done
+    return $last;
   }
 }
