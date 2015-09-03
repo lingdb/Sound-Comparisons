@@ -34,7 +34,7 @@ define(['backbone','collections/RegionCollection','collections/LanguageCollectio
   , getName: function(){
       var category = 'FamilyTranslationProvider'
         , field    = this.get('FamilyNm');
-      return App.translationStorage.translateDynamic(category, field, field);
+      return App.translationStorage.translateDynamic(category, this.getId(), field);
     }
     /**
       @return regions RegionCollection
