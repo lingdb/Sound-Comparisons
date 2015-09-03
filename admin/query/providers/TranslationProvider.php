@@ -57,15 +57,15 @@
         $db->query($q);
     }
     /**
+      @param tId TranslationId to use
+      @param study the Study for which we want to translate
+      @return Int[] offsets
       The methods offsets and page are build to implement paging via search.
       I've made the experience, that the way the TranslationBySearch Feature
       handles the data is more sophisticated than what DynamicTranslation currently does.
       Therefore DT will use the facilities of TBS and TBS needs paging for it.
       The offsets method shall build and array of offsets that can be used for paging
       given a study, a tId and a limit=30.
-      @param tId TranslationId to use
-      @param study the Study for which we want to translate
-      @return Int[] offsets
     */
     public abstract function offsets($tId, $study);
     /**
