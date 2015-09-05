@@ -82,14 +82,27 @@ define(['backbone'], function(Backbone){
     */
   , getFamily: function(){
       if(this._family === null){
-        var regionId = this.getId();
-        //_family becomes undefined, if not found:
-        var f = App.familyCollection.find(function(f){
-          return regionId.indexOf(f.getId()) === 0;
+        var regionId = this.getId()
+          , family = undefined // Family
+          , score = 0;//Score for the current Family.
+        //Iterating families:
+        App.familyCollection.each(function(f){
+          var fId = f.getId()//Id of the current family.
+            , matches = fId.match(/^([^0]+)0+$/)//Possible prefix for family.
+          if(matches !== null){
+            fId = matches[1];//Reducing fId to prefix, iff necessary.
+          }
+          //Keeping matches with higher scores.
+          if(regionId.indexOf(fId) === 0){
+            if(fId.length > score){
+              family = f;
+              score = fId.length;
+            }
+          }
         });
         //Checking for undefined:
-        if(!_.isUndefined(f)){
-          this._family = f;
+        if(!_.isUndefined(family)){
+          this._family = family;
         }
       }
       return this._family;
