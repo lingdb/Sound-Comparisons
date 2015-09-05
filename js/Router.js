@@ -151,7 +151,6 @@ define(['Linker','backbone'], function(Linker, Backbone){
               delete toChange[key];
             }
           }, this);
-          console.log(toChange);//FIXME DEBUG
           //Applying toChange:
           this.configure(toChange).always(function(){
             App.views.renderer.render();
