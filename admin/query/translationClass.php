@@ -341,7 +341,10 @@
            . "SELECT DISTINCT RfcLanguage FROM Languages_$study "
            . "WHERE RfcLanguage IS NOT NULL)";
         $set = $dbConnection->query($q);
-        while($r = $set->fetch_row()){
+        if($set === false){
+          //May fail if a studies entry exists but no Lanugage_$study table…
+          Config::error("Problem with query: $q", false, false);
+        }else while($r = $set->fetch_row()){
           $ret[$r[1]] = $r[0];
         }
       }
