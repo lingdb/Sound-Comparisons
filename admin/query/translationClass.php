@@ -270,6 +270,9 @@
       @return Bool true on success
     */
     public static function update($translationId, $payload, $update, $provider){
+      //Removing leading/trailing whitespace:
+      $update = ltrim(rtrim($update));
+      //Saving $update:
       self::initProviders();
       $translationId = Config::getConnection()->escape_string($translationId);
       if(array_key_exists($provider, self::$providers)){
@@ -286,6 +289,9 @@
       @param $desc description
     */
     public static function updateDescription($req, $desc){
+      //Removing leading/trailing whitespace:
+      $desc = ltrim(rtrim($desc));
+      //Saving description:
       $dbConnection = Config::getConnection();
       $req  = $dbConnection->escape_string($req);
       $desc = $dbConnection->escape_string($desc);
