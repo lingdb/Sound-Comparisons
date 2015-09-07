@@ -23,9 +23,11 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       //Stage 1 if study and/or siteLanguage are in config:
       if(_.any(['siteLanguage','study'], function(field){return (field in config);})){
         var proms = [];//Stack of promises for this case:
+        var sortWords = false;//Set to true to make sure words will be sorted.
         if('siteLanguage' in config){
           var siteLanguage = config.siteLanguage;
           if(_.isString(siteLanguage) && !_.isEmpty(siteLanguage)){
+            sortWords = App.pageState.wordOrderIsAlphabetical();
             proms.push(App.translationStorage.setTranslation(siteLanguage));
           }
           delete config.siteLanguage;
@@ -46,6 +48,9 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
         if(proms.length > 0){
           var t = this;
           $.when.apply($, proms).always(function(){
+            //Sorting words iff necessary:
+            if(sortWords === true){ App.wordCollection.sort(); }
+            //Resolving further:
             if(_.isEmpty(config)){
               def.resolve();
             }else{
