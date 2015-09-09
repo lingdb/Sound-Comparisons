@@ -1,4 +1,9 @@
 <?php
+/**
+  We can use this class for two things:
+  1.: Abstract away some of the overhead introduced by the current layout of DynamicTranslationProviders
+  2.: Implement a translation import from CSV as described in #189
+*/
 class TranslationTableDescription {
   /** @return self::$tableDescriptions */
   public static function getTableDescriptions(){
@@ -14,7 +19,6 @@ class TranslationTableDescription {
         , category => String
         ]
       , dependsOnStudy => Boolean
-      , implodeString => String
       ]
     ]
     Field explanations:
@@ -31,12 +35,22 @@ class TranslationTableDescription {
       - The category field describes the Category entry used in the Page_DynamicTranslation table.
     - dependsOnStudy shall be true iff the source table name contains the study name.
       If this is the case, the sNameRegex shall capture the study name.
-      If dependsOnStudy is true, the fieldSelect must be put into implode($implodeString, array($studyName, $fieldSelect)),
+      If dependsOnStudy is true, the fieldSelect must be put into implode('-', array($studyName, $fieldSelect)),
       to obtain the final field name.
-    - implodeString to be used to implode with $studyName.
-      This attribute may be missing in which case '-' shall be used.
-    FIXME: Not sure, what to do with this provider:
+    FIXME: Not sure, what to do with these providers:
     - StaticTranslationProvider.php
+    - StudyTitleTranslationProvider
+      , '/^Page_DynamicTranslation$/' => array(
+          'columns' => array(
+            array(
+              'columnName' => 'Trans'
+            , 'fieldSelect' => '\'\''
+            , 'description' => 'dt_studyTitle_trans'
+            , 'category' => 'StudyTitleTranslationProvider'
+            )
+          )
+        , 'dependsOnStudy' => false
+        )
   */
   private static $tableDescriptions = array(
     '/^ContributorCategories$/' => array(
@@ -117,18 +131,6 @@ class TranslationTableDescription {
         )
       )
     , 'dependsOnStudy' => false
-    )
-  , '/^Page_DynamicTranslation$/' => array(
-      'columns' => array(
-        array(
-          'columnName' => 'Trans'
-        , 'fieldSelect' => '\'\''
-        , 'description' => 'dt_studyTitle_trans'
-        , 'category' => 'StudyTitleTranslationProvider'
-        )
-      )
-    , 'dependsOnStudy' => false
-    , 'implodeString' => ''
     )
   , '/^RegionLanguages_(.+)$/' => array(
       'columns' => array(

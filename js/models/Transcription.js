@@ -152,7 +152,12 @@ define(['backbone'], function(Backbone){
         //Subscript:
         if(phonetics.length > 1){
           var isLex = _.any(source, function(s){
-            if(s.match(/_lex/)) return true;
+            if(_.isString(s)){
+              if(s.match(/_lex/)) return true;
+            }else{
+              console.log('Strange source: '+typeof(s));
+              console.log(s);
+            }
             return false;
           }, this);
           if(isLex){
