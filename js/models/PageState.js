@@ -61,6 +61,7 @@ define(['backbone'], function(Backbone){
     }
   //Managing {sp,ph}Lang:
     /**
+      @return spl Language || null
       Returns the current spellingLanguage
     */
   , getSpLang: function(){
@@ -76,6 +77,7 @@ define(['backbone'], function(Backbone){
       this.set({spLang: l || null});
     }
     /**
+      @return phl Language || null
       Returns the current phoneticLanguage
     */
   , getPhLang: function(){

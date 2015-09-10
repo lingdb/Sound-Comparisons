@@ -214,12 +214,16 @@ define(['backbone'], function(Backbone){
       return _.values(current);
     }
     /**
-      Returns an array of all models where model.getKey() is in the given array of keys.
+      @param xs [key/id]
+      @return filtered [model]
+      Returns an array of all models where model.getKey() or model.getId()
+      is in the given array of keys/ids.
     */
-  , filterKeys: function(keys){
+  , filterKeyOrId: function(xs){
       var lookup = {};
-      _.each(keys, function(k){lookup[k] = true;});
+      _.each(xs, function(x){lookup[x] = true});
       return this.filter(function(m){
+        if(m.getId() in lookup) return true;
         return m.getKey() in lookup;
       }, this);
     }

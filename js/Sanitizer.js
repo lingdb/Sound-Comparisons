@@ -185,14 +185,17 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
   , sanitizeConfig: function(o, pvk){
       if('config' in o){
         if(o.config !== null){
-          var vals = _.map(o.config, function(v, k){
+          var keys = _.keys(o.config).sort()
+            , vals = [];
+          _.each(keys, function(k){
+            var v = o.config[k];
             if(_.isArray(v)){
               v = this.sanitizeArray(_.filter(v, _.isString));
             }else{
               if(!_.isString(v)) v = ''+v;
               v = encodeURIComponent(v);
             }
-            return encodeURIComponent(k)+'='+v;
+            vals.push(encodeURIComponent(k)+'='+v);
           }, this);
           o.config = '?'+vals.join('&');
         }

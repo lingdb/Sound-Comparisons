@@ -76,5 +76,39 @@ define(['Configurator'], function(Configurator){
         , o = this.sanitize(suffixes, options, 'wordsXlanguages');
       return ['#',o.siteLanguage,o.study,'wordsXlanguages',o.words,o.languages].join('/');
     }
+    /**
+      Gathers the current state of everything involved in the current view of the page
+      and produces a config link for that.
+      This is useful for the shortlink feature and relates to #188.
+    */
+  , linkCurrentConfig: function(){
+      var config = this.getConfig(null,true);
+      //Enrich config with additional information:
+      _.extend(config, {
+        pageView: App.pageState.getPageViewKey()
+      , siteLanguage: App.translationStorage.getTranslationId()
+      , study: App.study.getId()
+      });
+      //Adding choice fields:
+      var fromChoice = function(model, field){
+        if(model !== null){ config[field] = model.getId(); }
+      };
+      fromChoice(App.languageCollection.getChoice(), 'language');
+      fromChoice(App.wordCollection.getChoice(), 'word');
+      //Adding selection fields:
+      var fromSelection = function(collection, field){
+        var selection = collection.getSelected();
+        if(selection.length > 0){
+          config[field] = _.map(selection, function(model){
+            return model.getId();
+          }, this);
+        }
+      };
+      fromSelection(App.languageCollection, 'languages');
+      fromSelection(App.wordCollection, 'words');
+      //Produce link:
+      config = this.sanitizeConfig({config: config}).config;
+      return ['#','config',config].join('/');
+    }
   });
 });

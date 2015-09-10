@@ -78,26 +78,28 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       }
       if('spLang' in config){
         var spLang = App.languageCollection.find(function(l){
+          if(l.getId() === config.spLang) return true;
           return l.getKey() === config.spLang;
         }, this);
         App.pageState.setSpLang(spLang);
       }
       if('phLang' in config){
         var phLang = App.languageCollection.find(function(l){
+          if(l.getId() === config.phLang) return true;
           return l.getKey() === config.phLang;
         }, this);
         App.pageState.setPhLang(phLang);
       }
       if('meaningGroups' in config){
-        var mgs = App.meaningGroupCollection.filterKeys(config.meaningGroups);
+        var mgs = App.meaningGroupCollection.filterKeyOrId(config.meaningGroups);
         App.meaningGroupCollection.setSelected(mgs);
       }
       if('regions' in config){
-        var rs = App.regionCollection.filterKeys(config.regions);
+        var rs = App.regionCollection.filterKeyOrId(config.regions);
         App.regionCollection.setSelected(rs);
       }
       if('families' in config){
-        var fs = App.familyCollection.filterKeys(config.families);
+        var fs = App.familyCollection.filterKeyOrId(config.families);
         App.familyCollection.setSelected(fs);
       }
       if('translation' in config){
@@ -113,6 +115,11 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
         App.languageCollection.setChoice(config.language);
       }
       if('languages' in config){//Selection
+        //If languages are a string, we need to produce a [Language].
+        if(_.isString(config.languages)){
+          var langs = this.parseArray(config.languages);
+          config.languages = App.languageCollection.filterKeyOrId(langs);
+        }
         //languages are expected to be of [Language]
         App.languageCollection.setSelected(config.languages);
       }
@@ -120,6 +127,11 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
         App.wordCollection.setChoice(config.word);
       }
       if('words' in config){//Selection
+        //If words are a string, we need to produce a [Word].
+        if(_.isString(config.words)){
+          var wds = this.parseArray(config.words);
+          config.words = App.wordCollection.filterKeyOrId(wds);
+        }
         //words are expected to be of [Word]
         App.wordCollection.setSelected(config.words);
       }
@@ -134,11 +146,14 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       return def.promise();
     }
     /**
+      @param [pvk String, PageViewKey]
+      @param [useIds Boolean]
       The reverse operation to configure.
       It shall generate an object describing the whole configuration.
     */
-  , getConfig: function(pvk){
+  , getConfig: function(pvk, useIds){
       pvk = pvk || App.pageState.getPageViewKey();
+      useIds = (_.isBoolean(useIds)) ? useIds : false;
       var config = {}, ps = App.pageState;
       //wordOrder:
       if(ps.wordOrderIsAlphabetical()){
@@ -149,21 +164,25 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
       //spLang:
       var spLang = ps.getSpLang();
       if(spLang){
-        config.spLang = spLang.getKey();
+        config.spLang = useIds ? spLang.getId() : spLang.getKey();
       }
       //phLang:
       var phLang = ps.getPhLang();
       if(phLang){
-        config.phLang = phLang.getKey();
+        config.phLang = useIds ? phLang.getId() : phLang.getKey();
       }
-      //Helper function:
-      var getKeys = function(xs){return _.map(xs, function(x){return x.getKey();});};
+      //Helper functions:
+      var getKeys = function(xs){return _.map(xs, function(x){return x.getKey();});}
+        , getIds  = function(xs){return _.map(xs, function(x){return x.getId();});};
       //meaningGroups:
-      config.meaningGroups = getKeys(App.meaningGroupCollection.getSelected(pvk));
+      var mgs = App.meaningGroupCollection.getSelected(pvk);
+      config.meaningGroups = useIds ? getIds(mgs) : getKeys(mgs);
       //regions:
-      config.regions = getKeys(App.regionCollection.getSelected(pvk));
+      var regions = App.regionCollection.getSelected(pvk);
+      config.regions = useIds ? getIds(regions) : getKeys(regions);
       //families:
-      config.families = getKeys(App.familyCollection.getSelected(pvk));
+      var families = App.familyCollection.getSelected(pvk);
+      config.families = useIds ? getIds(families) : getKeys(families);
       //translation:
       config.translation = App.translationStorage.getTranslationId();
       //mapViewIgnoreSelection:
