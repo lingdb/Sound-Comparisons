@@ -32,7 +32,6 @@ define(['backbone'], function(Backbone){
   , buildStatic: function(){
       var staticT = App.translationStorage.translateStatic({
         logoTitle:       'website_logo_hover'
-      , pageViewTitle:   'topmenu_views'
       , csvTitle:        'topmenu_download_csv'
       , sndTitle:        'topmenu_download_zip'
       , cogTitle:        'topmenu_download_cogTitle'
