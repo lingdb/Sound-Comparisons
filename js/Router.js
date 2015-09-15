@@ -172,5 +172,37 @@ define(['Linker','backbone'], function(Linker, Backbone){
       this.navigate(fragment, {trigger: false, replace: true});
       App.study.trackLinks(fragment);
     }
+    /**
+      @param shortLink String
+      @return def Deferred
+    */
+  , routeShortLink: function(shortLink){
+      var def = $.Deferred();
+      //Checking that shortLink is valid:
+      var slMap = App.dataStorage.getShortLinksMap();
+      if(!(shortLink in slMap)){
+        def.reject('Unknown shortLink: '+shortLink);
+        return def.promise();
+      }
+      //Isolating config directive:
+      var fragment = slMap[shortLink]
+        , matches = fragment.match(/^[^\?]+(.*)$/);
+      if(matches === null){
+          def.reject('Could not dissect fragment for shortLink: '+shortLink);
+          return def.promise();
+      }
+      var directive = matches[1];
+      /*
+        We don't want the URL to change, but we'd like the router to act as if it changed.
+        https://stackoverflow.com/q/17334465/448591
+      */
+      Backbone.history.loadUrl(shortLink);
+      this.configure(directive).done(function(){
+        def.resolve(arguments);
+      }).fail(function(){
+        def.reject(arguments);
+      });
+      return def.promise();
+    }
   });
 });

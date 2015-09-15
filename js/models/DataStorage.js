@@ -147,5 +147,34 @@ define(['backbone'], function(Backbone){
   , getShortLinksMap: function(){
       return this.get('global').global.shortLinks;
     }
+    /**
+      @param [fragment String]
+      @return Promise
+      Creates a (new) shortlink for the given fragment.
+      If no fragment is given, Linker.linkCurrentConfig() will be used to obtain one.
+      A promise is returned that will be resolved once the operation succeeds.
+      Resolve parameter will be an object mapping the shortlink key to the fragment.
+      If the promise is resolved, the new key-value-pair will also already be inserted in the DataStorage.getShortLinksMap().
+      The promise may be rejected iff the post fails.
+    */
+  , addShortLink: function(fragment){
+      var def = $.Deferred(), t = this;
+      //Sanitizing fragment:
+      fragment = _.isString(fragment)
+               ? fragment : App.router.linkCurrentConfig();
+      var query = {createShortLink: fragment};
+      $.post('query/shortLink', query, function(data){
+        //Entry maps key to fragment.
+        var entry = {};
+        entry[data.str] = data.url;
+        //Adding entry to ShortLinksMap:
+        _.extend(t.getShortLinksMap(), entry);
+        //Resolving promise:
+        def.resolve(entry);
+      }, 'json').fail(function(){
+        def.reject();
+      });
+      return def.promise();
+    }
   });
 });

@@ -39,6 +39,7 @@ define(['backbone'], function(Backbone){
       , format:          'topmenu_download_format'
       , soundClickTitle: 'topmenu_soundoptions_tooltip'
       , soundHoverTitle: 'topmenu_soundoptions_hover'
+      , createShortLink: 'topmenu_createShortLink'
       });
       this.setModel(staticT);
     }
@@ -205,6 +206,17 @@ define(['backbone'], function(Backbone){
         App.soundPlayOption.set({playMode: this.attributes.value.value});
         options.each(function(){
           $(this).toggleClass('hide');
+        });
+      });
+      //The shortLink button:
+      var shortLink = this.$('#createShortLink').click(function(){
+        App.dataStorage.addShortLink().done(function(data){
+          console.log(data);//FIXME MARDERSCHADEN!
+          App.router.routeShortLink(_.head(_.keys(data)));
+        }).fail(function(){
+          console.log('User could not create short link!');
+          //FIXME TRANSLATION!
+          alert('Sorry, it appears that a problem occured when creating a short link.');
         });
       });
     }

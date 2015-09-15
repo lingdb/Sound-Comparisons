@@ -122,7 +122,7 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topmenuDownloads {float: right; margin-right: 0px; margin-top: 7px;}
 #topmenuDownloads a.topLink {padding-right: 0px;}
 #topmenuDownloads ul.dropdown-menu>li {padding-left: 1em;}
-#topmenuSoundOptions {padding-top: 2px;}
+#topmenuSoundOptions, #topmenuMisc {padding-top: 2px;}
 #topmenuAbout {float: right; margin-right: 0px;}
 #topmenuAbout a.topLink {height: 30px; padding-top: 5px; padding-right: 0px;}
 #topmenuAbout a.topLink img {height: 30px; width: 30px;}
