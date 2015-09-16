@@ -83,12 +83,12 @@ define(['backbone'], function(Backbone){
   , getFamily: function(){
       if(this._family === null){
         var regionId = this.getId()
-          , family = undefined // Family
+          , family // Family
           , score = 0;//Score for the current Family.
         //Iterating families:
         App.familyCollection.each(function(f){
           var fId = f.getId()//Id of the current family.
-            , matches = fId.match(/^([^0]+)0+$/)//Possible prefix for family.
+            , matches = fId.match(/^([^0]+)0+$/);//Possible prefix for family.
           if(matches !== null){
             fId = matches[1];//Reducing fId to prefix, iff necessary.
           }

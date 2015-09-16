@@ -119,6 +119,19 @@ define(['backbone'], function(Backbone){
       if(!_.isArray(phonetics)) phonetics = [phonetics];
       //WordByWord logic:
       var wordByWord = App.pageState.get('wordByWord');
+      /*
+        isLexPredicate used in loop below.
+        Put here to not create it in a loop.
+      */
+      var isLexPredicate = function(s){
+        if(_.isString(s)){
+          if(s.match(/_lex/)) return true;
+        }else{
+          console.log('Strange source: '+typeof(s));
+          console.log(s);
+        }
+        return false;
+      };
       //Iterating phonetics:
       for(var i = 0; i < phonetics.length; i++){
         var phonetic = phonetics[i]//String
@@ -151,15 +164,7 @@ define(['backbone'], function(Backbone){
         }
         //Subscript:
         if(phonetics.length > 1){
-          var isLex = _.any(source, function(s){
-            if(_.isString(s)){
-              if(s.match(/_lex/)) return true;
-            }else{
-              console.log('Strange source: '+typeof(s));
-              console.log(s);
-            }
-            return false;
-          }, this);
+          var isLex = _.any(source, isLexPredicate, this);
           if(isLex){
             p.subscript = {
               ttip: App.translationStorage.translateStatic('tooltip_subscript_differentVariants')

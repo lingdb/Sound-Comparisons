@@ -9,8 +9,12 @@ define(['Linker','backbone'], function(Linker, Backbone){
   */
   return Linker.extend({
     routes: {
+      //shortLink:
+      'sl/:siteLanguage/:study/:shortLink': 'shortLink'//Shall use provided siteLanguage
+    , 'sl/:study/:shortLink':               'shortLink'//Shall detect siteLanguage
+    , 'sl/:shortLink':                      'shortLink'//Shall not change siteLanguage
       //mapView:
-      ':siteLanguage/:study/map/:word/:languageSelection': 'mapView'
+    , ':siteLanguage/:study/map/:word/:languageSelection': 'mapView'
     , ':siteLanguage/:study/map/:word/':                   'mapView'
     , ':siteLanguage/:study/map/':                         'mapView'
     , ':siteLanguage/:study/map':                          'mapView'
@@ -54,105 +58,97 @@ define(['Linker','backbone'], function(Linker, Backbone){
         //Rendering page:
         App.views.renderer.render();
       }, this);
-      /*
-        The defaultRoute provides detection as described in
-        https://github.com/sndcomp/website/issues/188
-      */
-      this.on('route:defaultRoute', function(route){
-        console.log('Router.defaultRoute('+route+')');
-        if(_.isString(route)){//route may also be null…
-          //Route parts when splitting route by '/' and than by ',':
-          var parts = _.flatten(_.map(route.split('/'), function(p){
-            return p.split(',');
-          }));
-          //Detecting shortLinks:
-          if(parts.length === 1){
-            var sl = _.head(parts);
-            if(sl in App.dataStorage.getShortLinksMap()){
-              this.routeShortLink(sl).done(function(){
-                console.log('Applied shortLink: '+sl);
-              }).fail(function(){
-                console.log('Error routing shortLink: '+sl);
-              });
-              return;
+      //Processing shortLink routes:
+      this.on('route:shortLink', this.routeShortLink, this);
+      //Processing defaultRoute:
+      this.on('', this.defaultRoute, this);
+    }
+    /**
+      The defaultRoute provides detection as described in
+      https://github.com/sndcomp/website/issues/188
+    */
+  , defaultRoute: function(route){
+      console.log('Router.defaultRoute('+route+')');
+      if(_.isString(route)){//route may also be null…
+        //Route parts when splitting route by '/' and than by ',':
+        var parts = _.flatten(_.map(route.split('/'), function(p){
+          return p.split(',');
+        }));
+        //Parts that can be changed:
+        var toChange = {
+          siteLanguage: null//String || null
+        , study: null//String || null
+          //languages will be filled via {iso,glotto}code and language detection.
+        , languages: []//[Language]
+          //words will be filled by word detection.
+        , words: []//[Word]
+          //pageView if detection decides to set it
+        , pageView: null//String
+        };
+        //Running detection:
+        _.each(parts, function(part){
+          //Detection for siteLanguage:
+          if(toChange.siteLanguage === null){
+            if(App.translationStorage.isBrowserMatch(part)){
+              toChange.siteLanguage = part;
+              return;//Stop detection for current part
             }
           }
-          //Parts that can be changed:
-          var toChange = {
-            siteLanguage: null//String || null
-          , study: null//String || null
-            //languages will be filled via {iso,glotto}code and language detection.
-          , languages: []//[Language]
-            //words will be filled by word detection.
-          , words: []//[Word]
-            //pageView if detection decides to set it
-          , pageView: null//String
-          };
-          //Running detection:
-          _.each(parts, function(part){
-            //Detection for siteLanguage:
-            if(toChange.siteLanguage === null){
-              if(App.translationStorage.isBrowserMatch(part)){
-                toChange.siteLanguage = part;
-                return;//Stop detection for current part
-              }
-            }
-            //Detection for study:
-            if(toChange.study === null){
-              if(_.contains(App.study.getAllIds(), part)){
-                toChange.study = part;
-                return;//Stop detection for current part
-              }
-            }
-            //Detection for iso code:
-            var lang = App.languageCollection.getLanguageByIso(part);
-            if(lang !== null){
-              toChange.languages.push(lang);
+          //Detection for study:
+          if(toChange.study === null){
+            if(_.contains(App.study.getAllIds(), part)){
+              toChange.study = part;
               return;//Stop detection for current part
             }
-            //Detection for glotto codes:
-            lang = App.languageCollection.getLanguageByGlotto(part);
-            if(lang !== null){
-              toChange.languages.push(lang);
-              return;//Stop detection for current part
+          }
+          //Detection for iso code:
+          var lang = App.languageCollection.getLanguageByIso(part);
+          if(lang !== null){
+            toChange.languages.push(lang);
+            return;//Stop detection for current part
+          }
+          //Detection for glotto codes:
+          lang = App.languageCollection.getLanguageByGlotto(part);
+          if(lang !== null){
+            toChange.languages.push(lang);
+            return;//Stop detection for current part
+          }
+          //FIXME what about detection of language/word names?
+          //Detection of pageViewKeys:
+          var pv = App.pageState.validatePageViewKey(part);
+          if(pv !== null){
+            toChange.pageView = pv;
+            return;//Stop detection for current part
+          }
+        }, this);
+        //Converting selections to choices if possible:
+        _.each([['languages','language'],['words','word']], function(pair){
+          var selection = pair[0], choice = pair[1]
+            , length = toChange[selection].length;
+          //Empty or single element selections:
+          if(length <= 1){
+            if(length === 1){
+              toChange[choice] = _.head(toChange[selection]);
             }
-            //FIXME what about detection of language/word names?
-            //Detection of pageViewKeys:
-            var pv = App.pageState.validatePageViewKey(part);
-            if(pv !== null){
-              toChange.pageView = pv;
-              return;//Stop detection for current part
-            }
-          }, this);
-          //Converting selections to choices if possible:
-          _.each([['languages','language'],['words','word']], function(pair){
-            var selection = pair[0], choice = pair[1]
-              , length = toChange[selection].length;
-            //Empty or single element selections:
-            if(length <= 1){
-              if(length === 1){
-                toChange[choice] = _.head(toChange[selection]);
-              }
-              //Removing useless selection:
-              delete toChange[selection];
-            }
-          }, this);
-          //FIXME what about detection for pageViewKeys?
-          //Removing useless keys from toChange:
-          _.each(_.keys(toChange), function(key){
-            if(_.isEmpty(toChange[key])){
-              delete toChange[key];
-            }
-          }, this);
-          //Applying toChange:
-          this.configure(toChange).always(function(){
-            App.views.renderer.render();
-          });
-        }else{
-          //Making sure something is rendered:
+            //Removing useless selection:
+            delete toChange[selection];
+          }
+        }, this);
+        //FIXME what about detection for pageViewKeys?
+        //Removing useless keys from toChange:
+        _.each(_.keys(toChange), function(key){
+          if(_.isEmpty(toChange[key])){
+            delete toChange[key];
+          }
+        }, this);
+        //Applying toChange:
+        this.configure(toChange).always(function(){
           App.views.renderer.render();
-        }
-      }, this);
+        });
+      }else{
+        //Making sure something is rendered:
+        App.views.renderer.render();
+      }
     }
     /**
       @param [fragment String]
@@ -170,35 +166,55 @@ define(['Linker','backbone'], function(Linker, Backbone){
       App.study.trackLinks(fragment);
     }
     /**
-      @param shortLink String
-      @return def Deferred
+      routeShortLink handles its argument in a way fitting the shortLink route definition.
     */
-  , routeShortLink: function(shortLink){
-      var def = $.Deferred();
+  , routeShortLink: function(){
+      //Handling expected parameters:
+      var siteLanguage = null, study = null, shortLink = null;
+      switch(arguments.length){
+        case 3:
+          siteLanguage = arguments[0];
+          study        = arguments[1];
+          shortLink    = arguments[2];
+        break;
+        case 2:
+          siteLanguage = App.translationStorage.getBrowserMatch();
+          study        = arguments[0];
+          shortLink    = arguments[1];
+        break;
+        case 1:
+          //siteLanguage and study ignored.
+          shortLink = arguments[0];
+        break;
+        default:
+          console.log('Unexpected number of parameters in Router.routeShortLink():');
+          console.log(arguments);
+          return;
+      }
       //Checking that shortLink is valid:
       var slMap = App.dataStorage.getShortLinksMap();
       if(!(shortLink in slMap)){
-        def.reject('Unknown shortLink: '+shortLink);
-        return def.promise();
+        console.log('Unknown shortLink: '+shortLink);
+        return;
       }
       //Isolating config directive:
       var fragment = slMap[shortLink]
         , matches = fragment.match(/^[^\?]+(.*)$/);
       if(matches === null){
-          def.reject('Could not dissect fragment for shortLink: '+shortLink);
-          return def.promise();
+          console.log('Could not dissect fragment for shortLink: '+shortLink);
+          return;
       }
-      var directive = matches[1];
-      //Updating fragment and configuring:
-      this.configure(directive).done(function(){
-        def.resolve(arguments);
-      }).fail(function(){
-        def.reject(arguments);
-      }).always(function(){
-        App.views.renderer.render();
-        App.router.updateFragment(shortLink);
+      //Taking over configuration:
+      var directive = matches[1], router = this;
+      this.configure(directive).always(function(){
+        var finish = function(){ App.views.renderer.render(); };
+        var config = {};
+        if(siteLanguage !== null){ config['siteLanguage'] = siteLanguage; }
+        if(study !== null){ config['study'] = study; }
+        if(_.keys(config).length > 0){
+          router.configure({siteLanguage: siteLanguage, study: study}).always(finish);
+        }else{ finish(); }
       });
-      return def.promise();
     }
   });
 });

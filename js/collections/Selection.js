@@ -221,7 +221,7 @@ define(['backbone'], function(Backbone){
     */
   , filterKeyOrId: function(xs){
       var lookup = {};
-      _.each(xs, function(x){lookup[x] = true});
+      _.each(xs, function(x){lookup[x] = true;});
       return this.filter(function(m){
         if(m.getId() in lookup) return true;
         return m.getKey() in lookup;

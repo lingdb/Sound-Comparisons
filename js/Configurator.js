@@ -102,7 +102,7 @@ define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language,
         var fs = App.familyCollection.filterKeyOrId(config.families);
         App.familyCollection.setSelected(fs);
       }
-      if('translation' in config){
+      if('translation' in config){//FIXME WHAT ABOUT THE PROMISE?
         App.translationStorage.setTranslationId(config.translation);
       }
       if('mapViewIgnoreSelection' in config){

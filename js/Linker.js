@@ -77,9 +77,13 @@ define(['Configurator'], function(Configurator){
       return ['#',o.siteLanguage,o.study,'wordsXlanguages',o.words,o.languages].join('/');
     }
     /**
+      @param skipFields Object //Maps fieldName -> *
+      @return fragment String
       Gathers the current state of everything involved in the current view of the page
       and produces a config link for that.
       This is useful for the shortlink feature and relates to #188.
+      If a skipFields object is given,
+      the keys of that object will be used to filter entries from the config fragment that will be returned.
     */
   , linkCurrentConfig: function(){
       var config = this.getConfig(null,true);
