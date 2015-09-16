@@ -54,25 +54,6 @@ define(['Linker','backbone'], function(Linker, Backbone){
         //Rendering page:
         App.views.renderer.render();
       }, this);
-      /**
-        The Router handles shortLinks and triggers navigating them.
-        We don't want the URL to change, but we'd like the router to act as if it changed.
-        https://stackoverflow.com/questions/17334465/backbone-js-routing-without-changing-url
-      */
-      this.on('route:shortLink', function(shortLink){
-        //Searching shortLink in the according map:
-        var slMap = App.dataStorage.getShortLinksMap();
-        if(shortLink in slMap){
-          var url = slMap[shortLink]
-            , matches = url.match(/^[^#]*#(.+)$/)
-            , fragment = (matches) ? matches[1] : url;
-          Backbone.history.loadUrl(fragment);
-        }else{
-          //We can still remain where we are:
-          console.log('Could not route shortLink: '+shortLink);
-          App.views.renderer.render();
-        }
-      }, this);
       /*
         The defaultRoute provides detection as described in
         https://github.com/sndcomp/website/issues/188
@@ -84,6 +65,18 @@ define(['Linker','backbone'], function(Linker, Backbone){
           var parts = _.flatten(_.map(route.split('/'), function(p){
             return p.split(',');
           }));
+          //Detecting shortLinks:
+          if(parts.length === 1){
+            var sl = _.head(parts);
+            if(sl in App.dataStorage.getShortLinksMap()){
+              this.routeShortLink(sl).done(function(){
+                console.log('Applied shortLink: '+sl);
+              }).fail(function(){
+                console.log('Error routing shortLink: '+sl);
+              });
+              return;
+            }
+          }
           //Parts that can be changed:
           var toChange = {
             siteLanguage: null//String || null
@@ -162,13 +155,17 @@ define(['Linker','backbone'], function(Linker, Backbone){
       }, this);
     }
     /**
+      @param [fragment String]
       Updates the fragment without triggering.
       This is useful to refresh the URL,
       and bring it up to the current state.
       Usually we call this from Renderer.render.
+      If the fragment parameter is missing linkCurrent() will be used to figure it out.
+      This method is also used from routeShortLink().
     */
-  , updateFragment: function(){
-      var fragment = this.linkCurrent({shortSelections: true});
+  , updateFragment: function(fragment){
+      fragment = _.isString(fragment)
+               ? fragment : this.linkCurrent({shortSelections: true});
       this.navigate(fragment, {trigger: false, replace: true});
       App.study.trackLinks(fragment);
     }
@@ -192,15 +189,14 @@ define(['Linker','backbone'], function(Linker, Backbone){
           return def.promise();
       }
       var directive = matches[1];
-      /*
-        We don't want the URL to change, but we'd like the router to act as if it changed.
-        https://stackoverflow.com/q/17334465/448591
-      */
-      Backbone.history.loadUrl(shortLink);
+      //Updating fragment and configuring:
       this.configure(directive).done(function(){
         def.resolve(arguments);
       }).fail(function(){
         def.reject(arguments);
+      }).always(function(){
+        App.views.renderer.render();
+        App.router.updateFragment(shortLink);
       });
       return def.promise();
     }
