@@ -211,15 +211,11 @@ define(['backbone'], function(Backbone){
       //The shortLink button:
       var shortLink = this.$('#createShortLink').click(function(){
         App.dataStorage.addShortLink().done(function(data){
-          console.log(data);//FIXME MARDERSCHADEN!
-          // Instead of calling below function,
-          // we should display the box discussed in
-          // https://github.com/sndcomp/website/issues/188#issuecomment-140718042
-          //App.router.routeShortLink(_.head(_.keys(data)));
+          App.views.shortLinkModalView.render(data);
         }).fail(function(){
           console.log('User could not create short link!');
-          //FIXME TRANSLATION!
-          window.alert('Sorry, it appears that a problem occured when creating a short link.');
+          var msg = App.translationStorage.translationStorage('shortLinkCreationFailed');
+          window.alert(msg);
         });
       });
     }

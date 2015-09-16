@@ -114,5 +114,14 @@ define(['Configurator'], function(Configurator){
       config = this.sanitizeConfig({config: config}).config;
       return ['#','config',config].join('/');
     }
+    /**
+      @return baseUrl String
+      Returns the part of the current URL that is found before the fragment.
+      That is everything leading up to a potential first occurence of '#'.
+    */
+  , getBaseUrl: function(){
+      var matches = window.location.href.match(/^([^#]+).*$/);
+      return matches[1];
+    }
   });
 });

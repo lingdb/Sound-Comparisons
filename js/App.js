@@ -72,6 +72,7 @@ requirejs([
 , 'views/PlaySequenceView'
 , 'views/render/Renderer'
 , 'views/SetupBarView'
+, 'views/ShortLinkModalView'
 , 'views/SoundPlayOptionView'
 ], function(require, $, Backbone, _){
     $(function(){
@@ -142,5 +143,6 @@ requirejs([
       App.views.playSequenceView = new (require('views/PlaySequenceView'))();
       App.views.renderer = new (require('views/render/Renderer'))({el: $('body')});
       App.views.loadModalView = new (require('views/LoadModalView'))({el: $('#loadModal')});
+      App.views.shortLinkModalView = new (require('views/ShortLinkModalView'))({el: $('#shortLinkModal')});
     });
   });

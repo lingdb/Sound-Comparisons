@@ -158,7 +158,8 @@ define(['backbone'], function(Backbone){
       The promise may be rejected iff the post fails.
     */
   , addShortLink: function(fragment){
-      var def = $.Deferred(), t = this;
+      var def = $.Deferred(), t = this
+        , prefix = App.router.getBaseUrl()+'#/sl';
       //Sanitizing fragment:
       fragment = _.isString(fragment)
                ? fragment : App.router.linkCurrentConfig();
@@ -175,10 +176,10 @@ define(['backbone'], function(Backbone){
           , resolve = _.map(tStorage.getTranslationIds(), function(tId){
             return {
               label: tStorage.getName(tId)
-            , url: ['#/sl', tStorage.getBrowserMatch(tId), shortLink].join('/')
+            , url: [prefix, tStorage.getBrowserMatch(tId), shortLink].join('/')
             };
           }, this);
-        resolve.push({label: 'default', url: '#/sl/'+shortLink});
+        resolve.push({label: 'default', url: prefix+'/'+shortLink});
         def.resolve(resolve);
       }, 'json').fail(function(){
         def.reject();
