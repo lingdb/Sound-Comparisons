@@ -239,6 +239,7 @@ class Importer{
     , 'colMapping' => array(
         'Sort Group' => 'SortGroup'
       , 'Heading Text for this Sort Group' => 'Headline'
+      , 'Heading Abbr' => 'Abbr'
       )
     )
   , '/^DefaultSingleLanguage\.txt$/' => array(
