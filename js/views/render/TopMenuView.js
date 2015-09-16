@@ -31,15 +31,16 @@ define(['backbone'], function(Backbone){
     */
   , buildStatic: function(){
       var staticT = App.translationStorage.translateStatic({
-        logoTitle:       'website_logo_hover'
-      , csvTitle:        'topmenu_download_csv'
-      , sndTitle:        'topmenu_download_zip'
-      , cogTitle:        'topmenu_download_cogTitle'
-      , wordByWord:      'topmenu_download_wordByWord'
-      , format:          'topmenu_download_format'
-      , soundClickTitle: 'topmenu_soundoptions_tooltip'
-      , soundHoverTitle: 'topmenu_soundoptions_hover'
-      , createShortLink: 'topmenu_createShortLink'
+        logoTitle:        'website_logo_hover'
+      , csvTitle:         'topmenu_download_csv'
+      , sndTitle:         'topmenu_download_zip'
+      , cogTitle:         'topmenu_download_cogTitle'
+      , wordByWord:       'topmenu_download_wordByWord'
+      , format:           'topmenu_download_format'
+      , soundClickTitle:  'topmenu_soundoptions_tooltip'
+      , soundHoverTitle:  'topmenu_soundoptions_hover'
+      , createShortLink:  'topmenu_createShortLink'
+      , viewContributors: 'topmenu_about_whoarewe'
       });
       this.setModel(staticT);
     }
@@ -136,10 +137,6 @@ define(['backbone'], function(Backbone){
         , about: 'topmenu_about_contact'}
       ]);
       _.each(entries, function(e){e.link = 'href="'+e.link+'"';});
-      entries.unshift({
-        link:  'href="#/Contributors"'
-      , about: App.translationStorage.translateStatic('topmenu_about_whoarewe') 
-      });
       this.setModel({aboutEntries: entries});
     }
     /**
@@ -217,6 +214,10 @@ define(['backbone'], function(Backbone){
           var msg = App.translationStorage.translationStorage('shortLinkCreationFailed');
           window.alert(msg);
         });
+      });
+      //The Contributor button:
+      this.$('#openContributors').click(function(){
+        App.router.navigate('#/Contributors');
       });
     }
     /**
