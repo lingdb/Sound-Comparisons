@@ -171,18 +171,18 @@ define(['Linker','backbone'], function(Linker, Backbone){
   , routeShortLink: function(){
       //Handling expected parameters:
       var siteLanguage = null, study = null, shortLink = null;
-      switch(arguments.length){
-        case 3:
+      switch(arguments.length){//Note that arguments has trailing null entry.
+        case 4:
           siteLanguage = arguments[0];
           study        = arguments[1];
           shortLink    = arguments[2];
         break;
-        case 2:
+        case 3:
           siteLanguage = App.translationStorage.getBrowserMatch();
           study        = arguments[0];
           shortLink    = arguments[1];
         break;
-        case 1:
+        case 2:
           //siteLanguage and study ignored.
           shortLink = arguments[0];
         break;
@@ -207,10 +207,16 @@ define(['Linker','backbone'], function(Linker, Backbone){
       //Taking over configuration:
       var directive = matches[1], router = this;
       this.configure(directive).always(function(){
-        var finish = function(){ App.views.renderer.render(); };
+        //finish triggers rendering and restores the fragment.
+        var finish = function(){
+          var fragment = Backbone.history.getFragment();
+          App.views.renderer.render();
+          router.updateFragment(fragment);
+        };
+        //Applying additional config, iff necessary:
         var config = {};
-        if(siteLanguage !== null){ config['siteLanguage'] = siteLanguage; }
-        if(study !== null){ config['study'] = study; }
+        if(siteLanguage !== null){ config.siteLanguage = siteLanguage; }
+        if(study !== null){ config.study = study; }
         if(_.keys(config).length > 0){
           router.configure({siteLanguage: siteLanguage, study: study}).always(finish);
         }else{ finish(); }

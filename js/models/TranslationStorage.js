@@ -277,11 +277,12 @@ define(['backbone','i18n'], function(Backbone, i18n){
       return App.languageCollection.findWhere(query) || null;
     }
     /**
+      @param [tId TranslationId]
       @return b String, BrowserMatch
       Returns the BrowserMatch for the current translation.
     */
-  , getBrowserMatch: function(){
-      var tId = this.getTranslationId();
+  , getBrowserMatch: function(tId){
+      tId = tId || this.getTranslationId();
       return this.get('summary')[tId].BrowserMatch;
     }
     /**

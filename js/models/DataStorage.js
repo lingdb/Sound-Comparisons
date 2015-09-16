@@ -149,11 +149,11 @@ define(['backbone'], function(Backbone){
     }
     /**
       @param [fragment String]
-      @return Promise
+      @return Promise -> [{label: String, url: String}]
       Creates a (new) shortlink for the given fragment.
       If no fragment is given, Linker.linkCurrentConfig() will be used to obtain one.
       A promise is returned that will be resolved once the operation succeeds.
-      Resolve parameter will be an object mapping the shortlink key to the fragment.
+      Resolve parameter will be an array holding lables and corresponding urls.
       If the promise is resolved, the new key-value-pair will also already be inserted in the DataStorage.getShortLinksMap().
       The promise may be rejected iff the post fails.
     */
@@ -170,7 +170,16 @@ define(['backbone'], function(Backbone){
         //Adding entry to ShortLinksMap:
         _.extend(t.getShortLinksMap(), entry);
         //Resolving promise:
-        def.resolve(entry);
+        var shortLink = App.study.getId()+'/'+data.str
+          , tStorage = App.translationStorage
+          , resolve = _.map(tStorage.getTranslationIds(), function(tId){
+            return {
+              label: tStorage.getName(tId)
+            , url: ['#/sl', tStorage.getBrowserMatch(tId), shortLink].join('/')
+            };
+          }, this);
+        resolve.push({label: 'default', url: '#/sl/'+shortLink});
+        def.resolve(resolve);
       }, 'json').fail(function(){
         def.reject();
       });

@@ -52,7 +52,7 @@ if(array_key_exists('name', $_POST)){
       <div class="control-group">
         <label class="control-label" for="newName">New Name:</label>
         <div class="controls">
-          <input name="url" type="text">
+          <input name="newName" type="text">
         </div>
       </div>
       <div class="control-group">
@@ -70,6 +70,7 @@ if(array_key_exists('name', $_POST)){
         $q = 'SELECT Name, Target FROM Page_ShortLinks';
         $stmt = $dbConnection->prepare($q);
         $stmt->execute();
+        $stmt->store_result();
         if($stmt->num_rows === 0){
           echo '<tr><td colspan="2">Currently no shortlinks exist.</td></tr>';
         }else{
