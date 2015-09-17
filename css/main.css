@@ -445,3 +445,5 @@ div.mapAudio .transcription {
 .mapAudio .transcription.playing, .mapAudio .transcription:hover{
   font-size: 20px;
 }
+/*Stuff for #shortLinkModal:*/
+#shortLinkModal .urlInput {margin-bottom: 0px;}

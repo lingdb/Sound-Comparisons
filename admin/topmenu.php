@@ -17,8 +17,6 @@
            . '<li><a href="dbimport.php">Data Tables (CSV format)</a></li>'
            . '<li><a href="sqlFrontend.php">Transcription Records (SQL format)</a></li>'
            . '</ul></li>';
-      if(session_mayTranslate($dbConnection))
-        echo '<li><a href="shortlinks.php">Shortlinks</a></li>';
       ?>
       <li><a href="userAccount.php">User account</a></li>
       <?php
