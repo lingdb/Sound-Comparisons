@@ -30,14 +30,31 @@ define(['backbone','collections/WordCollection'], function(Backbone, WordCollect
     */
   , getWords: function(){
       if(this._words === null){
-        var mId = this.getId(), ws = [];
-        App.wordCollection.each(function(w){
-          var m = w.getMeaningGroup();
-          if(m && m.getId() == mId) ws.push(w);
-        });
-        this._words = new WordCollection(ws);
+        this._words = this.filterWordCollection(App.wordCollection);
       }
       return this._words;
+    }
+    /**
+      Works similar to getWords,
+      but uses words from the FilteredWordCollection instead
+      of App.wordCollection.
+      Doesn't provide memoization because filter may change.
+    */
+  , getFilteredWords: function(){
+      return this.filterWordCollection(App.filteredWordCollection);
+    }
+    /**
+      @param collection WordCollection
+      @return filtered WordCollection
+      Returns a WordCollection that contains only Words that belong to this MeaningGroup.
+    */
+  , filterWordCollection: function(collection){
+      var mId = this.getId(), ws = [];
+      collection.each(function(w){
+        var m = w.getMeaningGroup();
+        if(m && m.getId() == mId) ws.push(w);
+      });
+      return new WordCollection(ws);
     }
   });
 });

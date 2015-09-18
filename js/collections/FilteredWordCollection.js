@@ -18,6 +18,14 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
       */
     , regex: ''
     }
+   , initialize: function(){
+      /*
+        Binding on events of WordCollection instance:
+        See https://stackoverflow.com/q/12279236/448591
+        This is necessary for first rendering, and will probably come in handy when changing study…
+      */
+      App.wordCollection.on('change reset add remove', this.filterWords, this);
+    }
     /**
       @param options Object following the schema of filterOptions.
       Updates the models of this collection by filtering the models of App.wordCollection.
@@ -66,6 +74,19 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
       }, this);
       //Setting models:
       this.reset(_.values(wMap));
+    }
+    /**
+      @overrides collections/Selection.getSelected(pvk)
+      @param [pvk] String
+      @return selected [Word]
+      Returns the selected Words as an array,
+      but fily those that survive the filter.
+      because the final collection for them is not known.
+      If pvk is given, it is used as the pageView to retrieve the selection for.
+      Otherwise the current pageView will be used.
+    */
+  , getSelected: function(pvk){
+      //FIXME IMPLEMENT!
     }
   });
 });

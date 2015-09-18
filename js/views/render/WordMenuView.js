@@ -129,7 +129,9 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       //Use App.pageState.get{Sp,Ph}Lang
       _.extend(this.model, {searchFilter: data});
     }
-    /***/
+    /**
+      @return self for chaining
+    */
   , updateWordList: function(){
       var data = App.translationStorage.translateStatic({
         title:       'menu_words_words'
@@ -145,7 +147,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
         var isMulti = App.pageState.isMultiView();
         App.meaningGroupCollection.each(function(m){
           //Each meaningGroup should have some words:
-          var words = m.getWords();
+          var words = m.getFilteredWords();
           if(words.length === 0) return;
           //Data for the current MeaningGroup:
           var collapsed = !App.meaningGroupCollection.isSelected(m)
@@ -169,7 +171,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
             var box = {icon: 'icon-chkbox-custom'};
             switch(App.wordCollection.areSelected(words)){
               case 'all':
-                var remaining = words.getDifference(App.wordCollection.getSelected(), words);
+                var remaining = words.getDifference(App.filteredWordCollection.getSelected(), words);
                 box.icon = 'icon-check';
                 box.link = 'data-href="'+App.router.linkCurrent({words: remaining})+'"';
                 box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_minus');
@@ -178,7 +180,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
                 box.icon = 'icon-chkbox-half-custom';
               /* falls through */
               case 'none':
-                var additional = words.getUnion(App.wordCollection.getSelected(), words);
+                var additional = words.getUnion(App.filteredWordCollection.getSelected(), words);
                 box.link = 'data-href="'+App.router.linkCurrent({words: additional})+'"';
                 box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_plus');
             }
@@ -194,12 +196,13 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
           }
         }, this);
       }else{
-        data.wordList = this.buildWordList(App.wordCollection);
+        data.wordList = this.buildWordList(App.filteredWordCollection);
         if('meaningGroups' in this.model){
           delete this.model.meaningGroups;
         }
       }
       _.extend(this.model, data);
+      return this;
     }
     /**
       This is a helper method for updateWordList.
@@ -261,8 +264,8 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
   , render: function(){
       //Updating the WordMenu html representation:
       this.$el.find('.nano-content').html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
-      //Updating soundfiles:
-      App.views.audioLogic.findAudio(this.$el);
+      //Soundfiles and related:
+      this.setupMgWordEvents();
       //Reinitializing the WordlistFilter:
       this.wordlistFilter.reinitialize();
       //Setting up callbacks:
@@ -276,16 +279,40 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
           App.router.navigate($(this).find(':selected').data('href'));
         });
       });
+      //IPAKeyboard:
+      this.$('#IPAOpenKeyboard').click(function(){
+        $('#ipaKeyboard').toggleClass('hide').trigger('shown');
+      });
+    }
+    /**
+      Redraws only the meaningGroups/WordList part of the WordMenu.
+    */
+  , renderMgWords: function(){
+      var tStore = App.templateStorage;
+      if(this.model.isLogical){
+        var mgHeadline = tStore.render('MeaningGroupsHeadline', this.model)
+          , mgList = tStore.render('MeaningGroupList', this.model);
+        this.$('.meaninggroupHeadline').replaceWith(mgHeadline);
+        this.$('.meaningGroupList').replaceWith(mgList);
+      }else{
+        var wordList = tStore.render('WordList', this.model);
+        this.$('.wordList').replaceWith(wordList);
+      }
+      this.setupMgWordEvents();
+    }
+    /**
+      Readys events for meaningGroups/WordList part of the WordMenu.
+      Used by this.render{,MgWords}().
+    */
+  , setupMgWordEvents: function(){
+      //Updating soundfiles:
+      App.views.audioLogic.findAudio(this.$el);
       //Checkboxes in MultiViews:
       if(App.pageState.isMultiView() && App.pageState.wordOrderIsLogical()){
         this.$('dl.meaninggroupList > dt > a[data-href]').click(function(){
           App.router.navigate($(this).attr('data-href'));
         });
       }
-      //IPAKeyboard:
-      this.$('#IPAOpenKeyboard').click(function(){
-        $('#ipaKeyboard').toggleClass('hide').trigger('shown');
-      });
     }
   });
 });

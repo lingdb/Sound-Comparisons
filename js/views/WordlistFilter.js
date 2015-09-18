@@ -143,9 +143,7 @@ define(['backbone'], function(Backbone){
       });
       //Calling updates for views as necessary:
       if(App.templateStorage.get('ready')){
-        //FIXME THIS CAUSES A LOOP.
-        //It would be better if we could only rerender the WordList.
-        //App.views.renderer.model.wordMenuView.render();
+        App.views.renderer.model.wordMenuView.updateWordList().renderMgWords();
         if(App.pageState.isPageView('l')){
           App.views.renderer.model.languageView.updateLanguageTable().render();
         }
