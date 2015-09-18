@@ -60,8 +60,11 @@ class Git {
     if(self::hasGit()){//We've got us some git:
       $branch = `git symbolic-ref --short HEAD`;
     }else{
-      $branch = array_pop(explode('/', file_get_contents($gitDir.'/HEAD')));
+      $branch = file_get_contents($gitDir.'/HEAD');
     }
+    //$branch may be like 'refs/heads/master\n' instead of 'master\n':
+    $branch = array_pop(explode('/', $branch));
+    //Removing trailing newline:
     return rtrim($branch, "\n");
   }
 }

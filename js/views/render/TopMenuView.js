@@ -211,7 +211,7 @@ define(['backbone'], function(Backbone){
           App.views.shortLinkModalView.render(data);
         }).fail(function(){
           console.log('User could not create short link!');
-          var msg = App.translationStorage.translationStorage('shortLinkCreationFailed');
+          var msg = App.translationStorage.translateStatic('shortLinkCreationFailed');
           window.alert(msg);
         });
       });
