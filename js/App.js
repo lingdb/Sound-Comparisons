@@ -42,6 +42,7 @@ requirejs([
   'require','jquery','backbone','underscore'
 , 'collections/ContributorCollection'
 , 'collections/FamilyCollection'
+, 'collections/FilteredWordCollection'
 , 'collections/LanguageCollection'
 , 'collections/LanguageStatusTypeCollection'
 , 'collections/MeaningGroupCollection'
@@ -111,6 +112,8 @@ requirejs([
       if(!_.isUndefined(Map)){
         _.extend(window.App, {map: new (require('models/Map'))()});
       }
+      //Adding FilteredWordCollection:
+      App.filteredWordCollection = new (require('collections/FilteredWordCollection'))();
       //Making sure TranslationStorage does it's thing:
       App.translationStorage.init();
       //Listening for changing global data:
