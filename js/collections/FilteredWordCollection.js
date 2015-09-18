@@ -18,13 +18,6 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
       */
     , regex: ''
     }
-  , initialize: function(){
-      /*
-        Binding on events of WordCollection instance:
-        See https://stackoverflow.com/q/12279236/448591
-      */
-      App.wordCollection.on('change reset add remove', this.filterWords, this);
-    }
     /**
       @param options Object following the schema of filterOptions.
       Updates the models of this collection by filtering the models of App.wordCollection.
@@ -38,11 +31,11 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
       options = this.filterOptions;
       //Unfiltered words:
       var toFilter = [];//[[FilterString, Word]], may contain duplicate Words
-      if(options.usePhonetics){
+      if(options.usePhonetics !== true){
         var spLang = App.pageState.getSpLang();
         App.wordCollection.each(function(word){
           toFilter.push([word.getNameFor(spLang), word]);
-        });
+        }, this);
       }else{
         var phLang = App.pageState.getPhLang();
         App.wordCollection.each(function(word){
@@ -59,8 +52,8 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
           _.each(phonetics, function(p){
             if(_.isEmpty(p)){ return; }
             toFilter.push([p, word]);
-          });
-        });
+          }, this);
+        }, this);
       }
       //Filtering words:
       var wMap = {};//Mapping Word.getId() -> Word

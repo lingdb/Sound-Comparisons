@@ -11,6 +11,8 @@ define(['backbone'], function(Backbone){
     }
     /***/
   , initialize: function(){
+      //If noFilter is set, reinitialize won't filter.
+      this.noFilter = false;
       App.pageState.on('change:pageView', this.clearStorage, this);
     }
   /*
@@ -25,8 +27,6 @@ define(['backbone'], function(Backbone){
         $(App.storage[this.storage.selectedId]).addClass('selected');
         $(App.storage[this.storage.inputId]).val(App.storage[this.storage.content] || '');
       }
-      //Checking if we can filter the languageTable aswell:
-      this.hasLanguageTable = App.pageState.isPageView('l');
       //Binding events:
       var t = this;
       $('#SpellingFilter').keyup(function(){ t.spellingFilter(); });
@@ -40,14 +40,16 @@ define(['backbone'], function(Backbone){
           App.study.trackLinks(fragment);
         })(App.router);
       });
-      //Initial triggers:
-      if($('#SpellingFilter').val() !== ''){
-        this.spellingFilter();
+      if(!this.noFilter){
+        //Initial triggers:
+        if($('#SpellingFilter').val() !== ''){
+          this.spellingFilter();
+        }
+        if($('#PhoneticFilter').val() !== ''){
+          this.phoneticFilter();
+        }
+        this.updateCount();
       }
-      if($('#PhoneticFilter').val() !== ''){
-        this.phoneticFilter();
-      }
-      this.updateCount();
     }
   , clearStorage: function(){
       _.each(_.values(this.storage), function(k){
@@ -109,7 +111,7 @@ define(['backbone'], function(Backbone){
     }
   //Updating the count of filtered words:
   , updateCount: function(){
-      var c = $('ul.wordList li:visible').size();
+      var c = App.filteredWordCollection.length;
       $('#FilterFoundMultiWords').text(c);
       if(c === 0){
         var i = $('#PhoneticFilter');
@@ -124,37 +126,41 @@ define(['backbone'], function(Backbone){
       return this;
     }
   //The magic filter function:
-  , filter: function(set, input){
+  , filter: function(input, isPhonetic){
+      this.noFilter = true;
+      if(isPhonetic === true){
+        input = this.enhanceIPA(input);
+      }
       //General rewriting of input:
       if(_.isString(input)){
         input = input.replace(/^#/, '^');
         input = input.replace(/#$/, '$');
       }
-      //Filtering the set against the input:
-      $(set).each(function(i, e){
-        var word = e.text.toLowerCase();
-        if(word.search(input) >= 0)
-          e.target.show();
-        else
-          e.target.hide();
+      //Filtering words:
+      App.filteredWordCollection.filterWords({
+        usePhonetics: isPhonetic
+      , regex: input
       });
+      //Calling updates for views as necessary:
+      if(App.templateStorage.get('ready')){
+        //FIXME THIS CAUSES A LOOP.
+        //It would be better if we could only rerender the WordList.
+        //App.views.renderer.model.wordMenuView.render();
+        if(App.pageState.isPageView('l')){
+          App.views.renderer.model.languageView.updateLanguageTable().render();
+        }
+      }
+      this.noFilter = false;
       return this.updateCount();
     }
   , spellingFilter: function(){
       $('#PhoneticFilter').val('');
       $('#FilterPhonetic').removeClass('selected');
       $('#FilterSpelling').addClass('selected');
-      var v =  $('#SpellingFilter').val();
+      var v = $('#SpellingFilter').val();
       var input = (!_.isEmpty(v)) ? v.toLowerCase() : '';
       this.setStorage('#FilterSpelling', '#SpellingFilter', input);
-      var elems = $('ul.wordList .color-word').map(function(i, e){
-        return {text: $(e).text(), target: $(e).closest('li')};
-      });
-      this.filter(elems, input);
-      if(this.hasLanguageTable){
-        this.filter(this.getLanguageTableSet(false), input);
-        App.views.renderer.model.languageView.redraw();
-      }
+      this.filter(input, false);
       return this.chkInput(input);
     }
   , phoneticFilter: function(){
@@ -163,29 +169,10 @@ define(['backbone'], function(Backbone){
       $('#FilterPhonetic').addClass('selected');
       var input = $('#PhoneticFilter').val();
       this.setStorage('#FilterPhonetic', '#PhoneticFilter', input);
-      var elems = $('ul.wordList .p50:nth-child(2)').map(function(i, e){
-        var element = $(e)
-          , string  = element.text()
-          , matches = string.match(/\s*\[\s*(.*)\s*\]\s*/);
-        if(matches !== null){
-          if(matches.length <= 1){
-            console.log('WordlistFilter.phoneticFilter() could not find any matches for string:\n\t'+string);
-            return null;
-          }
-          return {text: matches[1], target: element.closest('li')};
-        }else{
-          console.log('WordlistFilter.phoneticFilter() failed regex for string: '+string);
-          return null;
-        }
-      });
-      this.filter(elems, this.enhanceIPA(input));
-      if(this.hasLanguageTable){
-        this.filter(this.getLanguageTableSet(true), input);
-        App.views.renderer.model.languageView.redraw();
-      }
+      this.filter(input, true);
       return this.chkInput(input);
     }
-  //The function that leads the way:
+    //The function that leads the way:
   , pathfinder: function(keep){
       var words = keep ? App.wordCollection.getSelected() : []
         , wIds  = {};

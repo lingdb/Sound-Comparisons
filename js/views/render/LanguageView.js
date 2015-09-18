@@ -176,7 +176,7 @@ define(['views/render/SubView'], function(SubView){
       var spLang = App.pageState.getSpLang();
       //Gathering transcriptions:
       var transcriptions = [];
-      App.wordCollection.each(function(word){
+      App.filteredWordCollection.each(function(word){
         var tr = App.transcriptionMap.getTranscription(language, word);
         if(!tr) return;
         transcriptions.push({
@@ -195,6 +195,7 @@ define(['views/render/SubView'], function(SubView){
         //Adding a key to each chunk:
         return {transcriptions: ts};
       }).value();
+      return this;
     }
     /***/
   , render: function(){
