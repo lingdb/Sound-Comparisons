@@ -446,4 +446,5 @@ div.mapAudio .transcription {
   font-size: 20px;
 }
 /*Stuff for #shortLinkModal:*/
+#createShortLink {margin-top: 2.5px;}
 #shortLinkModal .urlInput {margin-bottom: 0px;}
