@@ -76,7 +76,10 @@ i, .icon, .favicon, input[type="radio"] {
   margin: 5px 0px 5px 0px;
   height: 37px;
 }
-#topMenu .nav-tabs {border-bottom: 0px;}
+#topMenu .nav-tabs {
+  border-bottom: 0px;
+  margin-right: 0px;
+}
 #topMenu .nav-tabs > li:not(.active) > a {
   webkit-box-shadow: 0px 3px 10px #999 inset;
   moz-box-shadow:    0px 3px 10px #999 inset;
@@ -110,21 +113,21 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topMenu .brand, #topMenu .topLink {
   text-shadow: none;
 }
-#topMenu .topLink {
-  padding-left: 10px;
-  padding-right: 10px;
+#topMenu .topLin: {
+  padding-left: 0px;
+  padding-right: 0px;
 }
 .topLink > .inline, #topMenu li.active .inline {text-shadow: none; margin: 0px;}
 #topMenu .pvImg {margin-right: .5em;}
 #topmenuFamilies a.topLink {padding-left: 0px; font-size: 17.5px;}
 #topmenuFamilies li.active>a {height: 22px;}
-#topmenuSiteLang a.topLink {padding-left: 0px;}
+#topmenuSiteLang a.topLink {padding-left: 0px; padding-right: 0px;}
 #topmenuDownloads {float: right; margin-right: 0px; margin-top: 7px;}
 #topmenuDownloads a.topLink {padding-right: 0px;}
 #topmenuDownloads ul.dropdown-menu>li {padding-left: 1em;}
 #topmenuSoundOptions, #topmenuMisc {padding-top: 2px;}
 #topmenuAbout {float: right; margin-right: 0px;}
-#topmenuAbout a.topLink {height: 30px; padding-top: 5px; padding-right: 0px;}
+#topmenuAbout a.topLink {height: 30px; padding: 0px;}
 #topmenuAbout a.topLink img {height: 30px; width: 30px;}
 #topmenuAbout .dropdown-menu {margin-left: -100px;}
 #topmenuAbout .dropdown-menu:before {left: auto; right: 9px;}
