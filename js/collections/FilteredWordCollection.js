@@ -42,7 +42,12 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
       if(options.usePhonetics !== true){
         var spLang = App.pageState.getSpLang();
         App.wordCollection.each(function(word){
-          toFilter.push([word.getNameFor(spLang), word]);
+          var text = word.getNameFor(spLang);
+          if(_.isArray(text)){
+            _.each(text, function(t){ toFilter.push([t, word]); }, this);
+          }else{
+            toFilter.push([text, word]);
+          }
         }, this);
       }else{
         var phLang = App.pageState.getPhLang();

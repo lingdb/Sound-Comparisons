@@ -295,7 +295,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
         this.$('.meaninggroupHeadline').replaceWith(mgHeadline);
         this.$('.meaningGroupList').replaceWith(mgList);
       }else{
-        var wordList = tStore.render('WordList', this.model);
+        var wordList = tStore.render('WordList', this.model.wordList);
         this.$('.wordList').replaceWith(wordList);
       }
       this.setupMgWordEvents();
