@@ -7,6 +7,22 @@ require_once('translationTableDescription.php');
 */
 class TranslationTableProjection {
   /**
+    Field for memoization of projectAll().
+  */
+  private static $allProjection = null;
+  /**
+    @return $this->allProjection TranslationTableProjection
+    Builds an instance of TranslationTableProjection that projects
+    to the complete description as ggiven by TranslationTableDescription.
+  */
+  public static function projectAll(){
+    if($this->allProjection === null){
+      $this->allProjection = new TranslationTableProjection();
+      $this->allProjection->descriptions = TranslationTableDescription::getTableDescriptions();
+    }
+    return $this->allProjection;
+  }
+  /**
     @param $tables [String]
     @return $ret TranslationTableProjection || Exception
     Tries to build an instance of TranslationTableProjection given a number of
@@ -152,5 +168,25 @@ class TranslationTableProjection {
       }
     }
     return $ret;
+  }
+  /**
+    @return $projections [TranslationTableProjection]
+    This method provides instances of TranslationTableProjection for each
+    column of each table for the current projection.
+    This is helpful to adapt TranslationTableProjection to work as a TranslationProvider.
+    If combined with projectAll(),
+    this method is an easy way to get TranslationTableProjection instances
+    for all columns in all tables translated.
+  */
+  public function projectColumns(){
+    $projections = array();
+    foreach($this->descriptions as $tableName => $desc){
+      foreach($desc['columns'] as $column){
+        $projection = new TranslationTableProjection();
+        $projection->descriptions = array($tableName => array($column));
+        array_push($projections, $projection);
+      }
+    }
+    return $projections;
   }
 }
