@@ -8,7 +8,7 @@ require_once('translationTableDescription.php');
 class TranslationTableProjection {
   /**
     @param $tables [String]
-    @return TranslationTableProjection || Exception
+    @return $ret TranslationTableProjection || Exception
     Tries to build an instance of TranslationTableProjection given a number of
     table names.
     May fail and return an Exception if the given $tables don't match any
@@ -133,7 +133,7 @@ class TranslationTableProjection {
           }
           //Fetching translation:
           $category = $column['category'];
-          $q = "SELECT Trans FROM Page_DynamicTranslation "
+          $q = "SELECT $fieldSelect, Trans FROM Page_DynamicTranslation "
              . "WHERE TranslationId = $tId "
              . "AND Category = '$category' "
              . "AND Field = '$fieldSelect' "
@@ -142,9 +142,9 @@ class TranslationTableProjection {
           foreach($fetchAll($q) as $tRow){//foreach acts as if
             $entry['Translation'] = array(
               'TranslationId' => $tId
-            , 'Translation' => $tRow[0]
-            , 'Payload' => '' //FIXME
-            , 'TranslationProvider' => '' //FIXME
+            , 'Translation' => $tRow[1]
+            , 'Payload' => $tRow[0]
+            , 'TranslationProvider' => $category
             );
             array_push($ret, $entry);
           }
