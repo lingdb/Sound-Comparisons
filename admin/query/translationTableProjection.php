@@ -1,6 +1,7 @@
 <?php
 require_once('translationTableDescription.php');
-require_once('translationColumnDescription.php');
+require_once('translationColumnProjection.php');
+require_once('../../query/dataProvider.php');
 /**
   Projection from TranslationTableDescription
   to a subset of its tables.
@@ -12,17 +13,25 @@ class TranslationTableProjection {
   */
   private static $allProjection = null;
   /**
-    @return $this->allProjection TranslationTableProjection
-    Builds an instance of TranslationTableProjection that projects
-    to the complete description as ggiven by TranslationTableDescription.
-    //FIXME needs to take into account study dependant projections!
+    @return $this->allProjection [TranslationTableProjection] || Exception
+    Builds instances of TranslationTableProjection for all projections.
   */
   public static function projectAll(){
-    if($this->allProjection === null){
-      $this->allProjection = new TranslationTableProjection();
-      $this->allProjection->descriptions = TranslationTableDescription::getTableDescriptions();
+    if(self::$allProjection === null){
+      //Gathering all tables:
+      $tables = array();
+      foreach(DataProvider::fetchAll('SHOW TABLES') as $row){
+        array_push($tables, current($row));
+      }
+      //Projecting onto all tables:
+      self::$allProjection = self::projectTables($tables);
+      if(self::$allProjection instanceof Exception){
+        $e = self::$allProjection;
+        self::$allProjection = null;
+        return $e;
+      }
     }
-    return $this->allProjection;
+    return self::$allProjection;
   }
   /**
     @param $tables [String]
@@ -83,6 +92,10 @@ class TranslationTableProjection {
     - Instead of sNameRegex the outermost keys will directly be table names.
   */
   protected $descriptions = array();
+  //Getter for protected $descriptions
+  public function getDescriptions(){
+    return $this->descriptions;
+  }
   /**
     @param $tId Int, TranslationId from the Page_Translations table.
     @return $ret [obj] || Exception

@@ -17,7 +17,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
     if(count($this->descriptions) !== 1){
       return new Exception('Projection on other than a single table in TranslationTableProjection.update()');
     }
-    foreach($this->descriptions as $tableName as $desc){
+    foreach($this->descriptions as $tableName => $desc){
       if(count($desc['columns']) !== 1){
         return new Exception('Projection on other than a single column in TranslationTableProjection.update()');
       }

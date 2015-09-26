@@ -1,4 +1,7 @@
 <?php
+$dir = getcwd(); chdir(__DIR__);
+require_once('../config.php');
+chdir($dir); unset($dir);
 /**
   This is mostly a helper class for query/data.php,
   but since some of it's parts shall be used at other places also,

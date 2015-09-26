@@ -64,7 +64,7 @@ class TranslationTableDescription {
       , array(
           'columnName' => 'Abbr'
         , 'fieldSelect' => 'SortGroup'
-        , 'description' => 'dt_contributor_categories_trans_abbr'//FIXME ADD to descriptions!
+        , 'description' => 'dt_contributor_categories_trans_abbr'//FIXME ADD to descriptions table!
         , 'category' => 'ContributorCategoriesTranslationProvider'
         )
       )
