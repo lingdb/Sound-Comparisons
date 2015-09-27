@@ -204,4 +204,16 @@ class TranslationTableProjection {
     }
     return $projections;
   }
+  /**
+    @param $lambda function($tableName, $desc)
+    @return $ret [$lambda()]
+    Executes given $lambda with $tableName and corresponding $desc from $descriptions and returns return values of $lambda.
+  */
+  protected function withTables($lambda){
+    $ret = array();
+    foreach($this->descriptions as $tableName => $desc){
+      array_push($ret, $lambda($tableName, $desc));
+    }
+    return $ret;
+  }
 }
