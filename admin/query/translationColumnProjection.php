@@ -29,6 +29,14 @@ class TranslationColumnProjection extends TranslationTableProjection {
     Config::error('Unreachable code?!', true, true);
   }
   /**
+    @return $tableName String
+  */
+  public function getTable(){
+    return current($this->withTables(function($tName){
+      return $tName;
+    }));
+  }
+  /**
     @param $tId TranslationId
     @param $payload String fieldSelect value from description
     @param $update String new value for translation entry
