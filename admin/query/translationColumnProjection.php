@@ -70,4 +70,50 @@ class TranslationColumnProjection extends TranslationTableProjection {
       return true;
     });
   }
+  /**
+    @param $limit Int = 30
+    @return $offsets [Int]
+    This method calculates the offsets that could be used for pagination with a TranslationColumnProjection, provided a given $limit.
+  */
+  public function offsets($limit = 30){
+    $table = $this->getTable();
+    $q = "SELECT COUNT(*) FROM $table";
+    $set = Config::getConnection()->query($q);
+    $count = 0;
+    if($r = $set->fetch_assoc()){
+      $count = $r[0];
+    }
+    $offsets = array();
+    for($offset = 0; $offset < $count; $offset += $limit){
+      array_push($offsets, $offset);
+    }
+    return $offsets;
+  }
+  /**
+    @param $tId TranslationId to use
+    @param $offset Int the offset for the page to fetch.
+    @param $limit Int = 30 the limit for the page to fetch.
+    @return $ret [obj] || Exception
+    obj will be arrays resembling JSON objects following this syntax:
+    {
+      Description: {Req: '', Description: ''}
+    , Original: ''
+    , Translation: {TranslationId: 5, Translation: '', Payload: '', TranslationProvider: ''}
+    }
+    If $offset === -1, page(…) shall return all elements.
+  */
+  public function page($tId, $offset, $limit = 30){
+    //Setting up $o as limit+offset sql part
+    $offset = is_numeric($offset) ? $offset : -1;
+    $limit  = is_numeric($limit)  ? $limit  : 30;
+    $o = " LIMIT $limit OFFSET $offset";
+    if($offset < 0 || $limit <= 0){$o = '';}
+    //Table to use:
+    $tableName = $this->getTable();
+    //Column specific code:
+    return $this->withColumn(function($column) use ($tId, $tableName){
+      //FIXME COMPARE LanguagesTranslationProvider.pageColumn(…)
+      //FIXME IMPLEMENT
+    });
+  }
 }
