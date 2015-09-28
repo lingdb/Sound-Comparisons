@@ -125,14 +125,7 @@ class TranslationTableProjection {
     foreach($this->descriptions as $tableName => $desc){
       foreach($desc['columns'] as $column){
         //Fetching Description:
-        $req = $column['description'];
-        $q = "SELECT Req, Description FROM Page_StaticDescription "
-           . "WHERE Req = '$req' LIMIT 1";
-        $description = array();
-        foreach(DataProvider::fetchAll($q) as $row){//foreach acts as if
-          $description['Req'] = $row['Req'];
-          $description['Description'] = $row['Description'];
-        }
+        $description = TranslationTableDescription::fetchDescription($column);
         //Fetching original entries:
         $columnName = $column['columnName'];
         $fieldSelect = $column['fieldSelect'];
@@ -212,5 +205,22 @@ class TranslationTableProjection {
       array_push($ret, $lambda($tableName, $desc));
     }
     return $ret;
+  }
+  /**
+    @param $column {…} column entry from $descriptions
+    @return $description array('Req' => String, 'Description' => String) || Exception
+    Fetches the description entry for a given $column from the database.
+  */
+  protected static fetchDescription($column){
+    $req = $column['description'];
+    $q = "SELECT Req, Description FROM Page_StaticDescription "
+       . "WHERE Req = '$req' LIMIT 1";
+    foreach(DataProvider::fetchAll($q) as $row){//foreach acts as if
+      return array(
+        'Req' => $row['Req']
+      , 'Description' => $row['Description']
+      );
+    }
+    return new Exception("Could not fetch Description for \$req='$req'.");
   }
 }
