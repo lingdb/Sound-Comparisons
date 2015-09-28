@@ -211,7 +211,7 @@ class TranslationTableProjection {
     @return $description array('Req' => String, 'Description' => String) || Exception
     Fetches the description entry for a given $column from the database.
   */
-  protected static fetchDescription($column){
+  protected static function fetchDescription($column){
     $req = $column['description'];
     $q = "SELECT Req, Description FROM Page_StaticDescription "
        . "WHERE Req = '$req' LIMIT 1";
