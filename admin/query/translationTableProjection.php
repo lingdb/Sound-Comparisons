@@ -198,7 +198,14 @@ class TranslationTableProjection {
     foreach($this->descriptions as $tableName => $desc){
       foreach($desc['columns'] as $column){
         $projection = new TranslationColumnProjection();
-        $projection->descriptions = array($tableName => array($column));
+        $cDesc = array(
+          'columns' => $column
+        , 'dependsOnStudy' => $desc['dependsOnStudy']
+        );
+        if($desc['dependsOnStudy'] === true){
+          $cDesc['study'] = $desc['study'];
+        }
+        $projection->descriptions = array($tableName => $cDesc);
         array_push($projections, $projection);
       }
     }

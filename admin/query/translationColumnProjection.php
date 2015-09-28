@@ -112,6 +112,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
     $tableName = $this->getTable();
     //Column specific code:
     return $this->withColumn(function($column) use ($tId, $tableName){
+      $q = "";
       //FIXME COMPARE LanguagesTranslationProvider.pageColumn(…)
       //FIXME IMPLEMENT
     });
