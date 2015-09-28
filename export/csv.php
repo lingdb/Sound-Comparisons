@@ -1,8 +1,8 @@
 <?php
 //Setup:
 chdir('..');
-require_once 'config.php';
-require_once 'query/dataProvider.php';
+require_once('config.php');
+require_once('query/dataProvider.php');
 /**
   @param $filename String - generated downlaod will be named $filename.csv
   @param $headline String[] - first row of the .csv

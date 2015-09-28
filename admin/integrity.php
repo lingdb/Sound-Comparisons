@@ -1,5 +1,5 @@
 <?php
-require 'common.php';
+require_once('common.php');
 if(!session_validate($dbConnection))
   header('LOCATION: index.php');
 if(!session_mayEdit($dbConnection))
@@ -10,12 +10,12 @@ if(!session_mayEdit($dbConnection))
   <?php
     $title = 'Checks for database integrity';
     $jsFiles = array('extern/jquery.dataTables.js');
-    require_once 'head.php';
+    require_once('head.php');
   ?>
   <body>
     <?php
-      require_once 'topmenu.php';
-      require_once 'query/Integrity.php';
+      require_once('topmenu.php');
+      require_once('query/Integrity.php');
       $data = Integrity::checkIntegrity();
       $mkTable = function($arr){
         $head = '<tr><th>Table:</th><th>Data:</th><th>Reason:</th></tr>';

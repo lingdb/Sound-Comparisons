@@ -1,5 +1,5 @@
 <?php
-  require_once 'common.php';
+  require_once('common.php');
   //The loginprocedure:
   if(!isset($_GET['action'])){
     $_GET['action'] = '';
@@ -39,10 +39,10 @@
         <!DOCTYPE HTML>
         <html><?php
           $title = "Login failed, try again.";
-          require 'head.php';
+          require_once('head.php');
         ?><body><?php
           $loginMessage = "Login failed.";
-          require 'loginForm.php';
+          require('loginForm.php');
         ?></body>
         </html>
       <?php }
@@ -75,10 +75,10 @@
        <!DOCTYPE HTML>
         <html><?php
           $title = "Login to perform administration tasks.";
-          require 'head.php';
+          require_once('head.php');
         ?><body><?php
           unset($loginMessage);
-          require 'loginForm.php';
+          require_once('loginForm.php');
         ?></body>
         </html>
 <?php }} /*Closing if and case blocks*/

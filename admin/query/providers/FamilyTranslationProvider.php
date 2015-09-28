@@ -3,7 +3,7 @@
     The FamilyTranslationProvider provides search and update
     facilities for the table Page_DynamicTranslation_Families.
   */
-  require_once "TranslationProvider.php";
+  require_once('TranslationProvider.php');
   /*
     Mapping between tables Families, Page_DynamicTranslation:
     CONCAT(StudyIx, FamilyIx) <-> Field

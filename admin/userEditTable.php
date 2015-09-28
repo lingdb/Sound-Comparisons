@@ -3,7 +3,7 @@
   The userEditTable is used by overview.php.
   It is also an external file so that it can be called from js directly.
 */
-require_once 'common.php';
+require_once('common.php');
 if(!session_mayEdit())
   die('Sorry, I cannot show you more here.');
 $q = "SELECT UserId, Login, AccessTranslate, AccessEdit FROM Edit_Users";

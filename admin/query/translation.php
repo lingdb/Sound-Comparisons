@@ -17,10 +17,10 @@
     In addition to the now completely modular, unified approach to translation,
     the site also got a new JavaScript interface, which uses the methods supplied by this file.
   */
-  require_once 'translationClass.php';
+  require_once('translationClass.php');
   //
   chdir('..');
-  require_once 'common.php';
+  require_once('common.php');
   session_validate()     or Config::error('403 Forbidden');
   session_mayTranslate() or Config::error('403 Forbidden');
   //Actions:

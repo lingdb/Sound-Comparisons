@@ -1,5 +1,5 @@
 <?php
-  require_once 'common.php';
+  require_once('common.php');
   if(!session_validate($dbConnection))
     header('LOCATION: index.php');
 ?>
@@ -8,11 +8,11 @@
   <?php
     $title   = "Welcome to the administration area.";
     $jsFiles = array("overview.js");
-    require 'head.php';
+    require_once('head.php');
   ?>
   <body>
     <?php
-      require 'topmenu.php';
+      require_once('topmenu.php');
     ?>
     <form class="form-inline" name="updatePassword" method="post" action="index.php?action=updatePassword">
       <fieldset>

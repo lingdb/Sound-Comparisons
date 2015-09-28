@@ -1,6 +1,6 @@
 <?php
 //Setup to have a JSON response:
-require_once '../config.php';
+require_once('../config.php');
 Config::setResponseJSON();
 //Blacklist to hide some templates:
 $blacklist = array('Projects');

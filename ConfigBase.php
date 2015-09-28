@@ -19,7 +19,7 @@ if(get_magic_quotes_gpc()){
   }
   unset($process);
 }
-require_once "query/dataProvider.php";
+require_once('query/dataProvider.php');
 /**
   The ConfigBase class aims to provide basic methods to the Config class,
   so that the Config can focus on providing login data for the database,
@@ -67,7 +67,7 @@ abstract class ConfigBase {
   /***/
   public static function getMustache(){
     if(is_null(self::$mustache)){
-      require_once 'extern/mustache.php';
+      require_once('extern/mustache.php');
       self::$mustache = new Mustache_Engine(array(
         'charset' => 'UTF-8'
       , 'loader'  => new Mustache_Loader_FilesystemLoader(

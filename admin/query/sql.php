@@ -1,7 +1,7 @@
 <?php
 chdir('..');
-require 'common.php';
-require_once '../query/cacheProvider.php';
+require_once('common.php');
+require_once('../query/cacheProvider.php');
 if(php_sapi_name() === 'cli'){
   //Translating $argv to $_GET,$_POST:
   if(count($argv) > 1){
@@ -115,7 +115,7 @@ switch($action){
     ?><!DOCTYPE HTML>
     <html><?php
       $title = "SQL file processed.";
-      require 'head.php';
+      require_once('head.php');
     ?><body>
       <h3>File processed.</h3>
       <a href="..">Go back!</a>

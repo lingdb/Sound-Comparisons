@@ -17,21 +17,21 @@
     In addition to the now completely modular, unified approach to translation,
     the site also got a new JavaScript interface, which uses the methods supplied by this file.
   */
-  require_once 'providers/TranslationProvider.php';
-  require_once 'providers/StaticTranslationProvider.php';
-  require_once 'providers/ContributorCategoriesTranslationProvider.php';
-  require_once 'providers/FamilyTranslationProvider.php';
-  require_once 'providers/DynamicTranslationProvider.php';
-  require_once 'providers/LanguageStatusTypesTranslationProvider.php';
-  require_once 'providers/SpellingLanguagesTranslationProvider.php';
-  require_once 'providers/MeaningGroupsTranslationProvider.php';
-  require_once 'providers/RegionLanguagesTranslationProvider.php';
-  require_once 'providers/RegionsTranslationProvider.php';
-  require_once 'providers/StudyTranslationProvider.php';
-  require_once 'providers/StudyTitleTranslationProvider.php';
-  require_once 'providers/TranscrSuperscriptInfoTranslationProvider.php';
-  require_once 'providers/TranscrSuperscriptLenderLgsTranslationProvider.php';
-  require_once 'providers/WordsTranslationProvider.php';
+  require_once('providers/TranslationProvider.php');
+  require_once('providers/StaticTranslationProvider.php');
+  require_once('providers/ContributorCategoriesTranslationProvider.php');
+  require_once('providers/FamilyTranslationProvider.php');
+  require_once('providers/DynamicTranslationProvider.php');
+  require_once('providers/LanguageStatusTypesTranslationProvider.php');
+  require_once('providers/SpellingLanguagesTranslationProvider.php');
+  require_once('providers/MeaningGroupsTranslationProvider.php');
+  require_once('providers/RegionLanguagesTranslationProvider.php');
+  require_once('providers/RegionsTranslationProvider.php');
+  require_once('providers/StudyTranslationProvider.php');
+  require_once('providers/StudyTitleTranslationProvider.php');
+  require_once('providers/TranscrSuperscriptInfoTranslationProvider.php');
+  require_once('providers/TranscrSuperscriptLenderLgsTranslationProvider.php');
+  require_once('providers/WordsTranslationProvider.php');
   //FOO BELOW
   class Translation {
     private static $providers = array();

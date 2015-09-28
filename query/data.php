@@ -22,10 +22,11 @@ if(php_sapi_name() === 'cli'){
   }
 }
 //Setup:
-require_once 'dataProvider.php';
-require_once 'cacheProvider.php';
+chdir(__DIR__);
+require_once('dataProvider.php');
+require_once('cacheProvider.php');
 chdir('..');
-require_once 'config.php';
+require_once('config.php');
 /*
   For the site to do as much as possible in the browser, it's crucial to have a data representation in JSON,
   so that we can use and manipulate stuff in JavaScript with ease.

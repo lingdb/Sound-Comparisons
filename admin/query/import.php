@@ -7,7 +7,7 @@
   */
   /* Setup and session verification */
   chdir('..');
-  require_once 'common.php';
+  require_once('common.php');
   chdir('query');//Need to go back for current export.
   //We only check for the session, if not on cli:
   if(php_sapi_name() !== 'cli'){

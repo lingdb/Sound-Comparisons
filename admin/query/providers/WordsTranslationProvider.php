@@ -1,6 +1,6 @@
 <?php
   /***/
-  require_once "DynamicTranslationProvider.php";
+  require_once('DynamicTranslationProvider.php');
   /*
     Mapping between Words_$s and Page_DynamicTranslation:
     CONCAT(Study,'-',IxElicitation,IxMorphologicalInstance) <-> Field

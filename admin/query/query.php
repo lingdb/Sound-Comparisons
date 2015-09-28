@@ -1,7 +1,7 @@
 <?php
   /* Setup and session verification */
   chdir('..');
-  require_once 'common.php';
+  require_once('common.php');
   session_validate() or Config::error('403 Forbidden');
   session_mayEdit()  or Config::error('403 Forbidden');
   //Actions:

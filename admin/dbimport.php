@@ -1,5 +1,5 @@
 <?php
-  require_once 'common.php';
+  require_once('common.php');
   /*Login check and procedure*/
   if(!session_validate($dbConnection))
     header('LOCATION: index.php');
@@ -11,14 +11,14 @@
   <?php
     $title   = "Import of .csv files.";
     $jsFiles = array('dbimport.js');
-    require_once 'head.php';
+    require_once('head.php');
     //<script type='application/javascript' src='js/main.js'></script>
     $max = ini_get_all();
     $max = $max['max_file_uploads'];
     $max = __::min(array($max['global_value'],$max['local_value']));
   ?>
   <body><?php
-    require_once 'topmenu.php';
+    require_once('topmenu.php');
     ?><form class="form-inline">
       <label>
         View the data for a LanguageFamily:

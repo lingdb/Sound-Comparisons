@@ -1,6 +1,6 @@
 <?php
   /***/
-  require_once "DynamicTranslationProvider.php";
+  require_once('DynamicTranslationProvider.php');
   /*
     Mapping between tables LanguageStatusTypes, Page_DynamicTranslation:
     LanguageStatusType <-> Field

@@ -1,6 +1,6 @@
 <?php
   /***/
-  require_once "TranslationProvider.php";
+  require_once('TranslationProvider.php');
   class StudyTitleTranslationProvider extends TranslationProvider{
     public function search($tId, $searchText, $searchAll = false){
       //Setup

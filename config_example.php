@@ -4,9 +4,9 @@
   and remember to enter data for the private variables
   under 'Configuration:'
 */
-require_once 'extern/underscore.php';
+require_once('extern/underscore.php');
 //Importing the Global class for Config to extend:
-require_once 'ConfigBase.php';
+require_once('ConfigBase.php');
 //Making sure we've got a default timezone:
 date_default_timezone_set('UTC');
 /* A class to bundle all configuration issues for the website. */

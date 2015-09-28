@@ -1,6 +1,6 @@
 <?php
   chdir('..');
-  require_once 'common.php';
+  require_once('common.php');
   /* Checking for edit rights: */
   if(!session_mayEdit())
     Config::error('You are not allowed to access this feature.');

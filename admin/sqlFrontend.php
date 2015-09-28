@@ -1,5 +1,5 @@
 <?php
-require 'common.php';
+require_once('common.php');
 if(!session_validate($dbConnection))
   header('LOCATION: index.php');
 if(!session_mayEdit($dbConnection))
@@ -10,10 +10,10 @@ if(!session_mayEdit($dbConnection))
   <?php
     $title = 'Perform database operations via SQL';
     $jsFiles = array();
-    require_once 'head.php';
+    require_once('head.php');
   ?>
   <body>
-    <?php require_once 'topmenu.php'; ?>
+    <?php require_once('topmenu.php'); ?>
     <div class="row-fluid">
       <div class="span6">
         <form class="form-horizontal" action="query/sql.php?action=import" method="POST" enctype="multipart/form-data">

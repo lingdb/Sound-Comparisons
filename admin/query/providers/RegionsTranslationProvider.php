@@ -1,6 +1,6 @@
 <?php
   /***/
-  require_once "DynamicTranslationProvider.php";
+  require_once('DynamicTranslationProvider.php');
   /*
     Mapping between tables Regions_$s and Page_DynamicTranslation:
     CONCAT(Study,'-',StudyIx,FamilyIx,SubFamilyIx,RegionGpIx) <-> Field

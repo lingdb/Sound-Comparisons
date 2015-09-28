@@ -1,5 +1,5 @@
 <?php
-  require_once 'validate.php';
+  require_once('validate.php');
   if(session_mayEdit($dbConnection))
     $isAdmin    = '1';
   else $isAdmin = '0';
@@ -34,7 +34,7 @@
       <li><a href="index.php?action=logout">Logout</a></li>
     </ul>
     <?php
-      require_once '../Git.php';
+      require_once('../Git.php');
       if($g = Git::getCommit('../.git')){
     ?>
     <ul class="nav pull-right" id="topMenu" data-isadmin="<?php echo $isAdmin; ?>">

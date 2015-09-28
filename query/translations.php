@@ -6,8 +6,8 @@
   and may be used to generate different presentations of the site.
 */
 //Setup:
-require_once 'translationProvider.php';
-require_once '../config.php';
+require_once('translationProvider.php');
+require_once('../config.php');
 //Actual work:
 Config::setResponseJSON();
 //Defaulting our action:

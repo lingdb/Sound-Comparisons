@@ -1,6 +1,6 @@
 <?php
   /***/
-  require_once "TranslationProvider.php";
+  require_once('TranslationProvider.php');
   /*
     Mapping between tables MeaningGroups, Page_DynamicTranslation:
     MeaningGroupIx <-> Field

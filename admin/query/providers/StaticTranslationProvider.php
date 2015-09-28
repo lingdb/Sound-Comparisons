@@ -3,7 +3,7 @@
     The StaticTranslationProvider provides search and update
     facilities for the static translation.
   */
-  require_once "TranslationProvider.php";
+  require_once('TranslationProvider.php');
   class StaticTranslationProvider extends TranslationProvider{
     public function search($tId, $searchText, $searchAll = false){
       $ret = array();

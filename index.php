@@ -3,8 +3,8 @@
   /* Constants: */
   define('FLAGS_ENABLED', false);
   /* Requirements: */
-  require_once 'config.php';
-  require_once 'query/translationProvider.php';
+  require_once('config.php');
+  require_once('query/translationProvider.php');
   /* Startup: */
   $dbConnection = Config::getConnection();
   $index = array(
@@ -16,7 +16,7 @@
     )
   );
   //Checking for minified js/App setup:
-  require_once 'Git.php';
+  require_once('Git.php');
   if(Git::getBranch() === 'master'){
     $app = 'js/App-minified';
     if(file_exists('./'.$app.'.js')){

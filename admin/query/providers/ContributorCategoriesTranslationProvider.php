@@ -1,6 +1,6 @@
 <?php
 /***/
-require_once "TranslationProvider.php";
+require_once('TranslationProvider.php');
 /*
   Mapping between tables ContributorCategories, Page_DynamicTranslation:
   SortGroup <-> Field

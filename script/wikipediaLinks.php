@@ -3,7 +3,7 @@
     This script harvests wikipediaLinks and stores them in the database.
     Links are searched for every ISO code and every Translation in the db.
   */
-  require_once '../config.php';
+  require_once('../config.php');
   $dbConnection = Config::getConnection();
   /*
     We need the ISOCodes from all studies,

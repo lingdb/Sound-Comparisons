@@ -1,5 +1,5 @@
 <?php
-require_once 'dataProvider.php';
+require_once('dataProvider.php');
 /**
   When getting study data from the DataProvider, a lot of work is performed in data.php
   This work is deterministic and its output only changes when the study data is replaced/changed.

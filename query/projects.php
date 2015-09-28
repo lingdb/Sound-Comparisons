@@ -1,5 +1,5 @@
 <?php
-require_once '../config.php';
+require_once('../config.php');
 /**
   Under http://<domain>/projects/<familyname>
   we want to serve an iframe page that seamlessly integrates

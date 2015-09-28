@@ -3,7 +3,7 @@
     The DynamicTranslationProvider generalises the way
     Dynamic Translation works, to add in more magic.
   */
-  require_once "TranslationProvider.php";
+  require_once('TranslationProvider.php');
   abstract class DynamicTranslationProvider extends TranslationProvider{
     /* Supplies the name of the Table a Provider takes care of. */
     public abstract function getTable();

@@ -1,5 +1,5 @@
 <?php
-require_once 'dataProvider.php';
+require_once('dataProvider.php');
 /**
   This is mostly a helper class for query/translations.php.
   Since some of it's parts shall be used in other places,

@@ -8,7 +8,7 @@ if(!array_key_exists('file', $_GET)){
   die('You must supply a file parameter.');
 }
 chdir('..');
-require_once 'config.php';
+require_once('config.php');
 $file = $_GET['file'];
 //Guarding against traversal:
 if(preg_match('/\\.\\./', $file)){

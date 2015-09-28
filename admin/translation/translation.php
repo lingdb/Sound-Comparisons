@@ -1,5 +1,5 @@
 <?php
-  require_once "categorySelection.php";
+  require_once('categorySelection.php');
   if($providerGroup !== ''){
     $pGroups = Translation::providers();
     $dependsOnStudy = array_key_exists($providerGroup, $pGroups['_dependsOnStudy']);
@@ -11,7 +11,7 @@
         $data[$s] = Translation::pageAll($pGroups[$providerGroup], $s, $translationId);
       }
     }
-    require_once "showTable.php";
+    require_once('showTable.php');
     //Below output only if $data contains something:
     if(count($data) !== 0){
       echo '<legend>Data to translate:</legend>';
@@ -29,5 +29,5 @@
   }
 ?>
 <script type="application/javascript">
-<?php require_once "js/translation.js"; ?>
+<?php require_once('js/translation.js'); ?>
 </script>

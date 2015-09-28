@@ -1,5 +1,5 @@
 <?php
-require 'common.php';
+require_once('common.php');
 if(!session_validate($dbConnection))
   header('LOCATION: index.php');
 if(!session_mayEdit($dbConnection))
@@ -10,10 +10,10 @@ if(!session_mayEdit($dbConnection))
   <?php
     $title = 'Sound files that could not be found';
     $jsFiles = array('extern/jquery.dataTables.js');
-    require_once 'head.php';
+    require_once('head.php');
   ?>
   <body>
-    <?php require_once 'topmenu.php'; ?>
+    <?php require_once('topmenu.php'); ?>
     <h3>Choose a study to list missing files for:</h3>
     <div class="btn-group">
     <?php

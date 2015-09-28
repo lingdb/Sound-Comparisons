@@ -11,7 +11,7 @@ foreach($params as $p){
 }
 //Setup:
 chdir('..');
-require_once 'config.php';
+require_once('config.php');
 //Transcription to work with:
 $ts = DataProvider::getTranscriptions($_GET['study']);
 $ts = $ts[$_GET['language'].$_GET['word']];
