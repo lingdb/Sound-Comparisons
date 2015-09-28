@@ -131,10 +131,48 @@ class TranslationColumnProjection extends TranslationTableProjection {
     //Study to use:
     $study = $this->getStudy(); // String || null
     //Column specific code:
-    return $this->withColumn(function($column) use ($tId, $tableName, $study){
-      $q = "";
-      //FIXME COMPARE LanguagesTranslationProvider.pageColumn(…)
-      //FIXME IMPLEMENT
+    return $this->withColumn(function($column) use ($tId, $o, $tableName, $study){
+      //Fetching $description:
+      $description = TranslationTableDescription::fetchDescription($column);
+      //Fetching original entries:
+      $columnName = $column['columnName'];
+      $fieldSelect = $column['fieldSelect'];
+      $q = "SELECT $columnName AS columnName, $fieldSelect AS fieldSelect "
+         . "FROM $tableName$o";
+      $originals = DataProvider::fetchAll($q);
+      //Array to return:
+      $ret = array();
+      //Iterating $originals to fill $ret:
+      foreach($originals as $original){
+        //$fieldSelect for translation table:
+        $fieldSelect = $original['fieldSelect'];
+        if($study !== null){
+          $fieldSelect = "$study-$fieldSelect";
+        }
+        //Stub for $entry:
+        $entry = array(
+          'Description' => $description
+        , 'Original' => $original['columnName']
+        , 'Translation' => array(
+            'TranslationId' => $tId
+          , 'Translation' => ''
+          , 'Payload' => $fieldSelect
+          , 'TranslationProvider' => $category
+          )
+        );
+        //Trying to fetch existing translation:
+        $q = "SELECT Trans FROM Page_DynamicTranslation "
+           . "WHERE TranslationId = $tId "
+           . "AND Category = '$category' "
+           . "AND Field = '$fieldSelect' "
+           . "LIMIT 1";
+        foreach(DataProvider::fetchAll($q) as $r){//foreach works as if
+          $entry['Translation']['Translation'] = $r['Trans'];
+        }
+        //Pushing $entry:
+        array_push($ret, $entry);
+      }
+      return $ret;
     });
   }
 }

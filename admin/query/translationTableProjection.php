@@ -129,8 +129,8 @@ class TranslationTableProjection {
         //Fetching original entries:
         $columnName = $column['columnName'];
         $fieldSelect = $column['fieldSelect'];
-        $q = "SELECT $columnName AS columnName, $fieldSelect AS fieldSelect"
-           . " FROM $tableName";
+        $q = "SELECT $columnName AS columnName, $fieldSelect AS fieldSelect "
+           . "FROM $tableName";
         $originals = DataProvider::fetchAll($q);//[{columnName:…,fieldSelect:…}]
         //Searching changed translations:
         foreach($originals as $row){
