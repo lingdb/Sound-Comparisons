@@ -108,6 +108,33 @@ class TranslationColumnProjection extends TranslationTableProjection {
     return $offsets;
   }
   /**
+    @param $entry obj
+    @return $entry obj
+    obj will be an array resembling a JSON object following this syntax:
+    {
+      Description: {Req: '', Description: ''}
+    , Original: ''
+    , Translation: {TranslationId: 5, Translation: '', Payload: '', TranslationProvider: ''}
+    }
+    Adds/Overwrites the Translation.Translation field if possible.
+  */
+  protected function addTranslation($entry){
+    $trans       = $entry['Translation'];
+    $tId         = $trans['TranslationId'];
+    $category    = $trans['TranslationProvider'];
+    $fieldSelect = $trans['Payload'];
+    //Trying to fetch existing translation:
+    $q = "SELECT Trans FROM Page_DynamicTranslation "
+       . "WHERE TranslationId = $tId "
+       . "AND Category = '$category' "
+       . "AND Field = '$fieldSelect' "
+       . "LIMIT 1";
+    foreach(DataProvider::fetchAll($q) as $r){//foreach works as if
+      $entry['Translation']['Translation'] = $r['Trans'];
+    }
+    return $entry;
+  }
+  /**
     @param $tId TranslationId to use
     @param $offset Int the offset for the page to fetch.
     @param $limit Int = 30 the limit for the page to fetch.
@@ -121,6 +148,8 @@ class TranslationColumnProjection extends TranslationTableProjection {
     If $offset === -1, page(…) shall return all elements.
   */
   public function page($tId, $offset, $limit = 30){
+    //Sanitizing $tId:
+    $tId = is_numeric($tId) ? $tId : 1;
     //Setting up $o as limit+offset sql part
     $offset = is_numeric($offset) ? $offset : -1;
     $limit  = is_numeric($limit)  ? $limit  : 30;
@@ -133,7 +162,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
     //Column specific code:
     return $this->withColumn(function($column) use ($tId, $o, $tableName, $study){
       //Fetching $description:
-      $description = TranslationTableDescription::fetchDescription($column);
+      $description = TranslationTableProjection::fetchDescription($column);
       //Fetching original entries:
       $columnName = $column['columnName'];
       $fieldSelect = $column['fieldSelect'];
@@ -160,19 +189,117 @@ class TranslationColumnProjection extends TranslationTableProjection {
           , 'TranslationProvider' => $category
           )
         );
-        //Trying to fetch existing translation:
-        $q = "SELECT Trans FROM Page_DynamicTranslation "
-           . "WHERE TranslationId = $tId "
-           . "AND Category = '$category' "
-           . "AND Field = '$fieldSelect' "
-           . "LIMIT 1";
-        foreach(DataProvider::fetchAll($q) as $r){//foreach works as if
-          $entry['Translation']['Translation'] = $r['Trans'];
-        }
+        //Trying to add existing translation:
+        $entry = $this->addTranslation($entry);
         //Pushing $entry:
         array_push($ret, $entry);
       }
       return $ret;
+    });
+  }
+  /**
+    @param $tId TranslationId the Translation to search
+    @param $searchText String the Text to search
+    @param $searchStrategy {'both','translation','original'}
+    @return $ret [obj] || Exception
+    obj will be arrays resembling JSON objects following this syntax:
+    {
+      Description: {Req: '', Description: ''}
+    , Original: ''
+    , Translation: {TranslationId: 5, Translation: '', Payload: '', TranslationProvider: ''}
+    }
+    Searches for the given $searchText and returns array to allow translation for found entries.
+    $searchStrategy specifies if the originals, the translations or both should be searched.
+  */
+  public function search($tId, $searchText, $searchStrategy = 'both'){
+    //Sanitizing $tId:
+    $tId = is_numeric($tId) ? $tId : 1;
+    //Sanitizing $searchText:
+    $searchText = Config::getConnection()->escape_string($searchText);
+    //Sanitizing $searchStrategy:
+    if(preg_match('/^(both|translation|original)$/', $searchStrategy) === 0){
+      return new Exception("Invalid \$searchStrategy: '$searchStrategy'");
+    }
+    //Table to use:
+    $tableName = $this->getTable();
+    //Study to use:
+    $study = $this->getStudy(); // String || null
+    //Column specific code:
+    return $this->withColumn(function($column)
+      use ($tId, $searchText, $searchStrategy, $tableName, $study){
+      //Description to use for entries:
+      $description = TranslationTableProjection::fetchDescription($column);
+      //Payload -> $entry to prevent duplicates
+      $payloadMap = array();
+      //Searching in originals:
+      if($searchStrategy === 'both' || $searchStrategy === 'original'){
+        $columnName = $column['columnName'];
+        $fieldSelect = $column['fieldSelect'];
+        $q = "SELECT $columnName AS columnName, $fieldSelect AS fieldSelect "
+           . "FROM $tableName "
+           . "WHERE $columnName LIKE '%$searchText%'";
+        $originals = DataProvider::fetchAll($q);
+        foreach($originals as $original){
+          $fieldSelect = $original['fieldSelect'];
+          if($study !== null){
+            $fieldSelect = "$study-$fieldSelect";
+          }
+          //Stub for $entry:
+          $entry = array(
+            'Description' => $description
+          , 'Original' => $original['columnName']
+          , 'Translation' => array(
+              'TranslationId' => $tId
+            , 'Translation' => ''
+            , 'Payload' => $fieldSelect
+            , 'TranslationProvider' => $category
+            )
+          );
+          //Trying to add existing translation:
+          $entry = $this->addTranslation($entry);
+          //Putting $entry into map:
+          $payloadMap[$fieldSelect] = $entry;
+        }
+      }
+      //Searching in translations:
+      if($searchStrategy === 'both' || $searchStrategy === 'translation'){
+        //Setting $columnName and $fieldSelect:
+        $columnName = $column['columnName'];
+        $fieldSelect = $column['fieldSelect'];
+        //Need to fetch all originals to find matching translations:
+        $q = "SELECT $columnName AS columnName, $fieldSelect AS fieldSelect "
+           . "FROM $tableName ";
+        $originals = DataProvider::fetchAll($q);
+        foreach($originals as $original){
+          $fieldSelect = $original['fieldSelect'];
+          if($study !== null){
+            $fieldSelect = "$study-$fieldSelect";
+          }
+          //Preventing possible duplicates:
+          if(array_key_exists($fieldSelect, $payloadMap)){ continue; }
+          //Checking for translation:
+          $q = "SELECT Trans FROM Page_DynamicTranslation "
+             . "WHERE TranslationId = $tId "
+             . "AND Category = '$category' "
+             . "AND Field = '$fieldSelect' "
+             . "AND Trans LIKE '%$searchText%' "
+             . "LIMIT 1";
+          foreach(DataProvider::fetchAll($q) as $r){//foreach works as if
+            $payloadMap[$fieldSelect] = array(
+              'Description' => $description
+            , 'Original' => $original['columnName']
+            , 'Translation' => array(
+                'TranslationId' => $tId
+              , 'Translation' => $r['Trans']
+              , 'Payload' => $fieldSelect
+              , 'TranslationProvider' => $category
+              )
+            );
+          }
+        }
+      }
+      //Done:
+      return array_values($payloadMap);
     });
   }
 }
