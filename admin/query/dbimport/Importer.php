@@ -208,18 +208,21 @@ class Importer{
   }
   /**
     @param $files [['name' => String, 'path' => String]]
+    @param $cleanLog Bool=true
     @return $tables [String]
     Takes an array of descriptions for uploaded files
     and returns an array of table names.
+    If $cleanLog === true, calling this method will clean self::$log.
   */
-  public static function findTables($files){
+  public static function findTables($files, $cleanLog = true){
     $tables = array();
     foreach($files as $file){
-      $desc = self::descFile($file);
+      $desc = self::descFile($file['name']);
       if($desc !== null){
         array_push($tables, $desc['table']);
       }
     }
+    if($cleanLog){ self::$log = array(); }
     return $tables;
   }
   /**

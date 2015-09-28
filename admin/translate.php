@@ -30,6 +30,9 @@
         case 'changed':
           require_once 'translation/changed.php';
         break;
+        case 'compareOriginal':
+          require_once 'translation/compareOriginal.php';
+        break;
         default:
           require_once 'translation/overview.php';
       }

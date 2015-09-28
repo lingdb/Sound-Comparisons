@@ -1,7 +1,9 @@
 <?php
+$dir = getcwd(); chdir(__DIR__);
 require_once('translationTableDescription.php');
 require_once('translationColumnProjection.php');
 require_once('../../query/dataProvider.php');
+chdir($dir); unset($dir);
 /**
   Projection from TranslationTableDescription
   to a subset of its tables.
