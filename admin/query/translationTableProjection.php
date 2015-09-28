@@ -120,17 +120,6 @@ class TranslationTableProjection {
     if(!is_numeric($tId)){//Sanity check on $tId
       return new Exception('$tId must be numeric!');
     }
-    //Helper function:
-    $fetchAll = function($q){
-      $ret = array();
-      $set = Config::getConnection()->query($q);
-      if($set !== false){
-        while($r = $set->fetch_row()){
-          array_push($ret, $r);
-        }
-      }
-      return $ret;
-    };
     //Finding wanted cases:
     $ret = array();
     foreach($this->descriptions as $tableName => $desc){
@@ -140,41 +129,42 @@ class TranslationTableProjection {
         $q = "SELECT Req, Description FROM Page_StaticDescription "
            . "WHERE Req = '$req' LIMIT 1";
         $description = array();
-        foreach($fetchAll($q) as $row){//foreach acts as if
-          $description['Req'] = $row[0];
-          $description['Description'] = $row[1];
+        foreach(DataProvider::fetchAll($q) as $row){//foreach acts as if
+          $description['Req'] = $row['Req'];
+          $description['Description'] = $row['Description'];
         }
         //Fetching original entries:
         $columnName = $column['columnName'];
         $fieldSelect = $column['fieldSelect'];
-        $q = "SELECT $columnName, $fieldSelect FROM $tableName";
-        $originals = $fetchAll($q);// [[columnName, fieldSelect]]
+        $q = "SELECT $columnName AS columnName, $fieldSelect AS fieldSelect"
+           . " FROM $tableName";
+        $originals = DataProvider::fetchAll($q);//[{columnName:…,fieldSelect:…}]
         //Searching changed translations:
         foreach($originals as $row){
           //Potential entry for $ret:
-          $original = $row[0];
+          $original = $row['columnName'];
           $entry = array(
             'Description' => $description
           , 'Original' => $original
           );
           //$fieldSelect setup:
-          $fieldSelect = $row[1];
+          $fieldSelect = $row['fieldSelect'];
           if($desc['dependsOnStudy'] === true){
             $fieldSelect = implode('-', array($desc['study'], $fieldSelect));
           }
           //Fetching translation:
           $category = $column['category'];
-          $q = "SELECT $fieldSelect, Trans FROM Page_DynamicTranslation "
+          $q = "SELECT $fieldSelect AS payload, Trans FROM Page_DynamicTranslation "
              . "WHERE TranslationId = $tId "
              . "AND Category = '$category' "
              . "AND Field = '$fieldSelect' "
              . "AND Trans != '$original' "
              . "LIMIT 1";
-          foreach($fetchAll($q) as $tRow){//foreach acts as if
+          foreach(DataProvider::fetchAll($q) as $tRow){//foreach acts as if
             $entry['Translation'] = array(
               'TranslationId' => $tId
-            , 'Translation' => $tRow[1]
-            , 'Payload' => $tRow[0]
+            , 'Translation' => $tRow['Trans']
+            , 'Payload' => $tRow['payload']
             , 'TranslationProvider' => $category
             );
             array_push($ret, $entry);
