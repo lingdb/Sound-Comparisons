@@ -207,6 +207,22 @@ class Importer{
     return null;
   }
   /**
+    @param $files [['name' => String, 'path' => String]]
+    @return $tables [String]
+    Takes an array of descriptions for uploaded files
+    and returns an array of table names.
+  */
+  public static function findTables($files){
+    $tables = array();
+    foreach($files as $file){
+      $desc = self::descFile($file);
+      if($desc !== null){
+        array_push($tables, $desc['table']);
+      }
+    }
+    return $tables;
+  }
+  /**
     [fNameRegex => ['study' => Bool, 'table' => String
                   , 'colMapping' => [headline String => colName String]
     The $fileDescriptions configure how to map files to tables.
