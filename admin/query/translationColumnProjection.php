@@ -37,6 +37,24 @@ class TranslationColumnProjection extends TranslationTableProjection {
     }));
   }
   /**
+    @return $study String || null
+    Null is returned if dependsOnStudy !== true.
+  */
+  public function getStudy(){
+    $studies = $this->withTables(function($tName, $desc){
+      if($desc['dependsOnStudy'] === true){
+        return $desc['study'];
+      }
+      return null;
+    });
+    foreach($studies as $study){
+      if($study !== null){
+        return $study;
+      }
+    }
+    return null;
+  }
+  /**
     @param $tId TranslationId
     @param $payload String fieldSelect value from description
     @param $update String new value for translation entry
@@ -110,8 +128,10 @@ class TranslationColumnProjection extends TranslationTableProjection {
     if($offset < 0 || $limit <= 0){$o = '';}
     //Table to use:
     $tableName = $this->getTable();
+    //Study to use:
+    $study = $this->getStudy(); // String || null
     //Column specific code:
-    return $this->withColumn(function($column) use ($tId, $tableName){
+    return $this->withColumn(function($column) use ($tId, $tableName, $study){
       $q = "";
       //FIXME COMPARE LanguagesTranslationProvider.pageColumn(…)
       //FIXME IMPLEMENT
