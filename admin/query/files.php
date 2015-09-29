@@ -39,7 +39,7 @@
       $log = Importer::processFiles($fs, $uId, $merge);
       echo '<ul><li>'.implode($log,'</li><li>').'</li></ul>';
       $tables = implode(',', Importer::findTables($fs));
-      $href = "../translate.php?action=compareOriginal&tables=$tables";
+      $href = "../translate.php?tId=1&action=compareOriginal&tables=$tables";
       echo '<a target="_parent" href="'.$href.'" class="btn btn-primary">Review translations</a>';
     }
   ?>

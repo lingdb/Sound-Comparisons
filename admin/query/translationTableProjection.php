@@ -127,7 +127,7 @@ class TranslationTableProjection {
     foreach($this->descriptions as $tableName => $desc){
       foreach($desc['columns'] as $column){
         //Fetching Description:
-        $description = TranslationTableDescription::fetchDescription($column);
+        $description = TranslationTableProjection::fetchDescription($column);
         //Fetching original entries:
         $columnName = $column['columnName'];
         $fieldSelect = $column['fieldSelect'];
@@ -149,7 +149,7 @@ class TranslationTableProjection {
           }
           //Fetching translation:
           $category = $column['category'];
-          $q = "SELECT $fieldSelect AS payload, Trans FROM Page_DynamicTranslation "
+          $q = "SELECT '$fieldSelect' AS payload, Trans FROM Page_DynamicTranslation "
              . "WHERE TranslationId = $tId "
              . "AND Category = '$category' "
              . "AND Field = '$fieldSelect' "
