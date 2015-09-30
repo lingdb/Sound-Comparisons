@@ -33,7 +33,7 @@
   require_once('providers/StudyTitleTranslationProvider.php');
   require_once('providers/TranscrSuperscriptInfoTranslationProvider.php');
   require_once('providers/TranscrSuperscriptLenderLgsTranslationProvider.php');
-  require_once('providers/WordsTranslationProvider.php');
+  require_once('providers/WordsTranslationProvider.php');//FIXME DELETE
   require_once('translationTableProjection.php');
   //FOO BELOW
   class Translation {
@@ -56,8 +56,6 @@
         , new TranscrSuperscriptInfoTranslationProvider('Trans_HoverText', $dbConnection)
         , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_Abbreviation', $dbConnection)
         , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_FullNameForHoverText', $dbConnection)
-        , new WordsTranslationProvider('Trans_FullRfcModernLg01',   $dbConnection)
-        , new WordsTranslationProvider('Trans_LongerRfcModernLg01', $dbConnection)
         ) as $p) self::$providers[$p->getName()] = $p;
       }
     }
@@ -329,14 +327,11 @@
       //Checking projections:
       $regex = '/^'.preg_quote($provider, '/').'$/';
       $projections = TranslationColumnProjection::filterCategoryRegex(self::$projections, $regex);
-      if(count($projections) === 1){
+      if(count($projections) !== 0){
         current($projections)->update($translationId, $payload, $update);
         return true;
-      }else if(count($projections) > 1){
-        Config::error("Multiple projections: $regex");
-      }else{
-        Config::error("Unsupported Provider: $provider");
       }
+      Config::error("Unsupported Provider: $provider");
       return false;
     }
     /**
