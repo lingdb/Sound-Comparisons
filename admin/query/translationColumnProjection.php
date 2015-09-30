@@ -227,6 +227,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
     //Column specific code:
     return $this->withColumn(function($column)
       use ($tId, $searchText, $searchStrategy, $tableName, $study){
+      $category = $column['category'];
       //Description to use for entries:
       $description = TranslationTableProjection::fetchDescription($column);
       //Payload -> $entry to prevent duplicates
@@ -255,6 +256,9 @@ class TranslationColumnProjection extends TranslationTableProjection {
             , 'TranslationProvider' => $category
             )
           );
+          if($study !== null){
+            $entry['Study'] = $study;
+          }
           //Trying to add existing translation:
           $entry = $this->addTranslation($entry);
           //Putting $entry into map:
@@ -285,7 +289,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
              . "AND Trans LIKE '%$searchText%' "
              . "LIMIT 1";
           foreach(DataProvider::fetchAll($q) as $r){//foreach works as if
-            $payloadMap[$fieldSelect] = array(
+            $entry = array(
               'Description' => $description
             , 'Original' => $original['columnName']
             , 'Translation' => array(
@@ -295,6 +299,10 @@ class TranslationColumnProjection extends TranslationTableProjection {
               , 'TranslationProvider' => $category
               )
             );
+            if($study !== null){
+              $entry['Study'] = $study;
+            }
+            $payloadMap[$fieldSelect] = $entry;
           }
         }
       }

@@ -15,7 +15,7 @@ class TranslationTableProjection {
   */
   private static $allProjection = null;
   /**
-    @return $this->allProjection [TranslationTableProjection] || Exception
+    @return $this->allProjection TranslationTableProjection || Exception
     Builds instances of TranslationTableProjection for all projections.
   */
   public static function projectAll(){
@@ -184,7 +184,7 @@ class TranslationTableProjection {
       foreach($desc['columns'] as $column){
         $projection = new TranslationColumnProjection();
         $cDesc = array(
-          'columns' => $column
+          'columns' => array($column)
         , 'dependsOnStudy' => $desc['dependsOnStudy']
         );
         if($desc['dependsOnStudy'] === true){
@@ -224,5 +224,14 @@ class TranslationTableProjection {
       );
     }
     return new Exception("Could not fetch Description for \$req='$req'.");
+  }
+  /**
+    @return $id String
+    Similar to what TranslationProvider.getName() did,
+    this method builds a String to identify a TranslationTableProjection by.
+  */
+  public function getId(){
+    $json = json_encode($this->descriptions);
+    return md5($json);
   }
 }

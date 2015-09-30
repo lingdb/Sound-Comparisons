@@ -16,7 +16,9 @@
     into Translation Providers, which also allow for paging in addition to the usual search procedure.
     In addition to the now completely modular, unified approach to translation,
     the site also got a new JavaScript interface, which uses the methods supplied by this file.
+    FIXME UPDATE DESCRIPTION
   */
+  //FIXME REPLACE PROVIDERS BY PROJECTION!
   require_once('providers/TranslationProvider.php');
   require_once('providers/StaticTranslationProvider.php');
   require_once('providers/ContributorCategoriesTranslationProvider.php');
@@ -32,6 +34,7 @@
   require_once('providers/TranscrSuperscriptInfoTranslationProvider.php');
   require_once('providers/TranscrSuperscriptLenderLgsTranslationProvider.php');
   require_once('providers/WordsTranslationProvider.php');
+  require_once('translationTableProjection.php');
   //FOO BELOW
   class Translation {
     private static $providers = array();
@@ -60,6 +63,21 @@
         , new WordsTranslationProvider('Trans_FullRfcModernLg01',   $dbConnection)
         , new WordsTranslationProvider('Trans_LongerRfcModernLg01', $dbConnection)
         ) as $p) self::$providers[$p->getName()] = $p;
+      }
+    }
+    /**
+      Following a similar pattern as with the providers, we have the projections.
+      They shall replace most providers.
+    */
+    private static $projections = array();
+    private static function initProjections(){
+      if(count(self::$projections) === 0){
+        $all = TranslationTableProjection::projectAll();
+        if($all instanceof Exception){
+          throw $all;
+        }else foreach($all->projectColumns() as $colPrj){
+          self::$projections[$colPrj->getId()] = $colPrj;
+        }
       }
     }
     private static $providerGroups = array(
@@ -131,12 +149,18 @@
     */
     public static function offsets($ps, $study, $translationId = 1){
       self::initProviders();
+      self::initProjections();
       $dbConnection = Config::getConnection();
       $study = $dbConnection->escape_string($study);
       $tId   = $dbConnection->escape_string($translationId);
       $ret   = array();
-      foreach($ps as $p)
-        $ret[$p] = self::$providers[$p]->offsets($tId, $study);
+      foreach($ps as $p){
+        if(array_key_exists($p, self::$projections)){
+          $ret[$p] = self::$projections[$p]->offsets($tId);
+        }else if(array_key_exists($p, self::$providers)){
+          $ret[$p] = self::$providers[$p]->offsets($tId, $study);
+        }
+      }
       return $ret;
     }
     /**
@@ -148,13 +172,18 @@
     */
     public static function page($ps, $study, $translationId, $offset){
       self::initProviders();
+      self::initProjections();
       $dbConnection = Config::getConnection();
       $study  = $dbConnection->escape_string($study);
       $tId    = $dbConnection->escape_string($translationId);
       $offset = $dbConnection->escape_string($offset);
       $ret    = array();
       foreach($ps as $p){
-        $ret[$p] = self::$providers[$p]->page($tId, $study, $offset);
+        if(array_key_exists($p, self::$projections)){
+          $ret[$p] = self::$projections[$p]->page($tId, $offset);
+        }else if(array_key_exists($p, self::$providers)){
+          $ret[$p] = self::$providers[$p]->page($tId, $study, $offset);
+        }
       }
       return $ret;
     }
@@ -175,9 +204,11 @@
       @param [$providerGroups] array of GroupName => Regex
       @return array of GroupName => [ProviderNames]
       Builds a mapping of ProviderGroups to Provider Names.
+      FIXME enhance this to also deal with self::$projections!
     */
     public static function providers($providerGroups = null){
       self::initProviders();
+      self::initProjections();
       $addNonProviders = false;
       if($providerGroups === null){ // Too long for default parameter .)
         $providerGroups = self::$providerGroups;
@@ -234,12 +265,17 @@
     */
     public static function search($translationId, $searchText, $searchAll = false){
       self::initProviders();
+      self::initProjections();
       $dbConnection  = Config::getConnection();
       $translationId = $dbConnection->escape_string($translationId);
       $searchText    = $dbConnection->escape_string($searchText);
       $matches = array();
       foreach(self::$providers as $p){
         $ms = $p->search($translationId, $searchText, $searchAll);
+        $matches = array_merge($matches, $ms);
+      }
+      foreach(self::$projections as $p){
+        $ms = $p->search($translationId, $searchText);
         $matches = array_merge($matches, $ms);
       }
       return $matches;
@@ -274,9 +310,13 @@
       $update = ltrim(rtrim($update));
       //Saving $update:
       self::initProviders();
+      self::initProjections();
       $translationId = Config::getConnection()->escape_string($translationId);
       if(array_key_exists($provider, self::$providers)){
         $p = self::$providers[$provider];
+        $p->update($translationId, $payload, $update);
+      }else if(array_key_exists($provider, self::$projections)){
+        $p = self::$projections[$provider];
         $p->update($translationId, $payload, $update);
       }else{
         Config::error("Unsupported Provider: $provider");
@@ -412,6 +452,7 @@
       Returns an empty Array if $translationId === 1,
       because there cannot be changed translations in the source translation.
       Otherwise returns entries where translation 1 has a newer change than $translationId.
+      FIXME SEE HOW THIS IS AFFECTED!
     */
     public static function getChangedTranslations($translationId){
       $changed = array();
@@ -423,6 +464,7 @@
       return $changed;
     }
     /**
+      FIXME FIGURE OUT WHAT THIS DOES AND HOW TO REPLACE IT VIA PROJECTIONS!
     */
     public static function categoryToDescription($category){
       if(array_key_exists($category, self::$providers)){
