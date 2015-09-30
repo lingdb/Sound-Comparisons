@@ -336,7 +336,8 @@ class TranslationColumnProjection extends TranslationTableProjection {
   */
   public static function filterCategoryRegex($projections, $regex){
     return self::filterColumn($projections, function($column) use ($regex){
-      return preg_match($regex, $column['category']);
+      $match = preg_match($regex, $column['category']);
+      return $match === 1;
     });
   }
 }
