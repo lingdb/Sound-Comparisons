@@ -16,24 +16,14 @@
     into Translation Providers, which also allow for paging in addition to the usual search procedure.
     In addition to the now completely modular, unified approach to translation,
     the site also got a new JavaScript interface, which uses the methods supplied by this file.
-    FIXME UPDATE DESCRIPTION
+    With issue #210 I've been able to reduce a big chunk of complexity that was lingering in this code,
+    by taking a more declarative approach with translationTableDescription.php.
+    Therefore I could remove most of the TranslationProviders,
+    especially all depending on DynamicTranslationProvider.
   */
-  //FIXME REPLACE PROVIDERS BY PROJECTION!
   require_once('providers/TranslationProvider.php');
   require_once('providers/StaticTranslationProvider.php');
-  require_once('providers/ContributorCategoriesTranslationProvider.php');//FIXME DELETE
-  require_once('providers/FamilyTranslationProvider.php');//FIXME DELETE
-  require_once('providers/DynamicTranslationProvider.php');//TODO CHECK IF STILL NECESSARY
-  require_once('providers/LanguageStatusTypesTranslationProvider.php');//FIXME DELETE
-  require_once('providers/SpellingLanguagesTranslationProvider.php');//FIXME DELETE
-  require_once('providers/MeaningGroupsTranslationProvider.php');//FIXME DELETE
-  require_once('providers/RegionLanguagesTranslationProvider.php');//FIXME DELETE
-  require_once('providers/RegionsTranslationProvider.php');//FIXME DELETE
-  require_once('providers/StudyTranslationProvider.php');//FIXME DELETE
   require_once('providers/StudyTitleTranslationProvider.php');
-  require_once('providers/TranscrSuperscriptInfoTranslationProvider.php');//FIXME DELETE
-  require_once('providers/TranscrSuperscriptLenderLgsTranslationProvider.php');//FIXME DELETE
-  require_once('providers/WordsTranslationProvider.php');//FIXME DELETE
   require_once('translationTableProjection.php');
   //FOO BELOW
   class Translation {
