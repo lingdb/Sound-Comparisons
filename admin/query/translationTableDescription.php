@@ -59,13 +59,13 @@ class TranslationTableDescription {
           'columnName' => 'Headline'
         , 'fieldSelect' => 'SortGroup'
         , 'description' => 'dt_contributor_categories_trans'
-        , 'category' => 'ContributorCategoriesTranslationProvider'
+        , 'category' => 'ContributorCategoriesTranslationProvider-Headline'
         )
       , array(
           'columnName' => 'Abbr'
         , 'fieldSelect' => 'SortGroup'
         , 'description' => 'dt_contributor_categories_trans_abbr'
-        , 'category' => 'ContributorCategoriesTranslationProvider'
+        , 'category' => 'ContributorCategoriesTranslationProvider-Abbr'
         )
       )
     , 'dependsOnStudy' => false

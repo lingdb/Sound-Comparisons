@@ -21,7 +21,7 @@
   //FIXME REPLACE PROVIDERS BY PROJECTION!
   require_once('providers/TranslationProvider.php');
   require_once('providers/StaticTranslationProvider.php');
-  require_once('providers/ContributorCategoriesTranslationProvider.php');
+  require_once('providers/ContributorCategoriesTranslationProvider.php');//FIXME DELETE
   require_once('providers/FamilyTranslationProvider.php');
   require_once('providers/DynamicTranslationProvider.php');
   require_once('providers/LanguageStatusTypesTranslationProvider.php');//FIXME DELETE
@@ -43,7 +43,6 @@
         $dbConnection = Config::getConnection();
         foreach(array(
           new StaticTranslationProvider($dbConnection)
-        , new ContributorCategoriesTranslationProvider($dbConnection)
         , new FamilyTranslationProvider($dbConnection)
         , new MeaningGroupsTranslationProvider($dbConnection)
         , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite', $dbConnection)
@@ -90,7 +89,7 @@
     , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'//Has projection!
     , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'//Has projection!
     , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'//Has projection, overly specific!
-    , 'Contributors'          => '/^ContributorCategoriesTranslationProvider$/'//Has projection!
+    , 'Contributors'          => '/^ContributorCategoriesTranslationProvider-/'//Has projection!
     );
     /**
       @param $imagePath String
@@ -330,11 +329,14 @@
       //Checking projections:
       $regex = '/^'.preg_quote($provider, '/').'$/';
       $projections = TranslationColumnProjection::filterCategoryRegex(self::$projections, $regex);
-      if(count($projections) !== 0){
+      if(count($projections) === 1){
         current($projections)->update($translationId, $payload, $update);
         return true;
+      }else if(count($projections) > 1){
+        Config::error("Multiple projections: $regex");
+      }else{
+        Config::error("Unsupported Provider: $provider");
       }
-      Config::error("Unsupported Provider: $provider");
       return false;
     }
     /**
