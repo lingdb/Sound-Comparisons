@@ -310,4 +310,33 @@ class TranslationColumnProjection extends TranslationTableProjection {
       return array_values($payloadMap);
     });
   }
+  /**
+    @param $projections [TranslationColumnProjection]
+    @param $predicate function($column) -> true || *
+    @return $ret [TranslationColumnProjection]
+    Filters an array of $projections by applying a given $predicate to their withColumn methods.
+    Only the cases where $predicate returns true will be returned in $ret.
+  */
+  private static function filterColumn($projections, $predicate){
+    $ret = array();
+    foreach($projections as $prj){
+      $chk = $prj->withColumn($predicate);
+      if($chk === true){
+        array_push($ret, $prj);
+      }
+    }
+    return $ret;
+  }
+  /**
+    @param $projections [TranslationColumnProjection]
+    @param $regex PREG pattern, String
+    @return $ret [TranslationColumnProjection]
+    Filters a given $projections array of TranslationColumnProjection by checking if
+    the 'category' entry of their column matches a given $regex.
+  */
+  public static function filterCategoryRegex($projections, $regex){
+    return self::filterColumn($projections, function($column) use ($regex){
+      return preg_match($regex, $column['category']);
+    });
+  }
 }

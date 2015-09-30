@@ -81,19 +81,19 @@
       }
     }
     private static $providerGroups = array(
-      'General'               => '/^StaticTranslationProvider$/'
-    , 'Studies'               => '/^StudyTranslationProvider$/'
-    , 'Study title'           => '/^StudyTitleTranslationProvider$/'
-    , 'Families'              => '/^FamilyTranslationProvider$/'
-    , 'Language status types' => '/^LanguageStatusTypesTranslationProvider-/'
-    , 'Meaning sets'          => '/^MeaningGroupsTranslationProvider$/'
-    , 'Words'                 => '/^WordsTranslationProvider-/'
-    , 'Regions'               => '/^RegionsTranslationProvider-/'
-    , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'
-    , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'
-    , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'
-    , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'
-    , 'Contributors'          => '/^ContributorCategoriesTranslationProvider$/'
+      'General'               => '/^StaticTranslationProvider$/'//TODO no Projection
+    , 'Studies'               => '/^StudyTranslationProvider$/'//Has projection!
+    , 'Study title'           => '/^StudyTitleTranslationProvider$/'//TODO no Projection!
+    , 'Families'              => '/^FamilyTranslationProvider$/'//Has projection!
+    , 'Language status types' => '/^LanguageStatusTypesTranslationProvider-/'//Has projection!
+    , 'Meaning sets'          => '/^MeaningGroupsTranslationProvider$/'//Has projection!
+    , 'Words'                 => '/^WordsTranslationProvider-/'//Has projection!
+    , 'Regions'               => '/^RegionsTranslationProvider-/'//Has projection!
+    , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'//Has projection!
+    , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'//Has projection!
+    , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'//Has projection!
+    , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'//Has projection, overly specific!
+    , 'Contributors'          => '/^ContributorCategoriesTranslationProvider$/'//Has projection!
     );
     /**
       @param $imagePath String
@@ -180,7 +180,14 @@
       $ret    = array();
       foreach($ps as $p){
         if(array_key_exists($p, self::$projections)){
-          $ret[$p] = self::$projections[$p]->page($tId, $offset);
+          $prj = self::$projections[$p];
+          if($study !== null){
+            $s = $prj->getStudy();
+            if($s !== null){
+              if($s !== $study){ continue; }
+            }
+          }
+          $ret[$p] = $prj->page($tId, $offset);
         }else if(array_key_exists($p, self::$providers)){
           $ret[$p] = self::$providers[$p]->page($tId, $study, $offset);
         }
@@ -216,15 +223,21 @@
       }
       $ret = array();
       foreach($providerGroups as $group => $regex){
-        $ret[$group] = __(array_keys(self::$providers))->filter(function($k) use ($regex){
-          return preg_match($regex, $k);
-        });
+        $projections = TranslationColumnProjection::filterCategoryRegex(self::$projections, $regex);
+        if(count($projections) !== 0){
+          $ret[$group] = __($projections)->map(function($p){
+            return $p->getId();
+          });
+        }else{
+          $ret[$group] = __(array_keys(self::$providers))->filter(function($k) use ($regex){
+            return preg_match($regex, $k);
+          });
+        }
       }
       if($addNonProviders){
         //Adding non providers (underscore prefix):
         $ret['_dependsOnStudy'] = array(
-          'Languages'          => true
-        , 'Region languages'   => true
+          'Region languages'   => true
         , 'Regions'            => true
         , 'Spelling languages' => true
         , 'Words'              => true
