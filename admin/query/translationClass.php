@@ -22,17 +22,17 @@
   require_once('providers/TranslationProvider.php');
   require_once('providers/StaticTranslationProvider.php');
   require_once('providers/ContributorCategoriesTranslationProvider.php');//FIXME DELETE
-  require_once('providers/FamilyTranslationProvider.php');
-  require_once('providers/DynamicTranslationProvider.php');
+  require_once('providers/FamilyTranslationProvider.php');//FIXME DELETE
+  require_once('providers/DynamicTranslationProvider.php');//TODO CHECK IF STILL NECESSARY
   require_once('providers/LanguageStatusTypesTranslationProvider.php');//FIXME DELETE
-  require_once('providers/SpellingLanguagesTranslationProvider.php');
-  require_once('providers/MeaningGroupsTranslationProvider.php');
-  require_once('providers/RegionLanguagesTranslationProvider.php');
-  require_once('providers/RegionsTranslationProvider.php');
-  require_once('providers/StudyTranslationProvider.php');
+  require_once('providers/SpellingLanguagesTranslationProvider.php');//FIXME DELETE
+  require_once('providers/MeaningGroupsTranslationProvider.php');//FIXME DELETE
+  require_once('providers/RegionLanguagesTranslationProvider.php');//FIXME DELETE
+  require_once('providers/RegionsTranslationProvider.php');//FIXME DELETE
+  require_once('providers/StudyTranslationProvider.php');//FIXME DELETE
   require_once('providers/StudyTitleTranslationProvider.php');
-  require_once('providers/TranscrSuperscriptInfoTranslationProvider.php');
-  require_once('providers/TranscrSuperscriptLenderLgsTranslationProvider.php');
+  require_once('providers/TranscrSuperscriptInfoTranslationProvider.php');//FIXME DELETE
+  require_once('providers/TranscrSuperscriptLenderLgsTranslationProvider.php');//FIXME DELETE
   require_once('providers/WordsTranslationProvider.php');//FIXME DELETE
   require_once('translationTableProjection.php');
   //FOO BELOW
@@ -43,19 +43,7 @@
         $dbConnection = Config::getConnection();
         foreach(array(
           new StaticTranslationProvider($dbConnection)
-        , new FamilyTranslationProvider($dbConnection)
-        , new MeaningGroupsTranslationProvider($dbConnection)
-        , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite', $dbConnection)
-        , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite', $dbConnection)
-        , new RegionsTranslationProvider('Trans_RegionGpNameShort', $dbConnection)
-        , new RegionsTranslationProvider('Trans_RegionGpNameLong', $dbConnection)
-        , new SpellingLanguagesTranslationProvider($dbConnection)
-        , new StudyTranslationProvider($dbConnection)
         , new StudyTitleTranslationProvider($dbConnection)
-        , new TranscrSuperscriptInfoTranslationProvider('Trans_Abbreviation', $dbConnection)
-        , new TranscrSuperscriptInfoTranslationProvider('Trans_HoverText', $dbConnection)
-        , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_Abbreviation', $dbConnection)
-        , new TranscrSuperscriptLenderLgsTranslationProvider('Trans_FullNameForHoverText', $dbConnection)
         ) as $p) self::$providers[$p->getName()] = $p;
       }
     }
