@@ -66,7 +66,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
     All given parameters will be escaped by this method.
   */
   public function update($tId, $payload, $update){
-    return $this->withColumn(function($column){
+    return $this->withColumn(function($column) use ($tId, $payload, $update){
       //Sanitize input:
       $db       = Config::getConnection();
       $tId      = $db->escape_string($tId);
@@ -186,7 +186,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
             'TranslationId' => $tId
           , 'Translation' => ''
           , 'Payload' => $fieldSelect
-          , 'TranslationProvider' => $category
+          , 'TranslationProvider' => $column['category']
           )
         );
         //Trying to add existing translation:

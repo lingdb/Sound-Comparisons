@@ -24,7 +24,7 @@
   require_once('providers/ContributorCategoriesTranslationProvider.php');
   require_once('providers/FamilyTranslationProvider.php');
   require_once('providers/DynamicTranslationProvider.php');
-  require_once('providers/LanguageStatusTypesTranslationProvider.php');
+  require_once('providers/LanguageStatusTypesTranslationProvider.php');//FIXME DELETE
   require_once('providers/SpellingLanguagesTranslationProvider.php');
   require_once('providers/MeaningGroupsTranslationProvider.php');
   require_once('providers/RegionLanguagesTranslationProvider.php');
@@ -45,9 +45,6 @@
           new StaticTranslationProvider($dbConnection)
         , new ContributorCategoriesTranslationProvider($dbConnection)
         , new FamilyTranslationProvider($dbConnection)
-        , new LanguageStatusTypesTranslationProvider('Trans_Status', $dbConnection)
-        , new LanguageStatusTypesTranslationProvider('Trans_Description', $dbConnection)
-        , new LanguageStatusTypesTranslationProvider('Trans_StatusTooltip', $dbConnection)
         , new MeaningGroupsTranslationProvider($dbConnection)
         , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameShortInThisSubFamilyWebsite', $dbConnection)
         , new RegionLanguagesTranslationProvider('Trans_RegionGpMemberLgNameLongInThisSubFamilyWebsite', $dbConnection)
@@ -211,7 +208,6 @@
       @param [$providerGroups] array of GroupName => Regex
       @return array of GroupName => [ProviderNames]
       Builds a mapping of ProviderGroups to Provider Names.
-      FIXME enhance this to also deal with self::$projections!
     */
     public static function providers($providerGroups = null){
       self::initProviders();
@@ -325,17 +321,21 @@
       self::initProviders();
       self::initProjections();
       $translationId = Config::getConnection()->escape_string($translationId);
+      //Checking providers:
       if(array_key_exists($provider, self::$providers)){
         $p = self::$providers[$provider];
         $p->update($translationId, $payload, $update);
-      }else if(array_key_exists($provider, self::$projections)){
-        $p = self::$projections[$provider];
-        $p->update($translationId, $payload, $update);
-      }else{
-        Config::error("Unsupported Provider: $provider");
-        return false;
+        return true;
       }
-      return true;
+      //Checking projections:
+      $regex = '/^'.preg_quote($provider, '/').'$/';
+      $projections = TranslationColumnProjection::filterCategoryRegex(self::$projections, $regex);
+      if(count($projections) !== 0){
+        current($projections)->update($translationId, $payload, $update);
+        return true;
+      }
+      Config::error("Unsupported Provider: $provider");
+      return false;
     }
     /**
       @param $req

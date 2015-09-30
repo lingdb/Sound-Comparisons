@@ -1,4 +1,5 @@
 <?php
+  chdir(__DIR__);
   require_once('validate.php');
   if(session_mayEdit($dbConnection))
     $isAdmin    = '1';
