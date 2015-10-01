@@ -62,7 +62,7 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
               }else{ phonetics = ps; }
             }
           }
-          _.each(phonetics, function(p){
+          _.each(_.flatten(phonetics), function(p){
             if(_.isEmpty(p)){ return; }
             toFilter.push([p, word]);
           }, this);
