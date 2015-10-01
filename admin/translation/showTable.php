@@ -16,8 +16,8 @@ function showTable($tdata){
       $value = array_shift($field);
       //Description:
       $desc = $value['Description'];
-      $req  = $desc['Req'];
-      $desc = $desc['Description'];
+      $req  = array_key_exists('Req', $desc) ? $desc['Req'] : '';
+      $desc = array_key_exists('Description', $desc) ? $desc['Description'] : '';
       //Shortening:
       $maxLen = 42;
       $short = preg_replace('/<[^<>]+>/','',$desc);

@@ -2,6 +2,7 @@
 $dir = getcwd(); chdir(__DIR__);
 require_once('translationTableDescription.php');
 require_once('translationColumnProjection.php');
+require_once('translationClass.php');
 require_once('../../query/dataProvider.php');
 /**
   Projection from TranslationTableDescription
@@ -232,5 +233,50 @@ class TranslationTableProjection {
   public function getId(){
     $json = json_encode($this->descriptions);
     return md5($json);
+  }
+  /**
+    @param $tId TranslationId
+    @return $ret [[ Description => [Req => String, Description => String]
+                 ,  Original => String
+                 ,  Translation => [TranslationId => $translationId
+                    , Translation => String, Payload => String, TranslationProvider => String]
+                 ]]
+    Returns entries where the translation has been saved earlier than the english translation.
+    These are the cases where it makes sense to review the translation.
+    Naturally for ($tId === 1) $ret will be empty.
+  */
+  public static function getChanged($tId){
+    //Sanitizing $tId:
+    $tId = is_numeric($tId) ? $tId : 1;
+    //$ret to return:
+    $ret = array();
+    //Changed only occur in $tId !== 1:
+    if($tId !== 1){
+      $q = 'SELECT Category, Field, Trans '
+         . 'FROM Page_DynamicTranslation WHERE TranslationId = 1';
+      foreach(DataProvider::fetchAll($q) as $r){
+        $c = $r['Category'];
+        $f = $r['Field'];
+        $q = "SELECT Trans FROM Page_DynamicTranslation "
+           . "WHERE Category = '$c' AND Field = '$f' AND TranslationId = $tId "
+           . "AND Time < (SELECT Time FROM Page_DynamicTranslation "
+           . "WHERE Category = '$c' AND Field = '$f' AND TranslationId = 1)";
+        foreach(DataProvider::fetchAll($q) as $x){
+          $desc = Translation::categoryToDescription($c);
+          array_push($ret, array(
+            'Description' => $desc
+          , 'Original'    => $r['Trans']
+          , 'Translation' => array(
+              'TranslationId'       => $tId
+            , 'Translation'         => $x['Trans']
+            , 'Payload'             => $f
+            , 'TranslationProvider' => $c
+            )
+          ));
+        }
+      }
+    }
+    //Done:
+    return $ret;
   }
 }

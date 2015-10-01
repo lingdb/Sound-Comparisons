@@ -432,7 +432,7 @@
     }
     /**
       @param $translationId
-      @return $missing [[ Description => [Req => String, Description => String]
+      @return $changed [[ Description => [Req => String, Description => String]
                        ,  Original => String
                        ,  Translation => [TranslationId => $translationId
                           , Translation => String, Payload => String, TranslationProvider => String]
@@ -440,21 +440,19 @@
       Returns an empty Array if $translationId === 1,
       because there cannot be changed translations in the source translation.
       Otherwise returns entries where translation 1 has a newer change than $translationId.
-      FIXME SEE HOW THIS IS AFFECTED!
     */
     public static function getChangedTranslations($translationId){
       $changed = array();
       if($translationId !== 1){
         $static = StaticTranslationProvider::getChanged($translationId);
-        //FIXME fix usage of DynamicTranslationProvider
-        $dynamic = DynamicTranslationProvider::getChanged($translationId);
+        $dynamic = TranslationTableProjection::getChanged($translationId);
         $changed = array_merge($static, $dynamic);
       }
       return $changed;
     }
     /**
       @param $category String
-      @return $description String || ''
+      @return $description array('Req' => String, 'Description' => String) || array()
       Given a $category this method fetches the description text that belongs to it.
     */
     public static function categoryToDescription($category){
@@ -465,9 +463,9 @@
         $desc = current($projections)->getDescription();
         if($desc instanceof Exception){
           Config::error(''.$desc);
-          return '';
+          return array();
         }
-        return $desc['Description'];
+        return $desc;
       }
       //Checking provider edge case:
       if(array_key_exists($category, self::$providers)){
@@ -477,6 +475,6 @@
           Config::error("Unexpected case in Translation::categoryToDescription for $category");
         }
       }
-      return '';
+      return array();
     }
   }
