@@ -55,6 +55,15 @@ class TranslationColumnProjection extends TranslationTableProjection {
     return null;
   }
   /**
+    @return $description array('Req' => String, 'Description' => String) || Exception
+    Fetches the Req and Description fields for a TranslationColumnProjection.
+  */
+  public function getDescription(){
+    return $this->withColumn(function($column){
+      return TranslationTableProjection::fetchDescription($column);
+    });
+  }
+  /**
     @param $tId TranslationId
     @param $payload String fieldSelect value from description
     @param $update String new value for translation entry

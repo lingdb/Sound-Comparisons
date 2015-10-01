@@ -446,21 +446,32 @@
       $changed = array();
       if($translationId !== 1){
         $static = StaticTranslationProvider::getChanged($translationId);
+        //FIXME fix usage of DynamicTranslationProvider
         $dynamic = DynamicTranslationProvider::getChanged($translationId);
         $changed = array_merge($static, $dynamic);
       }
       return $changed;
     }
     /**
-      FIXME FIGURE OUT WHAT THIS DOES AND HOW TO REPLACE IT VIA PROJECTIONS!
+      @param $category String
+      @return $description String || ''
+      Given a $category this method fetches the description text that belongs to it.
     */
     public static function categoryToDescription($category){
+      //Checking projections:
+      $regex = '/^'.preg_quote($category, '/').'$/';
+      $projections = TranslationColumnProjection::filterCategoryRegex(self::$projections, $regex);
+      if(count($projections) !== 0){
+        $desc = current($projections)->getDescription();
+        if($desc instanceof Exception){
+          Config::error(''.$desc);
+          return '';
+        }
+        return $desc['Description'];
+      }
+      //Checking provider edge case:
       if(array_key_exists($category, self::$providers)){
-        $p = self::$providers[$category];
-        if($p instanceof DynamicTranslationProvider){
-          $tCol = $p->translateColumn($p->getColumn());
-          return $tCol['description'];
-        }else if($category === 'StudyTitleTranslationProvider'){
+        if($category === 'StudyTitleTranslationProvider'){
           return TranslationProvider::getDescription('dt_studyTitle_trans');
         }else{
           Config::error("Unexpected case in Translation::categoryToDescription for $category");
