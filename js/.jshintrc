@@ -13,5 +13,6 @@
   , "google": false
   , "Worker": false
   , "Map": false
+  , "document": false
   }
 }

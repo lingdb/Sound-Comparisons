@@ -54,6 +54,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       , spelling:         'menu_words_filterspelling'
       , phonetics:        'menu_words_filterphonetics'
       , fonetics:         'menu_words_filter_fonetics'
+      , setPhLangHover:   'menu_words_filter_setPhLangHover'
       , psTarget:         'menu_words_filter_regex_link'
       , psHover:          'menu_words_filter_regex_hover'
       , in:               'menu_words_filter_spphin'
@@ -67,6 +68,21 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
         spList: {options: []}
       , phList: {}
       });
+      //Setting setPhLang, if 1L view:
+      /*
+        We only set setPhLang, iff:
+        - 1L view is active
+        - Current phLang !== languageCollection.getChoice()
+      */
+      var phLang = App.pageState.getPhLang();
+      if(App.pageState.isPageView('l')){
+        var language = App.languageCollection.getChoice();
+        if(language && phLang){
+          if(language.getId() !== phLang.getId()){
+            data.setPhLang = App.router.linkConfig({PhLang: language});
+          }
+        }
+      }
       //Filling spList:
       var spLang = App.pageState.getSpLang();
       data.spList.current = spLang ? spLang.getSpellingName() : App.translationStorage.getName();
@@ -103,7 +119,6 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       entries = _.sortBy(entries, function(e){return e.name;}, this);
       data.spList.options.push.apply(data.spList.options, entries);
       //Filling phList:
-      var phLang = App.pageState.getPhLang();
       if(phLang){
         var phId = phLang.getId();
         //Initial data for phList
