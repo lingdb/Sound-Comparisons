@@ -1,15 +1,21 @@
-<dl class="meaningGroupList">
-  {{#meaningGroups}}
-  <dt class="{{fold}}">
-    {{#checkbox}}
-    <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
-    {{/checkbox}}
-    <a class="color-meaninggroup" {{{link}}}><i class="{{triangle}}"></i>{{name}}</a>
-  </dt>
-  {{#wordList}}
-  <dd>
-    {{> WordList}}
-  </dd>
-  {{/wordList}}
-  {{/meaningGroups}}
-</dl>
+<div class="nano">
+  <dl class="meaningGroupList nano-content">
+    {{#meaningGroups}}
+    <dt class="{{fold}}">
+      {{#checkbox}}
+      <a {{{link}}} title="{{ttip}}">
+        <i class="{{icon}}"></i>
+      </a>
+      {{/checkbox}}
+      <a class="color-meaninggroup" {{{link}}}>
+        <i class="{{triangle}}"></i>{{name}}
+      </a>
+    </dt>
+    {{#wordList}}
+    <dd>
+      {{> WordList}}
+    </dd>
+    {{/wordList}}
+    {{/meaningGroups}}
+  </dl>
+</div>

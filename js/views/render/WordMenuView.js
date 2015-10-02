@@ -278,7 +278,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
     /***/
   , render: function(){
       //Updating the WordMenu html representation:
-      this.$el.find('.nano-content').html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
+      this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
       //Soundfiles and related:
       this.setupMgWordEvents();
       //Reinitializing the WordlistFilter:

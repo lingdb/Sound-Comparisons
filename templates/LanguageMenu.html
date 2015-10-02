@@ -6,7 +6,8 @@
   <a {{{expandHref}}} title="{{expandTitle}}"><i class="icon-plus"></i></a>
 </h6>
 {{#families}}
-  <dl class="familyList">
+<div class="nano">
+  <dl class="familyList nano-content">
     <dt style="background-color: {{color}};">
       {{#checkbox}}
         <a {{{link}}}{{#title}} title="{{title}}"{{/title}}><i class="{{icon}}"></i></a>
@@ -15,6 +16,11 @@
     </dt>
     <dd>{{#RegionList}}{{> RegionList}}{{/RegionList}}</dd>
   </dl>
+</div>
 {{/families}}
-{{#RegionList}}{{> RegionList}}{{/RegionList}}
+{{#RegionList}}
+<div class="nano">
+{{> RegionList}}
+</div>
+{{/RegionList}}
 {{/ LanguageMenu}}

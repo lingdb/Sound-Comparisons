@@ -94,10 +94,21 @@ define([
       Uses a timeout the first time, to make sure rendering is ok.
     */
   , nanoScroller: function(){
-      var height = _.max([$('#contentArea').height(), window.innerHeight - 55])+'px';
+      var height = _.max([$('#contentArea').height(), window.innerHeight - 55])
+        , style  = {'min-height': '600px', 'height': height+'px'};
       $('#leftMenu,#rightMenu').each(function(){
-        $(this).css({'min-height': '600px', 'height': height});
-      }).nanoScroller();
+        var menuTop = this.getBoundingClientRect().top, $t = $(this);
+        $t.find('.nano').each(function(){
+          /*
+            Using [1] to adjust height based on top style obj.
+            [1]: https://stackoverflow.com/a/11396681/448591
+          */
+          var nanoTop = this.getBoundingClientRect().top
+            , nanoCss = {'max-height': height - (nanoTop - menuTop)};
+          $(this).css(nanoCss);
+        }).nanoScroller();
+        $t.css(style);
+      });
       if(this._nano === false){
         this._nano = true;
         window.setTimeout(this.nanoScroller, 500);

@@ -201,7 +201,7 @@ define(['backbone'], function(Backbone){
       return regionList;
     }
   , render: function(){
-      this.$el.find('.nano-content').html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
+      this.$el.html(App.templateStorage.render('LanguageMenu', {LanguageMenu: this.model}));
       //Bindings for MapView:
       if(App.pageState.isMapView()){
         var t = this;

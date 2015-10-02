@@ -177,13 +177,13 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   padding-top: 2px;
 }
 /*Style in leftMenu:*/
-#leftMenu {padding-top: 0px; margin-bottom: 0px;}
+#leftMenu {padding: 0px; margin-bottom: 0px;}
 #leftMenu h3 {text-align: center;}
 .familyList, .regionList, .languageList {list-style: none;}
 .familyList > dt:first-child {margin-top: 0px;}
 .familyList .regionList a.colorRegion {font-size: 15px;}
 .regionList, .languageList {
-  margin: 0px 0px 0px 7px;
+  margin: 0px;
   white-space: nowrap;
 }
 dd.languageList {
@@ -197,10 +197,10 @@ dd.languageList {
 .highlighted + .zoomLanguage, .highlighted + .zoomLanguage + .languageLink {display: inline;}
 .languageLink > img, .zoomLanguage > i {margin-left: 0px; margin-right: 0px;}
 /*Style in rightMenu:*/
-#rightMenu {padding-top: 0px; margin-bottom: 0px;}
+#rightMenu {padding: 0px; margin-bottom: 0px;}
 #rightMenu h3 {text-align: center;}
-.meaninggroupList, .wordList {list-style: none; margin: 0px;}
-.meaninggroupList .wordList {margin-left: 7px;}
+.meaningGroupList, .wordList {list-style: none; margin: 0px;}
+.meaningGroupList .wordList {margin-left: 7px;}
 .p50 {width: 50%; display: inline-block;}
 .p50 div {display: inline-block;}
 #sortBy label {
