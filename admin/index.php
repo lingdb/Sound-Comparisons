@@ -64,6 +64,9 @@
         header('LOCATION: index.php');
       }else Config::error('Invalid session!');
     break;
+    case 'meanings':
+      require_once('meanings.php');
+    break;
     default:
       if(session_validate()){
         if(session_mayEdit()){
@@ -72,7 +75,7 @@
           header('LOCATION: translate.php');
         }
       }else{?>
-       <!DOCTYPE HTML>
+        <!DOCTYPE HTML>
         <html><?php
           $title = "Login to perform administration tasks.";
           require_once('head.php');

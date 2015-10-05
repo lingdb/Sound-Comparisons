@@ -32,6 +32,7 @@
            . '</ul></li>';
       }
       ?>
+      <li><a href="index.php?action=meanings">Meanings</a></li>
       <li><a href="index.php?action=logout">Logout</a></li>
     </ul>
     <?php
