@@ -526,11 +526,12 @@ class Importer{
       , 'Full Written Form:  Rfc Proto-Lg:  01  Altv Root' => 'FullRfcProtoLg01AltvRoot'
       , 'Full Written Form:  Rfc Proto-Lg:  02  Altv Root' => 'FullRfcProtoLg02AltvRoot')
     )
-  , '/^Book1.csv$/' => array(//Added for #240, given by Paul
+  , '/^Book1.csv$/' => array(//Added for #240, given by Paul.
       'study' => false
     , 'table' => 'Meanings'
     , 'colMapping' => array(
         'Entry Rfc Lg 1' => 'name'
+      , 'Ix Elicitation' => 'IxElicitation'
       )
     )
   );
