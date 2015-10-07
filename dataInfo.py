@@ -11,10 +11,37 @@ from db import EditImport, Study
 
 '''
     Gathers global information about the database and hands that to the client encoded as JSON.
+    JSON Structure will be like this:
+    {
+        "studies": [<studyNames>]
+    ,   "global": {
+            "shortLinks": {Name: Target}
+        ,   "soundPath": String
+        ,   "contributors"                => "SELECT * FROM Contributors"
+        ,   "contributorCategories"       => "SELECT * FROM ContributorCategories"
+        ,   "flagTooltip"                 => "SELECT * FROM FlagTooltip WHERE FLAG != ''"
+        ,   "languageStatusTypes"         => "SELECT * FROM LanguageStatusTypes"
+        ,   "meaningGroups"               => "SELECT * FROM MeaningGroups"
+        ,   "transcrSuperscriptInfo"      => "SELECT * FROM TranscrSuperscriptInfo"
+        ,   "transcrSuperscriptLenderLgs" => "SELECT * FROM TranscrSuperscriptLenderLgs"
+        ,   "wikipediaLinks"              => "SELECT * FROM WikipediaLinks"
+        }
+    }
 '''
 def getGlobal():
-    # FIXME IMPLEMENT!
-    return 'A wild global was seen!'
+    # Structure to fill up:
+    data = {
+        'studies': []
+    ,   'global': {
+            'soundPath': 'static/sound'
+        }
+    }
+    # Filling list of study names:
+    for study in db.getSession().query(Study).all():
+        data['studies'].append(study.name)
+    #FIXME IMPLEMENT
+    # Return stuff encoded as JSON:
+    return flask.jsonify(**data)
 
 '''
     @param studyName String
