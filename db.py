@@ -19,10 +19,8 @@ class EditImport(db.Model):
     def toDict(self):
         return {'who': self.who, 'time': self.time}
 
-# TODO this doesn't work like I'd want it to
-#   def __repr__(self):
-#       with app.test_request_context('/'):
-#           return flask.jsonify(**{'who': self.who, 'time': self.time})
+    def getTimeStampString(self):
+        return self.time.strftime('%s')
 
 if __name__ == '__main__':
     session = db.session
