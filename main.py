@@ -2,8 +2,9 @@ import flask
 
 import templateInfo
 import redirectStatic
+import db
 
-app = flask.Flask(__name__)
+app = db.app
 
 # Simple hello world at root:
 @app.route("/")
@@ -15,6 +16,10 @@ templateInfo.addRoutes(app,'/query/templateInfo','/templates/')
 
 # Redirect currently expected static files from toplevel:
 redirectStatic.addRoutes(app)
+
+#FIXME some test:
+import dataInfo
+dataInfo.addRoute(app)
 
 if __name__ == "__main__":
     app.debug = True
