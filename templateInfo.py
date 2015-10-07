@@ -53,6 +53,8 @@ def addRoutes(app, queryRoute, templateRoute):
         tInfo = getTemplateInfo(templateRoute)
         return flask.jsonify(**tInfo)
 
+    #FIXME this should be done my redirectStatic.py
+    #FIXME I can also remove this soon.
     @app.route(templateRoute+'<path:path>')
     def returnTemplate(path):
         return flask.send_from_directory(getMustacheDir(), path)
