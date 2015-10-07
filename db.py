@@ -22,9 +22,11 @@ class EditImport(db.Model):
     def getTimeStampString(self):
         return self.time.strftime('%s')
 
+def getSession():
+    return db.session
+
 if __name__ == '__main__':
-    session = db.session
-    print session
-    xs = session.query(EditImport).all()
+    xs = getSession().query(EditImport).all()
+    print 'Entries in Edit_Imports:'
     for x in xs:
         print x.toDict()
