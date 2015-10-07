@@ -17,6 +17,7 @@ import flask
     /css/* -> /static/css/*
     /js/*  -> /static/js/*
     /img/* -> /static/img/*
+    /sound/* -> /static/sound/*
     favicon.ico -> static/img/favicon.ico
 '''
 def addRoutes(app):
@@ -31,6 +32,10 @@ def addRoutes(app):
     @app.route('/img/<path:path>')
     def redirectImg(path):
         return flask.redirect('/static/img/'+path, 308)
+
+    @app.route('/sound/<path:path>')
+    def redirectSound(path):
+        return flask.redirect('/static/sound/'+path, 308)
 
     @app.route('/favicon.ico')
     def redirectFavicon():
