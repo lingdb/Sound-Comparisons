@@ -52,9 +52,11 @@ def getGlobal():
     for shortLink in db.getSession().query(ShortLink).all():
         data['global']['shortLinks'][shortLink.Name] = shortLink.Target
     # Filling contributors:
-    contributors = db.getSession().query(db.Contributor).all()
-    data['global']['contributors'] = [c.toDict() for c in contributors]
+    cs = db.getSession().query(db.Contributor).all()
+    data['global']['contributors'] = [c.toDict() for c in cs]
     # Filling contributorCategories
+    ccs = db.getSession().query(db.ContributorCategory).all()
+    data['global']['contributorCategories'] = [c.toDict() for c in ccs]
     #FIXME IMPLEMENT
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
