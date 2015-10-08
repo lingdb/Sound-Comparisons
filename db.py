@@ -190,6 +190,22 @@ class MeaningGroup(db.Model, SndCompModel):
     Name = Column('Name', String(255))
 
 '''
++--------------+------------------+------+-----+---------+
+| Field        | Type             | Null | Key | Default |
++--------------+------------------+------+-----+---------+
+| Ix           | int(10) unsigned | NO   | PRI | NULL    |
+| Abbreviation | varchar(10)      | NO   |     | NULL    |
+| HoverText    | text             | NO   |     | NULL    |
++--------------+------------------+------+-----+---------+
+'''
+# Model for v4.TranscrSuperscriptInfo
+class TranscrSuperscriptInfo(db.Model, SndCompModel):
+    __tablename__ = 'TranscrSuperscriptInfo'
+    Ix = Column('Ix', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    Abbreviation = Column('Abbreviation', String(10), nullable=False)
+    HoverText = Column('HoverText', TEXT, nullable=False)
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():

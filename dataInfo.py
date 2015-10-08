@@ -44,7 +44,7 @@ def getGlobal():
         ,   'flagTooltip': dictAll(db.FlagTooltip)
         ,   'languageStatusTypes': dictAll(db.LanguageStatusType)
         ,   'meaningGroups': dictAll(db.MeaningGroup)
-        ,   'transcrSuperscriptInfo': []
+        ,   'transcrSuperscriptInfo': dictAll(db.TranscrSuperscriptInfo)
         ,   'transcrSuperscriptLenderLgs': []
         ,   'wikipediaLinks': []
         }
