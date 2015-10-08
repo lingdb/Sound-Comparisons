@@ -176,6 +176,20 @@ class LanguageStatusType(db.Model, SndCompModel):
     ColorDepth = Column('ColorDepth', FLOAT, nullable=False)
 
 '''
++----------------+------------------+------+-----+---------+
+| Field          | Type             | Null | Key | Default |
++----------------+------------------+------+-----+---------+
+| MeaningGroupIx | int(10) unsigned | NO   | PRI | NULL    |
+| Name           | varchar(255)     | YES  |     | NULL    |
++----------------+------------------+------+-----+---------+
+'''
+# Model for v4.MeaningGroups
+class MeaningGroup(db.Model, SndCompModel):
+    __tablename__ = 'MeaningGroups'
+    MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    Name = Column('Name', String(255))
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():
