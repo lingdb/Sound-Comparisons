@@ -7,7 +7,7 @@ import flask
 import sqlalchemy
 
 import db
-from db import EditImport, Study
+from db import EditImport, Study, ShortLink
 
 '''
     Gathers global information about the database and hands that to the client encoded as JSON.
@@ -34,11 +34,15 @@ def getGlobal():
         'studies': []
     ,   'global': {
             'soundPath': 'static/sound'
+        ,   'shortLinks': {}
         }
     }
     # Filling list of study names:
     for study in db.getSession().query(Study).all():
         data['studies'].append(study.name)
+    # Filling shortLinks:
+    for shortLink in db.getSession().query(ShortLink).all():
+        data['global']['shortLinks'][shortLink.name] = shortLink.target
     #FIXME IMPLEMENT
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
