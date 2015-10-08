@@ -29,40 +29,26 @@ from db import EditImport, Study, ShortLink
     }
 '''
 def getGlobal():
+    # Fetch all models and make them a list of ditcs:
+    def dictAll(model):
+        ms = db.getSession().query(model).all()
+        return [m.toDict() for m in ms]
     # Structure to fill up:
     data = {
-        'studies': []
+        'studies': [s.Name for s in db.getSession().query(Study).all()]
     ,   'global': {
             'soundPath': 'static/sound'
-        ,   'shortLinks': {}
-        ,   'contributors': []
-        ,   'contributorCategories': []
-        ,   'flagTooltip': []
-        ,   'languageStatusTypes': []
-        ,   'meaningGroups': []
+        ,   'shortLinks': {l.Name: l.Target for l in db.getSession().query(ShortLink).all()}
+        ,   'contributors': dictAll(db.Contributor)
+        ,   'contributorCategories': dictAll(db.ContributorCategory)
+        ,   'flagTooltip': dictAll(db.FlagTooltip)
+        ,   'languageStatusTypes': dictAll(db.LanguageStatusType)
+        ,   'meaningGroups': dictAll(db.MeaningGroup)
         ,   'transcrSuperscriptInfo': []
         ,   'transcrSuperscriptLenderLgs': []
         ,   'wikipediaLinks': []
         }
     }
-    # Filling list of study names:
-    for study in db.getSession().query(Study).all():
-        data['studies'].append(study.Name)
-    # Filling shortLinks:
-    for shortLink in db.getSession().query(ShortLink).all():
-        data['global']['shortLinks'][shortLink.Name] = shortLink.Target
-    # Filling contributors:
-    cs = db.getSession().query(db.Contributor).all()
-    data['global']['contributors'] = [c.toDict() for c in cs]
-    # Filling contributorCategories
-    ccs = db.getSession().query(db.ContributorCategory).all()
-    data['global']['contributorCategories'] = [c.toDict() for c in ccs]
-    # Filling flagTooltip:
-    fs = db.getSession().query(db.FlagTooltip).all()
-    data['global']['flagTooltip'] = [f.toDict() for f in fs]
-    # Filling languageStatusTypes:
-    lsts = db.getSession().query(db.LanguageStatusType).all()
-    data['global']['languageStatusTypes'] = [lst.toDict() for lst in lsts]
     #FIXME IMPLEMENT
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
