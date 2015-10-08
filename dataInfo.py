@@ -46,10 +46,9 @@ def getGlobal():
         ,   'meaningGroups': dictAll(db.MeaningGroup)
         ,   'transcrSuperscriptInfo': dictAll(db.TranscrSuperscriptInfo)
         ,   'transcrSuperscriptLenderLgs': dictAll(db.TranscrSuperscriptLenderLg)
-        ,   'wikipediaLinks': []
+        ,   'wikipediaLinks': dictAll(db.WikipediaLink)
         }
     }
-    #FIXME IMPLEMENT
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
 

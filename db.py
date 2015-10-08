@@ -222,6 +222,24 @@ class TranscrSuperscriptLenderLg(db.Model, SndCompModel):
     FullNameForHoverText = Column('FullNameForHoverText', String(255), nullable=False)
 
 '''
++-------------------+--------------+------+-----+---------+
+| Field             | Type         | Null | Key | Default |
++-------------------+--------------+------+-----+---------+
+| BrowserMatch      | varchar(255) | NO   | PRI | NULL    |
+| ISOCode           | varchar(3)   | NO   | PRI | NULL    |
+| WikipediaLinkPart | varchar(255) | NO   | PRI | NULL    |
+| Href              | text         | NO   |     | NULL    |
++-------------------+--------------+------+-----+---------+
+'''
+# Model for v4.WikipediaLinks
+class WikipediaLink(db.Model, SndCompModel):
+    __tablename__ = 'WikipediaLinks'
+    BrowserMatch = Column('BrowserMatch', String(255), nullable=False, primary_key=True)
+    ISOCode = Column('ISOCode', String(3), nullable=False, primary_key=True)
+    WikipediaLinkPart = Column('WikipediaLinkPart', String(255), nullable=False, primary_key=True)
+    Href = Column('Href', TEXT, nullable=False)
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():
