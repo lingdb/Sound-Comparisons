@@ -11,22 +11,6 @@ from db import EditImport, Study, ShortLink
 
 '''
     Gathers global information about the database and hands that to the client encoded as JSON.
-    JSON Structure will be like this:
-    {
-        "studies": [<studyNames>]
-    ,   "global": {
-            "shortLinks": {Name: Target}
-        ,   "soundPath": String
-        ,   "contributors"                => "SELECT * FROM Contributors"
-        ,   "contributorCategories"       => "SELECT * FROM ContributorCategories"
-        ,   "flagTooltip"                 => "SELECT * FROM FlagTooltip WHERE FLAG != ''"
-        ,   "languageStatusTypes"         => "SELECT * FROM LanguageStatusTypes"
-        ,   "meaningGroups"               => "SELECT * FROM MeaningGroups"
-        ,   "transcrSuperscriptInfo"      => "SELECT * FROM TranscrSuperscriptInfo"
-        ,   "transcrSuperscriptLenderLgs" => "SELECT * FROM TranscrSuperscriptLenderLgs"
-        ,   "wikipediaLinks"              => "SELECT * FROM WikipediaLinks"
-        }
-    }
 '''
 def getGlobal():
     # Fetch all models and make them a list of ditcs:
