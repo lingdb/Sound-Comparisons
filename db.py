@@ -120,6 +120,25 @@ class Contributor(db.Model):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 '''
++-----------+------------------+------+-----+---------+
+| Field     | Type             | Null | Key | Default |
++-----------+------------------+------+-----+---------+
+| SortGroup | int(10) unsigned | NO   |     | NULL    |
+| Headline  | varchar(255)     | NO   |     |         |
+| Abbr      | varchar(255)     | NO   |     |         |
++-----------+------------------+------+-----+---------+
+'''
+# Model for v4.ContributorCategories table
+class ContributorCategory(db.Model):
+    __tablename__ = 'ContributorCategories';
+    SortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    Headline = Column('Headline', String(255), nullable=False, primary_key=True)
+    Abbr = Column('Abbr', String(255), nullable=False, primary_key=True)
+
+    def toDict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():
