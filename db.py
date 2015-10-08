@@ -139,6 +139,23 @@ class ContributorCategory(db.Model):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 '''
++---------+--------------+------+-----+---------+
+| Field   | Type         | Null | Key | Default |
++---------+--------------+------+-----+---------+
+| Flag    | varchar(255) | NO   | PRI | NULL    |
+| Tooltip | varchar(255) | NO   |     | NULL    |
++---------+--------------+------+-----+---------+
+'''
+# Model for v4.FlagTooltip
+class FlagTooltip(db.Model):
+    __tablename__ = 'FlagTooltip'
+    Flag = Column('Flag', String(255), nullable=False, primary_key=True)
+    Tooltip = Column('Tooltip', String(255), nullable=False)
+
+    def toDict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():
