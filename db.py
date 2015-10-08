@@ -1,5 +1,7 @@
 '''
     Playing with retrieving some stuff from the database
+    For the toDict() methods I've decided to use an idea from StackOverflow:
+    https://stackoverflow.com/a/11884806/448591
 '''
 
 import sqlalchemy
@@ -27,7 +29,7 @@ class EditImport(db.Model):
     Time = Column('Time', TIMESTAMP, primary_key=True)
 
     def toDict(self):
-        return {'Who': self.Who, 'Time': self.Time}
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def getTimeStampString(self):
         return self.Time.strftime('%s')
@@ -62,6 +64,9 @@ class Study(db.Model):
     ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
     SecondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
 
+    def toDict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 '''
 +--------+-------------+------+-----+---------+
 | Field  | Type        | Null | Key | Default |
@@ -77,6 +82,9 @@ class ShortLink(db.Model):
     Hash = Column('Hash', String(32), nullable=False, primary_key=True)
     Name = Column('Name', String(32), nullable=False)
     Target = Column('Target', TEXT, nullable=False)
+
+    def toDict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 '''
 +---------------------+---------------------+------+-----+---------+
@@ -107,6 +115,9 @@ class Contributor(db.Model):
     EmailAfterAt = Column('EmailAfterAt', String(255), nullable=False)
     PersonalWebsite = Column('PersonalWebsite', String(255), nullable=False)
     FullRoleDescription = Column('FullRoleDescription', TEXT)
+
+    def toDict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 '''
     A short method to access the database session from outside of this module.
