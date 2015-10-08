@@ -60,6 +60,9 @@ def getGlobal():
     # Filling flagTooltip:
     fs = db.getSession().query(db.FlagTooltip).all()
     data['global']['flagTooltip'] = [f.toDict() for f in fs]
+    # Filling languageStatusTypes:
+    lsts = db.getSession().query(db.LanguageStatusType).all()
+    data['global']['languageStatusTypes'] = [lst.toDict() for lst in lsts]
     #FIXME IMPLEMENT
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
