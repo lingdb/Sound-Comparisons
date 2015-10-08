@@ -57,6 +57,9 @@ def getGlobal():
     # Filling contributorCategories
     ccs = db.getSession().query(db.ContributorCategory).all()
     data['global']['contributorCategories'] = [c.toDict() for c in ccs]
+    # Filling flagTooltip:
+    fs = db.getSession().query(db.FlagTooltip).all()
+    data['global']['flagTooltip'] = [f.toDict() for f in fs]
     #FIXME IMPLEMENT
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
