@@ -4,7 +4,7 @@
 
 import sqlalchemy
 from sqlalchemy import Column, String, Integer
-from sqlalchemy.dialects.mysql import TINYINT, DOUBLE, TIMESTAMP
+from sqlalchemy.dialects.mysql import TINYINT, DOUBLE, TIMESTAMP, TEXT
 import flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -61,6 +61,22 @@ class Study(db.Model):
     defaultBottomRightLon = Column('DefaultBottomRightLon', DOUBLE)
     colorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
     secondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
+
+'''
++--------+-------------+------+-----+---------+
+| Field  | Type        | Null | Key | Default |
++--------+-------------+------+-----+---------+
+| Hash   | varchar(32) | NO   | PRI | NULL    |
+| Name   | varchar(32) | NO   |     | NULL    |
+| Target | text        | NO   |     | NULL    |
++--------+-------------+------+-----+---------+
+'''
+# Model for v4.Page_ShortLinks table
+class ShortLink(db.Model):
+    __tablename__ = 'Page_ShortLinks'
+    hash = Column('Hash', String(32), nullable=False, primary_key=True)
+    name = Column('Name', String(32), nullable=False)
+    target = Column('Target', TEXT, nullable=False)
 
 '''
     A short method to access the database session from outside of this module.
