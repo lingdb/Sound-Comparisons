@@ -35,14 +35,25 @@ def getGlobal():
     ,   'global': {
             'soundPath': 'static/sound'
         ,   'shortLinks': {}
+        ,   'contributors': []
+        ,   'contributorCategories': []
+        ,   'flagTooltip': []
+        ,   'languageStatusTypes': []
+        ,   'meaningGroups': []
+        ,   'transcrSuperscriptInfo': []
+        ,   'transcrSuperscriptLenderLgs': []
+        ,   'wikipediaLinks': []
         }
     }
     # Filling list of study names:
     for study in db.getSession().query(Study).all():
-        data['studies'].append(study.name)
+        data['studies'].append(study.Name)
     # Filling shortLinks:
     for shortLink in db.getSession().query(ShortLink).all():
-        data['global']['shortLinks'][shortLink.name] = shortLink.target
+        data['global']['shortLinks'][shortLink.Name] = shortLink.Target
+    # Filling contributors:
+    #contributors = db.getSession().query(db.Contributor).all()
+    #data['global']['contributors'] = [c.serialize() for c in contributors]
     #FIXME IMPLEMENT
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
@@ -75,7 +86,7 @@ def addRoute(app):
             if studyName == '':
                 return 'You need to supply a value for that study parameter!'
             else:
-                studyCount = db.getSession().query(Study).filter_by(name = studyName).limit(1).count()
+                studyCount = db.getSession().query(Study).filter_by(Name = studyName).limit(1).count()
                 if studyCount == 1:
                     return getStudy(studyName)
                 else:

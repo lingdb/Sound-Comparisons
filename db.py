@@ -23,14 +23,14 @@ db = SQLAlchemy(app)
 # Model for v4.Edit_Imports table
 class EditImport(db.Model):
     __tablename__ = 'Edit_Imports'
-    who = Column('Who', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
-    time = Column('Time', TIMESTAMP, primary_key=True)
+    Who = Column('Who', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    Time = Column('Time', TIMESTAMP, primary_key=True)
 
     def toDict(self):
-        return {'who': self.who, 'time': self.time}
+        return {'Who': self.Who, 'Time': self.Time}
 
     def getTimeStampString(self):
-        return self.time.strftime('%s')
+        return self.Time.strftime('%s')
 
 '''
 +-----------------------+---------------------+------+-----+---------+
@@ -51,16 +51,16 @@ class EditImport(db.Model):
 # Model for v4.Studies table
 class Study(db.Model):
     __tablename__ = 'Studies'
-    studyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    familyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    subFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    name = Column('Name', String(255), nullable=False)
-    defaultTopLeftLat = Column('DefaultTopLeftLat', DOUBLE)
-    defaultTopLeftLon = Column('DefaultTopLeftLon', DOUBLE)
-    defaultBottomRightLat = Column('DefaultBottomRightLat', DOUBLE)
-    defaultBottomRightLon = Column('DefaultBottomRightLon', DOUBLE)
-    colorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
-    secondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    Name = Column('Name', String(255), nullable=False)
+    DefaultTopLeftLat = Column('DefaultTopLeftLat', DOUBLE)
+    DefaultTopLeftLon = Column('DefaultTopLeftLon', DOUBLE)
+    DefaultBottomRightLat = Column('DefaultBottomRightLat', DOUBLE)
+    DefaultBottomRightLon = Column('DefaultBottomRightLon', DOUBLE)
+    ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
+    SecondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
 
 '''
 +--------+-------------+------+-----+---------+
@@ -74,9 +74,9 @@ class Study(db.Model):
 # Model for v4.Page_ShortLinks table
 class ShortLink(db.Model):
     __tablename__ = 'Page_ShortLinks'
-    hash = Column('Hash', String(32), nullable=False, primary_key=True)
-    name = Column('Name', String(32), nullable=False)
-    target = Column('Target', TEXT, nullable=False)
+    Hash = Column('Hash', String(32), nullable=False, primary_key=True)
+    Name = Column('Name', String(32), nullable=False)
+    Target = Column('Target', TEXT, nullable=False)
 
 '''
 +---------------------+---------------------+------+-----+---------+
@@ -97,16 +97,16 @@ class ShortLink(db.Model):
 # Model for v4.Contributors table
 class Contributor(db.Model):
     __tablename__ = 'Contributors'
-    contributorIx = Column('ContributorIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
-    sortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False)
-    sortIxForAboutPage = Column('SortIxForAboutPage', BIGINT(20, unsigned=True), nullable=False)
-    forenames = Column('Forenames', String(255), nullable=False)
-    surnames = Column('Surnames', String(255), nullable=False)
-    initials = Column('Initials', String(255), nullable=False)
-    emailUpToAt = Column('EmailUpToAt', String(255), nullable=False)
-    emailAfterAt = Column('EmailAfterAt', String(255), nullable=False)
-    personalWebsite = Column('PersonalWebsite', String(255), nullable=False)
-    fullRoleDescription = Column('FullRoleDescription', TEXT)
+    ContributorIx = Column('ContributorIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    SortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False)
+    SortIxForAboutPage = Column('SortIxForAboutPage', BIGINT(20, unsigned=True), nullable=False)
+    Forenames = Column('Forenames', String(255), nullable=False)
+    Surnames = Column('Surnames', String(255), nullable=False)
+    Initials = Column('Initials', String(255), nullable=False)
+    EmailUpToAt = Column('EmailUpToAt', String(255), nullable=False)
+    EmailAfterAt = Column('EmailAfterAt', String(255), nullable=False)
+    PersonalWebsite = Column('PersonalWebsite', String(255), nullable=False)
+    FullRoleDescription = Column('FullRoleDescription', TEXT)
 
 '''
     A short method to access the database session from outside of this module.
