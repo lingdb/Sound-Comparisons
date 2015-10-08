@@ -45,7 +45,7 @@ def getGlobal():
         ,   'languageStatusTypes': dictAll(db.LanguageStatusType)
         ,   'meaningGroups': dictAll(db.MeaningGroup)
         ,   'transcrSuperscriptInfo': dictAll(db.TranscrSuperscriptInfo)
-        ,   'transcrSuperscriptLenderLgs': []
+        ,   'transcrSuperscriptLenderLgs': dictAll(db.TranscrSuperscriptLenderLg)
         ,   'wikipediaLinks': []
         }
     }

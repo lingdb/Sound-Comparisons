@@ -206,6 +206,22 @@ class TranscrSuperscriptInfo(db.Model, SndCompModel):
     HoverText = Column('HoverText', TEXT, nullable=False)
 
 '''
++----------------------+--------------+------+-----+---------+
+| Field                | Type         | Null | Key | Default |
++----------------------+--------------+------+-----+---------+
+| IsoCode              | varchar(3)   | NO   | PRI | NULL    |
+| Abbreviation         | varchar(10)  | NO   |     | NULL    |
+| FullNameForHoverText | varchar(255) | NO   |     | NULL    |
++----------------------+--------------+------+-----+---------+
+'''
+# Model for v4.TranscrSuperscriptLenderLgs
+class TranscrSuperscriptLenderLg(db.Model, SndCompModel):
+    __tablename__ = 'TranscrSuperscriptLenderLgs'
+    IsoCode = Column('IsoCode', String(3), nullable=False, primary_key=True)
+    Abbreviation = Column('Abbreviation', String(10), nullable=False)
+    FullNameForHoverText = Column('FullNameForHoverText', String(255), nullable=False)
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():
