@@ -240,6 +240,28 @@ class WikipediaLink(db.Model, SndCompModel):
     Href = Column('Href', TEXT, nullable=False)
 
 '''
++------------------------+---------------------+------+-----+---------+
+| Field                  | Type                | Null | Key | Default |
++------------------------+---------------------+------+-----+---------+
+| StudyIx                | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx               | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyNm               | varchar(255)        | NO   | PRI | NULL    |
+| FamilyAbbrAllFileNames | varchar(255)        | NO   |     |         |
+| ProjectAboutUrl        | varchar(2000)       | NO   |     |         |
+| ProjectActive          | tinyint(1)          | NO   |     | 1       |
++------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Families
+class Family(db.Model, SndCompModel):
+    __tablename__ = 'Families'
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyNm = Column('FamilyNm', String(255), nullable=False)
+    FamilyAbbrAllFileNames = Column('FamilyAbbrAllFileNames', String(255), nullable=False)
+    ProjectAboutUrl = Column('ProjectAboutUrl', String(2000), nullable=False)
+    ProjectActive = Column('ProjectActive', TINYINT(1), nullable=False)
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():

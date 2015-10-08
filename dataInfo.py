@@ -10,13 +10,17 @@ import db
 from db import EditImport, Study, ShortLink
 
 '''
-    Gathers global information about the database and hands that to the client encoded as JSON.
+    @param model (db.Model, SndCompModel)
+    @return [{}] A list of Dicts
+    Fetch all models and make them a list of ditcs.
+'''
+def dictAll(model):
+    return [m.toDict() for m in db.getSession().query(model).all()]
+
+'''
+    Replies with a JSON encoded chunk of the database that is independant of the study.
 '''
 def getGlobal():
-    # Fetch all models and make them a list of ditcs:
-    def dictAll(model):
-        ms = db.getSession().query(model).all()
-        return [m.toDict() for m in ms]
     # Structure to fill up:
     data = {
         'studies': [s.Name for s in db.getSession().query(Study).all()]
@@ -38,11 +42,34 @@ def getGlobal():
 
 '''
     @param studyName String
+    @throws sqlalchemy.orm.exc.NoResultFound if studyName not found.
     Replies with a JSON encoded, study dependant chunk of the database.
 '''
+# FIXME think about the blacklist parameter!
 def getStudy(studyName):
+    # Study to fetch stuff for:
+    study = db.getSession().query(Study).filter_by(Name = studyName).limit(1).one()
+    # Structure to fill up:
+    data = {
+        'study': study.toDict()
+    ,   'families': dictAll(db.Family)
+    ,   'regions': []
+    ,   'regionLanguages': []
+    ,   'languages': []
+    ,   'words': []
+    ,   'meaningGroupMembers': []
+    ,   'transcriptions': []
+    ,   'defaults': {
+            'language': None
+        ,   'word': None
+        ,   'languages': []
+        ,   'words': []
+        ,   'excludeMap': []
+        }
+    }
     # FIXME IMPLEMENT!
-    return ('Found study: '+studyName)
+    # Return stuff encoded as JSON:
+    return flask.jsonify(**data)
 
 '''
     @param app instance of Flask
