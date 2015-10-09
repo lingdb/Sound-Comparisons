@@ -82,6 +82,7 @@ class Studies(db.Model, SndCompModel):
     DefaultMultipleLanguages = relationship('DefaultMultipleLanguages')
     DefaultMultipleWords = relationship('DefaultMultipleWords')
     DefaultWords = relationship('DefaultWords')
+    Regions = relationship('Regions')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -386,6 +387,35 @@ class DefaultWords(db.Model, SndCompModel):
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
+
+'''
++----------------------+---------------------+------+-----+---------+
+| Field                | Type                | Null | Key | Default |
++----------------------+---------------------+------+-----+---------+
+| StudyIx              | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx             | tinyint(3) unsigned | NO   | PRI | NULL    |
+| SubFamilyIx          | tinyint(3) unsigned | NO   | PRI | NULL    |
+| RegionGpIx           | tinyint(3) unsigned | NO   | PRI | NULL    |
+| DefaultExpandedState | tinyint(3) unsigned | NO   |     | 0       |
+| RegionGpTypeIx       | tinyint(3) unsigned | NO   |     | 1       |
+| RegionGpNameLong     | varchar(255)        | YES  |     | NULL    |
+| RegionGpNameShort    | varchar(255)        | YES  |     | NULL    |
+| StudyName            | varchar(10)         | NO   | PRI |         |
++----------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Regions
+class Regions(db.Model, SndCompModel):
+    __tablename__ = 'Regions'
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    RegionGpIx = Column('RegionGpIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    DefaultExpandedState = Column('DefaultExpandedState', TINYINT(3, unsigned=True), nullable=False)
+    RegionGpTypeIx = Column('RegionGpTypeIx', TINYINT(3, unsigned=True), nullable=False)
+    RegionGpNameLong = Column('RegionGpNameLong', String(255))
+    RegionGpNameShort = Column('RegionGpNameShort', String(255))
+    StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
 
 '''
     A short method to access the database session from outside of this module.

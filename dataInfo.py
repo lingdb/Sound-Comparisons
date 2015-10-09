@@ -48,11 +48,19 @@ def getGlobal():
 def getStudy(studyName):
     # Study to fetch stuff for:
     study = db.getSession().query(db.Studies).filter_by(Name = studyName).limit(1).one()
+    # Helper to remove StudyName from dicts:
+    def filterDicts(xs):
+        ys = []
+        for x in xs:
+            d = x.toDict()
+            d.pop('StudyName',None)
+            ys.append(d)
+        return ys
     # Structure to fill up:
     data = {
         'study': study.toDict()
     ,   'families': dictAll(db.Families)
-    ,   'regions': []
+    ,   'regions': filterDicts(study.Regions)
     ,   'regionLanguages': []
     ,   'languages': []
     ,   'words': []
