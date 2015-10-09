@@ -80,7 +80,6 @@ def getStudy(studyName):
     if len(study.DefaultWords) > 0:
         w = study.DefaultWords[0]
         data['defaults']['word'] = {'IxElicitation': w.IxElicitation, 'IxMorphologicalInstance': w.IxMorphologicalInstance}
-    # FIXME add soundFiles to transcriptions!
     # FIXME add DummyTranscriptions!
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)

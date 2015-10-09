@@ -733,6 +733,18 @@ class Transcriptions(db.Model, SndCompModel):
         # Done:
         return ret
 
+    '''
+        @return dict {}
+        Extending SndCompModel.toDict(…) to include sound files
+    '''
+    def toDict(self):
+        dict = super(Transcriptions, self).toDict()
+        try:
+            dict['soundPaths'] = self.getSoundFiles()['found']
+        except:
+            dict['soundPaths'] = []
+        return dict
+
 '''
     A short method to access the database session from outside of this module.
 '''
