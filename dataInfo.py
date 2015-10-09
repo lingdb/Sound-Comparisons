@@ -61,7 +61,7 @@ def getStudy(studyName):
         'study': study.toDict()
     ,   'families': dictAll(db.Families)
     ,   'regions': filterDicts(study.Regions)
-    ,   'regionLanguages': []
+    ,   'regionLanguages': filterDicts(study.RegionLanguages)
     ,   'languages': []
     ,   'words': []
     ,   'meaningGroupMembers': [m.toDict() for m in study.MeaningGroupMembers]

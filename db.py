@@ -83,6 +83,7 @@ class Studies(db.Model, SndCompModel):
     DefaultMultipleWords = relationship('DefaultMultipleWords')
     DefaultWords = relationship('DefaultWords')
     Regions = relationship('Regions')
+    RegionLanguages = relationship('RegionLanguages')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -416,6 +417,41 @@ class Regions(db.Model, SndCompModel):
     RegionGpNameShort = Column('RegionGpNameShort', String(255))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
+    # FIXME FOREIGN KEYS
+
+'''
++-------------------------------------------------+---------------------+------+-----+---------+
+| Field                                           | Type                | Null | Key | Default |
++-------------------------------------------------+---------------------+------+-----+---------+
+| StudyIx                                         | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx                                        | tinyint(3) unsigned | NO   | PRI | NULL    |
+| SubFamilyIx                                     | tinyint(3) unsigned | NO   | PRI | NULL    |
+| RegionGpIx                                      | tinyint(3) unsigned | NO   | PRI | NULL    |
+| RegionMemberLgIx                                | tinyint(3) unsigned | NO   |     | NULL    |
+| LanguageIx                                      | bigint(20) unsigned | NO   | PRI | NULL    |
+| RegionMemberWebsiteSubGroupIx                   | tinyint(3) unsigned | YES  |     | NULL    |
+| RegionGpMemberLgNameShortInThisSubFamilyWebsite | text                | YES  |     | NULL    |
+| RegionGpMemberLgNameLongInThisSubFamilyWebsite  | text                | YES  |     | NULL    |
+| Include                                         | tinyint(1)          | NO   |     | 0       |
+| StudyName                                       | varchar(10)         | NO   | PRI |         |
++-------------------------------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.RegionLanguages
+class RegionLanguages(db.Model, SndCompModel):
+    __tablename__ = 'RegionLanguages'
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    RegionGpIx = Column('RegionGpIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    RegionMemberLgIx = Column('RegionMemberLgIx', TINYINT(3, unsigned=True), nullable=False)
+    LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    RegionMemberWebsiteSubGroupIx = Column('RegionMemberWebsiteSubGroupIx', TINYINT(3, unsigned=True))
+    RegionGpMemberLgNameShortInThisSubFamilyWebsite = Column('RegionGpMemberLgNameShortInThisSubFamilyWebsite', TEXT)
+    RegionGpMemberLgNameLongInThisSubFamilyWebsite = Column('RegionGpMemberLgNameLongInThisSubFamilyWebsite', TEXT)
+    Include = Column('Include', TINYINT(1), nullable=False)
+    StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
+    # FIXME FOREIGN KEYS
 
 '''
     A short method to access the database session from outside of this module.
