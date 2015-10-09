@@ -38,7 +38,7 @@ class SndCompModel():
 +-------+---------------------+------+-----+-------------------+
 '''
 # Model for v4.Edit_Imports table
-class EditImport(db.Model, SndCompModel):
+class EditImports(db.Model, SndCompModel):
     __tablename__ = 'Edit_Imports'
     Who = Column('Who', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     Time = Column('Time', TIMESTAMP, primary_key=True)
@@ -63,7 +63,7 @@ class EditImport(db.Model, SndCompModel):
 +-----------------------+---------------------+------+-----+---------+
 '''
 # Model for v4.Studies table
-class Study(db.Model, SndCompModel):
+class Studies(db.Model, SndCompModel):
     __tablename__ = 'Studies'
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
@@ -76,7 +76,7 @@ class Study(db.Model, SndCompModel):
     ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
     SecondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
 
-    MeaningGroupMembers = relationship('MeaningGroupMember')
+    MeaningGroupMembers = relationship('MeaningGroupMembers')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -88,7 +88,7 @@ class Study(db.Model, SndCompModel):
 +--------+-------------+------+-----+---------+
 '''
 # Model for v4.Page_ShortLinks table
-class ShortLink(db.Model, SndCompModel):
+class ShortLinks(db.Model, SndCompModel):
     __tablename__ = 'Page_ShortLinks'
     Hash = Column('Hash', String(32), nullable=False, primary_key=True)
     Name = Column('Name', String(32), nullable=False)
@@ -111,7 +111,7 @@ class ShortLink(db.Model, SndCompModel):
 +---------------------+---------------------+------+-----+---------+
 '''
 # Model for v4.Contributors table
-class Contributor(db.Model, SndCompModel):
+class Contributors(db.Model, SndCompModel):
     __tablename__ = 'Contributors'
     ContributorIx = Column('ContributorIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     SortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False)
@@ -134,7 +134,7 @@ class Contributor(db.Model, SndCompModel):
 +-----------+------------------+------+-----+---------+
 '''
 # Model for v4.ContributorCategories table
-class ContributorCategory(db.Model, SndCompModel):
+class ContributorCategories(db.Model, SndCompModel):
     __tablename__ = 'ContributorCategories';
     SortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
     Headline = Column('Headline', String(255), nullable=False, primary_key=True)
@@ -168,7 +168,7 @@ class FlagTooltip(db.Model, SndCompModel):
 +--------------------+---------------------+------+-----+---------+
 '''
 # Model for v4.LanguageStatusTypes
-class LanguageStatusType(db.Model, SndCompModel):
+class LanguageStatusTypes(db.Model, SndCompModel):
     __tablename__ = 'LanguageStatusTypes'
     LanguageStatusType = Column('LanguageStatusType', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     Description = Column('Description', TEXT)
@@ -187,7 +187,7 @@ class LanguageStatusType(db.Model, SndCompModel):
 +----------------+------------------+------+-----+---------+
 '''
 # Model for v4.MeaningGroups
-class MeaningGroup(db.Model, SndCompModel):
+class MeaningGroups(db.Model, SndCompModel):
     __tablename__ = 'MeaningGroups'
     MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
     Name = Column('Name', String(255))
@@ -218,7 +218,7 @@ class TranscrSuperscriptInfo(db.Model, SndCompModel):
 +----------------------+--------------+------+-----+---------+
 '''
 # Model for v4.TranscrSuperscriptLenderLgs
-class TranscrSuperscriptLenderLg(db.Model, SndCompModel):
+class TranscrSuperscriptLenderLgs(db.Model, SndCompModel):
     __tablename__ = 'TranscrSuperscriptLenderLgs'
     IsoCode = Column('IsoCode', String(3), nullable=False, primary_key=True)
     Abbreviation = Column('Abbreviation', String(10), nullable=False)
@@ -235,7 +235,7 @@ class TranscrSuperscriptLenderLg(db.Model, SndCompModel):
 +-------------------+--------------+------+-----+---------+
 '''
 # Model for v4.WikipediaLinks
-class WikipediaLink(db.Model, SndCompModel):
+class WikipediaLinks(db.Model, SndCompModel):
     __tablename__ = 'WikipediaLinks'
     BrowserMatch = Column('BrowserMatch', String(255), nullable=False, primary_key=True)
     ISOCode = Column('ISOCode', String(3), nullable=False, primary_key=True)
@@ -255,7 +255,7 @@ class WikipediaLink(db.Model, SndCompModel):
 +------------------------+---------------------+------+-----+---------+
 '''
 # Model for v4.Families
-class Family(db.Model, SndCompModel):
+class Families(db.Model, SndCompModel):
     __tablename__ = 'Families'
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
@@ -277,7 +277,7 @@ class Family(db.Model, SndCompModel):
 +-------------------------+---------------------+------+-----+---------+
 '''
 # Model for v4.MeaningGroupMembers
-class MeaningGroupMember(db.Model, SndCompModel):
+class MeaningGroupMembers(db.Model, SndCompModel):
     __tablename__ = 'MeaningGroupMembers'
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
@@ -285,7 +285,7 @@ class MeaningGroupMember(db.Model, SndCompModel):
     MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True), nullable=False)
     IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
     IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Study.StudyIx, Study.FamilyIx]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME ADD FOREIGN KEY ON MeaningGroup
 
 '''
@@ -295,5 +295,5 @@ def getSession():
     return db.session
 
 if __name__ == '__main__':
-    s = getSession().query(Study).limit(1).one()
+    s = getSession().query(Studies).limit(1).one()
     print s.toDict()

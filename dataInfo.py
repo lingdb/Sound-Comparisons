@@ -7,7 +7,6 @@ import flask
 import sqlalchemy
 
 import db
-from db import EditImport, Study, ShortLink
 
 '''
     @param model (db.Model, SndCompModel)
@@ -23,18 +22,18 @@ def dictAll(model):
 def getGlobal():
     # Structure to fill up:
     data = {
-        'studies': [s.Name for s in db.getSession().query(Study).all()]
+        'studies': [s.Name for s in db.getSession().query(db.Studies).all()]
     ,   'global': {
             'soundPath': 'static/sound'
-        ,   'shortLinks': {l.Name: l.Target for l in db.getSession().query(ShortLink).all()}
-        ,   'contributors': dictAll(db.Contributor)
-        ,   'contributorCategories': dictAll(db.ContributorCategory)
+        ,   'shortLinks': {l.Name: l.Target for l in db.getSession().query(db.ShortLinks).all()}
+        ,   'contributors': dictAll(db.Contributors)
+        ,   'contributorCategories': dictAll(db.ContributorCategories)
         ,   'flagTooltip': dictAll(db.FlagTooltip)
-        ,   'languageStatusTypes': dictAll(db.LanguageStatusType)
-        ,   'meaningGroups': dictAll(db.MeaningGroup)
+        ,   'languageStatusTypes': dictAll(db.LanguageStatusTypes)
+        ,   'meaningGroups': dictAll(db.MeaningGroups)
         ,   'transcrSuperscriptInfo': dictAll(db.TranscrSuperscriptInfo)
-        ,   'transcrSuperscriptLenderLgs': dictAll(db.TranscrSuperscriptLenderLg)
-        ,   'wikipediaLinks': dictAll(db.WikipediaLink)
+        ,   'transcrSuperscriptLenderLgs': dictAll(db.TranscrSuperscriptLenderLgs)
+        ,   'wikipediaLinks': dictAll(db.WikipediaLinks)
         }
     }
     # Return stuff encoded as JSON:
@@ -48,11 +47,11 @@ def getGlobal():
 # FIXME think about the blacklist parameter!
 def getStudy(studyName):
     # Study to fetch stuff for:
-    study = db.getSession().query(Study).filter_by(Name = studyName).limit(1).one()
+    study = db.getSession().query(db.Studies).filter_by(Name = studyName).limit(1).one()
     # Structure to fill up:
     data = {
         'study': study.toDict()
-    ,   'families': dictAll(db.Family)
+    ,   'families': dictAll(db.Families)
     ,   'regions': []
     ,   'regionLanguages': []
     ,   'languages': []
@@ -91,14 +90,14 @@ def addRoute(app):
             if studyName == '':
                 return 'You need to supply a value for that study parameter!'
             else:
-                studyCount = db.getSession().query(Study).filter_by(Name = studyName).limit(1).count()
+                studyCount = db.getSession().query(db.Studies).filter_by(Name = studyName).limit(1).count()
                 if studyCount == 1:
                     return getStudy(studyName)
                 else:
                     return ("Couldn't find study: "+studyName)
         # Normal response in case of no get parameters:
         try:
-            latest = db.getSession().query(EditImport).order_by(EditImport.time.desc()).limit(1).one()
+            latest = db.getSession().query(db.EditImports).order_by(db.EditImports.time.desc()).limit(1).one()
             dict = {
                 'lastUpdate': latest.getTimeStampString(),
                 'Description': 'Add a global parameter to fetch global data, and add a study parameter to fetch a study.'
