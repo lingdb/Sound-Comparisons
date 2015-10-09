@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
     Playing with retrieving some stuff from the database
     For the toDict() methods I've decided to use an idea from StackOverflow:
@@ -13,6 +14,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import TINYINT, TIMESTAMP, TEXT, BIGINT, INTEGER, FLOAT
 import flask
 from flask.ext.sqlalchemy import SQLAlchemy
+# To check file existence:
+import os.path
 
 app = flask.Flask('Soundcomparisons')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1234@localhost/v4'
@@ -295,6 +298,7 @@ class MeaningGroupMembers(db.Model, SndCompModel):
     MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True), nullable=False)
     IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
     IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME ADD FOREIGN KEY ON MeaningGroup
 
@@ -313,6 +317,7 @@ class DefaultLanguages(db.Model, SndCompModel):
     LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
@@ -331,6 +336,7 @@ class DefaultLanguagesExcludeMap(db.Model, SndCompModel):
     LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
@@ -349,6 +355,7 @@ class DefaultMultipleLanguages(db.Model, SndCompModel):
     LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
@@ -369,6 +376,7 @@ class DefaultMultipleWords(db.Model, SndCompModel):
     IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
@@ -389,6 +397,7 @@ class DefaultWords(db.Model, SndCompModel):
     IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
@@ -419,6 +428,7 @@ class Regions(db.Model, SndCompModel):
     RegionGpNameLong = Column('RegionGpNameLong', String(255))
     RegionGpNameShort = Column('RegionGpNameShort', String(255))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
     # FIXME FOREIGN KEYS
 
@@ -453,6 +463,7 @@ class RegionLanguages(db.Model, SndCompModel):
     RegionGpMemberLgNameLongInThisSubFamilyWebsite = Column('RegionGpMemberLgNameLongInThisSubFamilyWebsite', TEXT)
     Include = Column('Include', TINYINT(1), nullable=False)
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
     # FIXME FOREIGN KEYS
 
@@ -549,6 +560,7 @@ class Languages(db.Model, SndCompModel):
     AssociatedPhoneticsLgForThisSpellingLg = Column('AssociatedPhoneticsLgForThisSpellingLg', BIGINT(20, unsigned=True))
     IsOrthographyHasNoTranscriptions = Column('IsOrthographyHasNoTranscriptions', TINYINT(3, unsigned=True))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
     # FIXME FOREIGN KEYS
 
@@ -599,6 +611,7 @@ class Words(db.Model, SndCompModel):
     FullRfcProtoLg01AltvRoot = Column('FullRfcProtoLg01AltvRoot', String(255))
     FullRfcProtoLg02AltvRoot = Column('FullRfcProtoLg02AltvRoot', String(255))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyName],[Studies.Name]), {})
     # FIXME FOREIGN KEYS
 
@@ -663,8 +676,62 @@ class Transcriptions(db.Model, SndCompModel):
     ReconstructedOrHistQuestionable = Column('ReconstructedOrHistQuestionable', TINYINT(1))
     ReconstructedOrHistQuestionableNote = Column('ReconstructedOrHistQuestionableNote', String(255))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
-    __table_args__ = (ForeignKeyConstraint([StudyName],[Studies.Name]), {})
+    # Foreign keys:
+    __table_args__ = (
+        # Relation to Studies:
+        ForeignKeyConstraint([StudyName],[Studies.Name]),
+        # Relation to Languages:
+        ForeignKeyConstraint([LanguageIx, StudyName], [Languages.LanguageIx, Languages.StudyName]),
+        # Relation to Words:
+        ForeignKeyConstraint([IxElicitation, IxMorphologicalInstance, StudyName], [Words.IxElicitation, Words.IxMorphologicalInstance, Words.StudyName]),
+        {})
     # FIXME FOREIGN KEYS
+    # Relationships with other models:
+    Study = relationship('Studies')
+    Language = relationship('Languages', viewonly=True)
+    Word = relationship('Words', viewonly=True)
+
+    '''
+        @return {'found': [String], 'missing': [String]}
+        Combines the work of these query/dataProvider.php methods:
+        * soundPathParts(…)
+        * findSoundFiles(…)
+        Returns a dictionary containing both,
+        lists of the found and of the missing sound files in the static/sound directory.
+        @throws AssertionError
+        Throws AssertionError iff self.{Language,Word} are not as expected.
+    '''
+    def getSoundFiles(self):
+        # Sanity checks:
+        assert isinstance(self.Language, Languages)
+        assert isinstance(self.Word, Words)
+        # Work from soundPathParts:
+        parts = {
+            'word': self.Word.SoundFileWordIdentifierText,
+            'language': self.Language.FilePathPart,
+            'pron': '',
+            'lex': ''
+            }
+        def helper(field, thing):
+            if thing > 1:
+                parts[field] = '_'+field+str(thing)
+        helper('pron', self.AlternativePhoneticRealisationIx)
+        helper('lex', self.AlternativeLexemIx)
+        # Work from findSoundFiles:
+        ret = {
+            'found': [],
+            'missing': []
+            }
+        extensions = ['.mp3','.ogg']
+        base = 'static/sound/'
+        for ext in extensions:
+            path = base+parts['language']+'/'+parts['language']+parts['word']+parts['lex']+parts['pron']+ext
+            if os.path.isfile(path):
+                ret['found'].append(path)
+            else:
+                ret['missing'].append(path)
+        # Done:
+        return ret
 
 '''
     A short method to access the database session from outside of this module.
@@ -673,5 +740,12 @@ def getSession():
     return db.session
 
 if __name__ == '__main__':
-    s = getSession().query(Studies).limit(1).one()
-    print s.toDict()
+    # TODO wield this into a test:
+    broken = 0
+    for t in getSession().query(Transcriptions).limit(2000).all():
+        try:
+            print t.getSoundFiles()
+        except:
+            broken += 1
+    print 'Broken Transcriptions:'
+    print broken
