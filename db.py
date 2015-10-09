@@ -85,6 +85,7 @@ class Studies(db.Model, SndCompModel):
     Regions = relationship('Regions')
     RegionLanguages = relationship('RegionLanguages')
     Languages = relationship('Languages')
+    Words = relationship('Words')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -548,6 +549,57 @@ class Languages(db.Model, SndCompModel):
     IsOrthographyHasNoTranscriptions = Column('IsOrthographyHasNoTranscriptions', TINYINT(3, unsigned=True))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
+    # FIXME FOREIGN KEYS
+
+'''
++-----------------------------------------------+---------------------+------+-----+---------+
+| Field                                         | Type                | Null | Key | Default |
++-----------------------------------------------+---------------------+------+-----+---------+
+| IxElicitation                                 | int(10) unsigned    | NO   | PRI | NULL    |
+| IxMorphologicalInstance                       | tinyint(3) unsigned | NO   | PRI | NULL    |
+| MeaningGroupIx                                | int(10) unsigned    | NO   |     | NULL    |
+| MeaningGroupMemberIx                          | int(10) unsigned    | NO   |     | NULL    |
+| ThisFySortOrderByAlphabeticalOfFamilyAncestor | int(10) unsigned    | YES  |     | NULL    |
+| SoundFileWordIdentifierText                   | varchar(255)        | NO   |     | NULL    |
+| FileNameRfcModernLg01                         | varchar(255)        | YES  |     | NULL    |
+| FileNameRfcModernLg02                         | varchar(255)        | YES  |     | NULL    |
+| FileNameRfcProtoLg01                          | varchar(255)        | YES  |     | NULL    |
+| FileNameRfcProtoLg02                          | varchar(255)        | YES  |     | NULL    |
+| FullRfcModernLg01                             | varchar(255)        | YES  |     | NULL    |
+| LongerRfcModernLg01                           | varchar(255)        | YES  |     | NULL    |
+| FullRfcModernLg02                             | varchar(255)        | YES  |     | NULL    |
+| LongerRfcModernLg02                           | varchar(255)        | YES  |     | NULL    |
+| FullRfcProtoLg01                              | varchar(255)        | YES  |     | NULL    |
+| FullRfcProtoLg02                              | varchar(255)        | YES  |     | NULL    |
+| FullRfcProtoLg01AltvRoot                      | varchar(255)        | YES  |     | NULL    |
+| FullRfcProtoLg02AltvRoot                      | varchar(255)        | YES  |     | NULL    |
+| StudyName                                     | varchar(10)         | NO   | PRI |         |
++-----------------------------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Words
+class Words(db.Model, SndCompModel):
+    __tablename__ = 'Words'
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True), nullable=False)
+    MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True), nullable=False)
+    ThisFySortOrderByAlphabeticalOfFamilyAncestor = Column('ThisFySortOrderByAlphabeticalOfFamilyAncestor', INTEGER(10, unsigned=True))
+    SoundFileWordIdentifierText = Column('SoundFileWordIdentifierText', String(255), nullable=False)
+    FileNameRfcModernLg01 = Column('FileNameRfcModernLg01', String(255))
+    FileNameRfcModernLg02 = Column('FileNameRfcModernLg02', String(255))
+    FileNameRfcProtoLg01 = Column('FileNameRfcProtoLg01', String(255))
+    FileNameRfcProtoLg02 = Column('FileNameRfcProtoLg02', String(255))
+    FullRfcModernLg01 = Column('FullRfcModernLg01', String(255))
+    LongerRfcModernLg01 = Column('LongerRfcModernLg01', String(255))
+    FullRfcModernLg02 = Column('FullRfcModernLg02', String(255))
+    LongerRfcModernLg02 = Column('LongerRfcModernLg02', String(255))
+    FullRfcProtoLg01 = Column('FullRfcProtoLg01', String(255))
+    FullRfcProtoLg02 = Column('FullRfcProtoLg02', String(255))
+    FullRfcProtoLg01AltvRoot = Column('FullRfcProtoLg01AltvRoot', String(255))
+    FullRfcProtoLg02AltvRoot = Column('FullRfcProtoLg02AltvRoot', String(255))
+    StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyName],[Studies.Name]), {})
+    # FIXME FOREIGN KEYS
 
 '''
     A short method to access the database session from outside of this module.
