@@ -86,6 +86,7 @@ class Studies(db.Model, SndCompModel):
     RegionLanguages = relationship('RegionLanguages')
     Languages = relationship('Languages')
     Words = relationship('Words')
+    Transcriptions = relationship('Transcriptions')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -597,6 +598,70 @@ class Words(db.Model, SndCompModel):
     FullRfcProtoLg02 = Column('FullRfcProtoLg02', String(255))
     FullRfcProtoLg01AltvRoot = Column('FullRfcProtoLg01AltvRoot', String(255))
     FullRfcProtoLg02AltvRoot = Column('FullRfcProtoLg02AltvRoot', String(255))
+    StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyName],[Studies.Name]), {})
+    # FIXME FOREIGN KEYS
+
+'''
++-------------------------------------+---------------------+------+-----+---------+
+| Field                               | Type                | Null | Key | Default |
++-------------------------------------+---------------------+------+-----+---------+
+| StudyIx                             | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx                            | tinyint(3) unsigned | NO   | PRI | NULL    |
+| IxElicitation                       | int(10) unsigned    | NO   | PRI | NULL    |
+| IxMorphologicalInstance             | tinyint(3) unsigned | NO   | PRI | NULL    |
+| AlternativePhoneticRealisationIx    | tinyint(3) unsigned | NO   | PRI | 1       |
+| AlternativeLexemIx                  | tinyint(3) unsigned | NO   | PRI | 1       |
+| LanguageIx                          | bigint(20) unsigned | NO   | PRI | NULL    |
+| Phonetic                            | varchar(255)        | YES  |     | NULL    |
+| SpellingAltv1                       | varchar(255)        | YES  |     | NULL    |
+| SpellingAltv2                       | varchar(255)        | YES  |     | NULL    |
+| NotCognateWithMainWordInThisFamily  | tinyint(1)          | YES  |     | NULL    |
+| CommonRootMorphemeStructDifferent   | tinyint(1)          | YES  |     | NULL    |
+| DifferentMeaningToUsualForCognate   | tinyint(1)          | YES  |     | NULL    |
+| ActualMeaningInThisLanguage         | varchar(255)        | YES  |     | NULL    |
+| OtherLexemeInLanguageForMeaning     | varchar(255)        | YES  |     | NULL    |
+| RootIsLoanWordFromKnownDonor        | tinyint(1)          | YES  |     | NULL    |
+| RootSharedInAnotherFamily           | tinyint(1)          | YES  |     | NULL    |
+| IsoCodeKnownDonor                   | varchar(3)          | YES  |     | NULL    |
+| DifferentMorphemeStructureNote      | varchar(255)        | YES  |     | NULL    |
+| OddPhonology                        | tinyint(1)          | YES  |     | NULL    |
+| OddPhonologyNote                    | varchar(255)        | YES  |     | NULL    |
+| UsageNote                           | varchar(255)        | YES  |     | NULL    |
+| SoundProblem                        | tinyint(1)          | YES  |     | NULL    |
+| ReconstructedOrHistQuestionable     | tinyint(1)          | YES  |     | NULL    |
+| ReconstructedOrHistQuestionableNote | varchar(255)        | YES  |     | NULL    |
+| StudyName                           | varchar(10)         | NO   | PRI |         |
++-------------------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Transcriptions
+class Transcriptions(db.Model, SndCompModel):
+    __tablename__ = 'Transcriptions'
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    AlternativePhoneticRealisationIx = Column('AlternativePhoneticRealisationIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    AlternativeLexemIx = Column('AlternativeLexemIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    Phonetic = Column('Phonetic', String(255))
+    SpellingAltv1 = Column('SpellingAltv1', String(255))
+    SpellingAltv2 = Column('SpellingAltv2', String(255))
+    NotCognateWithMainWordInThisFamily = Column('NotCognateWithMainWordInThisFamily', TINYINT(1))
+    CommonRootMorphemeStructDifferent = Column('CommonRootMorphemeStructDifferent', TINYINT(1))
+    DifferentMeaningToUsualForCognate = Column('DifferentMeaningToUsualForCognate', TINYINT(1))
+    ActualMeaningInThisLanguage = Column('ActualMeaningInThisLanguage', String(255))
+    OtherLexemeInLanguageForMeaning = Column('OtherLexemeInLanguageForMeaning', String(255))
+    RootIsLoanWordFromKnownDonor = Column('RootIsLoanWordFromKnownDonor', TINYINT(1))
+    RootSharedInAnotherFamily = Column('RootSharedInAnotherFamily', TINYINT(1))
+    IsoCodeKnownDonor = Column('IsoCodeKnownDonor', String(3))
+    DifferentMorphemeStructureNote = Column('DifferentMorphemeStructureNote', String(255))
+    OddPhonology = Column('OddPhonology', TINYINT(1))
+    OddPhonologyNote = Column('OddPhonologyNote', String(255))
+    UsageNote = Column('UsageNote', String(255))
+    SoundProblem = Column('SoundProblem', TINYINT(1))
+    ReconstructedOrHistQuestionable = Column('ReconstructedOrHistQuestionable', TINYINT(1))
+    ReconstructedOrHistQuestionableNote = Column('ReconstructedOrHistQuestionableNote', String(255))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     __table_args__ = (ForeignKeyConstraint([StudyName],[Studies.Name]), {})
     # FIXME FOREIGN KEYS

@@ -44,7 +44,6 @@ def getGlobal():
     @throws sqlalchemy.orm.exc.NoResultFound if studyName not found.
     Replies with a JSON encoded, study dependant chunk of the database.
 '''
-# FIXME think about the blacklist parameter!
 def getStudy(studyName):
     # Study to fetch stuff for:
     study = db.getSession().query(db.Studies).filter_by(Name = studyName).limit(1).one()
@@ -65,7 +64,7 @@ def getStudy(studyName):
     ,   'languages': filterDicts(study.Languages)
     ,   'words': filterDicts(study.Words)
     ,   'meaningGroupMembers': [m.toDict() for m in study.MeaningGroupMembers]
-    ,   'transcriptions': []
+    ,   'transcriptions': filterDicts(study.Transcriptions)
     ,   'defaults': {
             'language': None
         ,   'word': None
