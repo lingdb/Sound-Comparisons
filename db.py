@@ -84,6 +84,7 @@ class Studies(db.Model, SndCompModel):
     DefaultWords = relationship('DefaultWords')
     Regions = relationship('Regions')
     RegionLanguages = relationship('RegionLanguages')
+    Languages = relationship('Languages')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -452,6 +453,101 @@ class RegionLanguages(db.Model, SndCompModel):
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
     # FIXME FOREIGN KEYS
+
+'''
++----------------------------------------+---------------------+------+-----+---------+
+| Field                                  | Type                | Null | Key | Default |
++----------------------------------------+---------------------+------+-----+---------+
+| StudyIx                                | tinyint(3) unsigned | NO   |     | NULL    |
+| FamilyIx                               | tinyint(3) unsigned | NO   |     | NULL    |
+| LanguageIx                             | bigint(20) unsigned | NO   | PRI | NULL    |
+| ShortName                              | varchar(255)        | NO   |     | NULL    |
+| ToolTip                                | text                | YES  |     | NULL    |
+| SpecificLanguageVarietyName            | text                | YES  |     | NULL    |
+| LanguageStatusType                     | tinyint(3) unsigned | YES  |     | NULL    |
+| WebsiteSubgroupName                    | text                | YES  |     | NULL    |
+| WebsiteSubgroupWikipediaString         | text                | YES  |     | NULL    |
+| HistoricalPeriod                       | text                | YES  |     | NULL    |
+| HistoricalPeriodWikipediaString        | text                | YES  |     | NULL    |
+| EthnicGroup                            | text                | YES  |     | NULL    |
+| StateRegion                            | text                | YES  |     | NULL    |
+| NearestCity                            | text                | YES  |     | NULL    |
+| PreciseLocality                        | text                | YES  |     | NULL    |
+| PreciseLocalityNationalSpelling        | text                | YES  |     | NULL    |
+| ExternalWeblink                        | text                | YES  |     | NULL    |
+| FilePathPart                           | varchar(255)        | NO   |     | NULL    |
+| Flag                                   | varchar(255)        | YES  |     | NULL    |
+| RfcLanguage                            | bigint(20)          | YES  |     | NULL    |
+| Latitude                               | double              | YES  |     | NULL    |
+| Longtitude                             | double              | YES  |     | NULL    |
+| ISOCode                                | varchar(3)          | YES  |     | NULL    |
+| GlottoCode                             | varchar(8)          | YES  |     | NULL    |
+| WikipediaLinkPart                      | text                | YES  |     | NULL    |
+| IsSpellingRfcLang                      | tinyint(3) unsigned | YES  |     | 0       |
+| SpellingRfcLangName                    | varchar(255)        | YES  |     | NULL    |
+| ContributorSpokenBy                    | bigint(20) unsigned | YES  |     | NULL    |
+| ContributorRecordedBy1                 | bigint(20) unsigned | YES  |     | NULL    |
+| ContributorRecordedBy2                 | bigint(20) unsigned | YES  |     | NULL    |
+| ContributorSoundEditingBy              | bigint(20) unsigned | YES  |     | NULL    |
+| ContributorPhoneticTranscriptionBy     | bigint(20) unsigned | YES  |     | NULL    |
+| ContributorReconstructionBy            | bigint(20) unsigned | YES  |     | NULL    |
+| ContributorCitationAuthor1             | bigint(20) unsigned | YES  |     | NULL    |
+| Citation1Year                          | int(10) unsigned    | YES  |     | NULL    |
+| Citation1Pages                         | varchar(255)        | YES  |     | NULL    |
+| ContributorCitationAuthor2             | bigint(20) unsigned | YES  |     | NULL    |
+| Citation2Year                          | int(10) unsigned    | YES  |     | NULL    |
+| Citation2Pages                         | varchar(255)        | YES  |     | NULL    |
+| AssociatedPhoneticsLgForThisSpellingLg | bigint(20)          | YES  |     | NULL    |
+| IsOrthographyHasNoTranscriptions       | tinyint(3) unsigned | YES  |     | NULL    |
+| StudyName                              | varchar(10)         | NO   | PRI |         |
++----------------------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Languages
+class Languages(db.Model, SndCompModel):
+    __tablename__ = 'Languages'
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False)
+    LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    ShortName = Column('ShortName', String(255), nullable=False)
+    ToolTip = Column('ToolTip', TEXT)
+    SpecificLanguageVarietyName = Column('SpecificLanguageVarietyName', TEXT)
+    LanguageStatusType = Column('LanguageStatusType', TINYINT(3, unsigned=True))
+    WebsiteSubgroupName = Column('WebsiteSubgroupName', TEXT)
+    WebsiteSubgroupWikipediaString = Column('WebsiteSubgroupWikipediaString', TEXT)
+    HistoricalPeriod = Column('HistoricalPeriod', TEXT)
+    HistoricalPeriodWikipediaString = Column('HistoricalPeriodWikipediaString', TEXT)
+    EthnicGroup = Column('EthnicGroup', TEXT)
+    StateRegion = Column('StateRegion', TEXT)
+    NearestCity = Column('NearestCity', TEXT)
+    PreciseLocality = Column('PreciseLocality', TEXT)
+    PreciseLocalityNationalSpelling = Column('PreciseLocalityNationalSpelling', TEXT)
+    ExternalWeblink = Column('ExternalWeblink', TEXT)
+    FilePathPart = Column('FilePathPart', String(255), nullable=False)
+    Flag = Column('Flag', String(255))
+    RfcLanguage = Column('RfcLanguage', BIGINT(20, unsigned=True))
+    Latitude = Column('Latitude', FLOAT)
+    Longtitude = Column('Longtitude', FLOAT)
+    ISOCode = Column('ISOCode', String(3))
+    GlottoCode = Column('GlottoCode', String(8))
+    WikipediaLinkPart = Column('WikipediaLinkPart', TEXT)
+    IsSpellingRfcLang = Column('IsSpellingRfcLang', TINYINT(3, unsigned=True))
+    SpellingRfcLangName = Column('SpellingRfcLangName', String(255))
+    ContributorSpokenBy = Column('ContributorSpokenBy', BIGINT(20, unsigned=True))
+    ContributorRecordedBy1 = Column('ContributorRecordedBy1', BIGINT(20, unsigned=True))
+    ContributorRecordedBy2 = Column('ContributorRecordedBy2', BIGINT(20, unsigned=True))
+    ContributorSoundEditingBy = Column('ContributorSoundEditingBy', BIGINT(20, unsigned=True))
+    ContributorPhoneticTranscriptionBy = Column('ContributorPhoneticTranscriptionBy', BIGINT(20, unsigned=True))
+    ContributorReconstructionBy = Column('ContributorReconstructionBy', BIGINT(20, unsigned=True))
+    ContributorCitationAuthor1 = Column('ContributorCitationAuthor1', BIGINT(20, unsigned=True))
+    Citation1Year = Column('Citation1Year', INTEGER(10, unsigned=True))
+    Citation1Pages = Column('Citation1Pages', String(255))
+    ContributorCitationAuthor2 = Column('ContributorCitationAuthor2', BIGINT(20, unsigned=True))
+    Citation2Year = Column('Citation2Year', INTEGER(10, unsigned=True))
+    Citation2Pages = Column('Citation2Pages', String(255))
+    AssociatedPhoneticsLgForThisSpellingLg = Column('AssociatedPhoneticsLgForThisSpellingLg', BIGINT(20, unsigned=True))
+    IsOrthographyHasNoTranscriptions = Column('IsOrthographyHasNoTranscriptions', TINYINT(3, unsigned=True))
+    StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
 
 '''
     A short method to access the database session from outside of this module.
