@@ -61,11 +61,18 @@ def getStudy(studyName):
     ,   'defaults': {
             'language': None
         ,   'word': None
-        ,   'languages': []
-        ,   'words': []
-        ,   'excludeMap': []
+        ,   'languages': [{'LanguageIx': l.LanguageIx} for l in study.DefaultMultipleLanguages]
+        ,   'words': [{'IxElicitation': w.IxElicitation, 'IxMorphologicalInstance': w.IxMorphologicalInstance} for w in study.DefaultMultipleWords]
+        ,   'excludeMap': [{'LanguageIx': l.LanguageIx} for l in study.DefaultLanguagesExcludeMap]
         }
     }
+    # Single defaults:
+    if len(study.DefaultLanguages) > 0:
+        l = study.DefaultLanguages[0]
+        data['defaults']['language'] = {'LanguageIx': l.LanguageIx}
+    if len(study.DefaultWords) > 0:
+        w = study.DefaultWords[0]
+        data['defaults']['word'] = {'IxElicitation': w.IxElicitation, 'IxMorphologicalInstance': w.IxMorphologicalInstance}
     # FIXME IMPLEMENT!
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
@@ -97,7 +104,7 @@ def addRoute(app):
                     return ("Couldn't find study: "+studyName)
         # Normal response in case of no get parameters:
         try:
-            latest = db.getSession().query(db.EditImports).order_by(db.EditImports.time.desc()).limit(1).one()
+            latest = db.getSession().query(db.EditImports).order_by(db.EditImports.Time.desc()).limit(1).one()
             dict = {
                 'lastUpdate': latest.getTimeStampString(),
                 'Description': 'Add a global parameter to fetch global data, and add a study parameter to fetch a study.'

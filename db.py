@@ -75,8 +75,13 @@ class Studies(db.Model, SndCompModel):
     DefaultBottomRightLon = Column('DefaultBottomRightLon', FLOAT)
     ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
     SecondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
-
+    # Relationships with other models:
     MeaningGroupMembers = relationship('MeaningGroupMembers')
+    DefaultLanguages = relationship('DefaultLanguages')
+    DefaultLanguagesExcludeMap = relationship('DefaultLanguagesExcludeMap')
+    DefaultMultipleLanguages = relationship('DefaultMultipleLanguages')
+    DefaultMultipleWords = relationship('DefaultMultipleWords')
+    DefaultWords = relationship('DefaultWords')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -287,6 +292,100 @@ class MeaningGroupMembers(db.Model, SndCompModel):
     IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME ADD FOREIGN KEY ON MeaningGroup
+
+'''
++------------+---------------------+------+-----+---------+
+| Field      | Type                | Null | Key | Default |
++------------+---------------------+------+-----+---------+
+| LanguageIx | bigint(20) unsigned | NO   | PRI | NULL    |
+| StudyIx    | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx   | tinyint(3) unsigned | NO   | PRI | NULL    |
++------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Default_Languages
+class DefaultLanguages(db.Model, SndCompModel):
+    __tablename__ = 'Default_Languages'
+    LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
+    # FIXME FOREIGN KEYS
+
+'''
++------------+---------------------+------+-----+---------+
+| Field      | Type                | Null | Key | Default |
++------------+---------------------+------+-----+---------+
+| LanguageIx | bigint(20) unsigned | NO   | PRI | NULL    |
+| StudyIx    | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx   | tinyint(3) unsigned | NO   | PRI | NULL    |
++------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Default_Languages_Exclude_Map
+class DefaultLanguagesExcludeMap(db.Model, SndCompModel):
+    __tablename__ = 'Default_Languages_Exclude_Map'
+    LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
+    # FIXME FOREIGN KEYS
+
+'''
++------------+---------------------+------+-----+---------+
+| Field      | Type                | Null | Key | Default |
++------------+---------------------+------+-----+---------+
+| LanguageIx | bigint(20) unsigned | NO   | PRI | NULL    |
+| StudyIx    | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx   | tinyint(3) unsigned | NO   | PRI | NULL    |
++------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Default_Multiple_Languages
+class DefaultMultipleLanguages(db.Model, SndCompModel):
+    __tablename__ = 'Default_Multiple_Languages'
+    LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
+    # FIXME FOREIGN KEYS
+
+'''
++-------------------------+---------------------+------+-----+---------+
+| Field                   | Type                | Null | Key | Default |
++-------------------------+---------------------+------+-----+---------+
+| IxElicitation           | int(10) unsigned    | NO   |     | NULL    |
+| IxMorphologicalInstance | tinyint(3) unsigned | NO   |     | NULL    |
+| StudyIx                 | tinyint(3) unsigned | NO   |     | NULL    |
+| FamilyIx                | tinyint(3) unsigned | NO   |     | NULL    |
++-------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Default_Multiple_Words
+class DefaultMultipleWords(db.Model, SndCompModel):
+    __tablename__ = 'Default_Multiple_Words'
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
+    # FIXME FOREIGN KEYS
+
+'''
++-------------------------+---------------------+------+-----+---------+
+| Field                   | Type                | Null | Key | Default |
++-------------------------+---------------------+------+-----+---------+
+| IxElicitation           | int(10) unsigned    | NO   |     | NULL    |
+| IxMorphologicalInstance | tinyint(3) unsigned | NO   |     | NULL    |
+| StudyIx                 | tinyint(3) unsigned | NO   |     | NULL    |
+| FamilyIx                | tinyint(3) unsigned | NO   |     | NULL    |
++-------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.Default_Words
+class DefaultWords(db.Model, SndCompModel):
+    __tablename__ = 'Default_Words'
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Studies.StudyIx, Studies.FamilyIx]), {})
+    # FIXME FOREIGN KEYS
 
 '''
     A short method to access the database session from outside of this module.
