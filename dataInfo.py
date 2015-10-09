@@ -57,7 +57,7 @@ def getStudy(studyName):
     ,   'regionLanguages': []
     ,   'languages': []
     ,   'words': []
-    ,   'meaningGroupMembers': []
+    ,   'meaningGroupMembers': [m.toDict() for m in study.MeaningGroupMembers]
     ,   'transcriptions': []
     ,   'defaults': {
             'language': None

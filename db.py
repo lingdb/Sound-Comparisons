@@ -5,7 +5,8 @@
 '''
 
 import sqlalchemy
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, ForeignKeyConstraint
+from sqlalchemy.orm import relationship
 '''
     Don't use/import DOUBLE if it can be avoided, because DOUBLE for some reason doesn't (precision?) work with flask.jsonify
 '''
@@ -74,6 +75,8 @@ class Study(db.Model, SndCompModel):
     DefaultBottomRightLon = Column('DefaultBottomRightLon', FLOAT)
     ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
     SecondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
+
+    MeaningGroupMembers = relationship('MeaningGroupMember')
 
 '''
 +--------+-------------+------+-----+---------+
@@ -262,6 +265,30 @@ class Family(db.Model, SndCompModel):
     ProjectActive = Column('ProjectActive', TINYINT(1), nullable=False)
 
 '''
++-------------------------+---------------------+------+-----+---------+
+| Field                   | Type                | Null | Key | Default |
++-------------------------+---------------------+------+-----+---------+
+| StudyIx                 | tinyint(3) unsigned | NO   | PRI | NULL    |
+| FamilyIx                | tinyint(3) unsigned | NO   | PRI | NULL    |
+| MeaningGroupIx          | int(10) unsigned    | NO   | PRI | NULL    |
+| MeaningGroupMemberIx    | int(10) unsigned    | NO   |     | NULL    |
+| IxElicitation           | int(10) unsigned    | NO   | PRI | NULL    |
+| IxMorphologicalInstance | tinyint(3) unsigned | NO   | PRI | NULL    |
++-------------------------+---------------------+------+-----+---------+
+'''
+# Model for v4.MeaningGroupMembers
+class MeaningGroupMember(db.Model, SndCompModel):
+    __tablename__ = 'MeaningGroupMembers'
+    StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True), nullable=False)
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],[Study.StudyIx, Study.FamilyIx]), {})
+    # FIXME ADD FOREIGN KEY ON MeaningGroup
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():
@@ -270,7 +297,3 @@ def getSession():
 if __name__ == '__main__':
     s = getSession().query(Study).limit(1).one()
     print s.toDict()
-#   xs = getSession().query(EditImport).all()
-#   print 'Entries in Edit_Imports:'
-#   for x in xs:
-#       print x.toDict()
