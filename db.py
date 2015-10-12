@@ -837,6 +837,8 @@ class Page_Translations(db.Model, SndCompModel):
         {})
     # Relationships with other models:
     Language = relationship('Languages', viewonly=True)
+    Page_StaticTranslation = relationship('Page_StaticTranslation', viewonly=True)
+    Page_DynamicTranslation = relationship('Page_DynamicTranslation', viewonly=True)
 
     '''
         @return dict {}
