@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import flask
 
+import db
 import templateInfo
 import redirectStatic
-import db
+import dataInfo
 
 app = db.app
 
@@ -18,8 +19,7 @@ templateInfo.addRoutes(app,'/query/templateInfo')
 # Redirect currently expected static files from toplevel:
 redirectStatic.addRoutes(app)
 
-#FIXME some test:
-import dataInfo
+# query/data routes…
 dataInfo.addRoute(app)
 
 if __name__ == "__main__":
