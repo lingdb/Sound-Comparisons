@@ -806,6 +806,110 @@ def getDummyTranscriptions(studyName):
     return ret
 
 '''
++-------------------+---------------------+------+-----+---------------------+----------------+
+| Field             | Type                | Null | Key | Default             | Extra          |
++-------------------+---------------------+------+-----+---------------------+----------------+
+| TranslationId     | bigint(20) unsigned | NO   | PRI | NULL                | auto_increment |
+| TranslationName   | varchar(255)        | NO   |     | NULL                |                |
+| BrowserMatch      | varchar(255)        | YES  |     | NULL                |                |
+| ImagePath         | varchar(255)        | YES  |     | NULL                |                |
+| Active            | tinyint(1)          | NO   |     | 0                   |                |
+| RfcLanguage       | bigint(20) unsigned | YES  |     | NULL                |                |
+| lastChangeStatic  | timestamp           | NO   |     | 0000-00-00 00:00:00 |                |
+| lastChangeDynamic | timestamp           | NO   |     | 0000-00-00 00:00:00 |                |
++-------------------+---------------------+------+-----+---------------------+----------------+
+'''
+# Model for v4.Page_Translations
+class Page_Translations(db.Model, SndCompModel):
+    __tablename__ = 'Page_Translations'
+    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    TranslationName = Column('TranslationName', String(255), nullable=False)
+    BrowserMatch = Column('BrowserMatch', String(255))
+    ImagePath = Column('ImagePath', String(255))
+    Active = Column('Active', TINYINT(1), nullable=False)
+    RfcLanguage = Column('RfcLanguage', BIGINT(20, unsigned=True))
+    lastChangeStatic = Column('lastChangeStatic', TIMESTAMP, nullable=False)
+    lastChangeDynamic = Column('lastChangeDynamic', TIMESTAMP, nullable=False)
+    # Foreign keys:
+    __table_args__ = (
+        # Relation to Languages:
+        ForeignKeyConstraint([RfcLanguage],[Languages.LanguageIx]),
+        {})
+    # Relationships with other models:
+    Language = relationship('Languages', viewonly=True)
+
+'''
++-------------+--------------+------+-----+---------+
+| Field       | Type         | Null | Key | Default |
++-------------+--------------+------+-----+---------+
+| Req         | varchar(255) | NO   | PRI | NULL    |
+| Description | text         | NO   |     | NULL    |
++-------------+--------------+------+-----+---------+
+'''
+# Model for v4.Page_StaticDescription
+class Page_StaticDescription(db.Model, SndCompModel):
+    __tablename__ = 'Page_StaticDescription'
+    Req = Column('Req', String(255), nullable=False, primary_key=True)
+    Description = Column('Description', TEXT, nullable=False)
+
+'''
++---------------+---------------------+------+-----+-------------------+
+| Field         | Type                | Null | Key | Default           |
++---------------+---------------------+------+-----+-------------------+
+| TranslationId | bigint(20) unsigned | NO   |     | NULL              |
+| Req           | varchar(255)        | NO   |     | NULL              |
+| Trans         | text                | NO   |     | NULL              |
+| IsHtml        | tinyint(1)          | NO   |     | 0                 |
+| Time          | timestamp           | NO   |     | CURRENT_TIMESTAMP |
++---------------+---------------------+------+-----+-------------------+
+'''
+# Model for v4.Page_StaticTranslation
+class Page_StaticTranslation(db.Model, SndCompModel):
+    __tablename__ = 'Page_StaticTranslation'
+    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    Req = Column('Req', String(255), nullable=False, primary_key=True)
+    Trans = Column('Trans', TEXT, nullable=False,)
+    IsHtml = Column('IsHtml', TINYINT(1), nullable=False,)
+    Time = Column('Time', TIMESTAMP, nullable=False,)
+    # Foreign keys:
+    __table_args__ = (
+        # Relation to Page_Translations
+        ForeignKeyConstraint([TranslationId],[Page_Translations.TranslationId]),
+        # Relation to Page_StaticDescription:
+        ForeignKeyConstraint([Req],[Page_StaticDescription.Req]),
+        {})
+    # Relationships with other models:
+    Page_Translations = relationship('Page_Translations', viewonly=True)
+    Page_StaticDescription = relationship('Page_StaticDescription', viewonly=True)
+
+'''
++---------------+---------------------+------+-----+-------------------+
+| Field         | Type                | Null | Key | Default           |
++---------------+---------------------+------+-----+-------------------+
+| TranslationId | bigint(20) unsigned | NO   | PRI | NULL              |
+| Category      | varchar(255)        | NO   | PRI | NULL              |
+| Field         | varchar(255)        | NO   | PRI | NULL              |
+| Trans         | varchar(255)        | NO   |     | NULL              |
+| Time          | timestamp           | NO   |     | CURRENT_TIMESTAMP |
++---------------+---------------------+------+-----+-------------------+
+'''
+# Model for v4.Page_DynamicTranslation
+class Page_DynamicTranslation(db.Model, SndCompModel):
+    __tablename__ = 'Page_DynamicTranslation'
+    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    Category = Column('Category', String(255), nullable=False, primary_key=True)
+    Field = Column('Field', String(255), nullable=False, primary_key=True)
+    Trans = Column('Trans', String(255), nullable=False)
+    Time = Column('Time', TIMESTAMP, nullable=False)
+    # Foreign keys:
+    __table_args__ = (
+        # Relation to Page_Translations
+        ForeignKeyConstraint([TranslationId],[Page_Translations.TranslationId]),
+        {})
+    # Relationships with other models:
+    Page_Translations = relationship('Page_Translations', viewonly=True)
+
+'''
     A short method to access the database session from outside of this module.
 '''
 def getSession():
