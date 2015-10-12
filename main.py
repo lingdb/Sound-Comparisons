@@ -2,9 +2,10 @@
 import flask
 
 import db
-import templateInfo
-import redirectStatic
 import dataInfo
+import redirectStatic
+import templateInfo
+import translationInfo
 
 app = db.app
 
@@ -21,6 +22,9 @@ redirectStatic.addRoutes(app)
 
 # query/data routes…
 dataInfo.addRoute(app)
+
+# query/translations
+translationInfo.addRoute(app)
 
 if __name__ == "__main__":
     app.debug = True
