@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
     Tries to reproduce the thing the site currently does when fetching
     /query/templateInfo

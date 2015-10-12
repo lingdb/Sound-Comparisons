@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
     With the current state of soundcomparisons,
     static files are spread at several routes.
