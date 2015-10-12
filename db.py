@@ -838,6 +838,16 @@ class Page_Translations(db.Model, SndCompModel):
     # Relationships with other models:
     Language = relationship('Languages', viewonly=True)
 
+    '''
+        @return dict {}
+        Extending SndCompModel.toDict(…) to convert timestamps.
+    '''
+    def toDict(self):
+        dict = super(Page_Translations, self).toDict()
+        for k in ['lastChangeStatic','lastChangeDynamic']:
+            dict[k] = dict[k].strftime('%s')
+        return dict
+
 '''
 +-------------+--------------+------+-----+---------+
 | Field       | Type         | Null | Key | Default |
