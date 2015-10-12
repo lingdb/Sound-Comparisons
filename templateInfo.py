@@ -34,11 +34,12 @@ def md5(fname):
       Iterates all files in mustacheDir and creates a dict
       that maps route+fileName to the md5sum of the file at getMustacheDir()+fileName
 '''
-def getTemplateInfo(route):
+def getTemplateInfo():
+    dir = getMustacheDir()
     templateMap = {}
-    for fn in os.listdir(getMustacheDir()):
-        file = getMustacheDir()+fn
-        templateMap[route+fn] = md5(file)
+    for fn in os.listdir(dir):
+        file = dir+fn
+        templateMap[dir+fn] = md5(file)
     return templateMap
 
 '''
@@ -47,17 +48,11 @@ def getTemplateInfo(route):
     @param templateRoute String
     Attaches templateInfo logic to queryRoute providing templates at templateRoute.
 '''
-def addRoutes(app, queryRoute, templateRoute):
+def addRoutes(app, queryRoute):
     @app.route(queryRoute)
     def returnTemplateInfo():
-        tInfo = getTemplateInfo(templateRoute)
+        tInfo = getTemplateInfo()
         return flask.jsonify(**tInfo)
-
-    #FIXME this should be done my redirectStatic.py
-    #FIXME I can also remove this soon.
-    @app.route(templateRoute+'<path:path>')
-    def returnTemplate(path):
-        return flask.send_from_directory(getMustacheDir(), path)
 
 # Produce test output:
 if __name__ == "__main__":

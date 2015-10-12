@@ -12,7 +12,7 @@ def hello():
     return "Hello World!"
 
 # Putting templateInfo into place.
-templateInfo.addRoutes(app,'/query/templateInfo','/templates/')
+templateInfo.addRoutes(app,'/query/templateInfo')
 
 # Redirect currently expected static files from toplevel:
 redirectStatic.addRoutes(app)
