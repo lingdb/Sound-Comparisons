@@ -80,7 +80,10 @@ def getStudy(studyName):
     if len(study.DefaultWords) > 0:
         w = study.DefaultWords[0]
         data['defaults']['word'] = {'IxElicitation': w.IxElicitation, 'IxMorphologicalInstance': w.IxMorphologicalInstance}
-    # FIXME add DummyTranscriptions!
+    # Handling dummies:
+    dummies = db.getDummyTranscriptions(study.Name)
+    if len(dummies):
+        data['transcriptions'] += dummies
     # Return stuff encoded as JSON:
     return flask.jsonify(**data)
 

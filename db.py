@@ -79,17 +79,17 @@ class Studies(db.Model, SndCompModel):
     ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
     SecondRfcLg  = Column('SecondRfcLg', String(255), nullable=False)
     # Relationships with other models:
-    MeaningGroupMembers = relationship('MeaningGroupMembers')
-    DefaultLanguages = relationship('DefaultLanguages')
-    DefaultLanguagesExcludeMap = relationship('DefaultLanguagesExcludeMap')
-    DefaultMultipleLanguages = relationship('DefaultMultipleLanguages')
-    DefaultMultipleWords = relationship('DefaultMultipleWords')
-    DefaultWords = relationship('DefaultWords')
-    Regions = relationship('Regions')
-    RegionLanguages = relationship('RegionLanguages')
-    Languages = relationship('Languages')
-    Words = relationship('Words')
-    Transcriptions = relationship('Transcriptions')
+    MeaningGroupMembers = relationship('MeaningGroupMembers', viewonly=True)
+    DefaultLanguages = relationship('DefaultLanguages', viewonly=True)
+    DefaultLanguagesExcludeMap = relationship('DefaultLanguagesExcludeMap', viewonly=True)
+    DefaultMultipleLanguages = relationship('DefaultMultipleLanguages', viewonly=True)
+    DefaultMultipleWords = relationship('DefaultMultipleWords', viewonly=True)
+    DefaultWords = relationship('DefaultWords', viewonly=True)
+    Regions = relationship('Regions', viewonly=True)
+    RegionLanguages = relationship('RegionLanguages', viewonly=True)
+    Languages = relationship('Languages', viewonly=True)
+    Words = relationship('Words', viewonly=True)
+    Transcriptions = relationship('Transcriptions', viewonly=True)
 
 '''
 +--------+-------------+------+-----+---------+
@@ -562,6 +562,8 @@ class Languages(db.Model, SndCompModel):
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],[Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
+    # Relationships with other models:
+    Transcriptions = relationship('Transcriptions', viewonly=True)
     # FIXME FOREIGN KEYS
 
 '''
@@ -614,6 +616,8 @@ class Words(db.Model, SndCompModel):
     # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyName],[Studies.Name]), {})
     # FIXME FOREIGN KEYS
+    # Relationships with other models:
+    Transcriptions = relationship('Transcriptions', viewonly=True)
 
 '''
 +-------------------------------------+---------------------+------+-----+---------+
@@ -687,7 +691,7 @@ class Transcriptions(db.Model, SndCompModel):
         {})
     # FIXME FOREIGN KEYS
     # Relationships with other models:
-    Study = relationship('Studies')
+    Study = relationship('Studies', viewonly=True)
     Language = relationship('Languages', viewonly=True)
     Word = relationship('Words', viewonly=True)
 
@@ -708,9 +712,7 @@ class Transcriptions(db.Model, SndCompModel):
         # Work from soundPathParts:
         parts = {
             'word': self.Word.SoundFileWordIdentifierText,
-            'language': self.Language.FilePathPart,
-            'pron': '',
-            'lex': ''
+            'language': self.Language.FilePathPart
             }
         def helper(field, thing):
             if thing > 1:
@@ -718,20 +720,7 @@ class Transcriptions(db.Model, SndCompModel):
         helper('pron', self.AlternativePhoneticRealisationIx)
         helper('lex', self.AlternativeLexemIx)
         # Work from findSoundFiles:
-        ret = {
-            'found': [],
-            'missing': []
-            }
-        extensions = ['.mp3','.ogg']
-        base = 'static/sound/'
-        for ext in extensions:
-            path = base+parts['language']+'/'+parts['language']+parts['word']+parts['lex']+parts['pron']+ext
-            if os.path.isfile(path):
-                ret['found'].append(path)
-            else:
-                ret['missing'].append(path)
-        # Done:
-        return ret
+        return findSoundFiles(parts)
 
     '''
         @return dict {}
@@ -745,6 +734,77 @@ class Transcriptions(db.Model, SndCompModel):
             dict['soundPaths'] = []
         return dict
 
+
+'''
+    @param parts {
+            'word': SoundFileWordIdentifierText String,
+            'language': FilePathPart String,
+            'pron': String, #optional
+            'lex': String,  #optional
+        }
+    @return {'found': [String], 'missing': [String]}
+    Tests if sound files are at their expected locations.
+    used by Transcriptions and getDummyTranscriptions.
+'''
+def findSoundFiles(parts):
+    #Sanitiziny parts:
+    if 'pron' not in parts:
+        parts['pron'] = ''
+    if 'lex' not in parts:
+        parts['lex'] = ''
+    #Structure to return:
+    ret = {
+        'found': [],
+        'missing': []
+        }
+    #Extensions and base dir:
+    extensions = ['.mp3','.ogg']
+    base = 'static/sound/'
+    #Testing files:
+    for ext in extensions:
+        path = base+parts['language']+'/'+parts['language']+parts['word']+parts['lex']+parts['pron']+ext
+        if os.path.isfile(path):
+            ret['found'].append(path)
+        else:
+            ret['missing'].append(path)
+    # Done:
+    return ret
+
+'''
+    @param studyName String
+    @return [{
+            'isDummy': True,
+            'IxElicitation': …,
+            'IxMorphologicalInstance': …,
+            'LanguageIx': …,
+            'soundPaths': [String]
+        }]
+    Produces dicts for the expected Transcriptions entries that may follow in the future,
+    but don't currently exist in the database.
+    Returns only the cases where soundfiles are found.
+'''
+def getDummyTranscriptions(studyName):
+    ret = [] # Results produced
+    # Find Languages and Words that don't have Transcriptions:
+    langs = getSession().query(Languages).filter_by(StudyName = studyName).filter(~Languages.Transcriptions.any()).all()
+    words = getSession().query(Words).filter_by(StudyName = studyName).all()
+    # Cross product:
+    for l in langs:
+        for w in words:
+            files = findSoundFiles({
+                'word': w.SoundFileWordIdentifierText,
+                'language': l.FilePathPart
+                })['found']
+            if len(files):
+                ret.append({
+                    'isDummy': True,
+                    'IxElicitation': w.IxElicitation,
+                    'IxMorphologicalInstance': w.IxMorphologicalInstance,
+                    'LanguageIx': l.LanguageIx,
+                    'soundPaths': files
+                    })
+    return ret
+
 '''
     A short method to access the database session from outside of this module.
 '''
@@ -752,12 +812,13 @@ def getSession():
     return db.session
 
 if __name__ == '__main__':
-    # TODO wield this into a test:
-    broken = 0
-    for t in getSession().query(Transcriptions).limit(2000).all():
-        try:
-            print t.getSoundFiles()
-        except:
-            broken += 1
-    print 'Broken Transcriptions:'
-    print broken
+    print getDummyTranscriptions('Germanic')
+#   # TODO wield this into a test:
+#   broken = 0
+#   for t in getSession().query(Transcriptions).limit(2000).all():
+#       try:
+#           print t.getSoundFiles()
+#       except:
+#           broken += 1
+#   print 'Broken Transcriptions:'
+#   print broken
