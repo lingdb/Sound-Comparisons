@@ -841,11 +841,13 @@ class Page_Translations(db.Model, SndCompModel):
     '''
         @return dict {}
         Extending SndCompModel.toDict(…) to convert timestamps.
+        Hides 'Active' from dict.
     '''
     def toDict(self):
         dict = super(Page_Translations, self).toDict()
         for k in ['lastChangeStatic','lastChangeDynamic']:
             dict[k] = dict[k].strftime('%s')
+        dict.pop('Active', None)
         return dict
 
 '''
