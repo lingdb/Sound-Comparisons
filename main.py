@@ -9,11 +9,6 @@ import translationInfo
 
 app = db.app
 
-# Simple hello world at root:
-@app.route("/")
-def hello():
-    return "Hello World!"
-
 # Putting templateInfo into place.
 templateInfo.addRoutes(app,'/query/templateInfo')
 
@@ -25,6 +20,15 @@ dataInfo.addRoute(app)
 
 # query/translations
 translationInfo.addRoute(app)
+
+# index route:
+@app.route('/')
+def getIndex():
+    data = {
+            'title': 'TEST ME!',
+            'requirejs': 'js/App.js'
+        }
+    return flask.render_template('index.html', **data)
 
 if __name__ == "__main__":
     app.debug = True
