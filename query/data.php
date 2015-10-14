@@ -57,62 +57,20 @@ if(array_key_exists('global',$_GET)){
   if(CacheProvider::hasCache($_GET['study'])){
     echo CacheProvider::getCache($_GET['study']);
   }else{
-    //The representation that will be returned
-    $ret = array(
-      'study'               => null
-    , 'families'            => array()
-    , 'regions'             => array()
-    , 'regionLanguages'     => array()
-    , 'languages'           => array()
-    , 'words'               => array()
-    , 'meaningGroupMembers' => array()
-    , 'transcriptions'      => array()
-    , 'defaults'            => array(
-        'language'   => null
-      , 'word'       => null
-      , 'languages'  => array()
-      , 'words'      => array()
-      , 'excludeMap' => array()
-      )
-    );
     //Provide complete data for a single study:
     $sId = DataProvider::getStudyId($_GET['study']);
-    //Fetching the study:
-    if(array_key_exists('study', $ret)){
-      $ret['study'] = DataProvider::getStudy($_GET['study']);
-    }
-    //Fetching the families:
-    if(array_key_exists('families', $ret)){
-      $ret['families'] = DataProvider::getFamilies($sId);
-    }
-    //Fetching Regions:
-    if(array_key_exists('regions', $ret)){
-      $ret['regions'] = DataProvider::getRegions($_GET['study']);
-    }
-    //Fetching RegionLanguages:
-    if(array_key_exists('regionLanguages', $ret)){
-      $ret['regionLanguages'] = DataProvider::getRegionLanguages($_GET['study']);
-    }
-    //Fetching Languages:
-    if(array_key_exists('languages', $ret)){
-      $ret['languages'] = DataProvider::getLanguages($_GET['study']);
-    }
-    //Fetching Words:
-    if(array_key_exists('words', $ret)){
-      $ret['words'] = DataProvider::getWords($_GET['study']);
-    }
-    //Fetching MeaningGroupMembers:
-    if(array_key_exists('meaningGroupMembers', $ret)){
-      $ret['meaningGroupMembers'] = DataProvider::getMeaningGroupMembers($sId);
-    }
-    //Fetching Transcriptions:
-    if(array_key_exists('transcriptions', $ret)){
-      $ret['transcriptions'] = DataProvider::getTranscriptions($_GET['study']);
-    }
-    //Fetching Defaults:
-    if(array_key_exists('defaults', $ret)){
-      $ret['defaults'] = DataProvider::getDefaults($sId);
-    }
+    //The representation that will be returned
+    $ret = array(
+      'study'               => DataProvider::getStudy($_GET['study'])
+    , 'families'            => DataProvider::getFamilies($sId)
+    , 'regions'             => DataProvider::getRegions($_GET['study'])
+    , 'regionLanguages'     => DataProvider::getRegionLanguages($_GET['study'])
+    , 'languages'           => DataProvider::getLanguages($_GET['study'])
+    , 'words'               => DataProvider::getWords($_GET['study'])
+    , 'meaningGroupMembers' => DataProvider::getMeaningGroupMembers($sId)
+    , 'transcriptions'      => DataProvider::getTranscriptions($_GET['study'])
+    , 'defaults'            => DataProvider::getDefaults($sId)
+    );
     //Done:
     $data = json_encode($ret);
     echo $data;
