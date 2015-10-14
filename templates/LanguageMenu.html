@@ -5,19 +5,23 @@
   <a {{{collapseHref}}} title="{{collapseTitle}}"><i class="icon-minus"></i></a>
   <a {{{expandHref}}} title="{{expandTitle}}"><i class="icon-plus"></i></a>
 </h6>
-{{#families}}
+{{^RegionList}}
 <div class="nano">
-  <dl class="familyList nano-content">
-    <dt style="background-color: {{color}};">
-      {{#checkbox}}
-        <a {{{link}}}{{#title}} title="{{title}}"{{/title}}><i class="{{icon}}"></i></a>
-      {{/checkbox}}
-      <a class="color-family" {{{link}}}>{{name}}</a>
-    </dt>
-    <dd>{{#RegionList}}{{> RegionList}}{{/RegionList}}</dd>
-  </dl>
+  <div class="nano-content">
+    {{#families}}
+    <dl class="familyList">
+      <dt style="background-color: {{color}};">
+        {{#checkbox}}
+          <a {{{link}}}{{#title}} title="{{title}}"{{/title}}><i class="{{icon}}"></i></a>
+        {{/checkbox}}
+        <a class="color-family" {{{link}}}>{{name}}</a>
+      </dt>
+      <dd>{{#RegionList}}{{> RegionList}}{{/RegionList}}</dd>
+    </dl>
+    {{/families}}
+  </div>
 </div>
-{{/families}}
+{{/RegionList}}
 {{#RegionList}}
 <div class="nano">
 {{> RegionList}}
