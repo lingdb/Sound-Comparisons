@@ -7,3 +7,15 @@
 */
 chdir(__DIR__);
 require_once('../config.php');
+require_once('../query/cacheProvider.php');
+chdir('..');
+
+echo "Regenerating Study Cache:\n";
+foreach(DataProvider::getStudies() as $study){
+  if(CacheProvider::hasCache($study))
+    continue;
+  echo "$study..\n";
+  $chunk = DataProvider::getStudyChunk($study);
+  CacheProvider::setCache($study, json_encode($chunk));
+}
+echo "Done.\n";
