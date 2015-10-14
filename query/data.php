@@ -57,20 +57,7 @@ if(array_key_exists('global',$_GET)){
   if(CacheProvider::hasCache($_GET['study'])){
     echo CacheProvider::getCache($_GET['study']);
   }else{
-    //Provide complete data for a single study:
-    $sId = DataProvider::getStudyId($_GET['study']);
-    //The representation that will be returned
-    $ret = array(
-      'study'               => DataProvider::getStudy($_GET['study'])
-    , 'families'            => DataProvider::getFamilies($sId)
-    , 'regions'             => DataProvider::getRegions($_GET['study'])
-    , 'regionLanguages'     => DataProvider::getRegionLanguages($_GET['study'])
-    , 'languages'           => DataProvider::getLanguages($_GET['study'])
-    , 'words'               => DataProvider::getWords($_GET['study'])
-    , 'meaningGroupMembers' => DataProvider::getMeaningGroupMembers($sId)
-    , 'transcriptions'      => DataProvider::getTranscriptions($_GET['study'])
-    , 'defaults'            => DataProvider::getDefaults($sId)
-    );
+    $ret = DataProvider::getStudyChunk($_GET['study']);
     //Done:
     $data = json_encode($ret);
     echo $data;

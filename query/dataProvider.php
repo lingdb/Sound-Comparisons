@@ -409,4 +409,21 @@ class DataProvider {
     Config::error('Query failed in DataProvider::getLastImport()');
     return 0;
   }
+  /***/
+  public static function getStudyChunk($studyName){
+    //Provide complete data for a single study:
+    $sId = DataProvider::getStudyId($studyName);
+    //The representation that will be returned:
+    return array(
+      'study'               => DataProvider::getStudy($studyName)
+    , 'families'            => DataProvider::getFamilies($sId)
+    , 'regions'             => DataProvider::getRegions($studyName)
+    , 'regionLanguages'     => DataProvider::getRegionLanguages($studyName)
+    , 'languages'           => DataProvider::getLanguages($studyName)
+    , 'words'               => DataProvider::getWords($studyName)
+    , 'meaningGroupMembers' => DataProvider::getMeaningGroupMembers($sId)
+    , 'transcriptions'      => DataProvider::getTranscriptions($studyName)
+    , 'defaults'            => DataProvider::getDefaults($sId)
+    );
+  }
 }
