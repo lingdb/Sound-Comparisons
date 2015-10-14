@@ -13,7 +13,6 @@ if(php_sapi_name() === 'cli'){
           $_GET['global'] = true;
         break;
         case 'study':
-        case 'blacklist':
           $_GET[$argv[$i]] = $argv[$i+1];
           $i++;
         break;
@@ -76,14 +75,6 @@ if(array_key_exists('global',$_GET)){
       , 'excludeMap' => array()
       )
     );
-    //Filtering $ret with the blacklist:
-    if(array_key_exists('blacklist',$_GET)){
-      foreach(explode(',', $_GET['blacklist']) as $b){
-        if(array_key_exists($b, $ret)){
-          unset($ret[$b]);
-        }
-      }
-    }
     //Provide complete data for a single study:
     $sId = DataProvider::getStudyId($_GET['study']);
     //Fetching the study:
