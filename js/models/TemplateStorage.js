@@ -12,7 +12,7 @@ define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString
       var storage = this;
       $.getJSON('query/templateInfo').done(function(info){
         info = _.map(info, function(hash, path){
-          var name = /\/(.+)\.html$/.exec(path)[1];
+          var name = /^.*\/([^\/]+)\.html$/.exec(path)[1];
           return {
             name: name
           , path: path
