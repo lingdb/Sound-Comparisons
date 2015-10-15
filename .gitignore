@@ -1,6 +1,11 @@
 .*.swp
+*.pyc
 config.php
 .htaccess
 .htpasswd
 export/.htaccess
 query/.htaccess
+bin
+include
+lib
+pip-selfcheck.json
