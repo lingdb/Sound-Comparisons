@@ -1,11 +1,10 @@
+# vim .swp files:
 .*.swp
+# python bytecode:
 *.pyc
-config.php
-.htaccess
-.htpasswd
-export/.htaccess
-query/.htaccess
+# Stuff created by pip:
 bin
 include
 lib
+local
 pip-selfcheck.json
