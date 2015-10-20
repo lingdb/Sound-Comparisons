@@ -17,8 +17,9 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # To check file existence:
 import os.path
 
+import config
 app = flask.Flask('Soundcomparisons')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1234@localhost/v4'
+app.config['SQLALCHEMY_DATABASE_URI'] = config.dbURI
 db = SQLAlchemy(app)
 
 '''

@@ -31,5 +31,6 @@ def getIndex():
     return flask.render_template('index.html', **data)
 
 if __name__ == "__main__":
-    app.debug = True
+    import config
+    app.debug = config.debug
     app.run()
