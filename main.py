@@ -3,6 +3,7 @@ import flask
 
 import db
 import dataInfo
+import projectPages
 import templateInfo
 import translationInfo
 
@@ -16,6 +17,9 @@ dataInfo.addRoute(app)
 
 # query/translations
 translationInfo.addRoute(app)
+
+# projects/<magic> routes…
+projectPages.addRoute(app)
 
 # index route:
 @app.route('/')
