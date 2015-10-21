@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import flask
 
+import config
 import db
 import dataInfo
 import projectPages
@@ -26,8 +27,9 @@ projectPages.addRoute(app)
 def getIndex():
     data = {
             'title': 'TEST ME!',
-            'requirejs': 'static/js/App.js'
+            'requirejs': 'static/js/App-minified.js'
         }
+    if config.debug: data['requirejs'] = 'static/js/App.js'
     return flask.render_template('index.html', **data)
 
 if __name__ == "__main__":

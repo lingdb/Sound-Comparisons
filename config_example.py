@@ -17,5 +17,8 @@ dbURI = 'mysql://root:1234@localhost/v4'
     Decide wether flask shall run in debugging mode.
     Make sure this is False when running production.
     It's usually helpful for this to be True when developing.
+    When debug = True, the following conditions hold:
+    * Flask debugging and thereby werkzeug is enabled.
+    * Instead of App-minified.js, App.js is delivered.
 '''
 debug = False
