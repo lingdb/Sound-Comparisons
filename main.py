@@ -3,7 +3,6 @@ import flask
 
 import db
 import dataInfo
-import redirectStatic
 import templateInfo
 import translationInfo
 
@@ -11,9 +10,6 @@ app = db.app
 
 # Putting templateInfo into place.
 templateInfo.addRoutes(app,'/query/templateInfo')
-
-# Redirect currently expected static files from toplevel:
-redirectStatic.addRoutes(app)
 
 # query/data routes…
 dataInfo.addRoute(app)
