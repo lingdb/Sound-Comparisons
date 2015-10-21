@@ -138,6 +138,22 @@ class Contributors(db.Model, SndCompModel):
     PersonalWebsite = Column('PersonalWebsite', String(255), nullable=False)
     FullRoleDescription = Column('FullRoleDescription', TEXT)
 
+    '''
+        @return dict {}
+        Extending SndCompModel,toDict(…) to include avatars.
+    '''
+    def toDict(self):
+        dict = super(Contributors, self).toDict()
+        prefix = 'static/img/contributors'
+        if 'Initials' in dict:
+            prefix = 'static/img/contributors/'+dict['Initials']
+            for ext in ['.jpg','.png','.gif']:
+                guess = prefix + ext
+                if os.path.isfile(guess):
+                    dict['Avatar'] = guess
+                    break
+        return dict
+
 '''
 +-----------+------------------+------+-----+---------+
 | Field     | Type             | Null | Key | Default |
@@ -725,7 +741,7 @@ class Transcriptions(db.Model, SndCompModel):
 
     '''
         @return dict {}
-        Extending SndCompModel.toDict(…) to include sound files
+        Extending SndCompModel.toDict(…) to include sound files.
     '''
     def toDict(self):
         dict = super(Transcriptions, self).toDict()
