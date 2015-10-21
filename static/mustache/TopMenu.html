@@ -4,7 +4,7 @@
   <a target="_blank"
      title="{{logoTitle}}"
      href="http://www.eva.mpg.de/lingua/"
-     ><img src="img/logo.png"></a>
+     ><img src="static/img/logo.png"></a>
   </div>
   <ul id="topmenuFamilies" class="nav">
     <li>
@@ -28,19 +28,19 @@
     {{#pageViews}}
     <li {{#active}}class="active"{{/active}}>
       <a {{{link}}} {{^active}}class="topLink"{{/active}} title="{{title}}">
-      {{#img}}<img class="pvImg" src="img/{{img}}">{{/img}}
+      {{#img}}<img class="pvImg" src="static/img/{{img}}">{{/img}}
       {{{content}}}
       </a>
     </li>
     {{/pageViews}}
   </ul>
   <span id="topmenuDownloads" class="nav input-append btn-group">
-    <img id="createShortLink" title="{{createShortLink}}" class="btn btn-mini icon" src="img/link.png">
+    <img id="createShortLink" title="{{createShortLink}}" class="btn btn-mini icon" src="static/img/link.png">
     <div class="btn btn-mini disabled">
       <i class="icon-download-alt"></i>
     </div>
     <a href="{{csvLink}}" target="_blank" class="btn btn-mini" title="{{csvTitle}}">
-      <img src="img/DownloadTranscriptions.png" style="height: 18px;">
+      <img src="static/img/DownloadTranscriptions.png" style="height: 18px;">
     </a>
     <a target="_blank" class="btn btn-mini soundFile" title="{{sndTitle}}">
       <i class="icon-volume-up"></i>
@@ -84,21 +84,21 @@
   <ul id="topmenuSoundOptions" class="nav nav-tabs">
     <li>
       <img value="hover" class="btn btn-mini{{#soundOptionHover}} hide{{/soundOptionHover}}"
-      title="{{soundClickTitle}}" src="img/hover.png">
+      title="{{soundClickTitle}}" src="static/img/hover.png">
       <img value="click" class="btn btn-mini{{^soundOptionHover}} hide{{/soundOptionHover}}"
-      title="{{soundHoverTitle}}" src="img/click.png">
+      title="{{soundHoverTitle}}" src="static/img/click.png">
     </li>
   </ul>
   <ul id="topmenuMisc" class="nav nav-tabs">
     <li>
-      <img id="openContributors" title="{{viewContributors}}" class="btn btn-mini icon" src="img/people.png">
+      <img id="openContributors" title="{{viewContributors}}" class="btn btn-mini icon" src="static/img/people.png">
     </li>
   </ul>
   <ul id="topmenuAbout" class="nav">
     <li>
       <a class="dropdown-toggle topLink"
          data-toggle="dropdown">
-        <img id="topMenuInfo" src="img/info.png">
+        <img id="topMenuInfo" src="static/img/info.png">
       </a>
       <ul class="dropdown-menu">
         {{#aboutEntries}}

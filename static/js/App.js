@@ -1,6 +1,6 @@
 "use strict";
 requirejs.config({
-  baseUrl: 'js'
+  baseUrl: 'static/js'
 , paths: {//Paths for extern scripts
     'jquery': 'extern/jquery.min'
   , 'jquery.nanoscroller': 'extern/jquery.nanoscroller.min'

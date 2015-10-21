@@ -17,7 +17,7 @@ define(['backbone'], function(Backbone){
       //Worker to handle zipping:
       this.worker = null;
       if(_.isFunction(window.Worker)){
-        this.worker = new Worker('js/worker/Zipper.js');
+        this.worker = new Worker('static/js/worker/Zipper.js');
         var t = this;
         this.worker.onmessage = function(e){
           var m = e.data;

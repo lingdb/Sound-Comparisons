@@ -23,7 +23,7 @@ define(['backbone'], function(Backbone){
       //Compressor setup, if possible:
       this.compressor = null;
       if(_.isFunction(window.Worker)){
-        this.compressor = new Worker('js/worker/Compressor.js');
+        this.compressor = new Worker('static/js/worker/Compressor.js');
         this.set({compressorCallbacks: {}}); // Label -> [[callback, context]]
         this.compressor.onmessage = function(m){
           App.dataStorage.handleCompressor(m);

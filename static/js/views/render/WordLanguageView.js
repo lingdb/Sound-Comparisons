@@ -44,7 +44,7 @@ define(['views/render/SubView'], function(SubView){
       staticT.tableAlert = App.translationStorage.placeInTranslation(staticT.tableAlert, [
         '<a class="proxyHideLink" data-name="hidelink_left"><i class="icon-chevron-left"></i></a>'
       , '<a class="proxyHideLink" data-name="hidelink_right"><i class="icon-chevron-right"></i></a>'
-      , '<a '+tLink+'><img src="img/transpose.png"></a>'
+      , '<a '+tLink+'><img src="static/img/transpose.png"></a>'
       ]);
       _.extend(this.model, staticT);
     }

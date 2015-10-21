@@ -62,7 +62,7 @@ define(['views/render/SubView'], function(SubView){
           , img:  'http://www.ethnologue.com/favicon.ico'
           , ttip: App.translationStorage.translateStatic('tooltip_languages_link_ethnologue')}
         , { href: 'http://www.glottolog.org/resource/languoid/iso/'+iso
-          , img:  'img/extern/glottolog.png'
+          , img:  'static/img/extern/glottolog.png'
           , ttip: App.translationStorage.translateStatic('tooltip_languages_link_glottolog')}
         , { href: 'http://new.multitree.org/trees/code/'+iso
           , img:  'http://new.multitree.org/static/images/MultiTree.ico'
@@ -86,7 +86,7 @@ define(['views/render/SubView'], function(SubView){
         ls.push({
           ttip: App.translationStorage.translateStatic('tooltip_languages_link_mapview')
         , href: "https://www.google.com/maps/place/"+ll+"/@"+ll+",7z/"
-        , img:  'img/langmap.png'
+        , img:  'static/img/langmap.png'
         });
       }
       return {links: ls};

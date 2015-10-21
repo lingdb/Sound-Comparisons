@@ -26,7 +26,7 @@ translationInfo.addRoute(app)
 def getIndex():
     data = {
             'title': 'TEST ME!',
-            'requirejs': 'js/App.js'
+            'requirejs': 'static/js/App.js'
         }
     return flask.render_template('index.html', **data)
 
