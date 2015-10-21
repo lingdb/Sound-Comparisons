@@ -36,11 +36,7 @@ define(['backbone'], function(Backbone){
     }
     /***/
   , getAvatar: function(){
-      var a = this.get('Avatar');
-      if(!a){
-          return 'static/img/contributors/dummy.png';
-      }
-      return a;
+      return this.get('Avatar') || 'static/img/contributors/dummy.png';
     }
     /***/
   , getPersonalWebsite: function(){
