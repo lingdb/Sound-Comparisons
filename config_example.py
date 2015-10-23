@@ -11,7 +11,7 @@
     This setting is configured to fit the default setting
     put during Vagrant setup.
 '''
-dbURI = 'mysql://root:1234@localhost/v4'
+dbURI = 'mysql://root:1234@localhost/v5'
 
 '''
     Decide wether flask shall run in debugging mode.
