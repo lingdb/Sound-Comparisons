@@ -27,19 +27,19 @@ This is a test environment flask site where the main app is a simple server fron
 
 ### Configuring *signInButton* in **login.html** template -- some explanation of parameters: 
 
-- *data-scope*: Specifies google resources to access [e.g. `openid` requests user's name, profile picture and email address]
-- *data-clientid*: The Client ID provided when registering web application for Google plus.
-- *data-redirecturi*: By setting this to `postmessage`, we can enable the one time use code flow.
-- *data-accesstype*: Setting this to `offline` enables requests to Google API server, evenif user not logged in.
-- *data-cookiepolicy*: Determining scope of URIs that can access the cookie, e.g. `single_host_origin` for site with single domain and no host domains.
-- *data-callback*: Specifies callback function, e.g. setting this to `signInCallback`, then if user grants access to profile, this callback method is called and it is given a one time use code plus access token.
-- *data-approvalprompt*: Setting this to `force` means user must login each time they visit the login page [i.e. no check to see if they're already logged in]. This is useful when debugging, but may be annoying in production, so it might best to disable it for the latter. 
+- `data-scope`: Specifies google resources to access [e.g. "openid" requests user's name, profile picture and email address]
+- `data-clientid`: The Client ID provided when registering web application for Google plus.
+- `data-redirecturi`: By setting this to "postmessage", we can enable the one time use code flow.
+- `data-accesstype`: Setting this to "offline" enables requests to Google API server, evenif user not logged in.
+- `data-cookiepolicy`: Determining scope of URIs that can access the cookie, e.g. "single_host_origin" for site with single domain and no host domains.
+- `data-callback`: Specifies callback function, e.g. setting this to "signInCallback", then if user grants access to profile, this callback method is called and it is given a one time use code plus access token.
+- `data-approvalprompt`: Setting this to "force" means user must login each time they visit the login page [i.e. no check to see if they're already logged in]. This is useful when debugging, but may be annoying in production, so it might best to disable it for the latter. 
 
 ## Using the oauth app.
 
-### Running your server:
+### Running server locally:
 
 * To run the flask server, at topmost level of project run: **python project.py**
 * In your browser visit **http://localhost:5000** to view the project app. 
-* You should be able to *view* database items without logging in, but only users who are logged should be able to *add*, *edit*, and *delete* database entries. 
+* You should be able to *view* database items without logging in, but only users who are logged in should be able to *add*, *edit*, and *delete* database entries. 
 
