@@ -23,7 +23,7 @@ This is a test environment flask site where the main app is a simple server fron
 
 ### In **login.html**:
 
-- paste the **Client ID** in the `data-clientid` inside the *signInButton* div.
+- paste the **Client ID** into the `data-clientid` field inside the *signInButton* div.
 
 ### Configuring *signInButton* in **login.html** template -- some explanation of parameters: 
 
