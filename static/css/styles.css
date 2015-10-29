@@ -1,0 +1,34 @@
+body { font-family: sans-serif; background-color: #333333 }//background-image: url('img3.jpg');}
+
+h1, h2 { font-family: 'Georgia', serif; margin: 10px; }
+h1 { border-bottom: 2px solid #eee; }
+h2 { font-size: 1.2em; }
+h1.reverse, h2.reverse, h3.reverse, h4.reverse { color: white; }
+
+table, th, td { border: 1px solid black; border-collapse: collapse; color: white;}
+th { text-align: center; }
+td { padding: 15px; word-break: break-all;}
+
+form { padding: 10px; }
+
+p, dd, dt { color: #CCCCCC;}
+
+a {text-decoration: none; color:#FFFFCC;}
+
+.pane { position:absolute; left: 25%; width: 50%; border: 2px solid; border-radius: 25px; 
+		padding: 5px; margin: 25px; border-color: #999999; background-color: #333333 }
+.header {left:50%; text-align: center;}
+.name {width:50%;display: inline-block; float: left;}
+.editdeletepane{}
+
+.flash { background: #cee5F5; }
+
+
+/** Editable table
+------------------------- */
+.editable-table > tbody > tr > td { padding: 4px; }
+.editable-text { padding-left: 4px; padding-top: 4px; padding-bottom: 4px; display: inline-block; }
+.editable-table tbody > tr > td > .controls {  //width: 100%; }
+.editable-input { padding-left: 3px; }
+.editable-input.input-sm { height: 30px; font-size: 14px; padding-top: 4px; padding-bottom: 4px; }
+

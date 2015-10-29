@@ -1,0 +1,27 @@
+{% include 'header.html' %}
+
+	<div class="container">
+	
+		<div class="pane">
+		
+			<h1 class="reverse">Edit <em>{{ lex.lexeme }}</em></h1>
+					
+			<form action="{{url_for('edit_lexeme_item', lex_trg=lex.lexeme, lex_trg_id=lex.id)}}" method="post">
+			
+				<p>Lexeme: </p><input type="text", size="30", name="lex" placeholder="{{lex.lexeme}}"><br>
+				<p>Meaning: </p><input type="text", size="30", name="meaning" placeholder="{{lex.meaning}}"><br>
+				<p>Cognate Id: </p><input type="text", size="30", name="cognate_id" placeholder="{{lex.cognate_id}}"><br>
+				<p>Cognate Sources: </p><input type="text", size="30", name="cognate_sources" placeholder="{{lex.cognate_sources}}"><br>
+				<p>Language Code: </p><input type="text", size="30", name="iso_lang_code" placeholder="{{lex.iso_lang_code}}"><br>
+				<p>Lexeme Sources: </p><input type="text", size="30", name="lexeme_sources" placeholder="{{lex.lexeme_sources}}"><br>
+				<p>Original creator of entry: </p>{{creator}}<br>							
+				<input type="submit" value="Edit"> <a href="{{url_for('lexemes_menu')}}"> Cancel</a><br>
+			
+			</form><br><br>
+		
+		</div>
+	
+	</div>
+
+
+{% include 'footer.html' %}
