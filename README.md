@@ -8,8 +8,8 @@ This is a test environment flask site where the main app is a simple server fron
 
 ### Setting up the database:
 
-1. To initialize and populate the test database, in folder `\db` run: **python db_setup.py**
-2. The main app uses the db_access.py module to access the database.
+1. To initialize and populate the test database, in folder **\db** run: **python db_setup.py**
+2. The main app uses the **db_access.py** module to access the database.
 
 ## Setting up the OAuth environment working.
 
@@ -19,7 +19,7 @@ This is a test environment flask site where the main app is a simple server fron
 2. On leftmost menu of the landing page, go to: **APIs & auth > Credentials**.
 3. Follow the instructions to create a new project, record **Client ID** and **Client secret**.
 4. When configuring the Web application, be sure to set the fields for "Authorized JavaScript origins" and "Authorized redirect URIs". [NB. the redirects URIs are important for determining what happens after users have logged in or logged out.] 
-5. Download a JSON file of the **Client secret**; probably best to rename the file to something like `client_secret.json`.
+5. Download a JSON file of the Client parameters; probably best to rename the file to something like "client_secret.json".
 
 ### In **login.html**:
 
