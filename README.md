@@ -21,7 +21,9 @@ This is a test environment flask site where the main app is a simple server fron
 4. When configuring the Web application, be sure to set the fields for "Authorized JavaScript origins" and "Authorized redirect URIs". [NB. the redirects URIs are important for determining what happens after users have logged in or logged out.] 
 5. Download a JSON file of the **Client secret**; probably best to rename the file to something like `client_secret.json`.
 
-### In **login.html**, paste the **Client ID ** in the `data-clientid` inside the *signInButton* div.
+### In **login.html**:
+
+- paste the **Client ID ** in the `data-clientid` inside the *signInButton* div.
 
 ### Configuring *signInButton* in **login.html** template -- some explanation of parameters: 
 
