@@ -49,7 +49,7 @@ def getTemplateInfo():
     @param templateRoute String
     Attaches templateInfo logic to queryRoute providing templates at templateRoute.
 '''
-def addRoutes(app, queryRoute):
+def addRoute(app, queryRoute):
     @app.route(queryRoute)
     def returnTemplateInfo():
         tInfo = getTemplateInfo()

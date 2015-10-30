@@ -7,11 +7,12 @@ import dataInfo
 import projectPages
 import templateInfo
 import translationInfo
+import shortLink
 
 app = db.app
 
 # Putting templateInfo into place.
-templateInfo.addRoutes(app,'/query/templateInfo')
+templateInfo.addRoute(app,'/query/templateInfo')
 
 # query/data routes…
 dataInfo.addRoute(app)
@@ -21,6 +22,9 @@ translationInfo.addRoute(app)
 
 # projects/<magic> routes…
 projectPages.addRoute(app)
+
+# query/shortLink
+shortLink.addRoute(app)
 
 # index route:
 @app.route('/')
