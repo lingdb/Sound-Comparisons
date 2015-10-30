@@ -89,37 +89,33 @@ def getStudy(studyName):
     return flask.jsonify(**data)
 
 '''
-    @param app instance of Flask
-    Installs the dataInfo module to the /query/data route,
-    from where it serves GET requests.
-    It accepts parameters:
+    Serves the dataInfo module to a route, usually '/query/data'.
+    It accepts GET parameters:
     * global
     * study=<studyName>
 '''
-def addRoute(app):
-    @app.route('/query/data')
-    def getData():
-        # Checking if global portion of data is requested:
-        if 'global' in flask.request.args:
-            return getGlobal()
-        # Checking if study depandant portion of data is requested:
-        if 'study' in flask.request.args:
-            studyName = flask.request.args['study']
-            if studyName == '':
-                return 'You need to supply a value for that study parameter!'
+def getData():
+    # Checking if global portion of data is requested:
+    if 'global' in flask.request.args:
+        return getGlobal()
+    # Checking if study depandant portion of data is requested:
+    if 'study' in flask.request.args:
+        studyName = flask.request.args['study']
+        if studyName == '':
+            return 'You need to supply a value for that study parameter!'
+        else:
+            studyCount = db.getSession().query(db.Studies).filter_by(Name = studyName).limit(1).count()
+            if studyCount == 1:
+                return getStudy(studyName)
             else:
-                studyCount = db.getSession().query(db.Studies).filter_by(Name = studyName).limit(1).count()
-                if studyCount == 1:
-                    return getStudy(studyName)
-                else:
-                    return ("Couldn't find study: "+studyName)
-        # Normal response in case of no get parameters:
-        try:
-            latest = db.getSession().query(db.EditImports).order_by(db.EditImports.Time.desc()).limit(1).one()
-            dict = {
-                'lastUpdate': latest.getTimeStampString(),
-                'Description': 'Add a global parameter to fetch global data, and add a study parameter to fetch a study.'
-            }
-            return flask.jsonify(**dict)
-        except sqlalchemy.orm.exc.NoResultFound:
-            return flask.jsonify(**{})
+                return ("Couldn't find study: "+studyName)
+    # Normal response in case of no get parameters:
+    try:
+        latest = db.getSession().query(db.EditImports).order_by(db.EditImports.Time.desc()).limit(1).one()
+        dict = {
+            'lastUpdate': latest.getTimeStampString(),
+            'Description': 'Add a global parameter to fetch global data, and add a study parameter to fetch a study.'
+        }
+        return flask.jsonify(**dict)
+    except sqlalchemy.orm.exc.NoResultFound:
+        return flask.jsonify(**{})

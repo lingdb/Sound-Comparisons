@@ -96,31 +96,28 @@ def getI18n(lngs):
     return flask.jsonify(**i18n)
 
 '''
-    @param app instance of Flask
-    Installs the translationInfo module to the /query/translations route,
-    from where it serves GET requests.
-    It accepts parameters:
+    Handles the translationInfo requests,
+    and is usually installed at /query/translations.
+    Serves GET requests, and accepts parameters:
     * action in {summary,static,dynamic}
     * lng = ' '.join([String])
 '''
-def addRoute(app):
-    @app.route('/query/translations')
-    def getTranslations():
-        jumpMap = {
-            'summary': getSummary,
-            'static':  lambda: chkTranslationId(getStatic),
-            'dynamic': lambda: chkTranslationId(getDynamic),
-            }
-        #Executing specified action, iff possible:
-        if 'action' in flask.request.args:
-            action = flask.request.args['action']
-            if action in jumpMap:
-                return jumpMap[action]()
-        if 'lng' in flask.request.args:
-            lngs = flask.request.args['lng'].split(' ')
-            return getI18n(lngs)
-        #Fallback in case of error:
-        return flask.jsonify(**{
-            'msg': '"action" parameter must be specified, carrying one of the action values, or a lng parameter must be given.',
-            'action': jumpMap.keys()
-            })
+def getTranslations():
+    jumpMap = {
+        'summary': getSummary,
+        'static':  lambda: chkTranslationId(getStatic),
+        'dynamic': lambda: chkTranslationId(getDynamic),
+        }
+    #Executing specified action, iff possible:
+    if 'action' in flask.request.args:
+        action = flask.request.args['action']
+        if action in jumpMap:
+            return jumpMap[action]()
+    if 'lng' in flask.request.args:
+        lngs = flask.request.args['lng'].split(' ')
+        return getI18n(lngs)
+    #Fallback in case of error:
+    return flask.jsonify(**{
+        'msg': '"action" parameter must be specified, carrying one of the action values, or a lng parameter must be given.',
+        'action': jumpMap.keys()
+        })

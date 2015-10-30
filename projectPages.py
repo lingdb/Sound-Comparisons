@@ -13,30 +13,33 @@ import re
 
 import db
 
-def addRoute(app):
-    @app.route('/projects/<path:url>')
-    def checkUrl(url):
-        # Is url not absolute?
-        match = re.match("^[^:]*:\/\/", url)
-        if match != None:
-            msg = 'Sorry, the requested url "{}" is not allowed.'.format(url)
-            return msg, 403
-        # Is url the name of a Family?
-        match = re.match("^([^\/]*)/(.*)$", url)
-        if match:
-            try:
-                family = getFamily(match.group(1))
-                url = family.ProjectAboutUrl + match.group(2)
-                return streamUrl(url)
-            except: pass
-        # Redirect if url is just a plain family name:
+'''
+    @param url String
+    Provides the project page for the specified url, iff that url appears to be ok.
+    Otherwise returns an error message.
+'''
+def checkUrl(url):
+    # Is url not absolute?
+    match = re.match("^[^:]*:\/\/", url)
+    if match != None:
+        msg = 'Sorry, the requested url "{}" is not allowed.'.format(url)
+        return msg, 403
+    # Is url the name of a Family?
+    match = re.match("^([^\/]*)/(.*)$", url)
+    if match:
         try:
-            family = getFamily(url)
-            flask.redirect(url+'/')
+            family = getFamily(match.group(1))
+            url = family.ProjectAboutUrl + match.group(2)
+            return streamUrl(url)
         except: pass
-        # Fail:
-        msg = 'Sorry, the requested url "{}" could not be found.'.format(url)
-        return msg, 404
+    # Redirect if url is just a plain family name:
+    try:
+        family = getFamily(url)
+        flask.redirect(url+'/')
+    except: pass
+    # Fail:
+    msg = 'Sorry, the requested url "{}" could not be found.'.format(url)
+    return msg, 404
 
 def getFamily(name):#May throw!
     family = db.getSession().query(db.Families).filter_by(FamilyNm = name).limit(1).one()

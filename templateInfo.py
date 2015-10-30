@@ -49,11 +49,9 @@ def getTemplateInfo():
     @param templateRoute String
     Attaches templateInfo logic to queryRoute providing templates at templateRoute.
 '''
-def addRoute(app, queryRoute):
-    @app.route(queryRoute)
-    def returnTemplateInfo():
-        tInfo = getTemplateInfo()
-        return flask.jsonify(**tInfo)
+def returnTemplateInfo():
+    tInfo = getTemplateInfo()
+    return flask.jsonify(**tInfo)
 
 # Produce test output:
 if __name__ == "__main__":

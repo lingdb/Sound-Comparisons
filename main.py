@@ -11,23 +11,7 @@ import shortLink
 
 app = db.app
 
-# Putting templateInfo into place.
-templateInfo.addRoute(app,'/query/templateInfo')
-
-# query/data routes…
-dataInfo.addRoute(app)
-
-# query/translations
-translationInfo.addRoute(app)
-
-# projects/<magic> routes…
-projectPages.addRoute(app)
-
-# query/shortLink
-shortLink.addRoute(app)
-
-# index route:
-@app.route('/')
+# Delivers the index page.
 def getIndex():
     data = {
             'title': 'TEST ME!',
@@ -36,7 +20,24 @@ def getIndex():
     if config.debug: data['requirejs'] = 'static/js/App.js'
     return flask.render_template('index.html', **data)
 
+'''
+    Routes is a dictionary used to set up all routing for soundcomparisons.
+'''
+routes = {
+        '/': getIndex,
+        '/query/shortLink': shortLink.addShortLink,
+        '/projects/<path:url>': projectPages.checkUrl,
+        '/query/translations': translationInfo.getTranslations,
+        '/query/data': dataInfo.getData,
+        '/query/templateInfo': templateInfo.returnTemplateInfo
+    }
+
 if __name__ == "__main__":
+    # Binding routes:
+    for r,f  in routes:
+        app.route(r)(f)
+    # Loading & applying configuration:
     import config
     app.debug = config.debug
+    # Go:
     app.run()

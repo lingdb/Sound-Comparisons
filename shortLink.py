@@ -93,22 +93,20 @@ def insert(url):
 '''
 
 '''
-    @param app instance of Flask
-    Installs the shortLink module to the /query/shortLink route,
-    from where it serves POST requests carrying a createShortLink parameter.
+    Provides the shortlink addition funcitonality.
+    Expected to handle POST requests carrying a createShortLink parameter.
+    Usual route is /query/shortLink
 '''
-def addRoute(app):
-    @app.route('/query/shortLink')
-    def addShortLink():
-        if flask.request.method == 'POST':
-            if 'createShortLink' in flask.request.args:
-                i = insert(flask.request.args['createShortLink'])
-                # FIXME IMPLEMEMT
-                pass
-            else:
-                return 'Please specify a createShortLink parameter.', 400
+def addShortLink():
+    if flask.request.method == 'POST':
+        if 'createShortLink' in flask.request.args:
+            i = insert(flask.request.args['createShortLink'])
+            # FIXME IMPLEMEMT
+            pass
         else:
-            return 'Please do a POST request with a createShortLink parameter.', 400
+            return 'Please specify a createShortLink parameter.', 400
+    else:
+        return 'Please do a POST request with a createShortLink parameter.', 400
 
 if __name__ == "__main__":
     urls = ['foobar','#/config/?families=11&language=11111230301&languages=11002000000,11111110102,11111230301,11131000008,11141230509,11151120109,11161010008,11161960109,11161180509&mapViewIgnoreSelection=false&meaningGroups= &pageView=language&phLang=11002000000&regions= &siteLanguage=1&study=Germanic&translation=1&word=4410&wordByWord=false&wordOrder=logical&words=10,20,30,40,50']
