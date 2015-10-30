@@ -5,7 +5,7 @@ main:
 # Setup virtualenv and install necessary packages:
 install:
 	virtualenv -p python2.7 .
-	./bin/pip install flask Flask-SQLAlchemy MySQL-python requests
+	./bin/pip install -r requirements.txt
 
 # Remove stuff created by install or python byte code:
 clean:
