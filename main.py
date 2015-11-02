@@ -45,5 +45,6 @@ if __name__ == "__main__":
     import config
     app.debug = config.debug
     app.secret_key = config.getSecretKey()
+    app.passthrough_errors=True
     # Go:
     app.run()

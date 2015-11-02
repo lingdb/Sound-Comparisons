@@ -4,10 +4,14 @@
     Heavily inspired by https://github.com/lingdb/flask-oauth
 '''
 import flask
-from flask import session as login_session
 import json
 import random
 import string
+
+from flask import session as login_session
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
+from oauth2client.client import AccessTokenCredentials
 
 import config
 
@@ -26,12 +30,12 @@ def show_logout():
 
 def google_login():
     #First, is the token valid?
-    if request.args.get('state') != login_session['state']:
-        response = make_response(json.dumps('State parameter is invalid.'), 401)
+    if flask.request.args.get('state') != login_session['state']:
+        response = flask.make_response(json.dumps('State parameter is invalid.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     #Save code for authorisation
-    code = request.data
+    code = flask.request.data
 
     try:
         #Next, try obtaining credentials from authorisation code 
@@ -39,7 +43,7 @@ def google_login():
         oauth_flow.redirect_uri = 'postmessage'
         creds = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
-        response = make_response(
+        response = flask.make_response(
             json.dumps('Failed to obtain credentials using the authorisation code.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -52,19 +56,19 @@ def google_login():
     
     #Is there an error in the access token info? If so, then stop here.
     if result.get('error') is not None:
-        response = make_response(json.dumps(result.get('error')), 500)
+        response = flask.make_response(json.dumps(result.get('error')), 500)
         response.headers['Content-Type'] = 'application/json'
 
     #Is the access token for the intended user?
     google_plus_id = creds.id_token['sub']
     if result['user_id'] != google_plus_id:
-        response = make_response(json.dumps("The user ID of the token doesn't match the given user ID."), 401)
+        response = flask.make_response(json.dumps("The user ID of the token doesn't match the given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
     #Is the access token valid for this app?
     if result['issued_to'] != CLIENT_ID:
-        response = make_response(json.dumps('The client ID of the token does not match that of the app.'), 401)
+        response = flask.make_response(json.dumps('The client ID of the token does not match that of the app.'), 401)
         print 'The client ID of the token does not match that of the app.'
         response.headers['Content-Type'] = 'application/json'
         return response
