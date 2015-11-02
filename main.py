@@ -34,7 +34,7 @@ routes = {
 
 if __name__ == "__main__":
     # Binding routes:
-    for r,f  in routes:
+    for r, f in routes.iteritems():
         app.route(r)(f)
     # Loading & applying configuration:
     import config
