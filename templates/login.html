@@ -17,6 +17,17 @@
 			</span>
 		</div>
 		<div id="result"></div>
+        <div class="flash">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for msg in messages %}
+                <li><strong>{{ msg }}</strong></li>
+                {% endfor %}					
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
 	</body>
 	<script>
 		function signInCallback(oauth_res){

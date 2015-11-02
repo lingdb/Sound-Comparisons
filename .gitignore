@@ -10,3 +10,4 @@ local
 pip-selfcheck.json
 # Stuff created by Vagrant / deployment specific:
 config.py
+client_secrets.json

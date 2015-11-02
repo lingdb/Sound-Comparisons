@@ -2,12 +2,13 @@
 import flask
 
 import config
-import db
 import dataInfo
+import db
+import oauth
 import projectPages
+import shortLink
 import templateInfo
 import translationInfo
-import shortLink
 
 app = db.app
 
@@ -29,7 +30,11 @@ routes = {
         '/projects/<path:url>': projectPages.checkUrl,
         '/query/translations': translationInfo.getTranslations,
         '/query/data': dataInfo.getData,
-        '/query/templateInfo': templateInfo.returnTemplateInfo
+        '/query/templateInfo': templateInfo.returnTemplateInfo,
+        '/login': oauth.show_login,
+        '/logout': oauth.show_logout,
+        '/google_login': oauth.google_login,
+        '/google_logout': oauth.google_logout
     }
 
 if __name__ == "__main__":
@@ -39,5 +44,6 @@ if __name__ == "__main__":
     # Loading & applying configuration:
     import config
     app.debug = config.debug
+    app.secret_key = config.getSecretKey()
     # Go:
     app.run()
