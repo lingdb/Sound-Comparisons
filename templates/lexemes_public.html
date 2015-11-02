@@ -1,0 +1,69 @@
+{% include 'header.html' %}
+	
+	<div class="container">
+	
+
+		<div class="pane">
+	
+			
+			<h1 class="reverse">Lexemes</h1>
+	
+				<div class="flash">
+				
+					{% with messages = get_flashed_messages() %}
+						{% if messages %}
+						
+						<ul>
+							{% for msg in messages %}
+							<li><strong>{{ msg }}</strong></li>
+							{% endfor %}					
+						</ul>
+						
+						{% endif %}
+					{% endwith %}
+				
+				</div>
+				
+				<table>
+			        <colgroup>
+			          <col width="12.5%" />
+			          <col width="12.5%" />
+			          <col width="12.5%" />
+			          <col width="12.5%" />
+			          <col width="12.5%" />
+			          <col width="12.5%" />
+			          <col width="12.5%" />
+			        </colgroup>
+		
+					<tr>
+						<th>id</th>
+						<th>lexeme</th>
+						<th>meaning</th>
+						<th>cognate_id</th>
+						<th>cognate_sources</th>
+						<th>language</th>
+						<th>lexeme_sources</th>
+					</tr>
+					{% for l in lexemes %}
+
+						<td>{{ l.id }}</td>
+						<td>{{ l.lexeme }}</td>
+						<td>{{ l.meaning }}</td>
+						<td>{{ l.cognate_id }}</td>
+						<td>{{ l.cognate_sources }}</td>
+						<td>{{ l.iso_lang_code }}</td>
+						<td>{{ l.lexeme_sources }}</td>
+						
+			        </tr>
+        
+					</tr>
+					{% endfor %}
+
+				</table>
+			
+		</div>
+	
+	</div>
+
+
+{% include 'footer.html' %}

@@ -1,0 +1,45 @@
+{% include 'header.html' %}
+		
+	<div class="container">
+	
+		<div class="pane">
+	
+			<h1 class="reverse">Sources</h1>
+	
+				<div class="flash">
+				
+					{% with messages = get_flashed_messages() %}
+						{% if messages %}
+						
+						<ul>
+							{% for msg in messages %}
+							<li><strong>{{ msg }}</strong></li>
+							{% endfor %}					
+						</ul>
+						
+						{% endif %}
+					{% endwith %}
+				
+				</div>
+				
+				<table>
+		
+					<tr>
+						<th>id</th>
+						<th>ref</th>
+					</tr>
+					{% for s in sources %}
+					<tr>
+						<td>{{ s.id }}</td>
+						<td>{{ s.ref }}</td>
+					</tr>
+					{% endfor %}
+		
+				</table>
+			
+		</div>
+		
+	</div>
+	
+	
+{% include 'footer.html' %}

@@ -1,0 +1,15 @@
+{% include 'header.html' %}
+
+	<div class="pane">
+	
+		<h1>Delete example</h1>
+		
+		<form action="{{url_for('delete_lexeme_item', lex_trg=lex, lex_trg_id=lex_id)}}" method="post">
+		
+			<p>{{ lex }} was created by {{ creator }}</p>
+			<p>Do you really want to delete <em>{{ lex }}</em>?</p>
+			<input type="submit" value="Delete">
+		
+		</form>
+			
+{% include 'footer.html' %}

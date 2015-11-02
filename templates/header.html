@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" media="screen" href = "/static/css/bootstrap.min.css">
+		<link rel="stylesheet" media="screen" href = "/static/css/styles.css">
+		<link rel="stylesheet" media="screen" href = "/static/css/ng-table.min.css">
+		
+		<!--[if lt IE 9]>
+		<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<![endif]-->
+		<!--script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.js"></script>
+    	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-sanitize.js"></script>
+    	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-resource.js"></script>
+    	<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-route.js"></script-->
+
+    	<script src="/static/js/angular.min.js"></script>
+    	<script src="/static/js/ng-table.min.js"></script>
+    	<script src="/static/js/app_editabletable.js"></script>
+	</head>
+
+	<body>
+		<div class="navbar navbar-inverse navbar-static-top">
+		
+	  		<div class="container-fluid">
+		    	<div class="navbar-header">
+					<a class="navbar-brand" href="#">historical lexical database</a>
+					<button class="navbar-toggle" data-toggle="collapse" data-target=".navHeaderCollapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+	
+				<div class="collapse navbar-collapse navHeaderCollapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li class="active"><a href="/">Home</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">IELex database <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="/lexemes/">Lexemes</a></li>
+								<li><a href="/sources/">Sources</a></li>
+								<li><a href="/login">Login</a></li>
+								<li><a href="/google_logout">Logout</a></li>
+							</ul>
+						</li>
+						<li><a href="/about/">About</a></li>
+						<li><a href="#contact" data-toggle="modal">Contact</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="#">More 1</a></li>
+								<li><a href="#">More 2</a></li>
+								<li><a href="#">More 3</a></li>
+								<li><a href="#">More 4</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+				
+	  		</div>
+		</div>
+		
+		<div class="container">
+		
+			<div class="jumbotron">
+				<!--center></center--><h1>historical lexical database</h1>
+				<h2>[subheading]</h2>
+				<!--a class="btn btn-info" href="/languages/">Languages</a-->
+				<a class="btn btn-info" href="/lexemes/">Lexemes</a>
+				<a class="btn btn-info" href="/sources/">Sources</a>
+				<a class="btn btn-info" href = "/login">Login</a>
+				<a class="btn btn-info" href = "/google_logout">Logout</a>
+				<a class="btn btn-info" href = "/lexeme/new/">Create Lexeme</a>
+			</div>
+		
+		</div>
+		
+		<div class="container">
