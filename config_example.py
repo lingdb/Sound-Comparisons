@@ -28,13 +28,8 @@ debug = False
     For some stuff a secret key is necessary.
     The below should therefore be changed in config.py.
 '''
-_secret_key = 'Zooj8eegie4sheequ2ohfoh6pu0goKae'
-
 def getSecretKey():
-    import config_example as example
-    if _secret_key == example._secret_key:
-        print 'CHANGE THE SECRET KEY IN config.py!'
-    return _secret_key
+    return 'Zooj8eegie4sheequ2ohfoh6pu0goKae'
 
 # Used for memoization of getOAuth:
 _getOAuth_memo = {'loaded': False, 'data': None}
