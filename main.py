@@ -23,6 +23,12 @@ def getIndex():
 
 '''
     Routes is a dictionary used to set up all routing for soundcomparisons.
+    Keys are the described routes.
+    Values may be:
+    - A function to call for the route
+    - A tuple of a function and a list of strings,
+      where the function will be called for the route,
+      and the strings describe acceptable http methods.
 '''
 routes = {
         '/': getIndex,
@@ -33,14 +39,17 @@ routes = {
         '/query/templateInfo': templateInfo.returnTemplateInfo,
         '/login': oauth.show_login,
         '/logout': oauth.show_logout,
-#       '/google_login': oauth.google_login,
+        '/google_login': (oauth.google_login, ['POST']),
         '/google_logout': oauth.google_logout
     }
 
 if __name__ == "__main__":
     # Binding routes:
     for r, f in routes.iteritems():
-        app.route(r)(f)
+        if isinstance(f, tuple):
+            app.route(r, methods=f[1])(f[0])
+        else:
+            app.route(r)(f)
     # Loading & applying configuration:
     import config
     app.debug = config.debug

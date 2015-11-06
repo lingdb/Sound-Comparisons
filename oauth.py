@@ -16,13 +16,11 @@ from oauth2client.client import FlowExchangeError
 from oauth2client.client import AccessTokenCredentials
 
 import config
-import db # FIXME DEBUG
 
 CLIENT_ID = config.getOAuth()['web']['client_id']
 
 
 def show_login():
-    db.app.logger.info('show_login()') # FIXME DEBUG
     data = {
         'STATE': ''.join(random.choice(string.ascii_uppercase + string.digits)
                          for _ in xrange(32)),
@@ -36,8 +34,6 @@ def show_logout():
     return flask.redirect(flask.url_for('google_logout'))
 
 
-# FIXME NOTE POST METHOD!
-@db.app.route('/google_login', methods=['POST'])
 def google_login():
     # Check if we've got a POST request:
     if flask.request.method != 'POST':
@@ -55,10 +51,7 @@ def google_login():
         # Next, try obtaining credentials from authorisation code
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
-        db.app.logger.info('Before break:') # FIXME DEBUG
-        db.app.logger.info(str(code)) # FIXME DEBUG
         creds = oauth_flow.step2_exchange(code)
-        db.app.logger.info('try 4') # FIXME DEBUG
     except FlowExchangeError:
         answer = 'Failed to obtain credentials using the authorisation code.'
         response = flask.make_response(
@@ -163,14 +156,14 @@ def google_logout():
         del login_session['picture']
 
         answer = 'Session successfully shutdown. Goodbye %s' % usr
-        resp = make_response(json.dumps(answer), 200)
+        resp = flask.make_response(json.dumps(answer), 200)
         resp.headers['Content-Type'] = 'application/json'
 
         return resp
     else:
         # Message about some kind of problem in shutdown procedure.
         answer = "Failure to revoke current user's tokens."
-        resp = make_response(json.dumps(answer), 401)
+        resp = flask.make_response(json.dumps(answer), 401)
         resp.headers['Content-Type'] = 'application/json'
         return resp
 
