@@ -125,7 +125,8 @@ border-radius: 150px;
 -webkit-border-radius: 150px;
 -moz-border-radius: 150px;">
 """ % (login_session['username'], login_session['picture'])
-    flask.flash('You have successfully logged in as %s' % login_session['username'])
+    msg = 'You have successfully logged in as %s'
+    flask.flash(msg % login_session['username'])
     print 'Login completed!'
     return output
 
@@ -167,11 +168,7 @@ def google_logout():
         resp.headers['Content-Type'] = 'application/json'
         return resp
 
+
 # TODO HELPER METHODS BELOW:
 def get_user_id(email):
     return 'MAGICALMYSTERYNUMBER'
-    try:
-        usr = session.query(Users).filter_by(email = email).one()
-        return usr.id
-    except:
-        return None
