@@ -33,7 +33,7 @@ routes = {
         '/query/templateInfo': templateInfo.returnTemplateInfo,
         '/login': oauth.show_login,
         '/logout': oauth.show_logout,
-        '/google_login': oauth.google_login,
+#       '/google_login': oauth.google_login,
         '/google_logout': oauth.google_logout
     }
 

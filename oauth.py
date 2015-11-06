@@ -4,8 +4,10 @@
     Heavily inspired by https://github.com/lingdb/flask-oauth
 '''
 import flask
+import httplib2
 import json
 import random
+import requests
 import string
 
 from flask import session as login_session
@@ -14,11 +16,13 @@ from oauth2client.client import FlowExchangeError
 from oauth2client.client import AccessTokenCredentials
 
 import config
+import db # FIXME DEBUG
 
 CLIENT_ID = config.getOAuth()['web']['client_id']
 
 
 def show_login():
+    db.app.logger.info('show_login()') # FIXME DEBUG
     data = {
         'STATE': ''.join(random.choice(string.ascii_uppercase + string.digits)
                          for _ in xrange(32)),
@@ -32,7 +36,12 @@ def show_logout():
     return flask.redirect(flask.url_for('google_logout'))
 
 
+# FIXME NOTE POST METHOD!
+@db.app.route('/google_login', methods=['POST'])
 def google_login():
+    # Check if we've got a POST request:
+    if flask.request.method != 'POST':
+        return 'Method Not Allowed, use POST!', 405
     # First, is the token valid?
     if flask.request.args.get('state') != login_session['state']:
         response = flask.make_response(
@@ -46,7 +55,10 @@ def google_login():
         # Next, try obtaining credentials from authorisation code
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
+        db.app.logger.info('Before break:') # FIXME DEBUG
+        db.app.logger.info(str(code)) # FIXME DEBUG
         creds = oauth_flow.step2_exchange(code)
+        db.app.logger.info('try 4') # FIXME DEBUG
     except FlowExchangeError:
         answer = 'Failed to obtain credentials using the authorisation code.'
         response = flask.make_response(
@@ -119,8 +131,8 @@ height: 300px;
 border-radius: 150px;
 -webkit-border-radius: 150px;
 -moz-border-radius: 150px;">
-""" % login_session['username'], login_session['picture']
-    flash('You have successfully logged in as %s' % login_session['username'])
+""" % (login_session['username'], login_session['picture'])
+    flask.flash('You have successfully logged in as %s' % login_session['username'])
     print 'Login completed!'
     return output
 
@@ -161,3 +173,12 @@ def google_logout():
         resp = make_response(json.dumps(answer), 401)
         resp.headers['Content-Type'] = 'application/json'
         return resp
+
+# TODO HELPER METHODS BELOW:
+def get_user_id(email):
+    return 'MAGICALMYSTERYNUMBER'
+    try:
+        usr = session.query(Users).filter_by(email = email).one()
+        return usr.id
+    except:
+        return None
