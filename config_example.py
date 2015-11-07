@@ -25,6 +25,16 @@ dbURI = 'mysql://root:1234@localhost/v5'
 debug = False
 
 '''
+    The host interface that the soundcomparisons site should bind to.
+'''
+host='127.0.0.1'
+
+'''
+    The port that the soundcomparisons site should use on the network.
+'''
+port=5000
+
+'''
     For some stuff a secret key is necessary.
     The below should therefore be changed in config.py.
 '''

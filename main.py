@@ -58,4 +58,4 @@ if __name__ == "__main__":
     app.secret_key = config.getSecretKey()
     app.passthrough_errors = True
     # Go:
-    app.run()
+    app.run(host=config.host, port=config.port)
