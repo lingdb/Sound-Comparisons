@@ -4,6 +4,7 @@ import flask
 import config
 import dataInfo
 import db
+import downloads
 import oauth
 import projectPages
 import shortLink
@@ -42,7 +43,8 @@ routes = {
         '/login': oauth.show_login,
         '/logout': oauth.show_logout,
         '/google_login': (oauth.google_login, ['POST']),
-        '/google_logout': oauth.google_logout
+        '/google_logout': oauth.google_logout,
+        '/export/singleSoundFile': downloads.singleSoundFile
     }
 
 if __name__ == "__main__":
