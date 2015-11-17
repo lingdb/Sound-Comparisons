@@ -14,3 +14,6 @@ clean:
 # List notes in the code:
 fixme:
 	find -type f -regex .*py | grep -v "./lib" | grep -v "./bin/" | xargs grep 'FIXME\|TODO'
+
+pep8:
+	find -type f -name "*.py" | grep -v "lib\|bin" | xargs ./bin/pep8

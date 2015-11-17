@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="https://apis.google.com/js/client:platform.js?onload-start" async defer>
+		</script>		
+	</head>
+	<body>
+		<div id="signInButton">
+			<span class="g-signin"
+				data-scope="openid email"
+				data-clientid="{{CLIENT_ID}}"
+				data-redirecturi="postmessage"
+				data-accesstype="offline"
+				data-cookiepolicy="single_host_origin"
+				data-callback="signInCallback"
+				data-approvalprompt="force">			
+			</span>
+		</div>
+		<div id="result"></div>
+        <div class="flash">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for msg in messages %}
+                <li><strong>{{ msg }}</strong></li>
+                {% endfor %}					
+            </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+	</body>
+	<script>
+		function signInCallback(oauth_res){
+		  if(oauth_res['code']){
+		    //Once authorization successful, hide sign-in button.
+		    $('#signInButton').attr('style', 'display: none');
+		    //Send one time use code to the server:
+		    //IF the server responds
+		    //THEN send 'login successful' message to web page
+			//AND redirect to main site page
+			//ELSE handle errors AND send message to console.
+		    $.ajax({
+		      type: 'POST',
+		      url: '/google_login?state={{STATE}}',
+		      processData: false,
+		      data: oauth_res['code'],
+		      contentType: 'application/octet-stream; charset=utf-8',
+		      success: function(result){
+		        //Handle server response if necessary.
+		        if(result){
+		          $('#result').html('You logged in successfully!</br>'+ result +'</br>Redirecting to home page...')
+		          setTimeout(function(){
+		          	window.location.href = "{REDIRECT}";
+		          }, 4000);
+		      	}else if(oauth_res['error']){
+                    console.log('There was an error: ' + oauth_res['error']);
+                }else{
+                    $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                }
+		      }
+		  	});
+		}}
+	</script>
+</html>
