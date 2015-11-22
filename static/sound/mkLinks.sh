@@ -3,7 +3,7 @@
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $dir
 # Inspecting source directory:
-srcDir="../../../container/sndcomp/sound"
+srcDir="../../../container/nginx/sound"
 sources=$(ls $srcDir)
 # Creating softlinks:
 for s in $sources; do
