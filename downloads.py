@@ -88,7 +88,26 @@ def singleTextFile():
 
 '''
     Build after the preimage of php/export/csv.php
+    Expected GET parameters are:
+    * study, containing the name of a study
+    * languages, containing ',' delimited languageIds
+    * words, containing ',' delimited wordIds
+    Example route:
+    export/csv?study=Slavic&languages=13111210507&words=10,20,30
 '''
 def buildCSV():
+    args = flask.request.args
+    # Checking parameters:
+    params = ['study','languages','words']
+    for p in params:
+        if p not in args:
+            msg = "Missing parameter: '%s'! Parameters should be: %s" % (p, params)
+            return msg, 400
+    # Querying database:
+    lIds = [int(id) for id in args['languages'].split(',')]
+    wIds = [int(id) for id in args['words'].split(',')]
+    languages = db.getSession().query(db.Languages).filter_by(StudyName = args['study']).all() # FIXME filter by lIds
+    words = db.getSession().query(db.Words).filter_by(StudyName = args['study']).all() # FIXME filter by lIds
     # FIXME check where this is used!
-    pass
+    thing = {'lIds': lIds, 'wIds': wIds}
+    return flask.jsonify(thing)
