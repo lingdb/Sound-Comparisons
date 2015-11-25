@@ -44,7 +44,8 @@ routes = {
         '/logout': oauth.show_logout,
         '/google_login': (oauth.google_login, ['POST']),
         '/google_logout': oauth.google_logout,
-        '/export/singleSoundFile': downloads.singleSoundFile
+        '/export/singleSoundFile': downloads.singleSoundFile,
+        '/export/singleTextFile': downloads.singleTextFile
     }
 
 if __name__ == "__main__":

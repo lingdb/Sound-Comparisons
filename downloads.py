@@ -7,6 +7,9 @@ import flask
 import re
 import os.path
 import base64
+import sqlalchemy
+
+import db
 
 '''
     Build after the preimage of php/export/singleSoundFile.php
@@ -43,9 +46,45 @@ def singleSoundFile():
 
 '''
     Build after the preimage of php/export/singleTextFile.php
+    Expected GET parameters are:
+    * word, only containing digits of a wordId
+    * language, only containing digits of a languageId
+    * study, containing the name of a study
+    * n, number of Phonetic entry to use, starts at 0
+    Example route:
+    /export/singleTextFile?word=7660&language=11111230301&study=Germanic&n=0
 '''
 def singleTextFile():
-    pass
+    args = flask.request.args
+    # Checking parameters:
+    params = ['word','language','study','n']
+    for p in params:
+        if p not in args:
+            msg = "Missing parameter: '%s'! Parameters should be: %s" % (p, params)
+            return msg, 400
+    # Getting data to respond with:
+    where = sqlalchemy.func.concat(
+                db.Transcriptions.LanguageIx,
+                db.Transcriptions.IxElicitation,
+                db.Transcriptions.IxMorphologicalInstance
+                ).like(args['language'] + args['word'])
+    transcriptions = db.getSession().query(db.Transcriptions).filter_by(StudyName = args['study']).filter(where).all()
+    # Picking the element:
+    n = int(args['n'])
+    if n < 0:
+        return "Parameter 'n' must be >= 0!", 400
+    if n > len(transcriptions):
+        return ("Parameter 'n' cannot be >= %s for this query." % len(transcriptions)), 400
+    transcription = transcriptions[n].toDict()
+    # Building and returning response:
+    name = "transcription.txt"
+    if len(transcription['soundPaths']) > 0:
+        path = transcription['soundPaths'][0]
+        name = os.path.basename(path).replace('.ogg','.txt').replace('.mp3','.txt')
+    response = flask.make_response(transcription['Phonetic'])
+    response.headers["Content-Type"] = 'text/plain; charset=utf-8'
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % name
+    return response
 
 '''
     Build after the preimage of php/export/csv.php
