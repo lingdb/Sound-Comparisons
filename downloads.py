@@ -8,6 +8,7 @@ import re
 import os.path
 import base64
 import sqlalchemy
+import datetime
 
 import db
 
@@ -103,11 +104,39 @@ def buildCSV():
         if p not in args:
             msg = "Missing parameter: '%s'! Parameters should be: %s" % (p, params)
             return msg, 400
-    # Querying database:
-    lIds = [int(id) for id in args['languages'].split(',')]
-    wIds = [int(id) for id in args['words'].split(',')]
-    languages = db.getSession().query(db.Languages).filter_by(StudyName = args['study']).all() # FIXME filter by lIds
-    words = db.getSession().query(db.Words).filter_by(StudyName = args['study']).all() # FIXME filter by lIds
-    # FIXME check where this is used!
-    thing = {'lIds': lIds, 'wIds': wIds}
-    return flask.jsonify(thing)
+    # Querying languages:
+    lIds = {int(id) for id in args['languages'].split(',')}
+    languages = db.getSession().query(db.Languages).filter_by(StudyName = args['study']).filter(db.Languages.LanguageIx.in_(lIds)).all()
+    # Querying words:
+    wIds = {int(id) for id in args['words'].split(',')}
+    words = db.getSession().query(db.Words).filter_by(StudyName = args['study']).all()
+    words = [w for w in words if int(str(w.IxElicitation)+str(w.IxMorphologicalInstance)) in wIds]
+    # Compossing csv:
+    def quote(x): return '"'+x+'"'
+    head = ['LanguageId', 'LanguageName', 'Latitude', 'Longitude',
+            'WordId', 'WordModernName1', 'WordModernName2', 'WordProtoName1', 'WordProtoName2',
+            'Phonetic', 'SpellingAltv1', 'SpellingAltv2', 'NotCognateWithMainWordInThisFamily']
+    csv = [[quote(h) for h in head]]
+    for l in languages:
+        lPart = [str(l.LanguageIx), quote(l.ShortName), str(l.Latitude or ''), str(l.Longtitude or '')]
+        for w in words:
+            wPart = [str(w.IxElicitation)+str(w.IxMorphologicalInstance),
+                     quote(w.FullRfcModernLg01), quote(w.FullRfcModernLg02),
+                     quote(w.FullRfcProtoLg01), quote(w.FullRfcProtoLg02)]
+            transcriptions = [t for t in w.Transcriptions if t.LanguageIx in lIds]
+            for t in transcriptions:
+                tPart = [quote(t.Phonetic), quote(t.SpellingAltv1), quote(t.SpellingAltv2), str(t.NotCognateWithMainWordInThisFamily)]
+                csv.append(lPart+wPart+tPart)
+    # Transform csv to string:
+    csv = "\n".join([','.join(line) for line in csv])
+    # filename to use:
+    filename = 'Customexport_'+datetime.datetime.utcnow().isoformat()+'.csv'
+    # Build and return response:
+    response = flask.make_response(csv)
+    response.headers["Pragma"] = "public"
+    response.headers["Expires"] = "0"
+    response.headers["Cache-Control"] = "must-revalidate, post-check=0, pre-check=0"
+    response.headers["Content-Type"] = "text/csv; charset=utf-8"
+    response.headers["Content-Disposition"] = ('attachment;filename="%s"' % filename)
+    response.headers["Content-Transfer-Encoding"] = "binary"
+    return response
