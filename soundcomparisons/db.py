@@ -18,9 +18,9 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import os.path
 
 import config
-app = flask.Flask('Soundcomparisons')
-app.config['SQLALCHEMY_DATABASE_URI'] = config.dbURI
-db = SQLAlchemy(app)
+
+
+db = SQLAlchemy()
 
 '''
     Child of db.Model to add useful method
