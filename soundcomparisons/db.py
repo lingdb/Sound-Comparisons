@@ -17,8 +17,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # To check file existence:
 import os.path
 
-import config
-
 
 db = SQLAlchemy()
 

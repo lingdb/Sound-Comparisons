@@ -1,5 +1,6 @@
 # coding: utf8
 from __future__ import unicode_literals
+import os
 
 import flask
 
@@ -16,14 +17,10 @@ from soundcomparisons import translationInfo
 
 # Delivers the index page.
 def getIndex():
-    data = {
-        'title': 'TEST ME!',
-        'requirejs': 'static/js/App.js' if config.debug else 'static/js/App-minified.js'
-    }
     return flask.render_template(
         'index.html',
         title='TEST ME!',
-        requirejs='static/js/App.js' if config.debug else 'static/js/App-minified.js')
+        requirejs='static/js/App.js' if app.debug else 'static/js/App-minified.js')
 
 '''
     Routes is a dictionary used to set up all routing for soundcomparisons.
@@ -49,9 +46,12 @@ routes = {
 }
 
 app = flask.Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = config.dbURI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object('soundcomparisons.config')
+if 'SOUNDCOMPARISONS_SETTINGS' in os.environ:
+    # in production, this ENVVAR must be set and point to a config file!
+    app.config.from_envvar('SOUNDCOMPARISONS_SETTINGS')
 db.init_app(app)
+app.debug = False
 
 # Binding routes:
 for r, f in routes.items():
@@ -61,6 +61,4 @@ for r, f in routes.items():
         app.route(r)(f)
 
 # Loading & applying configuration:
-app.debug = config.debug
-app.secret_key = config.getSecretKey()
 app.passthrough_errors = True
