@@ -1,6 +1,7 @@
 /* global navigator: false */
 "use strict";
-define(['backbone','i18n'], function(Backbone, i18n){
+define(['backbone','models/Loader'], function(Backbone, Loader){
+  var i18n = Loader.translation.i18n;
   //Initializing options for i18n:
   var i18nOptions = {
     resGetPath: 'query/translations?lng=__lng__&ns=__ns__'
@@ -39,7 +40,7 @@ define(['backbone','i18n'], function(Backbone, i18n){
       */
       //Step 1:
       var storage = this;
-      $.getJSON('query/translations', {action: 'summary'}).done(function(summary){
+      Loader.translation.summary().done(function(summary){
         //Setting the summary, and thus triggering mkNToTMap:
         storage.set({'summary': summary});
         //Step 2:

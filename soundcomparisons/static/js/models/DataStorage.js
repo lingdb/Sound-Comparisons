@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','models/Loader'], function(Backbone, Loader){
   /**
     Given that query/data allows us to fetch individual studies,
     it appears helpful, to keep the data in App.storage.
@@ -10,9 +10,8 @@ define(['backbone'], function(Backbone){
   return Backbone.Model.extend({
     defaults: {
       global: null
-    , lastUpdate: 0 // timestamp aquired by fetching target in initialize
+    , lastUpdate: 0 // timestamp aquired by loading data.initial in initialize
     , study: null
-    , target: 'query/data'
     }
     /**
       initialize accounts for 3 segments of App.setupBar
@@ -33,9 +32,9 @@ define(['backbone'], function(Backbone){
           console.log(e);
         };
       }
-      //Fetching initial data from target:
+      //Fetching initial data from Loader:
       var t = this;
-      $.getJSON(this.get('target')).done(function(data){
+      Loader.data.initial().done(function(data){
         delete data.Description;
         console.log("Got target data: "+JSON.stringify(data));
         App.setupBar.addLoaded();
@@ -58,7 +57,7 @@ define(['backbone'], function(Backbone){
     /***/
   , loadGlobal: function(){
       var def = $.Deferred(), t = this;
-      $.getJSON(t.get('target'), {global: null}).done(function(data){
+      Loader.data.global().done(function(data){
         t.set({global: data});
         def.resolve();
       }).fail(function(f){
@@ -100,7 +99,7 @@ define(['backbone'], function(Backbone){
         delete is not in always to make sure it happens
         before further propagation.
       */
-      $.getJSON(t.get('target'), {study: name}).done(function(data){
+      Loader.data.study(name).done(function(data){
         delete t._loadStudyMap[name];
         t.set({study: data});
         def.resolve();
