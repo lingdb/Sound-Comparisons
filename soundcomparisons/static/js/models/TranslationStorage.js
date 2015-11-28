@@ -62,8 +62,7 @@ define(['backbone','models/Loader'], function(Backbone, Loader){
           }
         });
       }).fail(function(){
-        App.linkInterceptor.set({enabled: false});
-        console.log('Could not fetch translation summary from host -> LinkInterceptor disabled.');
+        console.log('Could not fetch translation summary from host.');
       });
     }
     /**
