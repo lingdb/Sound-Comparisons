@@ -22,7 +22,7 @@ define(['backbone'], function(Backbone){
       this._loadStudyMap = {};
       //Compressor setup, if possible:
       this.compressor = null;
-      if(_.isFunction(window.Worker)){
+      if(_.isFunction(window.Worker) && window.location.protocol !== 'file:'){
         this.compressor = new Worker('static/js/worker/Compressor.js');
         this.set({compressorCallbacks: {}}); // Label -> [[callback, context]]
         this.compressor.onmessage = function(m){
