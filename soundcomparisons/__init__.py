@@ -20,7 +20,7 @@ def getIndex():
     return flask.render_template(
         'index.html',
         title='TEST ME!',
-        requirejs='static/js/App.js' if app.debug else 'static/js/App-minified.js')
+        debug=app.debug)
 
 '''
     Routes is a dictionary used to set up all routing for soundcomparisons.
