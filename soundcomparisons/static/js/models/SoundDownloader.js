@@ -16,7 +16,7 @@ define(['backbone'], function(Backbone){
       this.maxDownloads = 5;
       //Worker to handle zipping:
       this.worker = null;
-      if(_.isFunction(window.Worker)){
+      if(_.isFunction(window.Worker) && window.location.protocol !== 'file:'){
         this.worker = new Worker('static/js/worker/Zipper.js');
         var t = this;
         this.worker.onmessage = function(e){
