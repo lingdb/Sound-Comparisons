@@ -110,9 +110,12 @@ requirejs([
       , views: {}
       , wordCollection: new (require('collections/WordCollection'))()
       });
-      if(!_.isUndefined(Map)){
-        _.extend(window.App, {map: new (require('models/Map'))()});
-      }
+      (function(){
+        var Map = require('models/Map');
+        if(_.isFunction(Map)){
+          _.extend(window.App, {map: new Map()});
+        }
+      })();
       //Adding FilteredWordCollection:
       App.filteredWordCollection = new (require('collections/FilteredWordCollection'))();
       //Making sure TranslationStorage does it's thing:

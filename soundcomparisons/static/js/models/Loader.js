@@ -20,8 +20,15 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     and returns a promise that will be resolved with the data from it.
   */
   var fetchFile = function(path, expectJSON){
-    path = path.replace(/\//g, '_');
-    var def = $.Deferred();
+    path = _.last(path.split('/'))
+    var def = $.Deferred()
+      , deliver = function(){
+                    if(expectJSON === true){
+                      def.resolve(JSON.parse(fileMemo[path]));
+                    }else{
+                      def.resolve(fileMemo[path]);
+                    }
+                  };
     if(fileMemo === null){
       fileMemo = {};
       interaction = $.Deferred();
@@ -43,27 +50,31 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
           };
           reader.readAsText(file, 'utf-8');
         }, this);
-        window.foo = fileMemo; // FIXME DEBUG
         $.when.apply($, waits).always(function(){
-          interaction.resolve();
-          interaction = null;
+          if(interaction !== null){
+            interaction.resolve();
+            interaction = null;
+          }
         });
       });
       dialog.modal({show: true});
+      interaction.done(deliver).fail(function(){
+        def.reject(arguments)
+      });
     }else if(interaction !== null){
       interaction.always(function(){
         if(path in fileMemo){
-          def.resolve(fileMemo[path]);
+          deliver();
         }else{
           def.reject();
         }
       });
     }else if(path in fileMemo){
-      def.resolve(fileMemo[path]);
+      deliver();
     }else{
       def.reject();
     }
-    // The prommise to use elsewhere:
+    // The promise to use elsewhere:
     return def.promise();
   };
   /**
@@ -125,8 +136,15 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     , 'i18nUrl': i18nRoute
     , 'i18n': (function(){
                  if(!useAjax){
+                   var func = mkFetch(i18nRoute, {}, true);
                    //Modify i18n to change file loadings:
-                   i18n.sync._fetch = mkFetch(i18nRoute, {}, true);
+                   i18n.sync._fetch = function(lngs, options, cb){
+                     func().done(function(data){
+                         cb(null, data);
+                     }).fail(function(err){
+                         cb(err);
+                     });
+                   };
                  }
                  return i18n;
                })()

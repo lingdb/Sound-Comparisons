@@ -1,6 +1,6 @@
 "use strict";
 define(['backbone','models/WordOverlay','views/WordOverlayView'], function(Backbone,WordOverlay,WordOverlayView){
-  if(!_.isUndefined(google)){
+  if(!_.isUndefined(window.google)){
     return Backbone.Model.extend({
       defaults: {
         mapOptions: {
