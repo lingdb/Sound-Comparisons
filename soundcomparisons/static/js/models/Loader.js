@@ -1,5 +1,5 @@
 "use strict";
-define(['jquery','underscore', 'i18n'], function($, _, i18n){
+define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
   /**
     This module shall produce a simple object
     that provides functionality to fetch special AJAX resources.
@@ -9,6 +9,10 @@ define(['jquery','underscore', 'i18n'], function($, _, i18n){
   */
   var useAjax = window.location.protocol !== 'file:';
   /**
+    Memo for files to load.
+  */
+  var fileMemo = null, interaction = null;
+  /**
     @param path String
     @param expectJSON Bool
     @return Deferred
@@ -16,24 +20,49 @@ define(['jquery','underscore', 'i18n'], function($, _, i18n){
     and returns a promise that will be resolved with the data from it.
   */
   var fetchFile = function(path, expectJSON){
+    path = path.replace(/\//g, '_');
     var def = $.Deferred();
-    // Timeout to reject the promise:
-    var timeout = window.setTimeout(function(){
-      def.reject('Timeout');
-    }, 1000);
-    // Trying to resolve the promise:
-    require([path], function(data){
-      window.clearTimeout(timeout);
-      if(expectJSON === true){
-        try{
-          def.resolve(JSON.parse(data));
-        }catch(e){
-          def.reject('Could not parse JSON.', e)
+    if(fileMemo === null){
+      fileMemo = {};
+      interaction = $.Deferred();
+      var dialog = bootbox.dialog({
+        title: 'Please select module files…'
+      , message: '<input id="moduleFiles" type="file" multiple="">'
+      , buttons: {}
+      , show: false
+      });
+      $('#moduleFiles').on('change', function(e){
+        var input = event.target, waits = [];
+        dialog.modal({show: false});
+        _.each(input.files, function(file){
+          var reader = new FileReader(), waitReader = $.Deferred();
+          waits.push(waitReader);
+          reader.onload = function(){
+            fileMemo[file.name] = reader.result;
+            waitReader.resolve();
+          };
+          reader.readAsText(file, 'utf-8');
+        }, this);
+        window.foo = fileMemo; // FIXME DEBUG
+        $.when.apply($, waits).always(function(){
+          interaction.resolve();
+          interaction = null;
+        });
+      });
+      dialog.modal({show: true});
+    }else if(interaction !== null){
+      interaction.always(function(){
+        if(path in fileMemo){
+          def.resolve(fileMemo[path]);
+        }else{
+          def.reject();
         }
-      }else{
-        def.resolve(data);
-      }
-    });
+      });
+    }else if(path in fileMemo){
+      def.resolve(fileMemo[path]);
+    }else{
+      def.reject();
+    }
     // The prommise to use elsewhere:
     return def.promise();
   };

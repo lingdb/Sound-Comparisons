@@ -11,6 +11,7 @@ requirejs.config({
   , 'underscore': 'extern/underscore-min'
   , 'backbone': 'extern/backbone-min'
   , 'bootstrap': 'extern/bootstrap.min'
+  , 'bootbox': 'extern/bootbox.min'
   , 'Blob': 'extern/Blob'
   , 'FileSaver': 'extern/FileSaver.min'
   , 'Mustache': 'extern/mustache'
