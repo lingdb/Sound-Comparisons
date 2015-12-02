@@ -12,10 +12,11 @@ import datetime
 
 import db
 
-'''
-    Build after the preimage of php/export/singleSoundFile.php
-'''
+
 def singleSoundFile():
+    '''
+        Build after the preimage of php/export/singleSoundFile.php
+    '''
     # Making sure file parameter exists:
     args = flask.request.args
     if 'file' in args:
@@ -30,7 +31,6 @@ def singleSoundFile():
             # Code to redirect:
             # return flask.redirect(file, code=302)
             filename = os.path.basename(file)
-            headers = {"Content-Disposition": "attachment; filename=%s" % filename}
             with open(file, 'r') as f:
                 body = f.read()
                 # Encode base64 iff requested:
@@ -45,31 +45,31 @@ def singleSoundFile():
     else:
         return 'GET parameter "file" missing.', 400
 
-'''
-    Build after the preimage of php/export/singleTextFile.php
-    Expected GET parameters are:
-    * word, only containing digits of a wordId
-    * language, only containing digits of a languageId
-    * study, containing the name of a study
-    * n, number of Phonetic entry to use, starts at 0
-    Example route:
-    /export/singleTextFile?word=7660&language=11111230301&study=Germanic&n=0
-'''
+
 def singleTextFile():
+    '''
+        Build after the preimage of php/export/singleTextFile.php
+        Expected GET parameters are:
+        * word, only containing digits of a wordId
+        * language, only containing digits of a languageId
+        * study, containing the name of a study
+        * n, number of Phonetic entry to use, starts at 0
+        Example route:
+        /export/singleTextFile?word=7660&language=11111230301&study=Germanic&n=0
+    '''
     args = flask.request.args
     # Checking parameters:
-    params = ['word','language','study','n']
+    params = ['word', 'language', 'study', 'n']
     for p in params:
         if p not in args:
             msg = "Missing parameter: '%s'! Parameters should be: %s" % (p, params)
             return msg, 400
     # Getting data to respond with:
     where = sqlalchemy.func.concat(
-                db.Transcriptions.LanguageIx,
-                db.Transcriptions.IxElicitation,
-                db.Transcriptions.IxMorphologicalInstance
-                ).like(args['language'] + args['word'])
-    transcriptions = db.getSession().query(db.Transcriptions).filter_by(StudyName = args['study']).filter(where).all()
+        db.Transcriptions.LanguageIx,
+        db.Transcriptions.IxElicitation,
+        db.Transcriptions.IxMorphologicalInstance).like(args['language'] + args['word'])
+    transcriptions = db.getSession().query(db.Transcriptions).filter_by(StudyName=args['study']).filter(where).all()
     # Picking the element:
     n = int(args['n'])
     if n < 0:
@@ -81,38 +81,40 @@ def singleTextFile():
     name = "transcription.txt"
     if len(transcription['soundPaths']) > 0:
         path = transcription['soundPaths'][0]
-        name = os.path.basename(path).replace('.ogg','.txt').replace('.mp3','.txt')
+        name = os.path.basename(path).replace('.ogg', '.txt').replace('.mp3', '.txt')
     response = flask.make_response(transcription['Phonetic'])
     response.headers["Content-Type"] = 'text/plain; charset=utf-8'
     response.headers["Content-Disposition"] = "attachment; filename=%s" % name
     return response
 
-'''
-    Build after the preimage of php/export/csv.php
-    Expected GET parameters are:
-    * study, containing the name of a study
-    * languages, containing ',' delimited languageIds
-    * words, containing ',' delimited wordIds
-    Example route:
-    export/csv?study=Slavic&languages=13111210507&words=10,20,30
-'''
+
 def buildCSV():
+    '''
+        Build after the preimage of php/export/csv.php
+        Expected GET parameters are:
+        * study, containing the name of a study
+        * languages, containing ',' delimited languageIds
+        * words, containing ',' delimited wordIds
+        Example route:
+        export/csv?study=Slavic&languages=13111210507&words=10,20,30
+    '''
     args = flask.request.args
     # Checking parameters:
-    params = ['study','languages','words']
+    params = ['study', 'languages', 'words']
     for p in params:
         if p not in args:
             msg = "Missing parameter: '%s'! Parameters should be: %s" % (p, params)
             return msg, 400
     # Querying languages:
     lIds = {int(id) for id in args['languages'].split(',')}
-    languages = db.getSession().query(db.Languages).filter_by(StudyName = args['study']).filter(db.Languages.LanguageIx.in_(lIds)).all()
+    languages = db.getSession().query(db.Languages).filter_by(StudyName=args['study']).filter(db.Languages.LanguageIx.in_(lIds)).all()
     # Querying words:
     wIds = {int(id) for id in args['words'].split(',')}
-    words = db.getSession().query(db.Words).filter_by(StudyName = args['study']).all()
-    words = [w for w in words if int(str(w.IxElicitation)+str(w.IxMorphologicalInstance)) in wIds]
-    # Compossing csv:
-    def quote(x): return '"'+x+'"'
+    words = db.getSession().query(db.Words).filter_by(StudyName=args['study']).all()
+    words = [w for w in words if int(str(w.IxElicitation) + str(w.IxMorphologicalInstance)) in wIds]
+
+    def quote(x):  # Compossing csv:
+        return '"' + x + '"'
     head = ['LanguageId', 'LanguageName', 'Latitude', 'Longitude',
             'WordId', 'WordModernName1', 'WordModernName2', 'WordProtoName1', 'WordProtoName2',
             'Phonetic', 'SpellingAltv1', 'SpellingAltv2', 'NotCognateWithMainWordInThisFamily']
@@ -120,17 +122,17 @@ def buildCSV():
     for l in languages:
         lPart = [str(l.LanguageIx), quote(l.ShortName), str(l.Latitude or ''), str(l.Longtitude or '')]
         for w in words:
-            wPart = [str(w.IxElicitation)+str(w.IxMorphologicalInstance),
+            wPart = [str(w.IxElicitation) + str(w.IxMorphologicalInstance),
                      quote(w.FullRfcModernLg01), quote(w.FullRfcModernLg02),
                      quote(w.FullRfcProtoLg01), quote(w.FullRfcProtoLg02)]
             transcriptions = [t for t in w.Transcriptions if t.LanguageIx in lIds]
             for t in transcriptions:
                 tPart = [quote(t.Phonetic), quote(t.SpellingAltv1), quote(t.SpellingAltv2), str(t.NotCognateWithMainWordInThisFamily)]
-                csv.append(lPart+wPart+tPart)
+                csv.append(lPart + wPart + tPart)
     # Transform csv to string:
     csv = "\n".join([','.join(line) for line in csv])
     # filename to use:
-    filename = 'Customexport_'+datetime.datetime.utcnow().isoformat()+'.csv'
+    filename = 'Customexport_%s.csv' % datetime.datetime.utcnow().isoformat()
     # Build and return response:
     response = flask.make_response(csv)
     response.headers["Pragma"] = "public"
