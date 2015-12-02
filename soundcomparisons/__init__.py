@@ -4,7 +4,6 @@ import os
 
 import flask
 
-from soundcomparisons import config
 from soundcomparisons import dataInfo
 from soundcomparisons.db import db
 from soundcomparisons import downloads

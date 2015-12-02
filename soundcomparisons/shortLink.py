@@ -105,8 +105,8 @@ def addShortLink():
     '''
     if flask.request.method == 'POST':
         if 'createShortLink' in flask.request.args:
-            i = insert(flask.request.args['createShortLink'])
             # FIXME IMPLEMEMT
+            # i = insert(flask.request.args['createShortLink'])
             pass
         else:
             return 'Please specify a createShortLink parameter.', 400
