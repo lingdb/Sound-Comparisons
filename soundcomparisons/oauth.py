@@ -13,7 +13,6 @@ import string
 from flask import session as login_session
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
-from oauth2client.client import AccessTokenCredentials
 
 import config
 
@@ -41,7 +40,7 @@ def google_login():
     # First, is the token valid?
     if flask.request.args.get('state') != login_session['state']:
         response = flask.make_response(
-                     json.dumps('State parameter is invalid.'), 401)
+            json.dumps('State parameter is invalid.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     # Save code for authorisation
@@ -91,7 +90,7 @@ def google_login():
     stored_gplus_id = login_session.get('gplus_id')
     if stored_access_token is not None and google_plus_id == stored_gplus_id:
         answer = 'Current user is already connected.'
-        response = make_response(json.dumps(answer), 200)
+        response = flask.make_response(json.dumps(answer), 200)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -113,7 +112,9 @@ def google_login():
     # Check if user exists, if not create user
     usrid = get_user_id(login_session['email'])
     if not usrid:
-        usrid = create_user(login_session)
+        usrid = 5
+        # FIXME not that create_user is currently not implemented.
+        # usrid = create_user(login_session)
     login_session['user_id'] = usrid
 
     output = """
@@ -137,7 +138,7 @@ def google_logout():
     access_token = login_session.get('access_token')
     # access_token = login_session.get('access_token')
     if access_token is None:
-        resp = make_response(json.dumps('Current user not logged in.'), 401)
+        resp = flask.make_response(json.dumps('Current user not logged in.'), 401)
         resp.headers['Content-Type'] = 'application/json'
         return resp
 
