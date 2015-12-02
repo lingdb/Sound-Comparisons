@@ -13,12 +13,13 @@ import re
 
 import db
 
-'''
-    @param url String
-    Provides the project page for the specified url, iff that url appears to be ok.
-    Otherwise returns an error message.
-'''
+
 def checkUrl(url):
+    '''
+        @param url String
+        Provides the project page for the specified url, iff that url appears to be ok.
+        Otherwise returns an error message.
+    '''
     # Is url not absolute?
     match = re.match("^[^:]*:\/\/", url)
     if match != None:
@@ -31,22 +32,26 @@ def checkUrl(url):
             family = getFamily(match.group(1))
             url = family.ProjectAboutUrl + match.group(2)
             return streamUrl(url)
-        except: pass
+        except:
+            pass
     # Redirect if url is just a plain family name:
     try:
         family = getFamily(url)
-        flask.redirect(url+'/')
-    except: pass
+        flask.redirect(url + '/')
+    except:
+        pass
     # Fail:
     msg = 'Sorry, the requested url "{}" could not be found.'.format(url)
     return msg, 404
 
-def getFamily(name):#May throw!
-    family = db.getSession().query(db.Families).filter_by(FamilyNm = name).limit(1).one()
+
+def getFamily(name):  # May throw!
+    family = db.getSession().query(db.Families).filter_by(FamilyNm=name).limit(1).one()
     if family.ProjectActive:
         return family
     raise RuntimeError("Family {} is not marked as active.".format(name))
 
+
 def streamUrl(url):
-    req = requests.get(url, stream = True)
-    return flask.Response(flask.stream_with_context(req.iter_content()), content_type = req.headers['content-type'])
+    req = requests.get(url, stream=True)
+    return flask.Response(flask.stream_with_context(req.iter_content()), content_type=req.headers['content-type'])
