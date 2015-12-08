@@ -7,6 +7,8 @@
     a look at admin/query/dbimport/Importer.php may be educational.
 '''
 import db
+import re
+import itertools
 
 '''
     csvMapping realizes a mapping from regexes of file namess
@@ -15,7 +17,7 @@ import db
     of the database models they belong to.
 '''
 csvMapping = {
-    '/^Contributors\.txt$/': {
+    '^Contributors\.txt$': {
         'model': db.Contributors,
         'columns': {
             'Contributor Ix': 'ContributorIx',
@@ -29,55 +31,55 @@ csvMapping = {
             'Personal Website Text to link to': 'PersonalWebsite',
             'Full Role Description for About page': 'FullRoleDescription'
         }},
-    '/^ContributorCategories\.txt$/': {
+    '^ContributorCategories\.txt$': {
         'model': db.ContributorCategories,
         'columns': {
             'Sort Group': 'SortGroup',
             'Heading Text for this Sort Group': 'Headline',
             'Heading Abbr': 'Abbr'
         }},
-    '/^DefaultSingleLanguage\.txt$/': {
+    '^DefaultSingleLanguage\.txt$': {
         'model': db.DefaultLanguages,
         'columns': {
             'Study Ix': 'StudyIx',
             'Family Ix': 'FamilyIx',
             'Default Single Language Full Ix': 'LanguageIx'
         }},
-    '/^DefaultLanguagesToExcludeFromMap\.txt$/': {
+    '^DefaultLanguagesToExcludeFromMap\.txt$': {
         'model': db.DefaultLanguagesExcludeMap,
         'columns': {
             'Study Ix': 'StudyIx',
             'Family Ix': 'FamilyIx',
             'Default Language to Exclude from Map Full Ix': 'LanguageIx'
         }},
-    '/^DefaultSingleWord\.txt$/': {
+    '^DefaultSingleWord\.txt$': {
         'model': db.DefaultWords,
         'columns': {
             'Study Ix': 'StudyIx',
             'Family Ix': 'FamilyIx',
             'Default Single Word Elicitation Ix': 'IxElicitation'
         }},
-    '/^DefaultTableMultipleLanguages\.txt$/': {
+    '^DefaultTableMultipleLanguages\.txt$': {
         'model': db.DefaultMultipleLanguages,
         'columns': {
             'Study Ix': 'StudyIx',
             'Family Ix': 'FamilyIx',
             'Default Table Multiple Language Full Ix': 'LanguageIx'
         }},
-    '/^DefaultTableMultipleWords\.txt$/': {
+    '^DefaultTableMultipleWords\.txt$': {
         'model': db.DefaultMultipleWords,
         'columns': {
             'Study Ix': 'StudyIx',
             'Family Ix': 'FamilyIx',
             'Default Table Multiple Word Elicitation Ix': 'IxElicitation'
         }},
-    '/^Flags\.txt$/': {
+    '^Flags\.txt$': {
         'model': db.FlagTooltip,
         'columns': {
             'Flag Image File Name': 'Flag',
             'Flag Tooltip': 'Tooltip'
         }},
-    '/^Languages_(.*)\.txt$/': {
+    '^Languages_(.*)\.txt$': {
         'model': db.Languages,
         'columns': {
             'Study Ix': 'StudyIx',
@@ -122,7 +124,7 @@ csvMapping = {
             'Citation 2:  Year': 'Citation2Year',
             'Citation 2:  Pages': 'Citation2Pages'
         }},
-    '/^LanguageStatusTypes\.txt$/': {
+    '^LanguageStatusTypes\.txt$': {
         'model': db.LanguageStatusTypes,
         'columns': {
             'Language Status Type Ix': 'LanguageStatusType',
@@ -133,13 +135,13 @@ csvMapping = {
             'Opacity Percentage': 'Opacity',
             'Colour Depth Percentage': 'ColorDepth'
         }},
-    '/^MeaningGroups\.txt$/': {
+    '^MeaningGroups\.txt$': {
         'model': db.MeaningGroups,
         'columns': {
             'Meaning Group Ix': 'MeaningGroupIx',
             'Meaning Group Name': 'Name'
         }},
-    '/^MeaningGroupMembers\.txt$/': {
+    '^MeaningGroupMembers\.txt$': {
         'model': db.MeaningGroupMembers,
         'columns': {
             'Study Ix': 'StudyIx',
@@ -149,7 +151,7 @@ csvMapping = {
             'Ix Elicitation': 'IxElicitation',
             'Ix Morphological Instance': 'IxMorphologicalInstance'
         }},
-    '/^RegionGroupMemberLanguages_(.*)\.txt$/': {
+    '^RegionGroupMemberLanguages_(.*)\.txt$': {
         'model': db.RegionLanguages,
         'columns': {
             'Study Ix': 'StudyIx',
@@ -163,7 +165,7 @@ csvMapping = {
             'Region Gp Member Lg Name Long In This Sub-Family WebSite': 'RegionGpMemberLgNameLongInThisSubFamilyWebsite',
             'Bn - Include?': 'Include'
         }},
-    '/^RegionGroups_(.*)\.txt$/': {
+    '^RegionGroups_(.*)\.txt$': {
         'model': db.Regions,
         'columns': {
             'Study Ix': 'StudyIx',
@@ -175,7 +177,7 @@ csvMapping = {
             'Region Gp Nm Short': 'RegionGpNameShort',
             'Bn: Default Expanded State': 'DefaultExpandedState'
         }},
-    '/^Studies\.txt$/': {
+    '^Studies\.txt$': {
         'model': db.Studies,
         'columns': {
             'Study Ix': 'StudyIx',
@@ -189,7 +191,7 @@ csvMapping = {
             'Bn: Colour by Family Rather Than By Region': 'ColorByFamily',
             'Second Rfc Lg for this Study': 'SecondRfcLg'
         }},
-    '/^Families\.txt$/': {
+    '^Families\.txt$': {
         'model': db.Families,
         'columns': {
             'Study Ix': 'StudyIx',
@@ -199,21 +201,21 @@ csvMapping = {
             'Project About URL': 'ProjectAboutUrl',
             'Bn:  Project Active?': 'ProjectActive'
         }},
-    '/^Transcription Superscript Info\.txt/': {
+    '^Transcription Superscript Info\.txt': {
         'model': db.TranscrSuperscriptInfo,
         'columns': {
             'Transcription Superscript Ix': 'Ix',
             'Transcription Superscript Abbreviation': 'Abbreviation',
             'Transcription Superscript Abbreviation Full Hover Text': 'HoverText'
         }},
-    '/^Transcription Superscript Lender Lgs\.txt/': {
+    '^Transcription Superscript Lender Lgs\.txt': {
         'model': db.TranscrSuperscriptLenderLgs,
         'columns': {
             'Lender Language ISO Code': 'IsoCode',
             'Lender Language Superscript Abbreviation Letters': 'Abbreviation',
             'Lender Language Full Name for Hover Text': 'FullNameForHoverText'
         }},
-    '/^Transcriptions_(.*)\.txt$/': {
+    '^Transcriptions_(.*)\.txt$': {
         'model': db.Transcriptions,
         'columns': {
             'Study Ix': 'StudyIx',
@@ -244,7 +246,7 @@ csvMapping = {
             'TSI 05:  Bn: Reconstructed or Historical Form Questionable?': 'ReconstructedOrHistQuestionable',
             'TSI 06:  Txt: Reconstructed or Historical Form Questionable Note': 'ReconstructedOrHistQuestionableNote'
         }},
-    '/^Words_(.*)\.txt$/': {
+    '^Words_(.*)\.txt$': {
         'model': db.Words,
         'columns': {
             'Ix Elicitation': 'IxElicitation',
@@ -265,5 +267,105 @@ csvMapping = {
             'Full Written Form:  Rfc Proto-Lg:  02': 'FullRfcProtoLg02',
             'Full Written Form:  Rfc Proto-Lg:  01  Altv Root': 'FullRfcProtoLg01AltvRoot',
             'Full Written Form:  Rfc Proto-Lg:  02  Altv Root': 'FullRfcProtoLg02AltvRoot'
-        }}
-    }
+        }}}
+
+
+def dissectCSV(line, delimiter, quote, escape, keepQuotes):
+    '''
+        @param line String
+        @param delimiter Char
+        @param quote Char
+        @return fields [String]
+        Helper function for parseCSV.
+        This function can cut a string into lines,
+        or the resulting line strings into fields.
+        Returned fields are stripped.
+    '''
+    fields = []
+    field = ''
+    quoted = False
+    escaped = False
+    for c in line:
+        # Handling escaping:
+        if escaped:
+            field += c
+            escaped = False
+            continue
+        if c == escape:
+            escaped = True
+            continue
+        # Handling quotes:
+        if c == quote:
+            quoted = not quoted
+            if keepQuotes:
+                field += c
+            continue
+        # Handling delimiters:
+        if c == delimiter:
+            if not quoted:
+                fields.append(field.strip())
+                field = ''
+                continue
+        field += c
+    # Making sure we don't leave a field behind:
+    if field != '':
+        fields.append(field.strip())
+    return fields
+
+
+def parseCSV(filename, csv):
+    '''
+        @param filename String
+        @param csv String
+        @return ([db.db.Model ∧ SndCompModel], [String])
+        This function parses a given csv string that is expected to have a headline.
+        The filename will be matched against the keys of the csvMapping,
+        and the first entry that matches the filename will be used.
+        When the entry is found, it's SndCompModel fromDict method shall be used
+        to create a SndCompModel which shall be returned in a list.
+        The returned tuple is composed of a list of successfully parsed models,
+        and list of errors or warnings.
+    '''
+    mapping = None
+    # Searching for a mapping:
+    for regex in csvMapping.keys():
+        if re.match(regex, filename):
+            mapping = csvMapping[regex]
+            break
+    # Exit if no mapping found:
+    if mapping == None:
+        return ([], ["No mapping found for filename '%s'." % filename])
+    # Dissecting csv:
+    lines = dissectCSV(csv, '\n', '"', '\\', True)
+    fields = [dissectCSV(l, ',', '"', '\\', False) for l in lines]
+    if len(fields) <= 1:
+        return ([], ["Not enough content found in '%s'." % filename])
+    headline = fields.pop(0)
+    # Checking headline:
+    errors = []
+    for h in headline:
+        if h not in mapping['columns']:
+            errors.append("Unknown field '%s' in file '%s', ignoring." % h, filename)
+    # Composing dicts:
+    dicts = []
+    for rowNumber in xrange(len(fields)):
+        row = fields[rowNumber]
+        dict = {}
+        for (h, r) in itertools.izip(headline, row):
+            if h in mapping['columns']:
+                dict[mapping['columns'][h]] = r
+        dicts.append(dict)
+    if len(dicts) == 0:
+        errors.append("No dicts generated for '%s'." % filename)
+        return ([], errors)
+    # Composing models:
+    models = [mapping['model'](**d) for d in dicts]
+    return (models, errors)
+
+# A simple test for development:
+if __name__ == '__main__':
+    print 'Testing the stuff…'
+    with open('/tmp/v0/Contributors.txt', 'r') as f:
+        csv = f.read()
+        print parseCSV('Contributors.txt', csv)
+        # FIXME now models would need validation and saving
