@@ -70,7 +70,7 @@ class SndCompModel():
 
     def validate(self):
         '''
-            @return (errors [String], warnings [])
+            @return (errors [String], warnings [String])
             Performs a simple form of validation on the SndCompModel.
             To do this it basically iterates all columns,
             and tests if the according field exists.
@@ -104,16 +104,16 @@ class SndCompModel():
                     ('INT', BIGINT),
                     ('INT', INTEGER),
                     ('FLOAT', FLOAT)]
-                label = None
+                # Searching label…
                 for (l, t) in types:
                     if isinstance(c.type, t):
                         label = l
                         break
-                if label == None:
+                else:
                     errors.append("Unknown type: '%s'" % c.type)
                     continue
                 # Validation depending on label:
-                choice = {
+                choice = {  # String -> (entry -> (entry, [String]))
                     'STRING': self.validateString,
                     'INT': self.validateInt,
                     'FLOAT': self.validateFloat}

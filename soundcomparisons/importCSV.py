@@ -348,8 +348,7 @@ def parseCSV(filename, csv):
             errors.append("Unknown field '%s' in file '%s', ignoring." % h, filename)
     # Composing dicts:
     dicts = []
-    for rowNumber in xrange(len(fields)):
-        row = fields[rowNumber]
+    for row in fields:
         dict = {}
         for (h, r) in itertools.izip(headline, row):
             if h in mapping['columns']:
@@ -359,7 +358,17 @@ def parseCSV(filename, csv):
         errors.append("No dicts generated for '%s'." % filename)
         return ([], errors)
     # Composing models:
-    models = [mapping['model'](**d) for d in dicts]
+    models = []
+    for rowNumber in xrange(len(dicts)):
+        model = mapping['model'](**dicts[rowNumber])
+        es, ws = model.validate()
+        if len(es) == 0:
+            models.append(model)
+        else:
+            for e in es:
+                errors.append("Error in line %i: %s" % (rowNumber, e))
+        for w in ws:
+            errors.append("Warning in line %i: %s" % (rowNumber, e))
     return (models, errors)
 
 # A simple test for development:
