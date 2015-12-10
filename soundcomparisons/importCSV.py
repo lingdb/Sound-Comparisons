@@ -380,9 +380,9 @@ def parseCSV(filename, csv):
             models.append(model)
         else:
             for e in es:
-                errors.append("Error in line %i: %s" % (rowNumber, e))
+                errors.append("Error in entry %i: %s" % (rowNumber + 1, e))
         for w in ws:
-            errors.append("Warning in line %i: %s" % (rowNumber, e))
+            errors.append("Warning in entry %i: %s" % (rowNumber + 1, e))
     return (models, errors)
 
 # A simple test for development:
