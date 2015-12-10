@@ -94,8 +94,13 @@ class SndCompModel():
             else:
                 # Checking None case for entry:
                 entry = getattr(self, c.name)
-                if c.nullable and entry == None:
-                    continue
+                if entry == None:
+                    if c.nullable:
+                        continue
+                    if c.default != None:
+                        setattr(self, c.name, c.default)
+                        warnings.append("Correcting entry '%s' for column '%s' to '%s'." % (entry, c.name, c.default))
+                        continue
                 # A column exists, and we can check its type.
                 types = [
                     ('STRING', String),
