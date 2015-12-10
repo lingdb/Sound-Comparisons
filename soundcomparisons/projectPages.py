@@ -54,4 +54,6 @@ def getFamily(name):  # May throw!
 
 def streamUrl(url):
     req = requests.get(url, stream=True)
-    return flask.Response(flask.stream_with_context(req.iter_content()), content_type=req.headers['content-type'])
+    return flask.Response(
+        flask.stream_with_context(req.iter_content()),
+        content_type=req.headers['content-type'])

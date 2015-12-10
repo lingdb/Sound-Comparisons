@@ -114,7 +114,13 @@ def addShortLink():
         return 'Please do a POST request with a createShortLink parameter.', 400
 
 if __name__ == "__main__":
-    urls = ['foobar', '#/config/?families=11&language=11111230301&languages=11002000000,11111110102,11111230301,11131000008,11141230509,11151120109,11161010008,11161960109,11161180509&mapViewIgnoreSelection=false&meaningGroups= &pageView=language&phLang=11002000000&regions= &siteLanguage=1&study=Germanic&translation=1&word=4410&wordByWord=false&wordOrder=logical&words=10,20,30,40,50']
+    urls = [
+        'foobar',
+        '#/config/?families=11&language=11111230301&languages=11002000000,'
+        '11111110102,11111230301,11131000008,11141230509,11151120109,11161010008,'
+        '11161960109,11161180509&mapViewIgnoreSelection=false&meaningGroups= &'
+        'pageView=language&phLang=11002000000&regions= &siteLanguage=1&study=Germanic&'
+        'translation=1&word=4410&wordByWord=false&wordOrder=logical&words=10,20,30,40,50']
     for u in urls:
         x = insert(u)
         print x.toDict()

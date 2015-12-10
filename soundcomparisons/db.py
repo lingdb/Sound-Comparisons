@@ -8,7 +8,8 @@
 from sqlalchemy import Column, String, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 '''
-    Don't use/import DOUBLE if it can be avoided, because DOUBLE for some reason doesn't (precision?) work with flask.jsonify
+    Don't use/import DOUBLE if it can be avoided,s
+    because DOUBLE for some reason (precision?) doesn't work with flask.jsonify
 '''
 from sqlalchemy.dialects.mysql import TINYINT, TIMESTAMP, TEXT, BIGINT, INTEGER, FLOAT
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -226,7 +227,8 @@ class Contributors(db.Model, SndCompModel):
     '''
     # Model for v4.Contributors table
     __tablename__ = 'Contributors'
-    ContributorIx = Column('ContributorIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    ContributorIx = Column('ContributorIx', BIGINT(20, unsigned=True),
+                           nullable=False, primary_key=True)
     SortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False)
     SortIxForAboutPage = Column('SortIxForAboutPage', BIGINT(20, unsigned=True), nullable=False)
     Forenames = Column('Forenames', String(255), nullable=False)
@@ -302,7 +304,8 @@ class LanguageStatusTypes(db.Model, SndCompModel):
     '''
     # Model for v4.LanguageStatusTypes
     __tablename__ = 'LanguageStatusTypes'
-    LanguageStatusType = Column('LanguageStatusType', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    LanguageStatusType = Column('LanguageStatusType', TINYINT(3, unsigned=True),
+                                nullable=False, primary_key=True)
     Description = Column('Description', TEXT)
     Status = Column('Status', String(50))
     StatusTooltip = Column('StatusTooltip', String(255))
@@ -322,7 +325,8 @@ class MeaningGroups(db.Model, SndCompModel):
     '''
     # Model for v4.MeaningGroups
     __tablename__ = 'MeaningGroups'
-    MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
+    MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True),
+                            nullable=False, primary_key=True)
     Name = Column('Name', String(255))
 
 
@@ -419,12 +423,17 @@ class MeaningGroupMembers(db.Model, SndCompModel):
     __tablename__ = 'MeaningGroupMembers'
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
-    MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True), nullable=False)
-    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
-    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True),
+                            nullable=False, primary_key=True)
+    MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True),
+                                  nullable=False)
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True),
+                           nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True),
+                                     nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx], [Studies.StudyIx, Studies.FamilyIx]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],
+                                           [Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME ADD FOREIGN KEY ON MeaningGroup
 
 
@@ -444,7 +453,8 @@ class DefaultLanguages(db.Model, SndCompModel):
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx], [Studies.StudyIx, Studies.FamilyIx]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],
+                                           [Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
 
@@ -464,7 +474,8 @@ class DefaultLanguagesExcludeMap(db.Model, SndCompModel):
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx], [Studies.StudyIx, Studies.FamilyIx]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],
+                                           [Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
 
@@ -484,7 +495,8 @@ class DefaultMultipleLanguages(db.Model, SndCompModel):
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx], [Studies.StudyIx, Studies.FamilyIx]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],
+                                           [Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
 
@@ -501,12 +513,15 @@ class DefaultMultipleWords(db.Model, SndCompModel):
     '''
     # Model for v4.Default_Multiple_Words
     __tablename__ = 'Default_Multiple_Words'
-    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
-    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True),
+                           nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True),
+                                     nullable=False, primary_key=True)
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx], [Studies.StudyIx, Studies.FamilyIx]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],
+                                           [Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
 
@@ -523,12 +538,15 @@ class DefaultWords(db.Model, SndCompModel):
     '''
     # Model for v4.Default_Words
     __tablename__ = 'Default_Words'
-    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
-    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True),
+                           nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True),
+                                     nullable=False, primary_key=True)
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx], [Studies.StudyIx, Studies.FamilyIx]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx],
+                                           [Studies.StudyIx, Studies.FamilyIx]), {})
     # FIXME FOREIGN KEYS
 
 
@@ -560,7 +578,8 @@ class Regions(db.Model, SndCompModel):
     RegionGpNameShort = Column('RegionGpNameShort', String(255))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName], [Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],
+                                           [Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
     # FIXME FOREIGN KEYS
 
 
@@ -590,13 +609,17 @@ class RegionLanguages(db.Model, SndCompModel):
     RegionGpIx = Column('RegionGpIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     RegionMemberLgIx = Column('RegionMemberLgIx', TINYINT(3, unsigned=True), nullable=False)
     LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
-    RegionMemberWebsiteSubGroupIx = Column('RegionMemberWebsiteSubGroupIx', TINYINT(3, unsigned=True))
-    RegionGpMemberLgNameShortInThisSubFamilyWebsite = Column('RegionGpMemberLgNameShortInThisSubFamilyWebsite', TEXT)
-    RegionGpMemberLgNameLongInThisSubFamilyWebsite = Column('RegionGpMemberLgNameLongInThisSubFamilyWebsite', TEXT)
+    RegionMemberWebsiteSubGroupIx = Column(
+        'RegionMemberWebsiteSubGroupIx', TINYINT(3, unsigned=True))
+    RegionGpMemberLgNameShortInThisSubFamilyWebsite = Column(
+        'RegionGpMemberLgNameShortInThisSubFamilyWebsite', TEXT)
+    RegionGpMemberLgNameLongInThisSubFamilyWebsite = Column(
+        'RegionGpMemberLgNameLongInThisSubFamilyWebsite', TEXT)
     Include = Column('Include', TINYINT(1), nullable=False)
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName], [Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],
+                                           [Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
     # FIXME FOREIGN KEYS
 
 
@@ -682,7 +705,8 @@ class Languages(db.Model, SndCompModel):
     ContributorRecordedBy1 = Column('ContributorRecordedBy1', BIGINT(20, unsigned=True))
     ContributorRecordedBy2 = Column('ContributorRecordedBy2', BIGINT(20, unsigned=True))
     ContributorSoundEditingBy = Column('ContributorSoundEditingBy', BIGINT(20, unsigned=True))
-    ContributorPhoneticTranscriptionBy = Column('ContributorPhoneticTranscriptionBy', BIGINT(20, unsigned=True))
+    ContributorPhoneticTranscriptionBy = Column('ContributorPhoneticTranscriptionBy',
+                                                BIGINT(20, unsigned=True))
     ContributorReconstructionBy = Column('ContributorReconstructionBy', BIGINT(20, unsigned=True))
     ContributorCitationAuthor1 = Column('ContributorCitationAuthor1', BIGINT(20, unsigned=True))
     Citation1Year = Column('Citation1Year', INTEGER(10, unsigned=True))
@@ -690,11 +714,14 @@ class Languages(db.Model, SndCompModel):
     ContributorCitationAuthor2 = Column('ContributorCitationAuthor2', BIGINT(20, unsigned=True))
     Citation2Year = Column('Citation2Year', INTEGER(10, unsigned=True))
     Citation2Pages = Column('Citation2Pages', String(255))
-    AssociatedPhoneticsLgForThisSpellingLg = Column('AssociatedPhoneticsLgForThisSpellingLg', BIGINT(20, unsigned=True))
-    IsOrthographyHasNoTranscriptions = Column('IsOrthographyHasNoTranscriptions', TINYINT(3, unsigned=True))
+    AssociatedPhoneticsLgForThisSpellingLg = Column('AssociatedPhoneticsLgForThisSpellingLg',
+                                                    BIGINT(20, unsigned=True))
+    IsOrthographyHasNoTranscriptions = Column('IsOrthographyHasNoTranscriptions',
+                                              TINYINT(3, unsigned=True))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     # Foreign keys:
-    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName], [Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
+    __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],
+                                           [Studies.StudyIx, Studies.FamilyIx, Studies.Name]), {})
     # Relationships with other models:
     Transcriptions = relationship('Transcriptions', viewonly=True)
     # FIXME FOREIGN KEYS
@@ -728,11 +755,15 @@ class Words(db.Model, SndCompModel):
     '''
     # Model for v4.Words
     __tablename__ = 'Words'
-    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
-    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True),
+                           nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True),
+                                     nullable=False, primary_key=True)
     MeaningGroupIx = Column('MeaningGroupIx', INTEGER(10, unsigned=True), nullable=False)
-    MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True), nullable=False)
-    ThisFySortOrderByAlphabeticalOfFamilyAncestor = Column('ThisFySortOrderByAlphabeticalOfFamilyAncestor', INTEGER(10, unsigned=True))
+    MeaningGroupMemberIx = Column('MeaningGroupMemberIx', INTEGER(10, unsigned=True),
+                                  nullable=False)
+    ThisFySortOrderByAlphabeticalOfFamilyAncestor = Column(
+        'ThisFySortOrderByAlphabeticalOfFamilyAncestor', INTEGER(10, unsigned=True))
     SoundFileWordIdentifierText = Column('SoundFileWordIdentifierText', String(255), nullable=False)
     FileNameRfcModernLg01 = Column('FileNameRfcModernLg01', String(255))
     FileNameRfcModernLg02 = Column('FileNameRfcModernLg02', String(255))
@@ -791,10 +822,15 @@ class Transcriptions(db.Model, SndCompModel):
     __tablename__ = 'Transcriptions'
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True), nullable=False, primary_key=True)
-    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    AlternativePhoneticRealisationIx = Column('AlternativePhoneticRealisationIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    AlternativeLexemIx = Column('AlternativeLexemIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    IxElicitation = Column('IxElicitation', INTEGER(10, unsigned=True),
+                           nullable=False, primary_key=True)
+    IxMorphologicalInstance = Column('IxMorphologicalInstance', TINYINT(3, unsigned=True),
+                                     nullable=False, primary_key=True)
+    AlternativePhoneticRealisationIx = Column('AlternativePhoneticRealisationIx',
+                                              TINYINT(3, unsigned=True),
+                                              nullable=False, primary_key=True)
+    AlternativeLexemIx = Column('AlternativeLexemIx', TINYINT(3, unsigned=True),
+                                nullable=False, primary_key=True)
     LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     Phonetic = Column('Phonetic', String(255))
     SpellingAltv1 = Column('SpellingAltv1', String(255))
@@ -822,7 +858,8 @@ class Transcriptions(db.Model, SndCompModel):
         # Relation to Languages:
         ForeignKeyConstraint([LanguageIx, StudyName], [Languages.LanguageIx, Languages.StudyName]),
         # Relation to Words:
-        ForeignKeyConstraint([IxElicitation, IxMorphologicalInstance, StudyName], [Words.IxElicitation, Words.IxMorphologicalInstance, Words.StudyName]),
+        ForeignKeyConstraint([IxElicitation, IxMorphologicalInstance, StudyName],
+                             [Words.IxElicitation, Words.IxMorphologicalInstance, Words.StudyName]),
         {})
     # FIXME FOREIGN KEYS
     # Relationships with other models:
@@ -896,7 +933,8 @@ def findSoundFiles(parts):
     base = 'static/sound/'
     # Testing files:
     for ext in extensions:
-        path = ''.join([base, parts['language'], '/', parts['language'], parts['word'], parts['lex'], parts['pron'], ext])
+        path = ''.join([base, parts['language'], '/',
+                        parts['language'], parts['word'], parts['lex'], parts['pron'], ext])
         if os.path.isfile(path):
             ret['found'].append(path)
         else:
@@ -921,7 +959,8 @@ def getDummyTranscriptions(studyName):
     '''
     ret = []  # Results produced
     # Find Languages and Words that don't have Transcriptions:
-    langs = getSession().query(Languages).filter_by(StudyName=studyName).filter(~Languages.Transcriptions.any()).all()
+    langs = getSession().query(Languages).filter_by(
+        StudyName=studyName).filter(~Languages.Transcriptions.any()).all()
     words = getSession().query(Words).filter_by(StudyName=studyName).all()
     # Cross product:
     for l in langs:
@@ -956,7 +995,8 @@ class Page_Translations(db.Model, SndCompModel):
     '''
     # Model for v4.Page_Translations
     __tablename__ = 'Page_Translations'
-    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True),
+                           nullable=False, primary_key=True)
     TranslationName = Column('TranslationName', String(255), nullable=False)
     BrowserMatch = Column('BrowserMatch', String(255))
     ImagePath = Column('ImagePath', String(255))
@@ -1015,7 +1055,8 @@ class Page_StaticTranslation(db.Model, SndCompModel):
     '''
     # Model for v4.Page_StaticTranslation
     __tablename__ = 'Page_StaticTranslation'
-    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True),
+                           nullable=False, primary_key=True)
     Req = Column('Req', String(255), nullable=False, primary_key=True)
     Trans = Column('Trans', TEXT, nullable=False,)
     IsHtml = Column('IsHtml', TINYINT(1), nullable=False,)
@@ -1045,7 +1086,8 @@ class Page_DynamicTranslation(db.Model, SndCompModel):
     '''
     # Model for v4.Page_DynamicTranslation
     __tablename__ = 'Page_DynamicTranslation'
-    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    TranslationId = Column('TranslationId', BIGINT(20, unsigned=True),
+                           nullable=False, primary_key=True)
     Category = Column('Category', String(255), nullable=False, primary_key=True)
     Field = Column('Field', String(255), nullable=False, primary_key=True)
     Trans = Column('Trans', String(255), nullable=False)

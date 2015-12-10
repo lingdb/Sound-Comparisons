@@ -35,12 +35,14 @@ def withParams(func):
                 if p == 'languages':
                     langs = []
                     for lIx in val:
-                        langs.append(db.getSession().query(db.Languages).filter_by(LanguageIx=lIx).limit(1).one())
+                        query = db.getSession().query(db.Languages)
+                        langs.append(query.filter_by(LanguageIx=lIx).limit(1).one())
                     fetched[p] = langs
                 elif p == 'words':
                     words = []
                     for wId in val:
-                        where = sqlalchemy.func.concat(db.Words.IxElicitation, db.Words.IxMorphologicalInstance).like(wId)
+                        where = sqlalchemy.func.concat(
+                            db.Words.IxElicitation, db.Words.IxMorphologicalInstance).like(wId)
                         words.append(db.getSession().query(db.Words).filter(where).limit(1).one())
                     fetched[p] = words
         except:

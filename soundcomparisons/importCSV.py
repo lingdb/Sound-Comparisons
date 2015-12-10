@@ -86,8 +86,10 @@ csvMapping = {
             'Family Ix': 'FamilyIx',
             'Spelling Reference Language for WebSite': 'IsSpellingRfcLang',
             'Spelling Reference Language for WebSite Lg Name': 'SpellingRfcLangName',
-            'Associated Phonetics Lg for this Spelling Lg': 'AssociatedPhoneticsLgForThisSpellingLg',
-            'Is This ONLY An Orthography With No Transcriptions': 'IsOrthographyHasNoTranscriptions',
+            'Associated Phonetics Lg for this Spelling Lg':
+                'AssociatedPhoneticsLgForThisSpellingLg',
+            'Is This ONLY An Orthography With No Transcriptions':
+                'IsOrthographyHasNoTranscriptions',
             'Full Index Number': 'LanguageIx',
             'Website Short Name': 'ShortName',
             'Website Tooltip': 'ToolTip',
@@ -161,8 +163,10 @@ csvMapping = {
             'Region Member Lg Ix': 'RegionMemberLgIx',
             'Region Member Lg Full Index Number': 'LanguageIx',
             'Region Member Website SubGroup Ix': 'RegionMemberWebsiteSubGroupIx',
-            'Region Gp Member Lg Name Short In This Sub-Family WebSite': 'RegionGpMemberLgNameShortInThisSubFamilyWebsite',
-            'Region Gp Member Lg Name Long In This Sub-Family WebSite': 'RegionGpMemberLgNameLongInThisSubFamilyWebsite',
+            'Region Gp Member Lg Name Short In This Sub-Family WebSite':
+                'RegionGpMemberLgNameShortInThisSubFamilyWebsite',
+            'Region Gp Member Lg Name Long In This Sub-Family WebSite':
+                'RegionGpMemberLgNameLongInThisSubFamilyWebsite',
             'Bn - Include?': 'Include'
         }},
     '^RegionGroups_(.*)\.txt$': {
@@ -228,14 +232,21 @@ csvMapping = {
             'PhoneTic Transcription in Unicode': 'Phonetic',
             'Spelling Altv 1': 'SpellingAltv1',
             'Spelling Altv 2': 'SpellingAltv2',
-            'TSI 01:  Bn: Not Cognate with Main Word in This Family': 'NotCognateWithMainWordInThisFamily',
-            'Bn: Not Cognate with Main Word in This Family': 'NotCognateWithMainWordInThisFamily',  # TODO only seen in Mapudungun
-            'TSI 02:  Bn: Common Root but Morpheme Structure Different': 'CommonRootMorphemeStructDifferent',
-            'Bn: Common Root but Morpheme Structure Different': 'CommonRootMorphemeStructDifferent',  # TODO only seen in Mapudungun
-            'TSI 03:  Bn: Different Meaning to Usual for This Cognate': 'DifferentMeaningToUsualForCognate',
+            'TSI 01:  Bn: Not Cognate with Main Word in This Family':
+                'NotCognateWithMainWordInThisFamily',
+            'Bn: Not Cognate with Main Word in This Family':
+                'NotCognateWithMainWordInThisFamily',  # TODO only seen in Mapudungun
+            'TSI 02:  Bn: Common Root but Morpheme Structure Different':
+                'CommonRootMorphemeStructDifferent',
+            'Bn: Common Root but Morpheme Structure Different':
+                'CommonRootMorphemeStructDifferent',  # TODO only seen in Mapudungun
+            'TSI 03:  Bn: Different Meaning to Usual for This Cognate':
+                'DifferentMeaningToUsualForCognate',
             'TSI 11:  Cognate\'s Actual Meaning in This Language': 'ActualMeaningInThisLanguage',
-            'TSI 12:  Other Lexeme in This Language for This Meaning': 'OtherLexemeInLanguageForMeaning',
-            'TSI 21:  Bn: Is This Root A Loan Word from a Known Donor?': 'RootIsLoanWordFromKnownDonor',
+            'TSI 12:  Other Lexeme in This Language for This Meaning':
+                'OtherLexemeInLanguageForMeaning',
+            'TSI 21:  Bn: Is This Root A Loan Word from a Known Donor?':
+                'RootIsLoanWordFromKnownDonor',
             'TSI 22:  Bn: Is This Root Shared in Another Family?': 'RootSharedInAnotherFamily',
             'TSI 99:  ISO Code for Known Donor or Shared Language or Family': 'IsoCodeKnownDonor',
             'TSI 04:  Txt: Different Morpheme Structure Note': 'DifferentMorphemeStructureNote',
@@ -243,8 +254,10 @@ csvMapping = {
             'TSI 42:  Txt: Odd Phonology Note': 'OddPhonologyNote',
             'TSI 13:  Txt: Usage Note': 'UsageNote',
             'TSI 81:  Bn: Sound Problem': 'SoundProblem',
-            'TSI 05:  Bn: Reconstructed or Historical Form Questionable?': 'ReconstructedOrHistQuestionable',
-            'TSI 06:  Txt: Reconstructed or Historical Form Questionable Note': 'ReconstructedOrHistQuestionableNote'
+            'TSI 05:  Bn: Reconstructed or Historical Form Questionable?':
+                'ReconstructedOrHistQuestionable',
+            'TSI 06:  Txt: Reconstructed or Historical Form Questionable Note':
+                'ReconstructedOrHistQuestionableNote'
         }},
     '^Words_(.*)\.txt$': {
         'model': db.Words,
@@ -253,7 +266,8 @@ csvMapping = {
             'Ix Morphological Instance': 'IxMorphologicalInstance',
             'Meaning Group Ix': 'MeaningGroupIx',
             'Meaning Group Member Ix': 'MeaningGroupMemberIx',
-            'This Fy:  Sort Order By Alphabetical of Family Ancestor': 'ThisFySortOrderByAlphabeticalOfFamilyAncestor',
+            'This Fy:  Sort Order By Alphabetical of Family Ancestor':
+                'ThisFySortOrderByAlphabeticalOfFamilyAncestor',
             'Ccd:  for Sound Files:  Word Identifier Text': 'SoundFileWordIdentifierText',
             'For FileName:  Rfc Modern Lg:  01': 'FileNameRfcModernLg01',
             'For FileName:  Rfc Modern Lg:  02': 'FileNameRfcModernLg02',

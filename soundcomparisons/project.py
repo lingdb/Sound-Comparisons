@@ -90,14 +90,16 @@ def google_login():
     # Is the access token for the intended user?
     google_plus_id = creds.id_token['sub']
     if result['user_id'] != google_plus_id:
-        response = make_response(json.dumps("The user ID of the token doesn't match the given user ID."), 401)
+        text = "The user ID of the token doesn't match the given user ID."
+        response = make_response(json.dumps(text), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
 
     # Is the access token valid for this app?
     if result['issued_to'] != CLIENT_ID:
-        response = make_response(json.dumps('The client ID of the token does not match that of the app.'), 401)
-        print 'The client ID of the token does not match that of the app.'
+        text = 'The client ID of the token does not match that of the app.'
+        response = make_response(json.dumps(text), 401)
+        print text
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -129,13 +131,10 @@ def google_login():
         usrid = create_user(login_session)
     login_session['user_id'] = usrid
 
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output = '<h1>Welcome, %s!</h1>' \
+        '<img src="%s" style="width: 300px; height: 300px; ' \
+        'border-radius: 150px; -webkit-border-radius: 150px; -moz-border-radius: 150px;">'
+    output %= login_session['username'], login_session['picture']
     flash('You have successfully logged in as %s' % login_session['username'])
     print 'Login completed!'
     return output
@@ -180,7 +179,10 @@ def google_logout():
 
 
 def create_user(login_session):
-    new_usr = Users(name=login_session['username'], email=login_session['email'], picture=login_session['picture'])
+    new_usr = Users(
+        name=login_session['username'],
+        email=login_session['email'],
+        picture=login_session['picture'])
     session.add(new_usr)
     session.commit()
     usr = session.query(Users).filter_by(email=login_session['email']).one()

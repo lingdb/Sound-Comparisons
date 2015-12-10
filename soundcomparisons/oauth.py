@@ -171,6 +171,7 @@ def google_logout():
 
 
 # TODO HELPER METHODS BELOW:
-# FIXME to make this module useful it will be necessary to introduce some concept of storage for a users id + email and such.
+# FIXME to make this module useful it will be necessary to introduce
+# some concept of storage for a users id + email and such.
 def get_user_id(email):
     return 'MAGICALMYSTERYNUMBER'

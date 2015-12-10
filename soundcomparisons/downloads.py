@@ -69,7 +69,8 @@ def singleTextFile():
         db.Transcriptions.LanguageIx,
         db.Transcriptions.IxElicitation,
         db.Transcriptions.IxMorphologicalInstance).like(args['language'] + args['word'])
-    transcriptions = db.getSession().query(db.Transcriptions).filter_by(StudyName=args['study']).filter(where).all()
+    query = db.getSession().query(db.Transcriptions)
+    transcriptions = query.filter_by(StudyName=args['study']).filter(where).all()
     # Picking the element:
     n = int(args['n'])
     if n < 0:
@@ -107,7 +108,8 @@ def buildCSV():
             return msg, 400
     # Querying languages:
     lIds = {int(id) for id in args['languages'].split(',')}
-    languages = db.getSession().query(db.Languages).filter_by(StudyName=args['study']).filter(db.Languages.LanguageIx.in_(lIds)).all()
+    languages = db.getSession().query(db.Languages).filter_by(
+        StudyName=args['study']).filter(db.Languages.LanguageIx.in_(lIds)).all()
     # Querying words:
     wIds = {int(id) for id in args['words'].split(',')}
     words = db.getSession().query(db.Words).filter_by(StudyName=args['study']).all()
@@ -120,14 +122,16 @@ def buildCSV():
             'Phonetic', 'SpellingAltv1', 'SpellingAltv2', 'NotCognateWithMainWordInThisFamily']
     csv = [[quote(h) for h in head]]
     for l in languages:
-        lPart = [str(l.LanguageIx), quote(l.ShortName), str(l.Latitude or ''), str(l.Longtitude or '')]
+        lPart = [str(l.LanguageIx), quote(l.ShortName),
+                 str(l.Latitude or ''), str(l.Longtitude or '')]
         for w in words:
             wPart = [str(w.IxElicitation) + str(w.IxMorphologicalInstance),
                      quote(w.FullRfcModernLg01), quote(w.FullRfcModernLg02),
                      quote(w.FullRfcProtoLg01), quote(w.FullRfcProtoLg02)]
             transcriptions = [t for t in w.Transcriptions if t.LanguageIx in lIds]
             for t in transcriptions:
-                tPart = [quote(t.Phonetic), quote(t.SpellingAltv1), quote(t.SpellingAltv2), str(t.NotCognateWithMainWordInThisFamily)]
+                tPart = [quote(t.Phonetic), quote(t.SpellingAltv1),
+                         quote(t.SpellingAltv2), str(t.NotCognateWithMainWordInThisFamily)]
                 csv.append(lPart + wPart + tPart)
     # Transform csv to string:
     csv = "\n".join([','.join(line) for line in csv])

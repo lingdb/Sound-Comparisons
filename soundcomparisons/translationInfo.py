@@ -35,7 +35,8 @@ def chkTranslationId(func):
     if 'translationId' in flask.request.args:
         tId = flask.request.args['translationId']
         try:
-            t = db.getSession().query(db.Page_Translations).filter_by(TranslationId=tId).limit(1).one()
+            query = db.getSession().query(db.Page_Translations)
+            t = query.filter_by(TranslationId=tId).limit(1).one()
             return func(t)
         except sqlalchemy.orm.exc.NoResultFound:
             return flask.jsonify(**{
@@ -85,7 +86,8 @@ def getI18n(lngs):
     i18n = defaultdict(dict)
     for l in lngs:
         try:
-            translation = db.getSession().query(db.Page_Translations).filter_by(BrowserMatch=l).limit(1).one()
+            query = db.getSession().query(db.Page_Translations)
+            translation = query.filter_by(BrowserMatch=l).limit(1).one()
             tDict = {}
             for s in translation.Page_StaticTranslation:
                 tDict[s.Req] = s.Trans
@@ -119,5 +121,7 @@ def getTranslations():
         return getI18n(lngs)
     # Fallback in case of error:
     return flask.jsonify(**{
-        'msg': '"action" parameter must be specified, carrying one of the action values, or a lng parameter must be given.',
+        'msg': '"action" parameter must be specified, '
+               'carrying one of the action values, '
+               'or a lng parameter must be given.',
         'action': jumpMap.keys()})
