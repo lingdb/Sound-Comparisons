@@ -142,7 +142,7 @@ class EditImports(db.Model, SndCompModel):
     # Model for v4.Edit_Imports table
     __tablename__ = 'Edit_Imports'
     Who = Column('Who', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
-    Time = Column('Time', TIMESTAMP, primary_key=True)
+    Time = Column('Time', TIMESTAMP, primary_key=True)  # FIXME default
 
     def getTimeStampString(self):
         return self.Time.strftime('%s')
@@ -169,13 +169,13 @@ class Studies(db.Model, SndCompModel):
     __tablename__ = 'Studies'
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
+    SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True, default=0)
     Name = Column('Name', String(255), nullable=False)
     DefaultTopLeftLat = Column('DefaultTopLeftLat', FLOAT)
     DefaultTopLeftLon = Column('DefaultTopLeftLon', FLOAT)
     DefaultBottomRightLat = Column('DefaultBottomRightLat', FLOAT)
     DefaultBottomRightLon = Column('DefaultBottomRightLon', FLOAT)
-    ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False)
+    ColorByFamily = Column('ColorByFamily', TINYINT(1, unsigned=True), nullable=False, default=0)
     SecondRfcLg = Column('SecondRfcLg', String(255), nullable=False)
     # Relationships with other models:
     MeaningGroupMembers = relationship('MeaningGroupMembers', viewonly=True)
@@ -229,7 +229,7 @@ class Contributors(db.Model, SndCompModel):
     __tablename__ = 'Contributors'
     ContributorIx = Column('ContributorIx', BIGINT(20, unsigned=True),
                            nullable=False, primary_key=True)
-    SortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False)
+    SortGroup = Column('SortGroup', INTEGER(10, unsigned=True), nullable=False, default=0)
     SortIxForAboutPage = Column('SortIxForAboutPage', BIGINT(20, unsigned=True), nullable=False)
     Forenames = Column('Forenames', String(255), nullable=False)
     Surnames = Column('Surnames', String(255), nullable=False)
@@ -309,9 +309,9 @@ class LanguageStatusTypes(db.Model, SndCompModel):
     Description = Column('Description', TEXT)
     Status = Column('Status', String(50))
     StatusTooltip = Column('StatusTooltip', String(255))
-    Color = Column('Color', String(6), nullable=False)
-    Opacity = Column('Opacity', FLOAT, nullable=False)
-    ColorDepth = Column('ColorDepth', FLOAT, nullable=False)
+    Color = Column('Color', String(6), nullable=False, default='00FFFF')
+    Opacity = Column('Opacity', FLOAT, nullable=False, default=1)
+    ColorDepth = Column('ColorDepth', FLOAT, nullable=False, default=0.5)
 
 
 class MeaningGroups(db.Model, SndCompModel):
@@ -403,7 +403,7 @@ class Families(db.Model, SndCompModel):
     FamilyNm = Column('FamilyNm', String(255), nullable=False)
     FamilyAbbrAllFileNames = Column('FamilyAbbrAllFileNames', String(255), nullable=False)
     ProjectAboutUrl = Column('ProjectAboutUrl', String(2000), nullable=False)
-    ProjectActive = Column('ProjectActive', TINYINT(1), nullable=False)
+    ProjectActive = Column('ProjectActive', TINYINT(1), nullable=False, default=1)
 
 
 class MeaningGroupMembers(db.Model, SndCompModel):
@@ -572,8 +572,8 @@ class Regions(db.Model, SndCompModel):
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     RegionGpIx = Column('RegionGpIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    DefaultExpandedState = Column('DefaultExpandedState', TINYINT(3, unsigned=True), nullable=False)
-    RegionGpTypeIx = Column('RegionGpTypeIx', TINYINT(3, unsigned=True), nullable=False)
+    DefaultExpandedState = Column('DefaultExpandedState', TINYINT(3, unsigned=True), nullable=False, default=0)
+    RegionGpTypeIx = Column('RegionGpTypeIx', TINYINT(3, unsigned=True), nullable=False, default=1)
     RegionGpNameLong = Column('RegionGpNameLong', String(255))
     RegionGpNameShort = Column('RegionGpNameShort', String(255))
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
@@ -615,7 +615,7 @@ class RegionLanguages(db.Model, SndCompModel):
         'RegionGpMemberLgNameShortInThisSubFamilyWebsite', TEXT)
     RegionGpMemberLgNameLongInThisSubFamilyWebsite = Column(
         'RegionGpMemberLgNameLongInThisSubFamilyWebsite', TEXT)
-    Include = Column('Include', TINYINT(1), nullable=False)
+    Include = Column('Include', TINYINT(1), nullable=False, default=0)
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     # Foreign keys:
     __table_args__ = (ForeignKeyConstraint([StudyIx, FamilyIx, StudyName],
@@ -699,7 +699,7 @@ class Languages(db.Model, SndCompModel):
     ISOCode = Column('ISOCode', String(3))
     GlottoCode = Column('GlottoCode', String(8))
     WikipediaLinkPart = Column('WikipediaLinkPart', TEXT)
-    IsSpellingRfcLang = Column('IsSpellingRfcLang', TINYINT(3, unsigned=True))
+    IsSpellingRfcLang = Column('IsSpellingRfcLang', TINYINT(3, unsigned=True), default=0)
     SpellingRfcLangName = Column('SpellingRfcLangName', String(255))
     ContributorSpokenBy = Column('ContributorSpokenBy', BIGINT(20, unsigned=True))
     ContributorRecordedBy1 = Column('ContributorRecordedBy1', BIGINT(20, unsigned=True))
@@ -828,9 +828,9 @@ class Transcriptions(db.Model, SndCompModel):
                                      nullable=False, primary_key=True)
     AlternativePhoneticRealisationIx = Column('AlternativePhoneticRealisationIx',
                                               TINYINT(3, unsigned=True),
-                                              nullable=False, primary_key=True)
+                                              nullable=False, primary_key=True, default=1)
     AlternativeLexemIx = Column('AlternativeLexemIx', TINYINT(3, unsigned=True),
-                                nullable=False, primary_key=True)
+                                nullable=False, primary_key=True, default=1)
     LanguageIx = Column('LanguageIx', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     Phonetic = Column('Phonetic', String(255))
     SpellingAltv1 = Column('SpellingAltv1', String(255))
@@ -1000,10 +1000,10 @@ class Page_Translations(db.Model, SndCompModel):
     TranslationName = Column('TranslationName', String(255), nullable=False)
     BrowserMatch = Column('BrowserMatch', String(255))
     ImagePath = Column('ImagePath', String(255))
-    Active = Column('Active', TINYINT(1), nullable=False)
+    Active = Column('Active', TINYINT(1), nullable=False, default=0)
     RfcLanguage = Column('RfcLanguage', BIGINT(20, unsigned=True))
-    lastChangeStatic = Column('lastChangeStatic', TIMESTAMP, nullable=False)
-    lastChangeDynamic = Column('lastChangeDynamic', TIMESTAMP, nullable=False)
+    lastChangeStatic = Column('lastChangeStatic', TIMESTAMP, nullable=False)  # FIXME default
+    lastChangeDynamic = Column('lastChangeDynamic', TIMESTAMP, nullable=False)  # FIXME default
     # Foreign keys:
     __table_args__ = (
         # Relation to Languages:
@@ -1059,8 +1059,8 @@ class Page_StaticTranslation(db.Model, SndCompModel):
                            nullable=False, primary_key=True)
     Req = Column('Req', String(255), nullable=False, primary_key=True)
     Trans = Column('Trans', TEXT, nullable=False,)
-    IsHtml = Column('IsHtml', TINYINT(1), nullable=False,)
-    Time = Column('Time', TIMESTAMP, nullable=False,)
+    IsHtml = Column('IsHtml', TINYINT(1), nullable=False, default=0)
+    Time = Column('Time', TIMESTAMP, nullable=False)  # FIXME default
     # Foreign keys:
     __table_args__ = (
         # Relation to Page_Translations
@@ -1091,7 +1091,7 @@ class Page_DynamicTranslation(db.Model, SndCompModel):
     Category = Column('Category', String(255), nullable=False, primary_key=True)
     Field = Column('Field', String(255), nullable=False, primary_key=True)
     Trans = Column('Trans', String(255), nullable=False)
-    Time = Column('Time', TIMESTAMP, nullable=False)
+    Time = Column('Time', TIMESTAMP, nullable=False)  # FIXME default
     # Foreign keys:
     __table_args__ = (
         # Relation to Page_Translations
