@@ -99,7 +99,7 @@ def google_login():
     if result['issued_to'] != CLIENT_ID:
         text = 'The client ID of the token does not match that of the app.'
         response = make_response(json.dumps(text), 401)
-        print text
+        print(text)
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -136,7 +136,7 @@ def google_login():
         'border-radius: 150px; -webkit-border-radius: 150px; -moz-border-radius: 150px;">'
     output %= login_session['username'], login_session['picture']
     flash('You have successfully logged in as %s' % login_session['username'])
-    print 'Login completed!'
+    print('Login completed!')
     return output
 
 

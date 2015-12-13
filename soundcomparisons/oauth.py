@@ -82,7 +82,7 @@ def google_login():
     if result['issued_to'] != CLIENT_ID:
         answer = 'The client ID of the token does not match that of the app.'
         response = flask.make_response(json.dumps(answer), 401)
-        print 'The client ID of the token does not match that of the app.'
+        print('The client ID of the token does not match that of the app.')
         response.headers['Content-Type'] = 'application/json'
         return response
 
@@ -128,7 +128,7 @@ border-radius: 150px;
 """ % (login_session['username'], login_session['picture'])
     msg = 'You have successfully logged in as %s'
     flask.flash(msg % login_session['username'])
-    print 'Login completed!'
+    print('Login completed!')
     return output
 
 

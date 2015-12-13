@@ -58,7 +58,7 @@ def getStatic(translation):
     static = {}
     for s in translation.Page_StaticTranslation:
         static[s.Req] = s.Trans
-    print static
+    print(static)
     return flask.jsonify(**static)
 
 

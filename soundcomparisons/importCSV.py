@@ -387,14 +387,14 @@ def parseCSV(filename, csv):
 
 # A simple test for development:
 if __name__ == '__main__':
-    print 'Testing the stuff…'
+    print('Testing the stuff…')
     with open('/tmp/v0/Contributors.txt', 'r') as f:
         csv = f.read()
         (models, errors) = parseCSV('Contributors.txt', csv)
         if len(errors):
             for e in errors:
-                print 'Problem when parsing CSV:', e
+                print('Problem when parsing CSV:', e)
         else:
             m = models[0]
-            print m.validate()
+            print(m.validate())
         # FIXME now models would need validation and saving

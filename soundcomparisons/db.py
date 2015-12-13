@@ -1112,13 +1112,12 @@ def getSession():
     return db.session
 
 if __name__ == '__main__':
-    print getDummyTranscriptions('Germanic')
+    print(getDummyTranscriptions('Germanic'))
 #   # TODO wield this into a test:
 #   broken = 0
 #   for t in getSession().query(Transcriptions).limit(2000).all():
 #       try:
-#           print t.getSoundFiles()
+#           print(t.getSoundFiles())
 #       except:
 #           broken += 1
-#   print 'Broken Transcriptions:'
-#   print broken
+#   print('Broken Transcriptions:', broken)

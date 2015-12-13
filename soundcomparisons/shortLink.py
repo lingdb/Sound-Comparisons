@@ -73,7 +73,7 @@ def insert(url):
                 entry = db.ShortLinks(Hash=s['hex'], Name=prefix, Target=s['url'])
                 db.getSession().add(entry)
                 db.getSession().commit()
-                print 'Inserted!'
+                print('Inserted!')
                 return toShortUrlDict(entry)
     # Return existing entry rather than creating a new one:
     try:
@@ -123,4 +123,4 @@ if __name__ == "__main__":
         'translation=1&word=4410&wordByWord=false&wordOrder=logical&words=10,20,30,40,50']
     for u in urls:
         x = insert(u)
-        print x.toDict()
+        print(x.toDict())
