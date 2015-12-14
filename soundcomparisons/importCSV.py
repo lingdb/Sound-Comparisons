@@ -359,7 +359,7 @@ def parseCSV(filename, csv):
     errors = []
     for h in headline:
         if h not in mapping['columns']:
-            errors.append("Unknown field '%s' in file '%s', ignoring." % h, filename)
+            errors.append("Unknown field '%s' in file '%s', ignoring." % (h, filename))
     # Composing dicts:
     dicts = []
     for row in fields:
@@ -388,13 +388,70 @@ def parseCSV(filename, csv):
 # A simple test for development:
 if __name__ == '__main__':
     print('Testing the stuff…')
-    with open('/tmp/v0/Contributors.txt', 'r') as f:
-        csv = f.read()
-        (models, errors) = parseCSV('Contributors.txt', csv)
-        if len(errors):
-            for e in errors:
-                print('Problem when parsing CSV:', e)
-        else:
-            m = models[0]
-            print(m.validate())
-        # FIXME now models would need validation and saving
+    files = [
+        'ContributorCategories.txt',
+        'Contributors.txt',
+        'DefaultLanguagesToExcludeFromMap.txt',
+        'DefaultSingleLanguage.txt',
+        'DefaultSingleWord.txt',
+        'DefaultTableMultipleLanguages.txt',
+        'DefaultTableMultipleWords.txt',
+        'Families.txt',
+        'Flags.txt',
+        'Languages_Andean.txt',
+        'Languages_Celtic.txt',
+        'Languages_Englishes.txt',
+        'Languages_Germanic.txt',
+        'Languages_Mapudungun.txt',
+        'Languages_Romance.txt',
+        'Languages_Slavic.txt',
+        'LanguageStatusTypes.txt',
+        'MeaningGroupMembers.txt',
+        'MeaningGroups.txt',
+        'RegionGroupMemberLanguages_Andean.txt',
+        'RegionGroupMemberLanguages_Celtic.txt',
+        'RegionGroupMemberLanguages_Englishes.txt',
+        'RegionGroupMemberLanguages_Germanic.txt',
+        'RegionGroupMemberLanguages_Mapudungun.txt',
+        'RegionGroupMemberLanguages_Romance.txt',
+        'RegionGroupMemberLanguages_Slavic.txt',
+        'RegionGroups_Andean.txt',
+        'RegionGroups_Celtic.txt',
+        'RegionGroups_Englishes.txt',
+        'RegionGroups_Germanic.txt',
+        'RegionGroups_Mapudungun.txt',
+        'RegionGroups_Romance.txt',
+        'RegionGroups_Slavic.txt',
+        'Studies.txt',
+        'Transcriptions_Andean.txt',
+        'Transcriptions_Englishes.txt',
+        'Transcriptions_Germanic.txt',
+        'Transcriptions_Mapudungun.txt',
+        'Transcriptions_Romance.txt',
+        'Transcriptions_Slavic.txt',
+        'Transcription Superscript Info.txt',
+        'Transcription Superscript Lender Lgs.txt',
+        'Words_Andean.txt',
+        'Words_Celtic.txt',
+        'Words_Englishes.txt',
+        'Words_Germanic.txt',
+        'Words_Mapudungun.txt',
+        'Words_Romance.txt',
+        'Words_Slavic.txt']
+    for file in files:
+        path = '/'.join(['/tmp/v0',file])
+        print('Parsing file "%s"' % file)
+        with open(path, 'r') as f:
+            csv = f.read()
+            (models, errors) = parseCSV(file, csv)
+            if len(errors):
+                for e in errors:
+                    print('Problem when parsing CSV:', e)
+            else:
+                m = models[0]
+                (errors, warnings) = m.validate()
+                for e in errors:
+                    print('Error when validating model: "%s"' % e)
+                for w in warnings:
+                    print('Warning when validating model: "%s"' % q)
+                # FIXME now model could be saved if errors and warnings are empty.
