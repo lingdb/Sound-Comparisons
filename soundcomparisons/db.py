@@ -62,7 +62,8 @@ class Studies(db.Model, SndCompModel):
     __tablename__ = 'Studies'
     StudyIx = Column('StudyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True, default=0)
+    SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True),
+                         nullable=False, primary_key=True, default=0)
     Name = Column('Name', String(255), nullable=False)
     DefaultTopLeftLat = Column('DefaultTopLeftLat', FLOAT)
     DefaultTopLeftLon = Column('DefaultTopLeftLon', FLOAT)
@@ -465,7 +466,8 @@ class Regions(db.Model, SndCompModel):
     FamilyIx = Column('FamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     SubFamilyIx = Column('SubFamilyIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
     RegionGpIx = Column('RegionGpIx', TINYINT(3, unsigned=True), nullable=False, primary_key=True)
-    DefaultExpandedState = Column('DefaultExpandedState', TINYINT(3, unsigned=True), nullable=False, default=0)
+    DefaultExpandedState = Column('DefaultExpandedState', TINYINT(3, unsigned=True),
+                                  nullable=False, default=0)
     RegionGpTypeIx = Column('RegionGpTypeIx', TINYINT(3, unsigned=True), nullable=False, default=1)
     RegionGpNameLong = Column('RegionGpNameLong', String(255))
     RegionGpNameShort = Column('RegionGpNameShort', String(255))

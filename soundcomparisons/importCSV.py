@@ -7,8 +7,9 @@
     a look at admin/query/dbimport/Importer.php may be educational.
 '''
 import db
-import re
 import itertools
+import os
+import re
 
 '''
     csvMapping realizes a mapping from regexes of file namess
@@ -439,7 +440,7 @@ if __name__ == '__main__':
         'Words_Romance.txt',
         'Words_Slavic.txt']
     for file in files:
-        path = '/'.join(['/tmp/v0',file])
+        path = os.path.join('/tmp/v0', file)
         print('Parsing file "%s"' % file)
         with open(path, 'r') as f:
             csv = f.read()
@@ -453,5 +454,5 @@ if __name__ == '__main__':
                 for e in errors:
                     print('Error when validating model: "%s"' % e)
                 for w in warnings:
-                    print('Warning when validating model: "%s"' % q)
+                    print('Warning when validating model: "%s"' % w)
                 # FIXME now model could be saved if errors and warnings are empty.

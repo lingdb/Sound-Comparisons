@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from sqlalchemy import String
+from sqlalchemy.dialects.mysql import TINYINT, TIMESTAMP, TEXT, BIGINT, INTEGER, FLOAT
+
 
 class SndCompModel():
     '''
@@ -80,7 +83,9 @@ class SndCompModel():
                         continue
                     if c.default != None:
                         setattr(self, c.name, c.default)
-                        warnings.append("Correcting entry '%s' for column '%s' to '%s'." % (entry, c.name, c.default))
+                        warnings.append(
+                            "Correcting entry '%s' for column '%s' to '%s'."
+                            % (entry, c.name, c.default))
                         continue
                 # A column exists, and we can check its type.
                 types = [
