@@ -33,19 +33,10 @@ def chkTranslationId(func):
         can be fetched, the given func is called and it's result returned.
         Otherwise a JSON encoded error message is returned.
     '''
-    if 'translationId' in flask.request.args:
-        tId = flask.request.args['translationId']
-        try:
-            query = db.getSession().query(db.Page_Translations)
-            t = query.filter_by(TranslationId=tId).limit(1).one()
-            return func(t)
-        except sqlalchemy.orm.exc.NoResultFound:
-            return flask.jsonify(**{
-                'msg': 'Specified translationId not found in database: ' + tId
-            })
-    action = flask.request.args['action']
-    return flask.jsonify(**{
-        'msg': ('You need to specify a translationId for action=%s.' % action)})
+    return func(db.getSession()
+                .query(db.Page_Translations)
+                .filter_by(TranslationId=flask.request.args['translationId'])
+                .one())
 
 
 def getStatic(translation):
@@ -59,7 +50,6 @@ def getStatic(translation):
     static = {}
     for s in translation.Page_StaticTranslation:
         static[s.Req] = s.Trans
-    print(static)
     return flask.jsonify(**static)
 
 
@@ -86,17 +76,15 @@ def getI18n(lngs):
     '''
     i18n = defaultdict(dict)
     for l in lngs:
-        try:
-            query = db.getSession().query(db.Page_Translations)
-            translation = query.filter_by(BrowserMatch=l).limit(1).one()
-            tDict = {}
-            for s in translation.Page_StaticTranslation:
-                tDict[s.Req] = s.Trans
+        translation = db.getSession()\
+            .query(db.Page_Translations)\
+            .filter_by(BrowserMatch=l)\
+            .one_or_none()
+        if translation:
+            tDict = {s.Req: s.Trans for s in translation.Page_StaticTranslation}
             for d in translation.Page_DynamicTranslation:
                 tDict[d.Category + d.Field] = d.Trans
             i18n[l]['translation'] = tDict
-        except sqlalchemy.orm.exc.NoResultFound:
-            pass
     return flask.jsonify(**i18n)
 
 

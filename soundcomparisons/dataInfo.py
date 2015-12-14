@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 '''
 
 import flask
-import sqlalchemy
 
 import db
 
@@ -26,10 +25,10 @@ def getGlobal():
     '''
     # Structure to fill up:
     data = {
-        'studies': [s.Name for s in db.getSession().query(db.Studies).all()],
+        'studies': [s.Name for s in db.getSession().query(db.Studies)],
         'global': {
             'soundPath': 'static/sound',
-            'shortLinks': {l.Name: l.Target for l in db.getSession().query(db.ShortLinks).all()},
+            'shortLinks': {l.Name: l.Target for l in db.getSession().query(db.ShortLinks)},
             'contributors': dictAll(db.Contributors),
             'contributorCategories': dictAll(db.ContributorCategories),
             'flagTooltip': dictAll(db.FlagTooltip),
@@ -42,15 +41,12 @@ def getGlobal():
     return flask.jsonify(**data)
 
 
-def getStudy(studyName):
+def getStudy(study):
     '''
         @param studyName String
         @throws sqlalchemy.orm.exc.NoResultFound if studyName not found.
         Replies with a JSON encoded, study dependant chunk of the database.
     '''
-    # Study to fetch stuff for:
-    study = db.getSession().query(db.Studies).filter_by(Name=studyName).limit(1).one()
-
     def filterDicts(xs):  # Helper to remove StudyName from dicts
         ys = []
         for x in xs:
@@ -105,24 +101,19 @@ def getData():
     # Checking if study depandant portion of data is requested:
     if 'study' in flask.request.args:
         studyName = flask.request.args['study']
-        if studyName == '':
-            return 'You need to supply a value for that study parameter!'
-        else:
-            query = db.getSession().query(db.Studies)
-            studyCount = query.filter_by(Name=studyName).limit(1).count()
-            if studyCount == 1:
-                return getStudy(studyName)
-            else:
-                return ("Couldn't find study: " + studyName)
+        study = db.getSession().query(db.Studies)\
+            .filter(db.Studies.Name == studyName).one()
+        return getStudy(study)
+
     # Normal response in case of no get parameters:
-    try:
-        query = db.getSession().query(db.EditImports)
-        latest = query.order_by(db.EditImports.Time.desc()).limit(1).one()
-        dict = {
-            'lastUpdate': latest.getTimeStampString(),
-            'Description': 'Add a global parameter to fetch global data, '
-                           'and add a study parameter to fetch a study.'
-        }
-        return flask.jsonify(**dict)
-    except sqlalchemy.orm.exc.NoResultFound:
-        return flask.jsonify(**{})
+    last_update = db.getSession()\
+        .query(db.EditImports)\
+        .order_by(db.EditImports.Time.desc())\
+        .first()
+    res = {
+        'Description': 'Add a global parameter to fetch global data, '
+                        'and add a study parameter to fetch a study.'
+    }
+    if last_update:
+        res['lastUpdate'] = last_update.getTimeStampString()
+    return flask.jsonify(**res)
