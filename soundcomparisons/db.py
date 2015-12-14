@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     Playing with retrieving some stuff from the database
     For the toDict() methods I've decided to use an idea from StackOverflow:

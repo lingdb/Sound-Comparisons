@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     This module is concerned with delivering chunks of data from the database
     encoded as JSON so that the soundcomparisons client side JavaScript can deal with it.

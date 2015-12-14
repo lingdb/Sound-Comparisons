@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     This module aims to provide translation data in a JSON encoded format.
 '''

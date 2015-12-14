@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     Tries to reproduce the behaviour of php/query/shortLink.php
     which is to shorten URLs and store them in the Page_ShortLinks table.

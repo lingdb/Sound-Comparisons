@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     Tries to reproduce the thing the site currently does when fetching
     /query/templateInfo

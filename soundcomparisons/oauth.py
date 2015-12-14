@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     Module to provide oauth authentication.
     Heavily inspired by https://github.com/lingdb/flask-oauth

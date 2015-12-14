@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     In the php version of the soundcomparisons websites
     it was possible to import .csv files from Pauls database.

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     This module replicates the php/export/csv.php functionality.
     Given GET parameters {study,languages,words} it shall provide

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     Provide the download endpoints given by code in php/export/*php files.
 '''

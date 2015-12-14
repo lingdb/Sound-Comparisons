@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
     This module was added to provide project pages.
     See #250 [1] for a details.
