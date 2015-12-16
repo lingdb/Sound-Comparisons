@@ -8,9 +8,9 @@ from __future__ import unicode_literals
     a look at admin/query/dbimport/Importer.php may be educational.
 '''
 import db
-import itertools
 import os
 import re
+import clldutils.dsv as dsv
 
 '''
     csvMapping realizes a mapping from regexes of file namess
@@ -286,106 +286,44 @@ csvMapping = {
         }}}
 
 
-def dissectCSV(line, delimiter, quote, escape, keepQuotes):
+def parseCSV(path, filename=''):
     '''
-        @param line String
-        @param delimiter Char
-        @param quote Char
-        @return fields [String]
-        Helper function for parseCSV.
-        This function can cut a string into lines,
-        or the resulting line strings into fields.
-        Returned fields are stripped.
-    '''
-    fields = []
-    field = ''
-    quoted = False
-    escaped = False
-    for c in line:
-        # Handling escaping:
-        if escaped:
-            field += c
-            escaped = False
-            continue
-        if c == escape:
-            escaped = True
-            continue
-        # Handling quotes:
-        if c == quote:
-            quoted = not quoted
-            if keepQuotes:
-                field += c
-            continue
-        # Handling delimiters:
-        if c == delimiter:
-            if not quoted:
-                fields.append(field.strip())
-                field = ''
-                continue
-        field += c
-    # Making sure we don't leave a field behind:
-    if field != '':
-        fields.append(field.strip())
-    return fields
-
-
-def parseCSV(filename, csv):
-    '''
+        @param path String
         @param filename String
-        @param csv String
         @return ([db.db.Model ∧ SndCompModel], [String])
-        This function parses a given csv string that is expected to have a headline.
+        This function parses a given csv string that is expected to have a headline
+        and will be read from a file expected at <path>.
         The filename will be matched against the keys of the csvMapping,
         and the first entry that matches the filename will be used.
         When the entry is found, it's SndCompModel fromDict method shall be used
         to create a SndCompModel which shall be returned in a list.
         The returned tuple is composed of a list of successfully parsed models,
         and list of errors or warnings.
+        If no filename is given, it will be taken from the basename of <path>.
     '''
-    mapping = None
+    # Sanitize filename:
+    if filename == '':
+        filename = os.path.basename(path)
     # Searching for a mapping:
+    mapping = None
     for regex in csvMapping.keys():
         if re.match(regex, filename):
             mapping = csvMapping[regex]
             break
-    # Exit if no mapping found:
-    if mapping == None:
+    else:  # Exit if no mapping found:
         return ([], ["No mapping found for filename '%s'." % filename])
     # Dissecting csv:
-    lines = dissectCSV(csv, '\n', '"', '\\', True)
-    fields = [dissectCSV(l, ',', '"', '\\', False) for l in lines]
-    if len(fields) <= 1:
-        return ([], ["Not enough content found in '%s'." % filename])
-    headline = fields.pop(0)
-    # Checking headline:
-    errors = []
-    for h in headline:
-        if h not in mapping['columns']:
-            errors.append("Unknown field '%s' in file '%s', ignoring." % (h, filename))
-    # Composing dicts:
-    dicts = []
-    for row in fields:
-        dict = {}
-        for (h, r) in itertools.izip(headline, row):
-            if h in mapping['columns']:
-                dict[mapping['columns'][h]] = r
-        dicts.append(dict)
-    if len(dicts) == 0:
-        errors.append("No dicts generated for '%s'." % filename)
-        return ([], errors)
+    dicts = list(dsv.reader(path, dicts=True))
     # Composing models:
     models = []
-    for rowNumber in xrange(len(dicts)):
-        model = mapping['model'](**dicts[rowNumber])
-        es, ws = model.validate()
-        if len(es) == 0:
-            models.append(model)
-        else:
-            for e in es:
-                errors.append("Error in entry %i: %s" % (rowNumber + 1, e))
-        for w in ws:
-            errors.append("Warning in entry %i: %s" % (rowNumber + 1, w))
-    return (models, errors)
+    for oDict in dicts:
+        mDict = {}  # model dict to be generated from original dict
+        for k, v in mapping['columns'].iteritems():
+            if k in oDict:
+                mDict[v] = oDict[k]
+        model = mapping['model'](**mDict)
+        models.append(model)
+    return (models, [])
 
 # A simple test for development:
 if __name__ == '__main__':
@@ -443,17 +381,14 @@ if __name__ == '__main__':
     for file in files:
         path = os.path.join('/tmp/v0', file)
         print('Parsing file "%s"' % file)
-        with open(path, 'r') as f:
-            csv = f.read()
-            (models, errors) = parseCSV(file, csv)
-            if len(errors):
-                for e in errors:
-                    print('Problem when parsing CSV:', e)
-            else:
-                m = models[0]
-                (errors, warnings) = m.validate()
-                for e in errors:
-                    print('Error when validating model: "%s"' % e)
-                for w in warnings:
-                    print('Warning when validating model: "%s"' % w)
-                # FIXME now model could be saved if errors and warnings are empty.
+        (models, errors) = parseCSV(path)
+        if len(errors):
+            for e in errors:
+                print('Problem when parsing CSV:', e)
+        else:
+            m = models[0]
+            (errors, warnings) = m.validate()
+            for e in errors:
+                print('Error when validating model: "%s"' % e)
+            for w in warnings:
+                print('Warning when validating model: "%s"' % w)
