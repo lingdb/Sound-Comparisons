@@ -58,16 +58,22 @@ define(['views/render/SubView'], function(SubView){
       var iso = lang.getISO();
       if(iso){
         ls.push(
-          { href: 'http://www.ethnologue.com/show_language.asp?code='+iso
-          , img:  'http://www.ethnologue.com/favicon.ico'
-          , ttip: App.translationStorage.translateStatic('tooltip_languages_link_ethnologue')}
-        , { href: 'http://www.glottolog.org/resource/languoid/iso/'+iso
+          { href: 'http://www.glottolog.org/resource/languoid/iso/'+iso
           , img:  'static/img/extern/glottolog.png'
           , ttip: App.translationStorage.translateStatic('tooltip_languages_link_glottolog')}
         , { href: 'http://new.multitree.org/trees/code/'+iso
           , img:  'http://new.multitree.org/static/images/MultiTree.ico'
           , ttip: App.translationStorage.translateStatic('tooltip_languages_link_multitree')}
         );
+        //In case of missing wikipedia link but ISO code:
+        if(!lang.getWikipediaLink()){
+          ls.push({
+            ttip:  App.translationStorage.translateStatic('tooltip_languages_link_wikipedia')
+          , img:   'http://en.wikipedia.org/favicon.ico'
+          , class: 'favicon favicon-bordered'
+          , href:  'http://en.wikipedia.org/wiki/ISO_639:'+iso
+          });
+        }
       }
       //Wikipedia link:
       var href = lang.getWikipediaLink();
