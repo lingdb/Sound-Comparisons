@@ -24,50 +24,6 @@ def getSummary():
     return flask.jsonify(**tMap)
 
 
-def chkTranslationId(func):
-    '''
-        @param func Page_Translation -> flask reply
-        @return flask reply
-        Check the existence of a translationId parameter.
-        If the parameter exists and the corresponding instance of Page_Translations
-        can be fetched, the given func is called and it's result returned.
-        Otherwise a JSON encoded error message is returned.
-    '''
-    return func(db.getSession()
-                .query(db.Page_Translations)
-                .filter_by(TranslationId=flask.request.args['translationId'])
-                .one())
-
-
-def getStatic(translation):
-    '''
-        @param translation Page_Translations
-        @return flask reply
-        @deprecated since i18n this most likely isn't used any more.
-        Returns JSON encoded data for dynamic translation.
-    '''
-    # FIXME remove due to deprecation at once.
-    static = {}
-    for s in translation.Page_StaticTranslation:
-        static[s.Req] = s.Trans
-    return flask.jsonify(**static)
-
-
-def getDynamic(translation):
-    '''
-        @param translation Page_Translations
-        @return flask reply
-        @deprecated since i18n this most likely isn't used any more.
-        Returns JSON encoded data for dynamic translation.
-        This implementation varies from the website PHP one.
-    '''
-    # FIXME remove due to deprecation at once.
-    dynamic = defaultdict(lambda: defaultdict(dict))
-    for d in translation.Page_DynamicTranslation:
-        dynamic[d.Category][d.Field] = d.Trans
-    return flask.jsonify(**dynamic)
-
-
 def getI18n(lngs):
     '''
         @param lngs [String]
@@ -96,15 +52,11 @@ def getTranslations():
         * action in {summary,static,dynamic}
         * lng = ' '.join([String])
     '''
-    jumpMap = {
-        'summary': getSummary,
-        'static': lambda: chkTranslationId(getStatic),
-        'dynamic': lambda: chkTranslationId(getDynamic)}
     # Executing specified action, iff possible:
     if 'action' in flask.request.args:
         action = flask.request.args['action']
-        if action in jumpMap:
-            return jumpMap[action]()
+        if action == 'summary':
+            return getSummary()
     if 'lng' in flask.request.args:
         lngs = flask.request.args['lng'].split(' ')
         return getI18n(lngs)
