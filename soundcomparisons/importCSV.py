@@ -336,6 +336,19 @@ def parseCSV(path, filename=''):
             valModels.append(m)
     return (valModels, messages)
 
+
+def postCSV():
+    '''
+        This function provides the endpoint for POST requests for CSV files.
+        CSV files well be parsed and the created models shall replace their counterparts in the database.
+        Finally some status shall reported to the user.
+        Inspired by:
+        http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
+        https://stackoverflow.com/a/17802252/448591
+        https://stackoverflow.com/a/11817318/448591
+    '''
+    pass  # FIXME IMPLEMENT
+
 # A simple test for development:
 if __name__ == '__main__':
     print('Testing the stuff…')
