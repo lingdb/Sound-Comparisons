@@ -54,6 +54,8 @@ class SndCompModel():
         '''
         if isinstance(entry, float):
             return entry, []
+        if entry == '':
+            return 0, []
         try:
             f = float(entry)
             return f, []

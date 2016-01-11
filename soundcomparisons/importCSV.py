@@ -11,6 +11,7 @@ import db
 import os
 import re
 import clldutils.dsv as dsv
+from itertools import izip
 
 '''
     csvMapping realizes a mapping from regexes of file namess
@@ -314,8 +315,6 @@ def parseCSV(path, filename=''):
         return ([], ["No mapping found for filename '%s'." % filename])
     # Dissecting csv:
     dicts = list(dsv.reader(path, dicts=True))
-    # Mapping dicts:
-    # FIXME IMPLEMENT!
     # Composing models:
     models = []
     for oDict in dicts:
@@ -326,8 +325,16 @@ def parseCSV(path, filename=''):
         model = mapping['model'](**mDict)
         models.append(model)
     # Validating models:
-    # FIXME IMPLEMENT!
-    return (models, [])
+    valModels, messages = ([], [])
+    for (i, m) in izip(xrange(1, len(models)+1), models):
+        errors, warnings = m.validate()
+        if len(warnings) > 0:
+            messages += ["Warning for entry %i: '%s'" % (i, w) for w in warnings]
+        if len(errors) > 0:
+            messages += ["Error for entry %i: '%s'" % (i, e) for e in errors]
+        else:
+            valModels.append(m)
+    return (valModels, messages)
 
 # A simple test for development:
 if __name__ == '__main__':
@@ -386,15 +393,5 @@ if __name__ == '__main__':
         path = os.path.join('/tmp/v0', file)
         print('Parsing file "%s"' % file)
         (models, errors) = parseCSV(path)
-        if len(errors):
-            for e in errors:
-                print('Problem when parsing CSV:', e)
-        elif len(models) == 0:
-            print('No models found.')
-        else:
-            m = models[0]
-            (errors, warnings) = m.validate()
-            for e in errors:
-                print('Error when validating model: "%s"' % e)
-            for w in warnings:
-                print('Warning when validating model: "%s"' % w)
+        for e in errors:
+            print(e)
