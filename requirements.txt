@@ -1,3 +1,4 @@
+clldutils==0.5
 Flask==0.10.1
 Flask-SQLAlchemy==2.1
 httplib2==0.9.2

@@ -4,8 +4,8 @@ import os
 
 import flask
 
+import soundcomparisons.db as db
 from soundcomparisons import dataInfo
-from soundcomparisons.db import db
 from soundcomparisons import downloads
 from soundcomparisons import oauth
 from soundcomparisons import projectPages
@@ -49,7 +49,7 @@ app.config.from_object('soundcomparisons.config')
 if 'SOUNDCOMPARISONS_SETTINGS' in os.environ:  # pragma: no cover
     # in production, this ENVVAR must be set and point to a config file!
     app.config.from_envvar('SOUNDCOMPARISONS_SETTINGS')
-db.init_app(app)
+db.db.init_app(app)
 app.debug = False
 
 # Binding routes:

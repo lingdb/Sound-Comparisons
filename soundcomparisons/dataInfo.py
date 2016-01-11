@@ -112,7 +112,7 @@ def getData():
         .first()
     res = {
         'Description': 'Add a global parameter to fetch global data, '
-                        'and add a study parameter to fetch a study.'
+                       'and add a study parameter to fetch a study.'
     }
     if last_update:
         res['lastUpdate'] = last_update.getTimeStampString()

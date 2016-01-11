@@ -9,7 +9,7 @@ from __future__ import unicode_literals
 from sqlalchemy import Column, String, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
 '''
-    Don't use/import DOUBLE if it can be avoided,s
+    Don't use/import DOUBLE if it can be avoided,
     because DOUBLE for some reason (precision?) doesn't work with flask.jsonify
 '''
 from sqlalchemy.dialects.mysql import TINYINT, TIMESTAMP, TEXT, BIGINT, INTEGER, FLOAT
