@@ -24,6 +24,10 @@ class SndCompModel():
         '''
         if isinstance(entry, str):
             return entry, []
+        if isinstance(entry, unicode):
+            return entry, []
+        if entry == None:
+            return '', []
         return entry, ["Entry '%s' is not a string." % entry]
 
     def validateInt(self, entry):
@@ -34,8 +38,10 @@ class SndCompModel():
         '''
         if isinstance(entry, int):
             return entry, []
+        if entry == '' or entry == None:
+            return 0, []
         try:
-            i = int(entry)
+            i = int(float(entry))  # Also parses '25.00'
             return i, []
         except:
             return entry, ["Could not convert entry '%s' to int." % entry]

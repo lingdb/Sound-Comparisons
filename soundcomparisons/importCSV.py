@@ -314,6 +314,8 @@ def parseCSV(path, filename=''):
         return ([], ["No mapping found for filename '%s'." % filename])
     # Dissecting csv:
     dicts = list(dsv.reader(path, dicts=True))
+    # Mapping dicts:
+    # FIXME IMPLEMENT!
     # Composing models:
     models = []
     for oDict in dicts:
@@ -323,6 +325,8 @@ def parseCSV(path, filename=''):
                 mDict[v] = oDict[k]
         model = mapping['model'](**mDict)
         models.append(model)
+    # Validating models:
+    # FIXME IMPLEMENT!
     return (models, [])
 
 # A simple test for development:
@@ -385,6 +389,8 @@ if __name__ == '__main__':
         if len(errors):
             for e in errors:
                 print('Problem when parsing CSV:', e)
+        elif len(models) == 0:
+            print('No models found.')
         else:
             m = models[0]
             (errors, warnings) = m.validate()
