@@ -24,6 +24,28 @@ db = SQLAlchemy()
 from sndCompModel import SndCompModel
 
 
+class EditUsers(db.Model, SndCompModel):
+    '''
+    +-----------------+---------------------+------+-----+---------+
+    | Field           | Type                | Null | Key | Default |
+    +-----------------+---------------------+------+-----+---------+
+    | UserId          | bigint(20) unsigned | NO   | PRI | NULL    |
+    | Login           | varchar(255)        | NO   |     | NULL    |
+    | Hash            | varchar(255)        | NO   |     | NULL    |
+    | AccessEdit      | tinyint(1)          | NO   |     | 0       |
+    | AccessTranslate | tinyint(1)          | NO   |     | 1       |
+    +-----------------+---------------------+------+-----+---------+
+    '''
+    # Model for v4.Edit_Users
+    __tablename__ = 'Edit_Users'
+    UserId = Column('UserId', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
+    Login = Column('Login', String(255), nullable=False)
+    Hash = Column('Hash', String(255), nullable=False)
+    AccessEdit = Column('AccessEdit', TINYINT(1, unsigned=True), nullable=False, default=0)
+    AccessTranslate = Column('AccessTranslate', TINYINT(1, unsigned=True),
+                             nullable=False, default=1)
+
+
 class EditImports(db.Model, SndCompModel):
     '''
     +-------+---------------------+------+-----+-------------------+
@@ -37,6 +59,10 @@ class EditImports(db.Model, SndCompModel):
     __tablename__ = 'Edit_Imports'
     Who = Column('Who', BIGINT(20, unsigned=True), nullable=False, primary_key=True)
     Time = Column('Time', TIMESTAMP, primary_key=True)  # FIXME default
+    # Foreign keys:
+    __table_args__ = (
+        # Relation to EditUsers:
+        ForeignKeyConstraint([Who], [EditUsers.UserId]), {})
 
     def getTimeStampString(self):
         return self.Time.strftime('%s')
@@ -1001,15 +1027,3 @@ def getSession():
         A short method to access the database session from outside of this module.
     '''
     return db.session
-
-if __name__ == '__main__':
-    print('FIXME PLS?')  # This should be put as a test and needs to get a db connection!
-#   print(getDummyTranscriptions('Germanic'))
-#   # TODO wield this into a test:
-#   broken = 0
-#   for t in getSession().query(Transcriptions).limit(2000).all():
-#       try:
-#           print(t.getSoundFiles())
-#       except:
-#           broken += 1
-#   print('Broken Transcriptions:', broken)
