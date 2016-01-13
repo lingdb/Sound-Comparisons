@@ -11,14 +11,20 @@ define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString
   , initialize: function(){
       var storage = this;
       $.getJSON('query/templateInfo').done(function(info){
-        info = _.map(info, function(hash, path){
-          var name = /\/(.+)\.html$/.exec(path)[1];
-          return {
-            name: name
-          , path: path
-          , hash: hash
-          };
-        });
+        info = _.chain(info).map(function(hash, path){
+          var parts = /^.*\/([^\/]+)\.html$/.exec(path);
+          if(parts !== null && parts.length >= 2){
+              var name = parts[1];
+              return {
+                name: name
+              , path: path
+              , hash: hash
+              };
+          }else{
+            console.log('Problem:', path)
+            return null;
+          }
+        }).filter(function(i){return i !== null;}).value();
         storage.process(info);
       }).fail(function(){
         console.log('TemplateStorage failed to fetch templates from host.');
