@@ -2,13 +2,13 @@
 <dl class="regionList nano-content">
   {{#regions}}
   <dt style="background-color: {{{color}}};">
+    {{#isMapView}}
+    <a title="{{zoomRegion}}" class="zoomRegion" data-rid="{{rid}}"><i class="icon-screenshot"></i></a>
+    {{/isMapView}}
     {{#checkbox}}
     <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
     {{/checkbox}}
     <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
-    {{#isMapView}}
-    <a title="{{zoomRegion}}" class="zoomRegion pull-right" data-rid="{{rid}}"><i class="icon-screenshot"></i></a>
-    {{/isMapView}}
   </dt>
   {{#selected}}
   <dd class="languageList">
