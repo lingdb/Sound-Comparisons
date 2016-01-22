@@ -176,6 +176,11 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   margin-top: 10px;
   padding-top: 2px;
 }
+  .regionList > dt a > i[class^="icon-"]
+, .languageList i[class^="icon-"]{
+  margin: 0px;
+  padding: 0px;
+}
 /*Style in leftMenu:*/
 #leftMenu {padding: 0px; margin-bottom: 0px;}
 #leftMenu h3 {text-align: center;}
