@@ -737,6 +737,7 @@ class Transcriptions(db.Model, SndCompModel):
     | SoundProblem                        | tinyint(1)          | YES  |     | NULL    |
     | ReconstructedOrHistQuestionable     | tinyint(1)          | YES  |     | NULL    |
     | ReconstructedOrHistQuestionableNote | varchar(255)        | YES  |     | NULL    |
+    | IsMissing                           | tinyint(1)          | NO   |     | 0       |
     | StudyName                           | varchar(10)         | NO   | PRI |         |
     +-------------------------------------+---------------------+------+-----+---------+
     '''
@@ -772,6 +773,7 @@ class Transcriptions(db.Model, SndCompModel):
     SoundProblem = Column('SoundProblem', TINYINT(1))
     ReconstructedOrHistQuestionable = Column('ReconstructedOrHistQuestionable', TINYINT(1))
     ReconstructedOrHistQuestionableNote = Column('ReconstructedOrHistQuestionableNote', String(255))
+    IsMissing = Column('IsMissing', TINYINT(1, unsigned=True), nullable=False, default=0)
     StudyName = Column('StudyName', String(10), nullable=False, primary_key=True)
     # Foreign keys:
     __table_args__ = (
