@@ -270,13 +270,27 @@ class DataProvider {
     $n   = $db->escape_string($studyName);
     $q   = "SELECT * FROM Transcriptions_$n";
     $ret = array();
-    $set = $db->query($q);
-    if($set !== false){
-      while($t = $set->fetch_assoc()){
+    $set = static::fetchAll($q);
+    if(count($set) > 0){
+      foreach($set as $t){
         $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
         $t['soundPaths'] = static::soundPaths($n, $t);
+        //Updating RecordingMissing, iff necessary:
+        if(($t['RecordingMissing'] === 0 && count($t['soundPaths']) > 0)
+          || ($t['RecordingMissing'] === 1 && count($t['soundPaths']) === 0)){
+          //Flip RecordingMissing:
+          $flip = ($t['RecordingMissing'] === 0) ? 1 : 0;
+          $q = "UPDATE Transcriptions_$n "
+             . "SET RecordingMissing = $flip "
+             . "WHERE StudyIx = ".$t['StudyIx']
+             . " AND FamilyIx = ".$t['FamilyIx']
+             . " AND IxElicitation = ".$t['IxElicitation']
+             . " AND IxMorphologicalInstance = ".$t['IxMorphologicalInstance']
+             . " AND LanguageIx = ".$t['LanguageIx'];
+          $db->query($q);
+        }
+        //Merging transcriptions:
         if(array_key_exists($tKey, $ret)){
-          //Merging transcriptions:
           $old = $ret[$tKey];
           foreach($t as $k => $v){
             if(array_key_exists($k, $old)){
@@ -310,8 +324,13 @@ class DataProvider {
     into its return.
   */
   public static function getDummyTranscriptions($studyName){
+    $db = Config::getConnection();
     //Add dummy transcriptions:
     $dummies = array();
+    //Fetching study related data:
+    $q = "SELECT StudyIx, FamilyIx FROM Studies WHERE Name='$studyName' LIMIT 1";
+    $study = current(static::fetchAll($q));
+    if($study === false) return $dummies;
     //Handling languages without transcriptions:
     $q = "SELECT L.LanguageIx, W.IxElicitation, W.IxMorphologicalInstance, L.FilePathPart, W.SoundFileWordIdentifierText "
        . "FROM Languages_$studyName AS L CROSS JOIN Words_$studyName AS W "
@@ -321,7 +340,15 @@ class DataProvider {
     //Handling resulting pairs:
     foreach($qs as $entry){
       $files = static::findSoundFiles($entry['FilePathPart'], $entry['SoundFileWordIdentifierText']);
-      if(count($files) === 0) continue; # FIXME reflect in database?!
+      $missing = (count($files) === 0) ? 1 : 0;
+      //Returning saving found dummies:
+      $q = "INSERT INTO Transcriptions_Germanic "
+         . "(StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx, RecordingMissing) "
+         . "VALUES ({$study['StudyIx']},{$study['FamilyIx']},{$study['IxElicitation']},{$study['IxMorphologicalInstance']},{$study['LanguageIx']},$missing)";
+      $db->query($q);
+      //Filtering
+      if($missing === 1) continue;
+      //Adding to dummy list:
       array_push($dummies, array(
         'isDummy' => true
       , 'LanguageIx' => $entry['LanguageIx']
