@@ -313,47 +313,20 @@ class DataProvider {
     //Add dummy transcriptions:
     $dummies = array();
     //Handling languages without transcriptions:
-    $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
-        . "WHERE LanguageIx NOT IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
-    $ls = static::fetchAll($lq);
-    $pairs = array();
-    if(count($ls) > 0){
-      //We create pairs for all words here:
-      $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
-          . "FROM Words_$studyName";
-      $ws = static::fetchAll($wq);
-      foreach($ls as $l){
-        foreach($ws as $w){
-          array_push($pairs, array($l, $w));
-        }
-      }
-    }
-    //Handling words without transcriptions:
-    $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
-        . "FROM Words_$studyName WHERE CONCAT(IxElicitation, IxMorphologicalInstance) "
-        . "NOT IN (SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Transcriptions_$studyName)";
-    $ws = static::fetchAll($wq);
-    if(count($ws) > 0){
-      //We create pairs only for languages not selected above:
-      $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
-          . "WHERE LanguageIx IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
-      $ls = static::fetchAll($lq);
-      foreach($ls as $l){
-        foreach($ws as $w){
-          array_push($pairs, array($l, $w));
-        }
-      }
-    }
+    $q = "SELECT L.LanguageIx, W.IxElicitation, W.IxMorphologicalInstance, L.FilePathPart, W.SoundFileWordIdentifierText "
+       . "FROM Languages_$studyName AS L CROSS JOIN Words_$studyName AS W "
+       . "WHERE CONCAT(L.LanguageIx, W.IxElicitation, W.IxMorphologicalInstance) "
+       . "NOT IN (SELECT CONCAT(LanguageIx, IxElicitation, IxMorphologicalInstance) FROM Transcriptions_$studyName)";
+    $qs = static::fetchAll($q);
     //Handling resulting pairs:
-    foreach($pairs as $p){
-      $l = $p[0]; $w = $p[1];
-      $files = static::findSoundFiles($l['FilePathPart'], $w['SoundFileWordIdentifierText']);
-      if(count($files) === 0) continue;
+    foreach($qs as $entry){
+      $files = static::findSoundFiles($entry['FilePathPart'], $entry['SoundFileWordIdentifierText']);
+      if(count($files) === 0) continue; # FIXME reflect in database?!
       array_push($dummies, array(
         'isDummy' => true
-      , 'LanguageIx' => $l['LanguageIx']
-      , 'IxElicitation' => $w['IxElicitation']
-      , 'IxMorphologicalInstance' => $w['IxMorphologicalInstance']
+      , 'LanguageIx' => $entry['LanguageIx']
+      , 'IxElicitation' => $entry['IxElicitation']
+      , 'IxMorphologicalInstance' => $entry['IxMorphologicalInstance']
       , 'soundPaths' => $files
       ));
     }
