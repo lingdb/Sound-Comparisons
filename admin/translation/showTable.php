@@ -1,6 +1,10 @@
 <?php
 //Function to generate a table for Translation::pageAll:
-function showTable($tdata){
+function showTable($tdata, $showKeep = false){
+  //Handling $showKeep:
+  $showKeep = $showKeep
+            ? '<a class="btn btn-info keep"><i class="icon-ok"></i>Keep</a>' : '';
+  //Building the table:
   $head = '<tr><th>Description:</th><th>Original:</th><th>Translation:'
         . '<input type="button" value="Save all" '
         . 'class="btn btn-primary pull-right saveAll"></th></tr>';
@@ -51,7 +55,7 @@ function showTable($tdata){
       echo "<td data-tId='$tId' data-provider='$prov' data-payload='$pay'>"
          . "<input type='text' value='$trans' class='translation'>"
          . '<a class="btn save"><i class="icon-hdd"></i>Save</a>'
-         . '</td>';
+         . $showKeep . '</td>';
       //Handling the exit condition:
       if(count($field) > 0){
         $newTZ[$key] = $field;
