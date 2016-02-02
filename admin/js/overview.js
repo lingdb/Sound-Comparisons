@@ -61,7 +61,7 @@ $(document).ready(function(){
     });
   };
   //Creating new users:
-  $('#addUser button').click(function(){
+  $('#addUser button').click(function(e){
     var query = {
       username:     $('#addUser input[name="username"]').val()
     , password:     $('#addUser input[name="password"]').val()
@@ -76,5 +76,6 @@ $(document).ready(function(){
       alert(data);
       updateUserEditTable();
     });
+    e.preventDefault();
   });
 });
