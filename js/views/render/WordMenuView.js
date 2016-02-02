@@ -111,7 +111,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       App.languageCollection.getSpellingLanguages().each(function(l){
         if(l.getId() === spId) return;
         entries.push({
-          link: 'data-href="'+App.router.linkConfig({SpLang: l})+'"'
+          link: 'data-href="'+App.router.linkConfig({SpLang: l, PhLang: l})+'"'
         , name: l.getSpellingName()
         });
       }, this);
