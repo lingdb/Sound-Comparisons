@@ -38,7 +38,7 @@
         <div class="control-group">
           <label class="control-label" for="password">Password:</label>
           <div class="controls">
-            <input name="password" type="text" placeholder="visible password"/>
+            <input name="password" type="text" placeholder="visible password" autocomplete="off"/>
           </div>
         </div>
         <div class="control-group">
