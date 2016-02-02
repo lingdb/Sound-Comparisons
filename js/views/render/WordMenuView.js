@@ -67,6 +67,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       _.extend(data, {
         spList: {options: []}
       , phList: {}
+      , hideFilterButtons: !App.pageState.isMultiView()
       });
       //Setting setPhLang, if 1L view:
       /*
