@@ -117,7 +117,7 @@ define(['collections/Choice', 'models/Language', 'collections/RegionLanguageColl
   , getSpellingLanguages: function(){
       if(!this._spellingLanguages){
         var langs = this.filter(function(l){
-          return parseInt(l.get('IsSpellingRfcLang')) === 1;
+          return l.isSpellingLanguage();
         }, this);
         this._spellingLanguages = new LanguageCollection(langs);
       }

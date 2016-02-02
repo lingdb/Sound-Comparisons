@@ -50,7 +50,7 @@
   </tr>
   <tr id="FilterAddAll">
     <td>{{filterFoundWords}}:<code id="FilterFoundMultiWords">x</code></td>
-    <td>
+    <td {{#hideFilterButtons}}class="hide"{{/hideFilterButtons}}>
       <i class="icon-plus" id="FilterAddMultiWords" title="{{fAddAll}}"></i>
       <i class="icon-repeat" id="FilterRefreshMultiWords" title="{{fRefresh}}"></i>
       <i class="icon-remove" id="FilterClearMultiWords" title="{{fClearAll}}" {{{fClearAllLink}}}></i>

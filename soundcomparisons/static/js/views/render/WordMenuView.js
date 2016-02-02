@@ -67,6 +67,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       _.extend(data, {
         spList: {options: []}
       , phList: {}
+      , hideFilterButtons: !App.pageState.isMultiView()
       });
       //Setting setPhLang, if 1L view:
       /*
@@ -111,7 +112,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       App.languageCollection.getSpellingLanguages().each(function(l){
         if(l.getId() === spId) return;
         entries.push({
-          link: 'data-href="'+App.router.linkConfig({SpLang: l})+'"'
+          link: 'data-href="'+App.router.linkConfig({SpLang: l, PhLang: l})+'"'
         , name: l.getSpellingName()
         });
       }, this);
@@ -134,8 +135,9 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
               , t = l.getTranscription(w);
             if(!t.hasPhonetics()) return;
             //Adding as phLang:
+            var config = l.isSpellingLanguage() ? {PhLang: l, SpLang: l} : {PhLang: l};
             data.phList.options.push({
-              link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
+              link: 'data-href="'+App.router.linkConfig(config)+'"'
             , name: l.getShortName()
             });
           }, this);
