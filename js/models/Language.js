@@ -293,7 +293,7 @@ define(['require','backbone','models/RegionLanguage','models/Contributor'], func
       return App.transcriptionMap.getTranscription(this, word);
     }
     /**
-      This shall also be knwon as 'hasTranscriptions',
+      This shall also be known as 'hasTranscriptions',
       as it's the same underlying question for both,
       that was exhibited in the old Language.php
     */
