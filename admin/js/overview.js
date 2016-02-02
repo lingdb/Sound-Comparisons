@@ -38,10 +38,12 @@ $(document).ready(function(){
         });
       });
       $('button.delete',e).click(function(){
-        $.post("query/admin.php?action=delete", entryData, function(data){
-          alert(data);
-          updateUserEditTable();
-        });
+        if(confirm('Are you sure you want to delete a user?')){
+          $.post("query/admin.php?action=delete", entryData, function(data){
+            alert(data);
+            updateUserEditTable();
+          });
+        }
       });
     });
   };
