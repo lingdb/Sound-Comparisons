@@ -406,5 +406,11 @@ define(['require','backbone','models/RegionLanguage','models/Contributor'], func
       }
       return ret;
     }
+    /**
+      @return is Bool
+    */
+  , isSpellingLanguage: function(){
+      return parseInt(this.get('IsSpellingRfcLang')) === 1;
+    }
   });
 });

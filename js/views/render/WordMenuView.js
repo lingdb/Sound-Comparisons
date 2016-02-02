@@ -134,8 +134,9 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
               , t = l.getTranscription(w);
             if(!t.hasPhonetics()) return;
             //Adding as phLang:
+            var config = l.isSpellingLanguage() ? {PhLang: l, SpLang: l} : {PhLang: l};
             data.phList.options.push({
-              link: 'data-href="'+App.router.linkConfig({PhLang: l})+'"'
+              link: 'data-href="'+App.router.linkConfig(config)+'"'
             , name: l.getShortName()
             });
           }, this);
