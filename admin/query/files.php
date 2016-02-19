@@ -37,6 +37,7 @@
       }
       CacheProvider::cleanCache('../');
       $log = Importer::processFiles($fs, $uId, $merge);
+      array_push($log,'Server cache cleared');
       echo '<ul><li>'.implode($log,'</li><li>').'</li></ul>';
       $tables = implode(',', Importer::findTables($fs));
       $href = "../translate.php?tId=1&action=compareOriginal&tables=$tables";
