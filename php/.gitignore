@@ -1,6 +1,0 @@
-# Legacy php files:
-config.php
-.htaccess
-.htpasswd
-export/.htaccess
-query/.htaccess

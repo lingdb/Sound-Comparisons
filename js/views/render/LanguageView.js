@@ -92,7 +92,7 @@ define(['views/render/SubView'], function(SubView){
         ls.push({
           ttip: App.translationStorage.translateStatic('tooltip_languages_link_mapview')
         , href: "https://www.google.com/maps/place/"+ll+"/@"+ll+",7z/"
-        , img:  'static/img/langmap.png'
+        , img:  'img/langmap.png'
         });
       }
       return {links: ls};
