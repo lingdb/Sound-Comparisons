@@ -135,7 +135,7 @@ define(['underscore'], function(_){
     ColerCalcView and google.maps.OverlayView.
     To work around this, I reimplemented WordOverlayView in a fashion that makes it independant of ColorCalcView below.
   */
-  if(!_.isUndefined(google)){
+  if(!_.isUndefined(window.google)){
     WordOverlayView.prototype = new google.maps.OverlayView();
   }
   return WordOverlayView;

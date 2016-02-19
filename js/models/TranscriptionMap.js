@@ -12,8 +12,9 @@ define(['backbone','models/Transcription','models/DummyTranscription'], function
       if(data && 'transcriptions' in data){
         console.log('TranscriptionMap.update()');
         var map = {}; // CONCAT(LanguageIx,IxElicitation,IxMorphologicalInstance) -> Transcription
-        _.each(data.transcriptions, function(t, k){
-          map[k] = new Transcription(t);
+        _.each(data.transcriptions, function(t){
+          var trans = new Transcription(t);
+          map[trans.getId()] = trans;
         }, this);
         this.set(map);
       }

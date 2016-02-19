@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString){
+define(['backbone','Mustache','LZString','models/Loader'], function(Backbone, Mustache, LZString, Loader){
   return Backbone.Model.extend({
     defaults: {
       ready:    false // true iff partials and render method are ready.
@@ -10,7 +10,7 @@ define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString
     */
   , initialize: function(){
       var storage = this;
-      $.getJSON('query/templateInfo').done(function(info){
+      Loader.template.info().done(function(info){
         info = _.chain(info).map(function(hash, path){
           var parts = /^.*\/([^\/]+)\.html$/.exec(path);
           if(parts !== null && parts.length >= 2){
@@ -49,8 +49,10 @@ define(['backbone','Mustache','LZString'], function(Backbone, Mustache, LZString
           if(current && current.hash === i.hash){
             i.content = current.content;
           }else{
-            fetches.push($.get(i.path, function(c){
+            fetches.push(Loader.template.fetch(i.path).done(function(c){
               i.content = c;
+            }).fail(function(){
+                console.log('Failed to load template:', i.path, arguments);
             }));
           }
         }));

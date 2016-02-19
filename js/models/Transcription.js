@@ -18,6 +18,11 @@ define(['backbone'], function(Backbone){
     */
   , getId: function(){
       var d = this.pick('language','word');
+      //Fallback to generate Id from local data:
+      if(d.language === null || d.word === null){
+        var keys = ['LanguageIx','IxElicitation','IxMorphologicalInstance'];
+        return _.map(keys, this.get, this).join('');
+      }
       return [d.language.getId(), d.word.getId()].join('');
     }
     /**

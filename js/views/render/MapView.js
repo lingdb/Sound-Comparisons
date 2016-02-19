@@ -10,7 +10,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       //Connecting to the router
       App.router.on('route:mapView', this.route, this);
       //Abort further work if no maps:
-      if(_.isUndefined(google)){
+      if(_.isUndefined(window.google)){
         console.log('MapView.initialize() aborts, google undefined.');
         return;
       }
@@ -125,7 +125,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
   , render: function(o){
       o = _.extend({renderMap: true}, o);
       if(App.pageState.isPageView(this)){
-        if(_.isUndefined(google)){
+        if(_.isUndefined(window.google)){
           App.views.loadModalView.noMap();
         }else{
           //Rendering the template:
