@@ -21,7 +21,7 @@ define(['backbone','Mustache','LZString','models/Loader'], function(Backbone, Mu
               , hash: hash
               };
           }else{
-            console.log('Problem:', path)
+            console.log('Problem:', path);
             return null;
           }
         }).filter(function(i){return i !== null;}).value();

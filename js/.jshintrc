@@ -14,5 +14,6 @@
   , "Worker": false
   , "Map": false
   , "document": false
+  , "event": false
   }
 }
