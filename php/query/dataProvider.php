@@ -270,13 +270,27 @@ class DataProvider {
     $n   = $db->escape_string($studyName);
     $q   = "SELECT * FROM Transcriptions_$n";
     $ret = array();
-    $set = $db->query($q);
-    if($set !== false){
-      while($t = $set->fetch_assoc()){
+    $set = static::fetchAll($q);
+    if(count($set) > 0){
+      foreach($set as $t){
         $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
         $t['soundPaths'] = static::soundPaths($n, $t);
+        //Updating RecordingMissing, iff necessary:
+        if(($t['RecordingMissing'] === 0 && count($t['soundPaths']) > 0)
+          || ($t['RecordingMissing'] === 1 && count($t['soundPaths']) === 0)){
+          //Flip RecordingMissing:
+          $flip = ($t['RecordingMissing'] === 0) ? 1 : 0;
+          $q = "UPDATE Transcriptions_$n "
+             . "SET RecordingMissing = $flip "
+             . "WHERE StudyIx = ".$t['StudyIx']
+             . " AND FamilyIx = ".$t['FamilyIx']
+             . " AND IxElicitation = ".$t['IxElicitation']
+             . " AND IxMorphologicalInstance = ".$t['IxMorphologicalInstance']
+             . " AND LanguageIx = ".$t['LanguageIx'];
+          $db->query($q);
+        }
+        //Merging transcriptions:
         if(array_key_exists($tKey, $ret)){
-          //Merging transcriptions:
           $old = $ret[$tKey];
           foreach($t as $k => $v){
             if(array_key_exists($k, $old)){
@@ -310,50 +324,36 @@ class DataProvider {
     into its return.
   */
   public static function getDummyTranscriptions($studyName){
+    $db = Config::getConnection();
     //Add dummy transcriptions:
     $dummies = array();
+    //Fetching study related data:
+    $q = "SELECT StudyIx, FamilyIx FROM Studies WHERE Name='$studyName' LIMIT 1";
+    $study = current(static::fetchAll($q));
+    if($study === false) return $dummies;
     //Handling languages without transcriptions:
-    $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
-        . "WHERE LanguageIx NOT IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
-    $ls = static::fetchAll($lq);
-    $pairs = array();
-    if(count($ls) > 0){
-      //We create pairs for all words here:
-      $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
-          . "FROM Words_$studyName";
-      $ws = static::fetchAll($wq);
-      foreach($ls as $l){
-        foreach($ws as $w){
-          array_push($pairs, array($l, $w));
-        }
-      }
-    }
-    //Handling words without transcriptions:
-    $wq = "SELECT IxElicitation, IxMorphologicalInstance, SoundFileWordIdentifierText "
-        . "FROM Words_$studyName WHERE CONCAT(IxElicitation, IxMorphologicalInstance) "
-        . "NOT IN (SELECT CONCAT(IxElicitation, IxMorphologicalInstance) FROM Transcriptions_$studyName)";
-    $ws = static::fetchAll($wq);
-    if(count($ws) > 0){
-      //We create pairs only for languages not selected above:
-      $lq = "SELECT LanguageIx, FilePathPart FROM Languages_$studyName "
-          . "WHERE LanguageIx IN (SELECT LanguageIx FROM Transcriptions_$studyName)";
-      $ls = static::fetchAll($lq);
-      foreach($ls as $l){
-        foreach($ws as $w){
-          array_push($pairs, array($l, $w));
-        }
-      }
-    }
+    $q = "SELECT L.LanguageIx, W.IxElicitation, W.IxMorphologicalInstance, L.FilePathPart, W.SoundFileWordIdentifierText "
+       . "FROM Languages_$studyName AS L CROSS JOIN Words_$studyName AS W "
+       . "WHERE CONCAT(L.LanguageIx, W.IxElicitation, W.IxMorphologicalInstance) "
+       . "NOT IN (SELECT CONCAT(LanguageIx, IxElicitation, IxMorphologicalInstance) FROM Transcriptions_$studyName)";
+    $qs = static::fetchAll($q);
     //Handling resulting pairs:
-    foreach($pairs as $p){
-      $l = $p[0]; $w = $p[1];
-      $files = static::findSoundFiles($l['FilePathPart'], $w['SoundFileWordIdentifierText']);
-      if(count($files) === 0) continue;
+    foreach($qs as $entry){
+      $files = static::findSoundFiles($entry['FilePathPart'], $entry['SoundFileWordIdentifierText']);
+      $missing = (count($files) === 0) ? 1 : 0;
+      //Returning saving found dummies:
+      $q = "INSERT INTO Transcriptions_Germanic "
+         . "(StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx, RecordingMissing) "
+         . "VALUES ({$study['StudyIx']},{$study['FamilyIx']},{$study['IxElicitation']},{$study['IxMorphologicalInstance']},{$study['LanguageIx']},$missing)";
+      $db->query($q);
+      //Filtering
+      if($missing === 1) continue;
+      //Adding to dummy list:
       array_push($dummies, array(
         'isDummy' => true
-      , 'LanguageIx' => $l['LanguageIx']
-      , 'IxElicitation' => $w['IxElicitation']
-      , 'IxMorphologicalInstance' => $w['IxMorphologicalInstance']
+      , 'LanguageIx' => $entry['LanguageIx']
+      , 'IxElicitation' => $entry['IxElicitation']
+      , 'IxMorphologicalInstance' => $entry['IxMorphologicalInstance']
       , 'soundPaths' => $files
       ));
     }

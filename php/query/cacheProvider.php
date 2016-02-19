@@ -43,7 +43,7 @@ class CacheProvider {
     Sets the data to cache for the given study.
   */
   public static function setCache($study, $data, $prefix = ''){
-    file_put_contents(self::getPath($study, $prefix), $data);
+    @file_put_contents(self::getPath($study, $prefix), $data);
   }
   /**
     @param $prefix String to help locate the $target

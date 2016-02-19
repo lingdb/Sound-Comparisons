@@ -38,10 +38,12 @@ $(document).ready(function(){
         });
       });
       $('button.delete',e).click(function(){
-        $.post("query/admin.php?action=delete", entryData, function(data){
-          alert(data);
-          updateUserEditTable();
-        });
+        if(confirm('Are you sure you want to delete a user?')){
+          $.post("query/admin.php?action=delete", entryData, function(data){
+            alert(data);
+            updateUserEditTable();
+          });
+        }
       });
     });
   };
@@ -59,7 +61,7 @@ $(document).ready(function(){
     });
   };
   //Creating new users:
-  $('#addUser button').click(function(){
+  $('#addUser button').click(function(e){
     var query = {
       username:     $('#addUser input[name="username"]').val()
     , password:     $('#addUser input[name="password"]').val()
@@ -74,5 +76,6 @@ $(document).ready(function(){
       alert(data);
       updateUserEditTable();
     });
+    e.preventDefault();
   });
 });

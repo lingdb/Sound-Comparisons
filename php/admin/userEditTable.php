@@ -23,9 +23,9 @@ while($r = $set->fetch_row()){
     $AccessEdit = '';
   echo "<tr class='editTableEntry'><td>$UserId</td>"
      . "<td><input name='login' type='text' value='$Login'/></td>"
-     . "<td><input name='password' type='text' placeholder='New Password'/></td>"
+     . "<td><input name='password' type='text' placeholder='New Password' autocomplete='off'/></td>"
      . "<td><input name='mayTranslate' type='checkbox'$AccessTranslate/></td>"
      . "<td><input name='mayEdit' type='checkbox'$AccessEdit/></td>"
      . "<td><button class='btn update'>Update</button>"
-     . "<button class='btn delete'>Delete</button></td></tr>";
+     . "<button class='btn btn-danger delete'>Delete</button></td></tr>";
 }

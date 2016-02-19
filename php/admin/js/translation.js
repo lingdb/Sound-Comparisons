@@ -39,6 +39,10 @@ $(document).ready(function(){
         btn.removeClass('btn-danger').addClass('btn-success');
       });
     });
+    //The keep buttons, if any:
+    table.on('click', '.btn.keep', function(){
+      $(this).changeInRow();
+    });
     //The Save All button:
     table.on('click', '.btn.saveAll', function(){
       table.$('.btn.save.btn-warning').trigger('click');

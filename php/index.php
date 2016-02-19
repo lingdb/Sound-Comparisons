@@ -20,7 +20,8 @@
   if(Git::getBranch() === 'master'){
     $app = 'js/App-minified';
     if(file_exists('./'.$app.'.js')){
-      $index['head']['requirejs'] = $app;
+      unset($index['head']['requirejs']);
+      $index['head']['minifiedjs'] = $app.'.js';
     }
   }
   //Making sure we get our appSetup:

@@ -59,7 +59,7 @@ define(['views/render/SubView'], function(SubView){
       if(iso){
         ls.push(
           { href: 'http://www.glottolog.org/resource/languoid/iso/'+iso
-          , img:  'static/img/extern/glottolog.png'
+          , img:  'img/extern/glottolog.png'
           , ttip: App.translationStorage.translateStatic('tooltip_languages_link_glottolog')}
         , { href: 'http://new.multitree.org/trees/code/'+iso
           , img:  'http://new.multitree.org/static/images/MultiTree.ico'

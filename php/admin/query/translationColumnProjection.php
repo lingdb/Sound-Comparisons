@@ -144,6 +144,35 @@ class TranslationColumnProjection extends TranslationTableProjection {
     return $entry;
   }
   /**
+    @param $entry obj
+    @return $entry obj
+    obj will be an array resembling a JSON object following this syntax:
+    {
+      Description: {Req: '', Description: ''}
+    , Original: ''
+    , Translation: {TranslationId: 5, Translation: '', Payload: '', TranslationProvider: ''}
+    }
+    Adds/Overwrites the Original field with English translation iff possible.
+    Will not overwrite for Translation.TranslationId == 1.
+  */
+  protected function overwriteOriginalWithEnglish($entry){
+    $trans       = $entry['Translation'];
+    $category    = $trans['TranslationProvider'];
+    $fieldSelect = $trans['Payload'];
+    //Quit early if possible:
+    if($trans['TranslationId'] == 1) return $entry;
+    //Trying to fetch existing translation:
+    $q = "SELECT Trans FROM Page_DynamicTranslation "
+       . "WHERE TranslationId = 1 "
+       . "AND Category = '$category' "
+       . "AND Field = '$fieldSelect' "
+       . "LIMIT 1";
+    foreach(DataProvider::fetchAll($q) as $r){//foreach works as if
+      $entry['Original'] = $r['Trans'];
+    }
+    return $entry;
+  }
+  /**
     @param $tId TranslationId to use
     @param $offset Int the offset for the page to fetch.
     @param $limit Int = 30 the limit for the page to fetch.
@@ -200,6 +229,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
         );
         //Trying to add existing translation:
         $entry = $this->addTranslation($entry);
+        $entry = $this->overwriteOriginalWithEnglish($entry);
         //Pushing $entry:
         array_push($ret, $entry);
       }
@@ -270,6 +300,7 @@ class TranslationColumnProjection extends TranslationTableProjection {
           }
           //Trying to add existing translation:
           $entry = $this->addTranslation($entry);
+          $entry = $this->overwriteOriginalWithEnglish($entry);
           //Putting $entry into map:
           $payloadMap[$fieldSelect] = $entry;
         }

@@ -16,9 +16,14 @@
   <link href="static/css/myflow.css" rel="stylesheet">
   <link href="static/css/main.css" rel="stylesheet">
   {{! External .js files: }}
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false&libraries=geometry"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry"></script>
   {{! RequireJS to provide module magic: }}
-  <script data-main="{{requirejs}}" src="static/js/extern/require.js"></script>
+  {{#requirejs}}
+  <script data-main="{{requirejs}}" src="js/extern/require.js"></script>
+  {{/requirejs}}
+  {{#minifiedjs}}
+  <script src="{{minifiedjs}}"></script>
+  {{/minifiedjs}}
   {{! Analytics: }}
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
