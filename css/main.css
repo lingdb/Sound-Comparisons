@@ -378,8 +378,14 @@ input#FilterAddMultiWords {}
 #toggleLanguageGroups {padding-left: 0.25em; padding-top: 0.4em; height: 1.4em;}
 #toggleMeaningGroups img.icon {margin-top: 0.25em; margin-left: 0.25em;}
 /*Audio*/
-td.transcription {text-align: center;}
-div.audio {white-space: nowrap;}
+td.transcription {
+  padding: 5px;
+  text-align: center;
+}
+div.audio {
+  display: inline;
+  white-space: nowrap;
+}
 div.transcription { /*The color of phonetics that can be played with hover*/
   color:         #00F;
   display:       inline-block;
