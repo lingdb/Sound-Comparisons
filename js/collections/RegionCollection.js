@@ -41,6 +41,10 @@ define(['collections/Selection','models/Region'], function(Selection, Region){
       @return regions [Region]
       The default selection for a RegionCollection is that no regions are selected.
     */
-  , getDefaultSelection: function(){ return []; }
+  , getDefaultSelection: function(){
+      return _.filter(this.models, function(r){
+        return r.getDefaultExpandedState();
+      }, this);
+    }
   });
 });

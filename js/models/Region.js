@@ -130,5 +130,13 @@ define(['backbone'], function(Backbone){
         return false;
       }, this);
     }
+    /**
+      @return expanded Bool
+      Get the DefaultExpandedState of a Region as a boolean.
+    */
+  , getDefaultExpandedState: function(){
+      var expanded = this.get('DefaultExpandedState');
+      return expanded == 1;
+    }
   });
 });
