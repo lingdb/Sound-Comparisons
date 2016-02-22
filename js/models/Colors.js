@@ -10,7 +10,7 @@ define(['backbone'], function(Backbone){
         '#E6E6E6'
       , '#CCCCFF'
       , '#CCFFFF'
-      , '#F2F6CA'
+      , '#CFFF7C' // ADJUSTING THIS
       , '#FFFACD'
       , '#FFCC99'
       , '#C59595'
