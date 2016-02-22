@@ -376,10 +376,14 @@ class DataProvider {
     foreach(array(
       //Default_Languages
       'language' => "SELECT LanguageIx FROM Default_Languages "
-                  . "WHERE CONCAT(StudyIx, FamilyIx) = $sId LIMIT 1"
+                  . "WHERE CONCAT(StudyIx, FamilyIx) "
+                  . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%')) "
+                  . "LIMIT 1"
       //Default_Words
     , 'word'     => "SELECT IxElicitation, IxMorphologicalInstance FROM Default_Words "
-                  . "WHERE CONCAT(StudyIx, FamilyIx) = $sId LIMIT 1"
+                  . "WHERE CONCAT(StudyIx, FamilyIx) "
+                  . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%')) "
+                  . "LIMIT 1"
     ) as $k => $q){
       $ret[$k] = $db->query($q)->fetch_assoc();
     }
@@ -387,13 +391,16 @@ class DataProvider {
     foreach(array(
       //Default_Multiple_Languages
       'languages'  => "SELECT LanguageIx FROM Default_Multiple_Languages "
-                    . "WHERE CONCAT(StudyIx, FamilyIx) = $sId"
+                    . "WHERE CONCAT(StudyIx, FamilyIx) "
+                    . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
       //Default_Multiple_Words
     , 'words'      => "SELECT IxElicitation, IxMorphologicalInstance FROM Default_Multiple_Words "
-                    . "WHERE CONCAT(StudyIx, FamilyIx) = $sId"
+                    . "WHERE CONCAT(StudyIx, FamilyIx) "
+                    . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
       //Default_Languages_Exclude_Map
     , 'excludeMap' => "SELECT LanguageIx FROM Default_Languages_Exclude_Map "
-                    . "WHERE CONCAT(StudyIx, FamilyIx) = $sId"
+                    . "WHERE CONCAT(StudyIx, FamilyIx) "
+                    . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
     ) as $k => $q){
       $ret[$k] = static::fetchAll($q);
     }
