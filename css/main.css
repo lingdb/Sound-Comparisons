@@ -259,6 +259,7 @@ dd.languageList {
   margin-bottom: 5px;
 }
 #language_playAll {vertical-align: middle;}
+#languageTable {table-layout: fixed;}
 #contributorGroup .dropdown-menu{
   min-width: 300px;
   max-width: 600px;
