@@ -302,7 +302,9 @@ define(['require','backbone','models/RegionLanguage','models/Contributor'], func
       return parseInt(isOrt) === 0;
     }
     /***/
-  , hasTranscriptions: function(){return this.isDefaultPhoneticLanguage();}
+  , hasTranscriptions: function(){
+      return this.isDefaultPhoneticLanguage();
+    }
     /***/
   , isHistorical: function(){
       var rs = this.getRegions();

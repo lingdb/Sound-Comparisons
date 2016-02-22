@@ -107,11 +107,12 @@ define(['collections/Choice', 'models/Language', 'collections/RegionLanguageColl
         this.reset(data.languages);
       }
     }
-    /***/
+    /**
+      @return default Language
+      As of #304 this method returns the same result as getDefaultChoice().
+    */
   , getDefaultPhoneticLanguage: function(){
-      return this.find(function(l){
-        return l.isDefaultPhoneticLanguage() || false;
-      });
+      return this.getDefaultChoice();
     }
     /***/
   , getSpellingLanguages: function(){
