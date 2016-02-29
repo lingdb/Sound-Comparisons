@@ -10,14 +10,13 @@
   $sText = array_key_exists('SearchText', $_GET) ? ' value="'.$_GET['SearchText'].'"' : '';
 ?>
 <form class="form-inline">
-<legend>Category to translate:</legend>
-<label>General:</label>
+<h3 class="categoryHeadline">General:</h3>
 <?php foreach(array_keys(Translation::generalProviders()) as $p){ $btn($p); } ?>
-<hr><label>Study dependant:</label>
+<h3 class="categoryHeadline" style="color: #666;">Study dependant:</h3>
 <?php foreach(array_keys(Translation::studyProviders()) as $p){ $btn($p); } ?>
 </form>
 <form class="form-inline" action="translate.php" method="get">
-<hr><label>Search:</label>
+<h3 class="categoryHeadline">Search:</h3>
 <div class="input-append">
   <label class="checkbox">
     all translations
@@ -32,7 +31,7 @@
 <input type="hidden" name="tId" value="<?php echo $translationId; ?>">
 </form>
 <form class="form-inline">
-<hr><label>Special cases:</label>
+<h3 class="categoryHeadline">Special cases:</h3>
 <?php
   $missing = ($_GET['action'] === 'missing') ? ' btn-inverse' : '';
   $changed = ($_GET['action'] === 'changed') ? ' btn-inverse' : '';
