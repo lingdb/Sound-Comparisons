@@ -71,8 +71,9 @@ define(['backbone'], function(Backbone){
     */
   , getTitle: function(){
       var category = 'StudyTitleTranslationProvider'
-        , field    = this.get('Name');
-      return window.App.translationStorage.translateDynamic(category, field, field);
+        , field    = this.get('Name')
+        , fallback = this.getName();
+      return window.App.translationStorage.translateDynamic(category, field, fallback);
     }
     /**
       Predicate to tell if the families colors should be used for coloring.
