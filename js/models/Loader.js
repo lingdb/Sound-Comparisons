@@ -20,7 +20,7 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     and returns a promise that will be resolved with the data from it.
   */
   var fetchFile = function(path, expectJSON){
-    path = _.last(path.split('/'))
+    path = _.last(path.split('/'));
     var def = $.Deferred()
       , deliver = function(){
                     if(expectJSON === true){
@@ -59,7 +59,7 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
       });
       dialog.modal({show: true});
       interaction.done(deliver).fail(function(){
-        def.reject(arguments)
+        def.reject(arguments);
       });
     }else if(interaction !== null){
       interaction.always(function(){
@@ -108,7 +108,7 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     Returns a modified version of the fetch function with the parameters prefilled.
   */
   var mkFetch = function(target, query, expectJSON){
-    return _.bind(fetch, null, target, query, expectJSON)
+    return _.bind(fetch, null, target, query, expectJSON);
   };
   /** The endpoints to use: */
   var dataRoute = 'query/data'

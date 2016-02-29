@@ -15,5 +15,6 @@
   , "Map": false
   , "document": false
   , "event": false
+  , "FileReader": false
   }
 }
