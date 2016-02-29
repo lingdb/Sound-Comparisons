@@ -46,10 +46,7 @@
       $category = $this->getName();
       //Page query:
       $o = ($offset == -1) ? '' : " LIMIT 30 OFFSET $offset";
-      $q = "SELECT Field, Trans "
-         . "FROM Page_DynamicTranslation "
-         . "WHERE TranslationId = 1 "
-         . "AND Category = '$category'$o";
+      $q = "SELECT Name, Name FROM Studies$o";
       foreach($this->fetchRows($q) as $r){
         $sName = $r[0];
         $q = $this->getTranslationQuery($sName, $tId);
