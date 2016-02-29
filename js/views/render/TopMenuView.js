@@ -115,13 +115,13 @@ define(['backbone'], function(Backbone){
   , updateTranslations: function(){
       this.setModel({
         currentFlag: App.translationStorage.getFlag()
-      , otherTranslations: _.map(App.translationStorage.getOthers(), function(tId){
+      , otherTranslations: _.chain(App.translationStorage.getOthers()).map(function(tId){
           return {
             link: 'href="'+App.router.linkConfig({Translation: tId})+'"'
           , flag: this.getFlag(tId)
           , name: this.getName(tId)
           };
-        }, App.translationStorage)
+        }, App.translationStorage).sortBy('name').value()
       });
     }
     /**
