@@ -12,7 +12,7 @@ define(['backbone'], function(Backbone){
     , spLang: null
     , phLang: null
     , pageView: 'map'
-    , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView']
+    , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView','aboutView']
     , pageViewShortcuts: {
         'm':  'map'
       , 'w':  'word'
@@ -20,6 +20,7 @@ define(['backbone'], function(Backbone){
       , 'lw': 'languagesXwords'
       , 'wl': 'wordsXlanguages'
       , 'c':  'contributorView'
+      , 'a':  'aboutView'
       }
     , mapViewIgnoreSelection: false // On true all languages shall be displayed
     , wordByWord: false // Should wordByWord downloads be displayed?
@@ -166,6 +167,8 @@ define(['backbone'], function(Backbone){
         if(!_.isFunction(key.getKey))
           return false;
         return this.isPageView(key.getKey());
+      }else if(_.isArray(key)){
+        return _.some(key, this.isPageView, this);
       }
       console.log('PageState.isPageState() with unexpected key: '+key);
       return false;

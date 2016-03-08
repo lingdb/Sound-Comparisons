@@ -44,6 +44,8 @@ define(['Linker','backbone'], function(Linker, Backbone){
     , 'Contributors/:initials': 'contributorView'
     , 'Contributors/':          'contributorView'
     , 'Contributors':           'contributorView'
+      //aboutView:
+    , 'about/:page': 'aboutView'
       //Routes for configuration directives:
     , 'config/*directives': 'configDirective'
       //defaultRoute:

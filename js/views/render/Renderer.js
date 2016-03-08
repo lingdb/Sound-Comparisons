@@ -11,6 +11,7 @@ define([
   , 'views/render/LanguageWordView'
   , 'views/render/WordLanguageView'
   , 'views/render/ContributorView'
+  , 'views/render/AboutView'
   , 'jquery.nanoscroller'
   ], function(
     Backbone
@@ -24,6 +25,7 @@ define([
   , LanguageWordView
   , WordLanguageView
   , ContributorView
+  , AboutView
   ){
   /**
     The Renderer will coordinate an array of views as it's model.
@@ -43,6 +45,7 @@ define([
       , languageWordView: new LanguageWordView({el: this.$('#multitableContainer')})
       , wordLanguageView: new WordLanguageView({el: this.$('#multitableTransposedContainer')})
       , contributorView:  new ContributorView({el: this.$('#contributors')})
+      , aboutView: new AboutView({el: this.$('#aboutViewContainer')})
       };
       //Flag if models have been activated:
       this._activated = false;
@@ -79,7 +82,7 @@ define([
         v.render();
       }, this);
       //We only update the fragment, if we're in one of the 'typical' views.
-      if(!App.pageState.isPageView('c')){
+      if(!App.pageState.isPageView(['c','a'])){
         App.router.updateFragment();
       }
       //Triggering nanoScroller updates:

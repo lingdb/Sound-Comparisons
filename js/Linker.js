@@ -27,10 +27,11 @@ define(['Configurator'], function(Configurator){
       , language:        'linkLanguageView'
       , languagesXwords: 'linkLanguageWordView'
       , wordsXlanguages: 'linkWordLanguageView'
-      //We cannot generate links with options for contributorView:
+      //We cannot generate links with options for these views:
       , contributorView: 'linkMapView'
-     };
-     return this[callMap[App.pageState.getPageViewKey()]](options);
+      , aboutView: 'linkMapView'
+      };
+      return this[callMap[App.pageState.getPageViewKey()]](options);
     }
     /**
       Creates the link structure for map view that can be placed in a href attribute.

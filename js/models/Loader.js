@@ -115,7 +115,8 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     , templateRoute = 'query/templateInfo'
     , translationRoute = 'query/translations'
     , i18nRoute = (useAjax ? translationRoute+'?lng=__lng__&ns=__ns__'
-                           : translationRoute+'_i18n');
+                           : translationRoute+'_i18n')
+    , aboutRoute = 'query/about';
   /** The object to aid fetching: */
   return {
     'data': {
@@ -148,6 +149,11 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
                  }
                  return i18n;
                })()
+    }
+  , 'github': {
+      'about': function(page){
+                 return fetch(aboutRoute, {page: page}, false);
+               }
     }
   };
 });

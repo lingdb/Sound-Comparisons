@@ -18,6 +18,7 @@ requirejs.config({
   , 'LZString': 'extern/lz-string-1.3.3-min'
   , 'QueryString': 'extern/QueryString'
   , 'i18n': 'extern/i18next.amd.withJQuery-1.10.1'
+  , 'markdown-it': 'extern/markdown-it.min'
   }
 , shim: {//Dependencies and magic for extern scripts
     'jquery': {exports: '$'}
