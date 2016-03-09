@@ -52,8 +52,7 @@ define(['views/render/SubView', 'models/Loader', 'markdown-it'],
           });
         }else{
           var data = this.model.pages[page]
-            , html = '<h3>'+page.replace(/-/g,' ')+'</h3>'
-                   + this.model.mdProcessor.render(data);
+            , html = this.model.mdProcessor.render(data);
           this.$el.html(html).removeClass('hide');
         }
       }else{
