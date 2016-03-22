@@ -229,7 +229,27 @@ class DataProvider {
     $db = Config::getConnection();
     $n  = $db->escape_string($studyName);
     $q  = "SELECT * FROM Languages_$n";
-    return static::fetchAll($q);
+    $lData = static::fetchAll($q);
+    return array_map('DataProvider::getLanguageContributorImages', $lData);
+  }
+  /**
+    @param $languageData {} as fetch_assoc from Languages_* table
+    @return $languageData with additional 'contributors' field
+  */
+  public static function getLanguageContributorImages($languageData){
+    if(array_key_exists('FilePathPart', $languageData)){
+      $images = array(); $i = 1; $found = true; $base = 'img/contributors/';
+      while($found){
+        $path = $base.$languageData['FilePathPart'].'_'.str_pad($i, 2, '0', STR_PAD_LEFT).'.jpg';
+        $i++;
+        $found = file_exists($path);
+        if($found){
+          array_push($images, $path);
+        }
+      }
+      $languageData['ContributorImages'] = $images;
+    }
+    return $languageData;
   }
   /**
     @param $studyName String

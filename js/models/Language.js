@@ -287,6 +287,16 @@ define(['require','backbone','models/RegionLanguage','models/Contributor'], func
       return this._contributors;
     }
     /**
+      @return ContributorImages [String]
+    */
+  , getContributorImages: function(){
+      var ci = this.get('ContributorImages');
+      if(_.isArray(ci)){
+        return ci;
+      }
+      return [];
+    }
+    /**
       Proxy method for TranscriptionMap
     */
   , getTranscription: function(word){
