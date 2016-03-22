@@ -189,8 +189,10 @@ define(['backbone'],function(Backbone){
       If cond we will also play the sound.
     */
   , highlight: function(cond){
+      var marker = this.get('marker');
+      if(marker === null){ return; }
       if(cond){
-        this.get('marker').setIcon({
+        marker.setIcon({
           fillColor:    '#FF0000'
         , fillOpacity:  1
         , path:         google.maps.SymbolPath.CIRCLE
@@ -200,7 +202,7 @@ define(['backbone'],function(Backbone){
         //Playing audio:
         window.App.views.audioLogic.play($(this.get('div')).find('audio').get(0));
       }else{
-        this.get('marker').setIcon({
+        marker.setIcon({
           fillColor:    '#000000'
         , fillOpacity:  1
         , path:         google.maps.SymbolPath.CIRCLE

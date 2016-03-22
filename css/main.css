@@ -198,8 +198,10 @@ dd.languageList {
   background-color: #FFE993;
   color: black;
 }
-.languageLink, .zoomLanguage {display: none;}
-.highlighted + .zoomLanguage, .highlighted + .zoomLanguage + .languageLink {display: inline;}
+.languageLink, .zoomLanguage, .contributorImage {display: none;}
+.highlighted ~ .zoomLanguage,
+.highlighted ~ .contributorImage,
+.highlighted ~ .languageLink {display: inline;}
 .languageLink > img, .zoomLanguage > i {margin-left: 0px; margin-right: 0px;}
 /*Style in rightMenu:*/
 #rightMenu {padding: 0px; margin-bottom: 0px;}

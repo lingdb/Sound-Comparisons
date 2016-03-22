@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['backbone','views/ContributorImageView'], function(Backbone, ContributorImageView){
   /**
     The LanguageMenuView will be used by the Renderer.
     It will set it's own model and handle it similar to TopMenuView.
@@ -166,6 +166,11 @@ define(['backbone'], function(Backbone){
             }else{
               language.selected = false;
             }
+            //Adding the contributor image if possible:
+            var contributorImage = l.getContributorImages();
+            if(contributorImage.length){
+              language.contributorImage = contributorImage[0];
+            }
             //Building the icon for a language:
             if(isMultiView||region.isMapView){
               var icon = {
@@ -217,6 +222,7 @@ define(['backbone'], function(Backbone){
           var rId = $(e.target).closest('.zoomRegion').data('rid');
           t.zoomRegion($(e.target));
         });
+        ContributorImageView(this.$el);
       }
     }
     /**

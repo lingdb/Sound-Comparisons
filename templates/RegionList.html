@@ -22,6 +22,9 @@
         {{#shortName}}{{> LanguageSuperscript}}{{/shortName}}
       </a>
       {{#isMapView}}
+      {{#contributorImage}}
+      <img src="{{ contributorImage }}" class="icon contributorImage" data-languageIx="{{ languageIx }}">
+      {{/contributorImage}}
       <a title="{{zoomLanguage}}" class="zoomLanguage"><i class="icon-screenshot"></i></a>
       <a title="{{longName}}" {{{link}}} class="languageLink">
       <img src="img/1l.png" class="icon">
@@ -57,9 +60,12 @@
           {{#shortName}}{{> LanguageSuperscript}}{{/shortName}}
         </a>
         {{#isMapView}}
+        {{#contributorImage}}
+        <img src="{{ contributorImage }}" class="icon contributorImage" data-languageIx="{{ languageIx }}">
+        {{/contributorImage}}
         <a title="{{zoomLanguage}}" class="zoomLanguage"><i class="icon-screenshot"></i></a>
         <a title="{{longName}}" {{{link}}} class="languageLink">
-        <img src="img/1l.png" class="icon">
+          <img src="img/1l.png" class="icon">
         </a>
         {{/isMapView}}
         </li>
