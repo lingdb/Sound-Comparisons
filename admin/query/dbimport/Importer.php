@@ -359,6 +359,8 @@ class Importer{
       , 'Contributor:  Citation Author 2' => 'ContributorCitationAuthor2'
       , 'Citation 2:  Year' => 'Citation2Year'
       , 'Citation 2:  Pages' => 'Citation2Pages'
+      , 'Speaker Surnames' => 'SpeakerSurnames'
+      , 'Speaker First Names' => 'SpeakerFirstNames'
       )
 )
   , '/^LanguageStatusTypes\.txt$/' => array(
