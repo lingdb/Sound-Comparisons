@@ -362,7 +362,7 @@ class DataProvider {
       $files = static::findSoundFiles($entry['FilePathPart'], $entry['SoundFileWordIdentifierText']);
       $missing = (count($files) === 0) ? 1 : 0;
       //Returning saving found dummies:
-      $q = "INSERT INTO Transcriptions_Germanic "
+      $q = "INSERT INTO Transcriptions_$studyName "
          . "(StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx, RecordingMissing) "
          . "VALUES ({$study['StudyIx']},{$study['FamilyIx']},{$study['IxElicitation']},{$study['IxMorphologicalInstance']},{$study['LanguageIx']},$missing)";
       $db->query($q);
