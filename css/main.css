@@ -399,7 +399,7 @@ div.altSpelling { /*The color of altSpellings, usually inside some table above t
   font-style:   italic;
   font-family:  "Calibri", "Arial Unicode MS", "Cambria", "Doulos SIL", "Gentium", "TITUS Cyberbit Basic", sans-serif;}
 div.transcription:hover {color: #F00;} /*Makes phonetics/soundfiles red on hover*/
-div.fileMissing, div.fileMissing:hover {color: #666;} /*Phonetics where the soundfiles are missing are grey*/
+div.fileMissing, div.fileMissing:hover {color: #000000;} /*Phonetics where the soundfiles are missing are black; see #351*/
 div.playing {color: #F00;} /*Phonetics where the sound is currently playing are red*/
 /* .icon-play added for #194 */
 .icon-play {
