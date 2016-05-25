@@ -59,7 +59,9 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
               var ps = tr.get('Phonetic');
               if(_.isString(ps)){
                 phonetics = [ps];
-              }else{ phonetics = ps; }
+              }else if(_.isArray(ps)){
+                phonetics = ps;
+              }
             }
           }
           _.each(_.flatten(phonetics), function(p){
