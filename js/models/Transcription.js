@@ -157,6 +157,10 @@ define(['backbone'], function(Backbone){
                            , n:        i }
             , wordByWord:  wordByWord
           };
+        //Guarding for #351:
+        if(_.some(['--','..','...','…'], function(s){return p.phonetic === s;})){
+          continue;
+        }
         //Not cognate:
         if(i < superScr.length){
           var s = superScr[i] || [];
