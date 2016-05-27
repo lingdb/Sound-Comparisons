@@ -19,9 +19,9 @@ if(!session_mayEdit($dbConnection))
         <form class="form-horizontal" action="query/sql.php?action=import" method="POST" enctype="multipart/form-data">
           <legend>Upload a .sql file:</legend>
           <div class="control-group">
-            <label class="control-label" for="import">File to upload:</label>
+            <label class="control-label" for="import[]">File to upload:</label>
             <div class="controls">
-              <input name="import" type="file" required/>
+              <input name="import[]" type="file" required multiple/>
             </div>
           </div>
           <div class="control-group">

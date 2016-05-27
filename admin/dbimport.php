@@ -12,7 +12,6 @@
     $title   = "Import of .csv files.";
     $jsFiles = array('dbimport.js');
     require_once('head.php');
-    //<script type='application/javascript' src='js/main.js'></script>
     $max = ini_get_all();
     $max = $max['max_file_uploads'];
     $max = __::min(array($max['global_value'],$max['local_value']));
@@ -63,7 +62,9 @@
         enctype="multipart/form-data" target="iframe_post_form">
         <legend>Upload .csv files</legend>
         <div class="control-group">
-          <label class="control-label" for="upload[]">Select files to upload (max: <?php echo $max; ?>):</label>
+          <label class="control-label" for="upload[]">
+            Select files to upload (max: <?php echo $max; ?>):
+          </label>
           <div class="controls">
             <input name="upload[]" id="files" type="file" multiple/>
           </div>

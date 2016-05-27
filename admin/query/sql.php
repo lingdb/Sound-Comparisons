@@ -38,12 +38,17 @@ if(php_sapi_name() === 'cli'){
     $action = $_GET['action'];
     switch($action){
       case 'import':
-        if(array_key_exists('import', $_FILES)){
-          $file = file_get_contents($_FILES['import']['tmp_name']);
-          error_log('Got some data:');
-          error_log($file);
-        }else{
+        $imports = $_FILES['import'];
+        if(count($imports['name']) === 1 && $imports['name'][0] === ''){
           die('import file missing.');
+        }else{
+          $files = [];
+          while(count($imports['name']) > 0){
+            array_push($files, array(
+              'name' => array_pop($imports['name'])
+            , 'path' => array_pop($imports['tmp_name'])
+            ));
+          }
         }
       break;
     }
@@ -99,29 +104,33 @@ switch($action){
   break;
   case 'import':
     CacheProvider::cleanCache('../');
-    //Executing multiple queries:
-    $report = array(); $i = 1;
-    $worked = $dbConnection->multi_query($file);
-    if(!$worked){
-      array_push($report, $i);
-    }
-    while($dbConnection->more_results()){
-      $worked = $dbConnection->next_result();
-      $i++;
+    foreach($files as $f){
+      //Executing multiple queries:
+      $report = array(); $i = 1;
+      $sql = file_get_contents($f['path']);
+      $worked = $dbConnection->multi_query($sql);
       if(!$worked){
-        array_push($report, $i);
+        array_push($report, 'File: '.$f['name'].' Query: '.$i);
+      }
+      while($dbConnection->more_results()){
+        $worked = $dbConnection->next_result();
+        $i++;
+        if(!$worked){
+          array_push($report, 'File: '.$f['name'].' Query: '.$i);
+        }
       }
     }
     ?><!DOCTYPE HTML>
     <html><?php
-      $title = "SQL file processed.";
+      $title = "SQL file(s) processed.";
       require_once('head.php');
     ?><body>
-      <h3>File processed.</h3>
+      <h3>File(s) processed.</h3>
       <a href="..">Go back!</a>
         <?php if(count($report) > 0){ ?>
         <div class="well">
           There have been errors with the following query numbers:
+          <br>
           <code><?php echo implode(' ,', $report); ?></code>
         </div>
         <?php } ?>
