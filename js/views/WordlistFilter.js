@@ -125,6 +125,19 @@ define(['backbone'], function(Backbone){
       }else{
         $('#PhoneticFilter, #SpellingFilter').removeClass('filterempty');
       }
+      //Rerendering {Map,Word}View if either is active:
+      if(App.pageState.isPageView(['m','w'])){
+        if(App.pageState.isPageView('m')){
+          var m = App.views.renderer.model.mapView;
+          m.updateWordHeadline();
+          m.render({renderMap: false});
+        }else if(App.pageState.isPageView('w')){
+          var w = App.views.renderer.model.wordView;
+          w.updateWordHeadline();
+          w.render();
+        }
+      }
+      //Done:
       return this;
     }
   //The magic filter function:

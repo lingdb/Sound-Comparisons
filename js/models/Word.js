@@ -109,10 +109,13 @@ define(['backbone'], function(Backbone){
       It returns the next or previous Word with respect to the current wordOrder.
       Since the App.wordCollection is always kept in the correct order depending on App.pageState,
       we can just select the correct one of it's models.
+      For #357 this function got expanded to use FilteredWordCollection
+      instead of WordCollection.  The effect is that Neighbours
+      are only considered in the currently filtered set of words.
     */
   , getNeighbour: function(next){
       var key   = next ? 1 : -1 // Key already contains direction.
-        , words = App.wordCollection.models
+        , words = App.filteredWordCollection.models
         , wId   = this.getId();
       //Find current position in words array and add it to the key:
       for(var i = 0; i < words.length; i++){
