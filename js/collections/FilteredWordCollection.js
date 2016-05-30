@@ -83,11 +83,17 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
       this.reset(_.values(wMap));
     }
     /**
+      Reset the collection to include all models.
+    */
+  , clearFilter: function(){
+      this.reset(App.wordCollection.models);
+    }
+    /**
       @overrides collections/Selection.getSelected(pvk)
       @param [pvk] String
       @return selected [Word]
       Returns the selected Words as an array,
-      but fily those that survive the filter.
+      but only those that survive the filter,
       because the final collection for them is not known.
       If pvk is given, it is used as the pageView to retrieve the selection for.
       Otherwise the current pageView will be used.

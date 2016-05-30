@@ -55,6 +55,8 @@ define(['backbone'], function(Backbone){
       _.each(_.values(this.storage), function(k){
         delete App.storage[k];
       });
+      // Resetting the wordcollection:
+      App.filteredWordCollection.clearFilter();
       return this;
     }
   , setStorage: function(selectedId, inputId, content){
