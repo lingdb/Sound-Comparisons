@@ -190,7 +190,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
             t.adjustCanvasSize();
             t.centerRegion();
           }, 10000);
-        }else if(!this.renderMapFlag || App.studyWatcher.studyChanged()){
+        }else{
           this.adjustCanvasSize();
           this.centerRegion();
         }
