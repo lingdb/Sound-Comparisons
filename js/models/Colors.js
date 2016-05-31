@@ -10,7 +10,7 @@ define(['backbone'], function(Backbone){
         '#E6E6E6'
       , '#CCCCFF'
       , '#CCFFFF'
-      , '#CFFF7C' // ADJUSTING THIS
+      , '#CFFF7C'
       , '#FFFACD'
       , '#FFCC99'
       , '#C59595'
@@ -20,6 +20,9 @@ define(['backbone'], function(Backbone){
     }
   , getColor: function(i){
       var cs = this.get('colors');
+      while(i < cs.length){
+          i += cs.length;
+      }
       return cs[i % cs.length];
     }
   });

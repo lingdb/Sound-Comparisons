@@ -71,7 +71,7 @@ define(['backbone'], function(Backbone){
         rIx = parseInt(rIx);
       }
       if(_.isNumber(rIx)){
-        return App.colors.getColor(rIx - 1);
+        return App.colors.getColor(rIx);
       }
       return null;
     }
