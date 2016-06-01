@@ -133,7 +133,7 @@ define(['collections/Choice', 'models/Language', 'collections/RegionLanguageColl
         pvk = pvk || App.pageState.getPageViewKey();
         var isMap = App.pageState.isMapView(pvk)
           , sel   = isMap ? App.defaults.getMapLanguages()
-                          : App.defaults.getLanguages();
+                          : App.defaults.getLanguages({'pageViewKey': pvk});
         if(sel.length === 0){
           return _.take(this.models, 5);
         }

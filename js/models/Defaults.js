@@ -56,14 +56,27 @@ define(['backbone','models/Word'], function(Backbone, Word){
       Returns the default Languages as array for the current Study
       as defined in the v4.Default_Multiple_Languages table.
     */
-  , getLanguages: function(){
-      var lIds = {}; // LanguageIx -> Boolean
-      _.each(this.get('languages'), function(l){
-        lIds[l.LanguageIx] = true;
-      }, this);
-      return App.languageCollection.filter(function(l){
-        return l.get('LanguageIx') in lIds;
-      }, this);
+  , getLanguages: function(o){
+      //Sanitize options:
+      o = o || {'pageViewKey': ''};
+      if(o.pageViewKey === ''){
+        o.pageViewKey = App.pageState.getPageViewKey();
+      }
+      //Get defaults in case of MultiView:
+      if(_.contains(['languagesXwords','wordsXlanguages'], o.pageViewKey)){
+        var lIds = {} // LanguageIx -> Boolean
+          , xs = (o.pageViewKey === 'wordsXlanguages')
+               ? this.get('languages_WdsXLgs')
+               : this.get('languages_LgsXWds');
+        _.each(xs, function(l){
+          lIds[l.LanguageIx] = true;
+        }, this);
+        return App.languageCollection.filter(function(l){
+          return l.get('LanguageIx') in lIds;
+        }, this);
+      }
+      //Default to all in other cases:
+      return App.languageCollection.models;
     }
     /**
       Returns the default Languages as array for map use in the current Study

@@ -410,9 +410,12 @@ class DataProvider {
     //Multiple queries:
     foreach(array(
       //Default_Multiple_Languages
-      'languages'  => "SELECT LanguageIx FROM Default_Multiple_Languages "
-                    . "WHERE CONCAT(StudyIx, FamilyIx) "
-                    . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
+      'languages_WdsXLgs'  => "SELECT LanguageIx FROM Default_Multiple_Languages_WdsXLgs "
+                            . "WHERE CONCAT(StudyIx, FamilyIx) "
+                            . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
+    , 'languages_LgsXWds'  => "SELECT LanguageIx FROM Default_Multiple_Languages_LgsXWds "
+                            . "WHERE CONCAT(StudyIx, FamilyIx) "
+                            . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
       //Default_Multiple_Words
     , 'words'      => "SELECT IxElicitation, IxMorphologicalInstance FROM Default_Multiple_Words "
                     . "WHERE CONCAT(StudyIx, FamilyIx) "

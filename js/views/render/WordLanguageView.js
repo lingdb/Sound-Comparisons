@@ -5,7 +5,8 @@ define(['views/render/SubView'], function(SubView){
       this.model = {};
       //Connecting to the router
       App.router.on('route:wordLanguageView', this.route, this);
-      App.router.on('route:wordLanguageView_', function(s,w,l){return this.route(s,l,w);}, this);
+      App.router.on('route:wordLanguageView_',
+                    function(s,w,l){return this.route(s,l,w);}, this);
     }
     /**
       Method to make it possible to check what kind of PageView this Backbone.View is.
@@ -130,7 +131,7 @@ define(['views/render/SubView'], function(SubView){
       }else{//Filling non-fake words with content:
         basic = _.extend({fake: false}, App.translationStorage.translateStatic({
               deleteWordTtip: 'tabulator_multi_tooltip_removeWord'
-            , playTtip:       'tabulator_multi_playword' }));
+            , playTtip:       'tabulator_multi_playword'}));
         var spLang = App.pageState.getSpLang()
           , mTtip  = App.translationStorage.translateStatic('tooltip_words_link_mapview');
         words = _.map(words, function(w, j){

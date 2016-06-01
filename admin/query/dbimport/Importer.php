@@ -288,9 +288,18 @@ class Importer{
       , 'Default Single Word Elicitation Ix' => 'IxElicitation'
       )
     )
-  , '/^DefaultTableMultipleLanguages\.txt$/' => array(
+  , '/^DefaultTableC05LgsForWdsXLgsTable\.txt$/' => array(
       'study' => false
-    , 'table' => 'Default_Multiple_Languages'
+    , 'table' => 'Default_Multiple_Languages_WdsXLgs'
+    , 'colMapping' => array(
+        'Study Ix' => 'StudyIx'
+      , 'Family Ix' => 'FamilyIx'
+      , 'Default Table Multiple Language Full Ix' => 'LanguageIx'
+      )
+    )
+  , '/^DefaultTableC30LgsForLgsXWdsTable\.txt$/' => array(
+      'study' => false
+    , 'table' => 'Default_Multiple_Languages_LgsXWds'
     , 'colMapping' => array(
         'Study Ix' => 'StudyIx'
       , 'Family Ix' => 'FamilyIx'
