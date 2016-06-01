@@ -177,6 +177,7 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   padding-top: 2px;
 }
   .regionList > dt a > i[class^="icon-"]
+, .regionList > li i[class^="icon-"]
 , .languageList i[class^="icon-"]{
   margin: 0px;
   padding: 0px;
@@ -197,6 +198,12 @@ dd.languageList {
 .languageList .highlighted {
   background-color: #FFE993;
   color: black;
+}
+.regionList dd.languageList {
+  padding-left: 2px;
+}
+.regionList .languageList li {
+  padding-left: 18px;
 }
 .languageLink, .zoomLanguage, .contributorImage {display: none;}
 .highlighted ~ .zoomLanguage,
