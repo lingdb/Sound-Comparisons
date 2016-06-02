@@ -388,9 +388,10 @@ class DataProvider {
                       , excludeMap => [LanguageIx]]
     Given a studyId, this method fetches the default words and languages.
   */
-  public static function getDefaults($studyId){
+  public static function getDefaults($studyId, $studyName){
     $db  = Config::getConnection();
     $sId = $db->escape_string($studyId);
+    $studyName = $db->escape_string($studyName);
     $ret = array();
     //Single queries:
     foreach(array(
@@ -410,16 +411,15 @@ class DataProvider {
     //Multiple queries:
     foreach(array(
       //Default_Multiple_Languages
-      'languages_WdsXLgs'  => "SELECT LanguageIx FROM Default_Multiple_Languages_WdsXLgs "
-                            . "WHERE CONCAT(StudyIx, FamilyIx) "
-                            . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
-    , 'languages_LgsXWds'  => "SELECT LanguageIx FROM Default_Multiple_Languages_LgsXWds "
-                            . "WHERE CONCAT(StudyIx, FamilyIx) "
-                            . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
+      'languages_WdsXLgs' => "SELECT LanguageIx FROM Default_Multiple_Languages_WdsXLgs "
+                           . "WHERE CONCAT(StudyIx, FamilyIx) "
+                           . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
+    , 'languages_LgsXWds' => "SELECT LanguageIx FROM Default_Multiple_Languages_LgsXWds "
+                           . "WHERE CONCAT(StudyIx, FamilyIx) "
+                           . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
       //Default_Multiple_Words
-    , 'words'      => "SELECT IxElicitation, IxMorphologicalInstance FROM Default_Multiple_Words "
-                    . "WHERE CONCAT(StudyIx, FamilyIx) "
-                    . "LIKE (SELECT CONCAT(REPLACE($sId, 0, ''), '%'))"
+    , 'words_LgsXWds' => "SELECT IxElicitation FROM Default_Multiple_Words_LgsXWds_$studyName"
+    , 'words_WdsXLgs' => "SELECT IxElicitation FROM Default_Multiple_Words_WdsXLgs_$studyName"
       //Default_Languages_Exclude_Map
     , 'excludeMap' => "SELECT LanguageIx FROM Default_Languages_Exclude_Map "
                     . "WHERE CONCAT(StudyIx, FamilyIx) "
@@ -453,7 +453,7 @@ class DataProvider {
     , 'words'               => DataProvider::getWords($studyName)
     , 'meaningGroupMembers' => DataProvider::getMeaningGroupMembers($sId)
     , 'transcriptions'      => DataProvider::getTranscriptions($studyName)
-    , 'defaults'            => DataProvider::getDefaults($sId)
+    , 'defaults'            => DataProvider::getDefaults($sId, $studyName)
     );
   }
 }
