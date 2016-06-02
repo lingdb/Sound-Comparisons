@@ -306,13 +306,22 @@ class Importer{
       , 'Default Table Multiple Language Full Ix' => 'LanguageIx'
       )
     )
-  , '/^DefaultTableMultipleWords\.txt$/' => array(
-      'study' => false
-    , 'table' => 'Default_Multiple_Words'
+  , '/^DefaultTableC..WdsForLgsXWdsTable_(.*)\.txt$/' => array(
+      'study' => true
+    , 'table' => 'Default_Multiple_Words_LgsXWds_'
     , 'colMapping' => array(
         'Study Ix' => 'StudyIx'
       , 'Family Ix' => 'FamilyIx'
-      , 'Default Table Multiple Word Elicitation Ix' => 'IxElicitation'
+      , 'Ix Elicitation' => 'IxElicitation'
+      )
+    )
+  , '/^DefaultTableC30WdsForWdsXLgsTable_(.*)\.txt$/' => array(
+      'study' => true
+    , 'table' => 'Default_Multiple_Words_WdsXLgs_'
+    , 'colMapping' => array(
+        'Study Ix' => 'StudyIx'
+      , 'Family Ix' => 'FamilyIx'
+      , 'Ix Elicitation' => 'IxElicitation'
       )
     )
   , '/^Flags\.txt$/' => array(
