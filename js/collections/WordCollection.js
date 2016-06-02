@@ -89,12 +89,16 @@ define(['collections/Choice','models/Word','collections/Selection','backbone'], 
     /**
       Returns the default Words as array to be used as selection for the WordCollection.
     */
-  , getDefaultSelection: function(){
-      var sel = App.defaults.getWords();
-      if(sel.length === 0){
-        return _.take(this.models, 5);
+  , getDefaultSelection: function(pvk){
+      if(_.isString(pvk) && !_.isEmpty(pvk)){
+        return App.defaults.getWords({'pageViewKey': pvk});
+      }else{
+        var ret = {};
+        _.each(App.pageState.get('pageViews'), function(pvk){
+          ret[pvk] = this.getDefaultSelection(pvk);
+        }, this);
+        return ret;
       }
-      return sel;
     }
     /**
       Returns the default Word to be used as Choice for the WordCollection.

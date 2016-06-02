@@ -32,16 +32,29 @@ define(['backbone','models/Word'], function(Backbone, Word){
     /**
       Returns the default Words as an array for the current Study as defined in the v4.Default_Multiple_Words table.
     */
-  , getWords: function(){
-      var wIds = {}; // WordId -> Boolean
-      _.each(this.get('words'), function(w){
-        var word = new Word(w);
-        wIds[word.getId()] = true;
-      }, this);
-      //Search words:
-      return App.wordCollection.filter(function(w){
-        return w.getId() in wIds;
-      }, this);
+  , getWords: function(o){
+      //Sanitize options:
+      o = o || {'pageViewKey': ''};
+      if(o.pageViewKey === ''){
+        o.pageViewKey = App.pageState.getPageViewKey();
+      }
+      //Get defaults in case of MultiView:
+      if(_.contains(['languagesXwords','wordsXlanguages'], o.pageViewKey)){
+        var wIds = {} // WordId -> Boolean
+          , xs = (o.pageViewKey === 'wordsXlanguages')
+               ? this.get('words_WdsXLgs')
+               : this.get('words_LgsXWds');
+        _.each(xs, function(x){
+          wIds[parseInt(x.IxElicitation, 10)] = true;
+        }, this);
+        //Search words:
+        return App.wordCollection.filter(function(w){
+          var ixE = parseInt(w.get('IxElicitation'), 10);
+          return ixE in wIds;
+        }, this);
+      }
+      //Default to first 5 in other cases:
+      return _.take(App.wordCollection.models, 5);
     }
     /**
       Returns the default Language for the current Study as defined in the v4.Default_Languages table.
@@ -53,8 +66,7 @@ define(['backbone','models/Word'], function(Backbone, Word){
       return l || App.languageCollection.models[0];
     }
     /**
-      Returns the default Languages as array for the current Study
-      as defined in the v4.Default_Multiple_Languages table.
+      Returns the default Languages as array for the current Study and pageViewKey.
     */
   , getLanguages: function(o){
       //Sanitize options:
