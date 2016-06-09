@@ -27,9 +27,13 @@
   //Making sure we get our appSetup:
   $index['appSetup'] = true;
   //Processing the Content-type:
-  $headers = getallheaders();
-  if(!array_key_exists('Accept', $headers)){
-    $headers['Accept'] = 'text/html';
+  if(php_sapi_name() === 'cli'){
+    $headers = array('Accept' => 'text/html');
+  }else{
+    $headers = getallheaders();
+    if(!array_key_exists('Accept', $headers)){
+      $headers['Accept'] = 'text/html';
+    }
   }
   $cType = $headers['Accept'];
   switch($cType){
