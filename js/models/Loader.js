@@ -24,7 +24,13 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     var def = $.Deferred()
       , deliver = function(){
                     if(expectJSON === true){
-                      def.resolve(JSON.parse(fileMemo[path]));
+                      try{
+                        def.resolve(JSON.parse(fileMemo[path]));
+                      }catch(err){
+                        console.log('Problems parsing file:',
+                                    {path: path, expectJSON: expectJSON},
+                                    fileMemo[path], _.keys(fileMemo));
+                      }
                     }else{
                       def.resolve(fileMemo[path]);
                     }
