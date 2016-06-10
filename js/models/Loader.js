@@ -103,7 +103,11 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     }
     // Folding query into target:
     _.each(query, function(v, k){
-        target += '_'+k+'_'+v;
+        if(v === null){
+          target += '_'+k;
+        }else{
+          target += '_'+k+'_'+v;
+        }
     });
     return fetchFile(target, expectJSON);
   };

@@ -4,12 +4,12 @@ define(['backbone','models/Loader'], function(Backbone, Loader){
   var i18n = Loader.translation.i18n;
   //Initializing options for i18n:
   var i18nOptions = {
-    resGetPath: 'query/translations?lng=__lng__&ns=__ns__'
+    resGetPath: Loader.translation.i18nUrl
   , dynamicLoad: true
   , fallbackLng: 'en'
   , useCookie: false
   , useLocalStorage: false
-  , lng: 'en'//To be changed to local BrowserMatch
+  , lng: 'en' // To be changed to local BrowserMatch
   , load: 'unspecific'
   , preload: [] // To be filled in before i18n.init()
   , shortcutFunction: 'defaultValue'

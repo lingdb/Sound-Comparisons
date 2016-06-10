@@ -6,7 +6,7 @@ chdir(__DIR__);
 chdir('..');
 // Compute $path and create it:
 $date = trim(`date -I`);
-$path = '/tmp/sndComp_'.$date.'_export';
+$path = './sndComp_'.$date.'_export';
 `mkdir -p $path/data`;
 // Create index.html:
 `php -f index.php > $path/index.html`;
@@ -36,15 +36,13 @@ $tdata = fetchJSON("$baseUrl/translations?action=summary",
 // Combined translations map:
 $tdata = json_decode($tdata, true);
 $url = "$baseUrl/translations?lng=";
-$file = "$path/data/translations_lng_";
+$file = "$path/data/translations_i18n";
 $lnames = array();
 foreach($tdata as $t){
   array_push($lnames, $t['BrowserMatch']);
 }
-$lnames = implode('+', $lnames);
-$url .= "$lnames&ns=translation";
-$file .= $lnames."_ns_translation";
+$url .= implode('+', $lnames)."&ns=translation";
 fetchJSON($url, $file);
-// FIXME IMPLEMENT
 // Fetch map tiles for offline usage:
 // FIXME IMPLEMENT
+`chown 1000.1000 -R $path`;
