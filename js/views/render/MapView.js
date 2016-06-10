@@ -103,6 +103,13 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
                    , soundfiles: $.parseJSON(p.srcs) };
           }, this);
         }
+        //proxyColor added for #364
+        var proxyColor = function(o){
+          if(App.study.getId() === 'Malakula'){
+            o.color = '#CFFF7C';
+          }
+          return o;
+        };
         //The complete structure:
         data.transcriptions.push({
           altSpelling:        (tr !== null) ? tr.getAltSpelling() : ''
@@ -114,7 +121,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
         , langName:           l.getShortName()
         , languageLink:       'href="'+App.router.linkLanguageView({language: l})+'"'
         , familyIx:           l.getFamilyIx()
-        , color:              l.getColor()
+        , color:              proxyColor(l.getColor())
         , languageIx:         l.getId()
         });
       }, this);
