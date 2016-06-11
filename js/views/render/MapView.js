@@ -1,21 +1,32 @@
 /* global document: false */
 "use strict";
-define(['views/render/SubView','views/SoundControlView','views/render/WordView','views/MouseTrackView'], function(SubView,SoundControlView, WordView, MouseTrackView){
+define(['views/render/SubView',
+        'views/SoundControlView',
+        'views/render/WordView',
+        'views/MouseTrackView',
+        'leaflet','leaflet-markercluster'],
+       function(SubView, SoundControlView, WordView, MouseTrackView, leaflet){
   return SubView.extend({
     /***/
     initialize: function(){
       //Data representation created by update methods:
       this.model = {}; // Notice that we also make heavy use of App.map
-      this.renderMapFlag = false; // Hackish approach to solve the 'zoom on change word'-problem.
       //Connecting to the router
       App.router.on('route:mapView', this.route, this);
-      //Abort further work if no maps:
-      if(_.isUndefined(window.google)){
-        console.log('MapView.initialize() aborts, google undefined.');
-        return;
-      }
       //Map setup:
       this.div = document.getElementById("map_canvas");
+      this.map = leaflet.map(this.div).setView([51.505, -0.09], 13);
+
+      leaflet.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(this.map);
+
+      leaflet.marker([51.5, -0.09]).addTo(this.map)
+          .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+          .openPopup();
+
+      return; // FIXME REIMPLEMENT?!
+
       this.map = new google.maps.Map(this.div, App.map.get('mapOptions'));
       this.fixMap().renderMap();
       //SoundControlView:
@@ -85,6 +96,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
     }
     /***/
   , updateMapsData: function(){
+      return; // FIXME REIMPLEMENT?!
       var data = {
         transcriptions: []
       , regionZoom: App.study.getMapZoomCorners()
@@ -183,6 +195,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       This method also calls adjustCanvasSize.
     */
   , renderMap: function(){
+      return; // FIXME REIMPLEMENT?!
       this.renderMapFirst = true; // Tracking if we want the first case of renderMap.
       this.renderMap = function(){
         /*

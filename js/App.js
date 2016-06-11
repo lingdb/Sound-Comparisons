@@ -19,6 +19,8 @@ requirejs.config({
   , 'QueryString': 'extern/QueryString'
   , 'i18n': 'extern/i18next.amd.withJQuery-1.10.1'
   , 'markdown-it': 'extern/markdown-it.min'
+  , 'leaflet': 'extern/leaflet'
+  , 'leaflet-markercluster': 'extern/leaflet.markercluster'
   }
 , shim: {//Dependencies and magic for extern scripts
     'jquery': {exports: '$'}
@@ -38,6 +40,7 @@ requirejs.config({
   , 'Mustache': {exports: 'Mustache'}
   , 'LZString': {exports: 'LZString'}
   , 'QueryString': {exports: 'QueryString'}
+  , 'leaflet-markercluster': {deps: ['leaflet']}
   }
 });
 requirejs([
