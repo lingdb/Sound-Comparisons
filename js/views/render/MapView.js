@@ -5,14 +5,12 @@ define(['views/render/SubView',
         'views/render/WordView',
         'views/MouseTrackView',
         'views/WordMarker',
-        'views/WordClusterMarker',
         'leaflet','leaflet-markercluster'],
        function(SubView,
                 SoundControlView,
                 WordView,
                 MouseTrackView,
                 WordMarker,
-                WordClusterMarker,
                 L){
   return SubView.extend({
     /***/
@@ -31,15 +29,17 @@ define(['views/render/SubView',
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
       //Creating marker layer:
-  		this.markers = L.markerClusterGroup({
-        maxClusterRadius: 120,
-        iconCreateFunction: WordClusterMarker,
-        //Set flags:
-        animate: true,
-        showCoverageOnHover: true,
-        spiderfyOnMaxZoom: false,
-        zoomToBoundsOnClick: false
-  		});
+      this.markers = L.layerGroup(); // FIXME replace with markerClusterGroup
+      this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};
+//		this.markers = L.markerClusterGroup({
+//      maxClusterRadius: 120,
+//      iconCreateFunction: WordMarker.mkCluster,
+//      //Set flags:
+//      animate: true,
+//      showCoverageOnHover: true,
+//      spiderfyOnMaxZoom: false,
+//      zoomToBoundsOnClick: false
+//		});
       this.map.addLayer(this.markers);
 
       this.fixMap().renderMap();
@@ -205,7 +205,7 @@ define(['views/render/SubView',
       if('mapsData' in  this.model){
         var ts = this.model.mapsData.transcriptions, ms = [];
         _.each(ts, function(tData){
-          tData = WordMarker(this.map, tData);
+          tData = WordMarker.mkWordMarker(this.map, tData);
           ms.push(tData.marker);
         }, this);
         // Adding ms, duplicates filtered by markercluster:
