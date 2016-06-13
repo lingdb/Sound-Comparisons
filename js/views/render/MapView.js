@@ -13,21 +13,20 @@ define(['views/render/SubView',
       this.model = {}; // Notice that we also make heavy use of App.map
       //Connecting to the router
       App.router.on('route:mapView', this.route, this);
+      //Setting leaflet imagePath:
+      leaflet.Icon.Default.imagePath = '/img/leaflet.js/';
       //Map setup:
       this.div = document.getElementById("map_canvas");
       this.map = leaflet.map(this.div).setView([51.505, -0.09], 13);
-
+      //Specifying tileLayer:
       leaflet.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
-
+      //Setting a marker for testing:
       leaflet.marker([51.5, -0.09]).addTo(this.map)
           .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
           .openPopup();
 
-      return; // FIXME REIMPLEMENT?!
-
-      this.map = new google.maps.Map(this.div, App.map.get('mapOptions'));
       this.fixMap().renderMap();
       //SoundControlView:
       this.soundControlView = new SoundControlView({
@@ -39,13 +38,14 @@ define(['views/render/SubView',
       //Window resize
       var view = this;
       $(window).resize(function(){view.adjustCanvasSize();});
-      google.maps.event.addListener(this.map, 'zoom_changed', function(){
-        App.map.placeWordOverlays();
-      });
-      //Handle zooming via mouse on clicking the map:
-      google.maps.event.addListener(this.map, 'mousedown', function(){
-        view.setScrollWheel(true);
-      });
+// FIXME REIMPLEMENT MAP CODE:
+//    google.maps.event.addListener(this.map, 'zoom_changed', function(){
+//      App.map.placeWordOverlays();
+//    });
+//    //Handle zooming via mouse on clicking the map:
+//    google.maps.event.addListener(this.map, 'mousedown', function(){
+//      view.setScrollWheel(true);
+//    });
       $('body').on('mousedown', function(e){
         var onMap = $(e.target).parents('#map_canvas').length > 0;
         if(!onMap){
@@ -144,23 +144,20 @@ define(['views/render/SubView',
   , render: function(o){
       o = _.extend({renderMap: true}, o);
       if(App.pageState.isPageView(this)){
-        if(_.isUndefined(window.google)){
-          App.views.loadModalView.noMap();
-        }else{
-          //Rendering the template:
-          this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
-          //Binding click events:
-          this.bindEvents();
-          //Updating SoundControlView:
-          this.soundControlView.update();
-          //Setting mapsData to map model:
-          App.map.setModel(this.model.mapsData);
-          //Displaying stuff:
-          this.$el.removeClass('hide');
-          $('#map_canvas').removeClass('hide');
-          if(o.renderMap){
-            this.renderMap();
-          }
+        //Rendering the template:
+        this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
+        //Binding click events:
+        this.bindEvents();
+        //FIXME REIMPLEMENT
+        //Updating SoundControlView:
+        //this.soundControlView.update();
+        //Setting mapsData to map model:
+        //App.map.setModel(this.model.mapsData);
+        //Displaying stuff:
+        this.$el.removeClass('hide');
+        $('#map_canvas').removeClass('hide');
+        if(o.renderMap){
+          this.renderMap();
         }
       }else{
         this.$el.addClass('hide');
@@ -248,10 +245,6 @@ define(['views/render/SubView',
           }
           _.each(ls, function(l){ google.maps.event.removeListener(l); });
         };
-        //Listen to certain events to disable:
-        _.each(['zoom_changed','center_changed'], function(e){
-          ls.push(google.maps.event.addListener(t.map, e, disable));
-        });
         //Timeout to make sure disable is called:
         j = window.setTimeout(disable, 10000);
         //Getting everything running:
@@ -269,7 +262,7 @@ define(['views/render/SubView',
         , offset = canvas.offset();
       if(canvas.length !== 0){
         canvas.css('height', window.innerHeight - offset.top - 1 + 'px');
-        google.maps.event.trigger(this.map, "resize");
+        this.map.invalidateSize();
       }
       return this;
     }
@@ -302,6 +295,7 @@ define(['views/render/SubView',
       Centers the Map on the given region.
     */
   , centerRegion: function(){
+      return this; // FIXME REIMPLEMENT
       var bnds = App.map.get('regionBounds');
       if(bnds !== null){
         this.map.fitBounds(App.map.get('regionBounds'));
@@ -363,7 +357,12 @@ define(['views/render/SubView',
       but this functions allows us to change that.
     */
   , setScrollWheel: function(use){
-      return this.map.setOptions({scrollwheel: use});
+      if(use){
+        map.scrollWheelZoom.enable();
+      }else{
+        map.scrollWheelZoom.disable();
+      }
+      return this.map.scrollWheelZoom.enabled();
     }
     /**
       @param l Language
