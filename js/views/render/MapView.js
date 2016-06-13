@@ -4,8 +4,9 @@ define(['views/render/SubView',
         'views/SoundControlView',
         'views/render/WordView',
         'views/MouseTrackView',
+        'views/WordMarker',
         'leaflet','leaflet-markercluster'],
-       function(SubView, SoundControlView, WordView, MouseTrackView, leaflet){
+       function(SubView, SoundControlView, WordView, MouseTrackView, WordMarker, L){
   return SubView.extend({
     /***/
     initialize: function(){
@@ -14,18 +15,33 @@ define(['views/render/SubView',
       //Connecting to the router
       App.router.on('route:mapView', this.route, this);
       //Setting leaflet imagePath:
-      leaflet.Icon.Default.imagePath = '/img/leaflet.js/';
+      L.Icon.Default.imagePath = '/img/leaflet.js/';
       //Map setup:
       this.div = document.getElementById("map_canvas");
-      this.map = leaflet.map(this.div).setView([51.505, -0.09], 13);
+      this.map = L.map(this.div).setView([51.505, -0.09], 13);
       //Specifying tileLayer:
-      leaflet.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
       //Setting a marker for testing:
-      leaflet.marker([51.5, -0.09]).addTo(this.map)
-          .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-          .openPopup();
+      L.marker([51.5, -0.09]).addTo(this.map)
+        .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+        .openPopup();
+      //Creating marker layer:
+  		this.markers = L.markerClusterGroup({
+        maxClusterRadius: 120,
+        iconCreateFunction: function(c){
+          return L.divIcon({html: 'merged: '+c.getChildCount(),
+                            className: 'mapAudio',
+                            iconSize: L.point(40, 40)});
+        },
+        //Set flags:
+        animate: true,
+        showCoverageOnHover: true,
+        spiderfyOnMaxZoom: false,
+        zoomToBoundsOnClick: false
+  		});
+      this.map.addLayer(this.markers);
 
       this.fixMap().renderMap();
       //SoundControlView:
@@ -38,17 +54,12 @@ define(['views/render/SubView',
       //Window resize
       var view = this;
       $(window).resize(function(){view.adjustCanvasSize();});
-// FIXME REIMPLEMENT MAP CODE:
-//    google.maps.event.addListener(this.map, 'zoom_changed', function(){
-//      App.map.placeWordOverlays();
-//    });
-//    //Handle zooming via mouse on clicking the map:
-//    google.maps.event.addListener(this.map, 'mousedown', function(){
-//      view.setScrollWheel(true);
-//    });
+      //Handle zooming via mouse on clicking the map:
+      this.map.on('mousedown', _.bind(this.setScrollWheel, this, true));
       $('body').on('mousedown', function(e){
-        var onMap = $(e.target).parents('#map_canvas').length > 0;
-        if(!onMap){
+        var tgt = $(e.target)
+          , onMap = tgt.parents('#map_canvas').length > 0;
+        if(!onMap && tgt.attr('id') !== 'map_canvas'){
           view.setScrollWheel(false);
         }
       });
@@ -96,13 +107,14 @@ define(['views/render/SubView',
     }
     /***/
   , updateMapsData: function(){
-      return; // FIXME REIMPLEMENT?!
       var data = {
         transcriptions: []
       , regionZoom: App.study.getMapZoomCorners()
       }, word = App.wordCollection.getChoice();
       //Iterating languages:
-      var languages = App.pageState.get('mapViewIgnoreSelection') ? App.languageCollection.models : App.languageCollection.getSelected();
+      var languages = App.pageState.get('mapViewIgnoreSelection')
+                    ? App.languageCollection.models
+                    : App.languageCollection.getSelected();
       _.each(languages, function(l){
         var latlon = l.getLocation();
         if(latlon === null) return;
@@ -126,8 +138,7 @@ define(['views/render/SubView',
         data.transcriptions.push({
           altSpelling:        (tr !== null) ? tr.getAltSpelling() : ''
         , translation:        word.getNameFor(l)
-        , lat:                latlon[0]
-        , lon:                latlon[1]
+        , latlng:             L.latLng.apply(L, latlon)
         , historical:         l.isHistorical() ? 1 : 0
         , phoneticSoundfiles: psf
         , langName:           l.getShortName()
@@ -192,27 +203,18 @@ define(['views/render/SubView',
       This method also calls adjustCanvasSize.
     */
   , renderMap: function(){
-      return; // FIXME REIMPLEMENT?!
-      this.renderMapFirst = true; // Tracking if we want the first case of renderMap.
-      this.renderMap = function(){
-        /*
-          It would be nice to depend on events rather than a Timeout,
-          but events appeared to be rather annoying while this is simple.
-        */
-        if(this.renderMapFirst){
-          var t = this;
-          window.setTimeout(function(){
-            if(!t.renderMapFirst) return;
-            t.renderMapFirst = false;
-            t.adjustCanvasSize();
-            t.centerRegion();
-          }, 10000);
-        }else{
-          this.adjustCanvasSize();
-          this.centerRegion();
-        }
-      };
-      return this.renderMap();
+      //Test usage of WordMarker.js:
+      console.log('DEBUG', this.model);
+      if('mapsData' in  this.model){
+        var ts = this.model.mapsData.transcriptions, ms = [];
+        _.each(ts, function(tData){
+          tData = WordMarker(this.map, tData);
+          ms.push(tData.marker);
+        }, this);
+        this.markers.addLayers(ms);
+      }
+      this.adjustCanvasSize();
+      this.centerRegion();
     }
     /**
       @return this for chaining
@@ -308,6 +310,8 @@ define(['views/render/SubView',
       Fills a PlaySequence with currently displayed entries from the map in the given direction.
     */
   , fillPSeq: function(direction, playSequence){
+      //FIXME REIMPLEMENT
+      return;
       var wos = App.map.sortWordOverlays(direction);
       _.chain(wos).filter(function(wo){
         var view = wo.get('view');
@@ -358,9 +362,9 @@ define(['views/render/SubView',
     */
   , setScrollWheel: function(use){
       if(use){
-        map.scrollWheelZoom.enable();
+        this.map.scrollWheelZoom.enable();
       }else{
-        map.scrollWheelZoom.disable();
+        this.map.scrollWheelZoom.disable();
       }
       return this.map.scrollWheelZoom.enabled();
     }
