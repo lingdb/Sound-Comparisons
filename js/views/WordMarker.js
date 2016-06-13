@@ -1,7 +1,7 @@
 "use strict";
-define(['underscore',
+define(['underscore', 'jquery',
         'leaflet','leaflet.dom-markers'],
-       function(_, L){
+       function(_, $, L){
   /**
     The task of this module shall be to place a transcription marker on a leaflet map.
     It replaces the work formerly done by WordOverlay{View}.
@@ -50,15 +50,27 @@ define(['underscore',
     content = content.join(',<br>');
     //Creating the div:
     var div = document.createElement('div');
-    $(div).addClass('mapAudio', 'audio')
-          .html(content)
-          .css('background-color', data.color)
-          .attr('title', data.langName);
+    var $div = $(div).addClass('mapAudio', 'audio')
+                     .html(content)
+                     .css('background-color', data.color)
+                     .attr('title', data.langName);
     //Adding a marker to the map
     var icon = L.DomMarkers.icon({
       element: div,
       iconSize: L.point(40, 40)});
     var marker = L.marker(data.latlng, {icon: icon});
+    //Fixing the icon size when the marker is added:
+    marker.on('add', function(){
+      var w = 0, h = 0;
+      $div.find('.transcription').each(function(){
+        var t = $(this);
+        w = Math.max(w, t.width());
+        h += t.height();
+      });
+      //Fix size plus a tick:
+      icon.options.iconSize = [w+2, h+2];
+      marker.setIcon(icon);
+    });
     //Returning generated structures:
     return _.extend(data, {content: content, marker: marker});
   };
