@@ -23,7 +23,7 @@ define(['views/render/SubView',
       L.Icon.Default.imagePath = '/img/leaflet.js/';
       //Map setup:
       this.div = document.getElementById("map_canvas");
-      this.map = L.map(this.div).setView([51.505, -0.09], 13);
+      this.map = L.map(this.div).setView([54.92, 1.875], 2);
       //Specifying tileLayer:
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -244,7 +244,7 @@ define(['views/render/SubView',
           _.each(ls, function(l){ google.maps.event.removeListener(l); });
         };
         //Timeout to make sure disable is called:
-        j = window.setTimeout(disable, 10000);
+        j = window.setTimeout(disable, 5000);
         //Getting everything running:
         i = window.setInterval(function(){
           t.adjustCanvasSize().centerRegion();
@@ -293,10 +293,9 @@ define(['views/render/SubView',
       Centers the Map on the given region.
     */
   , centerRegion: function(){
-      return this; // FIXME REIMPLEMENT
-      var bnds = App.map.get('regionBounds');
-      if(bnds !== null){
-        this.map.fitBounds(App.map.get('regionBounds'));
+      var bnds = this.getRegionBounds();
+      if(!_.isEmpty(bnds)){
+        this.map.fitBounds(bnds);
         $('#map_menu_zoomCoreRegion').addClass('selected');
         $('#map_menu_zoomCenter').removeClass('selected');
       }
@@ -363,6 +362,20 @@ define(['views/render/SubView',
         this.map.scrollWheelZoom.disable();
       }
       return this.map.scrollWheelZoom.enabled();
+    }
+    /**
+      Compute the regionBounds for the current study.
+      @return LatLngBounds | null
+    */
+  , getRegionBounds: function(){
+      var study = window.App.study;
+      if(study.isReady()){
+        var get = _.bind(study.get, study);
+        var tl = L.latLng(get('DefaultTopLeftLat'), get('DefaultTopLeftLon'))
+          , br = L.latLng(get('DefaultBottomRightLat'), get('DefaultBottomRightLon'));
+        return L.latLngBounds([tl, br]);
+      }
+      return null;
     }
     /**
       @param l Language
