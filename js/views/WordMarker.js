@@ -1,6 +1,6 @@
 "use strict";
 define(['underscore',
-        'leaflet','leaflet-markercluster'],
+        'leaflet','leaflet.dom-markers'],
        function(_, L){
   /**
     The task of this module shall be to place a transcription marker on a leaflet map.
@@ -20,6 +20,10 @@ define(['underscore',
     }
   */
   return function(map, data){
+    //Checking if data was already processed:
+    if('marker' in data && 'content' in data){
+      return data; // Don't process a second time.
+    }
     //Generating the marker content:
     var content = _.map(data.phoneticSoundfiles, function(sf){
       //Building audioelements:
@@ -44,10 +48,15 @@ define(['underscore',
            + audio+'</div>';
     }, this);
     content = content.join(',<br>');
+    //Creating the div:
+    var div = document.createElement('div');
+    $(div).addClass('mapAudio', 'audio')
+          .html(content)
+          .css('background-color', data.color)
+          .attr('title', data.langName);
     //Adding a marker to the map
-    var icon = L.divIcon({
-      html: content,
-      className: 'mapAudio',
+    var icon = L.DomMarkers.icon({
+      element: div,
       iconSize: L.point(40, 40)});
     var marker = L.marker(data.latlng, {icon: icon});
     //Returning generated structures:

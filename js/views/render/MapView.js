@@ -5,8 +5,15 @@ define(['views/render/SubView',
         'views/render/WordView',
         'views/MouseTrackView',
         'views/WordMarker',
+        'views/WordClusterMarker',
         'leaflet','leaflet-markercluster'],
-       function(SubView, SoundControlView, WordView, MouseTrackView, WordMarker, L){
+       function(SubView,
+                SoundControlView,
+                WordView,
+                MouseTrackView,
+                WordMarker,
+                WordClusterMarker,
+                L){
   return SubView.extend({
     /***/
     initialize: function(){
@@ -23,18 +30,10 @@ define(['views/render/SubView',
       L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(this.map);
-      //Setting a marker for testing:
-      L.marker([51.5, -0.09]).addTo(this.map)
-        .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-        .openPopup();
       //Creating marker layer:
   		this.markers = L.markerClusterGroup({
         maxClusterRadius: 120,
-        iconCreateFunction: function(c){
-          return L.divIcon({html: 'merged: '+c.getChildCount(),
-                            className: 'mapAudio',
-                            iconSize: L.point(40, 40)});
-        },
+        iconCreateFunction: WordClusterMarker,
         //Set flags:
         animate: true,
         showCoverageOnHover: true,
@@ -49,7 +48,7 @@ define(['views/render/SubView',
         el: this.map, model: this});
       if(!_.isUndefined(MouseTrackView)){
         this.mouseTrackView = new MouseTrackView({
-        el: this.map, model: this});
+          el: this.map, model: this});
       }
       //Window resize
       var view = this;
@@ -203,14 +202,13 @@ define(['views/render/SubView',
       This method also calls adjustCanvasSize.
     */
   , renderMap: function(){
-      //Test usage of WordMarker.js:
-      console.log('DEBUG', this.model);
       if('mapsData' in  this.model){
         var ts = this.model.mapsData.transcriptions, ms = [];
         _.each(ts, function(tData){
           tData = WordMarker(this.map, tData);
           ms.push(tData.marker);
         }, this);
+        // Adding ms, duplicates filtered by markercluster:
         this.markers.addLayers(ms);
       }
       this.adjustCanvasSize();

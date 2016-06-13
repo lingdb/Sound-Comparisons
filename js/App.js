@@ -21,6 +21,7 @@ requirejs.config({
   , 'markdown-it': 'extern/markdown-it.min'
   , 'leaflet': 'extern/leaflet'
   , 'leaflet-markercluster': 'extern/leaflet.markercluster'
+  , 'leaflet.dom-markers': 'extern/leaflet.dom-markers'
   }
 , shim: {//Dependencies and magic for extern scripts
     'jquery': {exports: '$'}
@@ -41,6 +42,7 @@ requirejs.config({
   , 'LZString': {exports: 'LZString'}
   , 'QueryString': {exports: 'QueryString'}
   , 'leaflet-markercluster': {deps: ['leaflet']}
+  , 'leaflet.dom-markers': {deps: ['leaflet']}
   }
 });
 requirejs([
