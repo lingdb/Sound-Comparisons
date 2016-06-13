@@ -6,23 +6,45 @@ define(['underscore',
         'leaflet.dom-markers'],
        function(_, $, L){
   /**
-    The task of this module shall be to place a transcription marker on a leaflet map.
-    It replaces the work formerly done by WordOverlay{View}.
-    map :: L.map()
-    data :: {
-      altSpelling:        (tr !== null) ? tr.getAltSpelling() : ''
-    , translation:        word.getNameFor(l)
-    , latlng:             L.latlng
-    , historical:         l.isHistorical() ? 1 : 0
-    , phoneticSoundfiles: [{phonetic: String, soundfiles: [[String]]}]
-    , langName:           l.getShortName()
-    , languageLink:       'href="'+App.router.linkLanguageView({language: l})+'"'
-    , familyIx:           l.getFamilyIx()
-    , color:              proxyColor(l.getColor())
-    , languageIx:         l.getId()
-    }
+    Function to handle audio in .transcription parts in markers.
   */
+  var handleAudio = function(div){
+    $('.transcription', div).each(function(){
+      var audio = $(this).next().get(0);
+      if(audio){
+        $(this).on('click mouseover touchstart', function(e){
+          if(e.type === 'mouseover')
+            if(!window.App.soundPlayOption.playOnHover())
+              return;
+          window.App.views.audioLogic.play(audio);
+        });
+//      //Logic to set WordOverlay.playing accordingly:
+//      $(audio).on('play', function(){
+//        o.model.playing(true);
+//      }).on('ended pause', function(){
+//        o.model.playing(false);
+//      });
+      }
+    });
+  };
   return {
+    /**
+      The task of this function shall be to place a transcription marker
+      on a leaflet map.
+      map :: L.map()
+      data :: {
+        altSpelling:        (tr !== null) ? tr.getAltSpelling() : ''
+      , translation:        word.getNameFor(l)
+      , latlng:             L.latlng
+      , historical:         l.isHistorical() ? 1 : 0
+      , phoneticSoundfiles: [{phonetic: String, soundfiles: [[String]]}]
+      , langName:           l.getShortName()
+      , languageLink:       'href="'+App.router.linkLanguageView({language: l})+'"'
+      , familyIx:           l.getFamilyIx()
+      , color:              proxyColor(l.getColor())
+      , languageIx:         l.getId()
+      }
+    */
     'mkWordMarker': function(map, data){
       //Checking if data was already processed:
       if('marker' in data && 'content' in data){
@@ -34,7 +56,7 @@ define(['underscore',
         var audio = '';
         if(sf.soundfiles.length > 0){
           audio = '<audio '
-                + 'data-onDemand="' + JSON.stringify(sf.soundfiles) + '" '
+                + 'data-onDemand=\'' + JSON.stringify(sf.soundfiles) + '\' '
                 + 'autobuffer="" preload="auto"></audio>';
         }
         var fileMissing = ''; //Historical entries -> no files
@@ -78,6 +100,8 @@ define(['underscore',
         //Fix size plus a tick:
         icon.options.iconSize = [Math.max(w+2, 40), Math.max(h+2, 40)];
         marker.setIcon(icon);
+        // Connect audio events:
+        handleAudio(div);
       });
       //Returning generated structures:
       return _.extend(data, {content: content, marker: marker});

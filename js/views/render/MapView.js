@@ -161,8 +161,6 @@ define(['views/render/SubView',
         //FIXME REIMPLEMENT
         //Updating SoundControlView:
         //this.soundControlView.update();
-        //Setting mapsData to map model:
-        //App.map.setModel(this.model.mapsData);
         //Displaying stuff:
         this.$el.removeClass('hide');
         $('#map_canvas').removeClass('hide');
