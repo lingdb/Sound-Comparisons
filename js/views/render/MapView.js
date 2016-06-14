@@ -115,8 +115,8 @@ define(['views/render/SubView',
                     ? App.languageCollection.models
                     : App.languageCollection.getSelected();
       _.each(languages, function(l){
-        var latlon = l.getLocation();
-        if(latlon === null) return;
+        var latlng = l.getLatLng();
+        if(latlng === null) return;
         var tr = App.transcriptionMap.getTranscription(l, word);
         //Creating psf entries:
         var psf = [];
@@ -137,7 +137,7 @@ define(['views/render/SubView',
         data.transcriptions.push({
           altSpelling:        (tr !== null) ? tr.getAltSpelling() : ''
         , translation:        word.getNameFor(l)
-        , latlng:             L.latLng.apply(L, latlon)
+        , latlng:             latlng
         , historical:         l.isHistorical() ? 1 : 0
         , phoneticSoundfiles: psf
         , langName:           l.getShortName()
@@ -319,40 +319,6 @@ define(['views/render/SubView',
       });
     }
     /**
-      A method to compute a BoundingBox for the div that the map_canvas belongs to, relative to the browser viewport.
-      The algorithm to do so comes from http://stackoverflow.com/questions/211703/is-it-possible-to-get-the-position-of-div-within-the-browser-viewport-not-withi
-    */
-  , getBBox: function(){
-      var e = this.div, offset = {x:0,y:0};
-      //We traverse the parents of e to accumulate it's offsets:
-      while(e){
-        offset.x += e.offsetLeft;
-        offset.y += e.offsetTop;
-        e = e.offsetParent;
-      }
-      //We factor in the current scroll positions/page offsets:
-      if(document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)){
-        offset.x -= document.documentElement.scrollLeft;
-        offset.y -= document.documentElement.scrollTop;
-      }else if (document.body && (document.body.scrollTop || document.body.scrollLeft)){
-        offset.x -= document.body.scrollLeft;
-        offset.y -= document.body.scrollTop;
-      }else if (window.pageXOffset || window.pageYOffset){
-        offset.x -= window.pageXOffset;
-        offset.y -= window.pageYOffset;
-      }
-      //We complete the representation of our BBox:
-      e = $(this.div);
-      return {
-        x1: offset.x
-      , y1: offset.y
-      , x2: offset.x + e.width()
-      , y2: offset.y + e.height()
-      , w:  e.width()
-      , h:  e.height()
-      };
-    }
-    /**
       Per default, the map doesn't care for the scroll wheel,
       but this functions allows us to change that.
     */
@@ -396,16 +362,13 @@ define(['views/render/SubView',
       Otherwise nothing happens.
     */
   , boundLanguage: function(l){
-      this.renderMapFirst = false;//Making sure no timeout zooms along.
       var ll = l.getLatLng();
       if(!this.map.getBounds().contains(ll)){
-        var bounds = new google.maps.LatLngBounds()
-          , xs = window.App.languageCollection.map(function(l){return l.getLatLng();});
-        xs = _.sortBy(xs, function(x){
-          return google.maps.geometry.spherical.computeDistanceBetween(ll,x);
-        });
-        _.each(_.first(xs, 11), function(x){bounds.extend(x);});
-        this.map.fitBounds(bounds);
+        var lls = _.chain(window.App.languageCollection.models)
+                   .map(function(l){return l.getLatLng();})
+                   .sortBy(function(x){return ll.distanceTo(x);})
+                   .first(11).value();
+        this.map.fitBounds(L.latLngBounds(lls));
       }
     }
     /**
@@ -413,20 +376,20 @@ define(['views/render/SubView',
       Method to zoom in on the location of a single language.
     */
   , zoomLanguage: function(l){
-      this.renderMapFirst = false;//Making sure no timeout zooms along.
       var ll = l.getLatLng();
-      this.map.setCenter(ll);
-      this.map.setZoom(8);
+      if(ll !== null){
+        this.map.setView(l.getLatLng(), 8);
+      }
     }
     /**
       @param ls [Language]
       Method to zoom in on the bounding box of an array of languages.
     */
   , zoomLanguages: function(ls){
-      this.renderMapFirst = false;//Making sure no timeout zooms along.
-      var bounds = new google.maps.LatLngBounds();
-      _.each(ls, function(l){bounds.extend(l.getLatLng());});
-      this.map.fitBounds(bounds);
+      var bnds = L.latLngBounds(_.map(ls, function(l){
+        return l.getLatLng();
+      }, this));
+      this.map.fitBounds(bnds);
     }
   });
 });
