@@ -283,7 +283,8 @@ define(['views/render/SubView',
       Centers the Map on the given default.
     */
   , centerDefault: function(){
-      this.map.fitBounds(App.map.get('defaultBounds'));
+      var defaultBounds = this.getDefaultBounds();
+      this.map.fitBounds(defaultBounds);
       $('#map_menu_zoomCenter').addClass('selected');
       $('#map_menu_zoomCoreRegion').removeClass('selected');
       return this;
@@ -376,6 +377,16 @@ define(['views/render/SubView',
         return L.latLngBounds([tl, br]);
       }
       return null;
+    }
+    /**
+      Compute the defaultBounds for the current set of transcriptions.
+      @return LatLngBounds
+    */
+  , getDefaultBounds: function(){
+      return L.latLngBounds(
+        _.map(this.model.mapsData.transcriptions, function(t){
+          return t.latlng;
+        }, this));
     }
     /**
       @param l Language
