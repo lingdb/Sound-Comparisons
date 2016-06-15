@@ -1,6 +1,8 @@
 /* global document: false */
 "use strict";
-define(['backbone','models/PlaySequence'], function(Backbone, PlaySequence){
+define(['backbone',
+        'models/PlaySequence'],
+       function(Backbone, PlaySequence){
   /**
     el:    google.maps.Map
     model: MapView

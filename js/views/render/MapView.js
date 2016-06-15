@@ -304,19 +304,36 @@ define(['views/render/SubView',
     }
     /**
       Fills a PlaySequence with currently displayed entries from the map in the given direction.
+      @param direction 'ns'|'sn'|'we'|'ew'
+      @param playSequence PlaySequence
+      Strategy:
+      - Filter all transcriptions that are in current bounds.
+      - Project transcriptions to points.
+      - Sort points by direction.
+      - Add audio to playSequence for given points sequence.
     */
   , fillPSeq: function(direction, playSequence){
-      //FIXME REIMPLEMENT
-      return;
-      var wos = App.map.sortWordOverlays(direction);
-      _.chain(wos).filter(function(wo){
-        var view = wo.get('view');
-        if(wo.get('added') && view)
-          return view.onScreen();
-        return false;
-      }).each(function(wo){
-        playSequence.add(wo.getAudio());
-      });
+      var bnds = this.map.getBounds()
+        , ts = _.chain(this.model.mapsData.transcriptions)
+                .filter(function(t){return bnds.contains(t.latlng);})
+                .map(function(t){
+                  var p = this.map.latLngToLayerPoint(t.latlng);
+                  return {
+                    transcription: t
+                  , val: (direction === 'ns' || direction === 'sn') ? p.y : p.x
+                  };
+                }, this)
+                .sortBy(function(x){return x.val;})
+                .map(function(x){return x.transcription;})
+                .value();
+      if(direction === 'sn' || direction === 'ew'){
+        ts.reverse();
+      }
+      _.each(ts, function(t){
+        _.each(t.getAudio(), function(a){
+          playSequence.add(a);
+        }, this);
+      }, this);
     }
     /**
       Per default, the map doesn't care for the scroll wheel,

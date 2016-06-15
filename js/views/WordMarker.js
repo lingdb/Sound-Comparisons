@@ -103,8 +103,14 @@ define(['underscore',
         // Connect audio events:
         handleAudio(div);
       });
-      //Returning generated structures:
-      return _.extend(data, {content: content, marker: marker});
+      //Returning generated structures; expanding data:
+      return _.extend(data, {
+        content: content
+      , marker: marker
+      , getAudio: function(){
+          return $div.find('audio').get();
+        }
+      });
     },
     /**
       This is a function that generates
