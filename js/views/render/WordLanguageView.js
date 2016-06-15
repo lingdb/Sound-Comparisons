@@ -139,7 +139,7 @@ define(['views/render/SubView'], function(SubView){
             , word = _.extend({}, basic, {
             link:           'href="'+App.router.linkWordView({word: w})+'"'
           , ttip:           w.getLongName()
-          , trans:          w.getNameFor(spLang)
+          , trans:          w.getModernName()
           , deleteWordLink: 'href="'+App.router.linkWordLanguageView({words: remaining})+'"'
           , maps:           {link: 'href="'+App.router.linkMapView({word: w})+'"', ttip: mTtip}
           });

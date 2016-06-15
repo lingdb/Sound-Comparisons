@@ -188,7 +188,7 @@ define(['views/render/SubView'], function(SubView){
         transcriptions.push({
           link:     'href="'+App.router.linkWordView({word: word})+'"'
         , ttip:     word.getLongName()
-        , trans:    word.getNameFor(spLang)
+        , trans:    word.getModernName()
         , spelling: tr.getAltSpelling()
         , phonetic: tr.getPhonetics()
         });

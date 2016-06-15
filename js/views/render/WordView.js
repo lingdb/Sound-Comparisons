@@ -21,7 +21,7 @@ define(['views/render/SubView'], function(SubView){
         return;
       }
       var spLang   = App.pageState.getSpLang()
-        , headline = {name: word.getNameFor(spLang)}
+        , headline = {name: word.getModernName()}
         , longName = word.getLongName();
       if(_.isString(longName) && longName !== ''){
         headline.name = longName;
@@ -41,7 +41,7 @@ define(['views/render/SubView'], function(SubView){
         return {
           link:  'href="'+App.router.linkCurrent({word: w})+'"'
         , ttip:  w.getLongName()
-        , trans: w.getNameFor(spLang)
+        , trans: w.getModernName()
         };
       };
       //Previous Word:

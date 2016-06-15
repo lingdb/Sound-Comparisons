@@ -55,7 +55,7 @@ define(['views/render/SubView'], function(SubView){
         base.isFake = false;
         table.words = _.map(words, function(w){
           var remaining = App.wordCollection.getDifference(words, [w])
-            , alts = w.getNameFor(spLang);
+            , alts = w.getModernName();
           if(_.isArray(alts)) alts = alts.join(', ');
           var ln = w.getLongName();
           return _.extend({}, base, {
