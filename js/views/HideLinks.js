@@ -12,6 +12,8 @@ define(['backbone'], function(Backbone){
           , n = t.data('name');
         view.links[n] = t;
       });
+      this.setHover();
+      window.App.translationStorage.on('change:translationId', this.setHover, this);
     }
   , toggleChevron: function(t){
       if(t.hasClass('icon-chevron-right')){
@@ -27,7 +29,7 @@ define(['backbone'], function(Backbone){
       return 0;
     }
   , deltaSpan: function(t, d){
-      var s = this.getSpan(t); 
+      var s = this.getSpan(t);
       t.removeClass('span'+s).addClass('span'+(s+d));
     }
   , click: function(t){
@@ -65,6 +67,15 @@ define(['backbone'], function(Backbone){
           view.links[n].trigger('click');
         });
       });
+    }
+    /**
+      Setting the correct translation for hover texts.
+      This became apparent as a problem in #368.
+    */
+  , setHover: function(){
+      _.each(this.links, function($t, name){
+        $t.attr('title', window.App.translationStorage.translateStatic(name));
+      }, this);
     }
   });
 });
