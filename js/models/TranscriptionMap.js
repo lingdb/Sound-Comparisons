@@ -1,5 +1,8 @@
 "use strict";
-define(['backbone','models/Transcription','models/DummyTranscription'], function(Backbone, Transcription, DummyTranscription){
+define(['backbone',
+        'models/Transcription',
+        'models/DummyTranscription'],
+       function(Backbone, Transcription, DummyTranscription){
   /***/
   return Backbone.Model.extend({
     /**
