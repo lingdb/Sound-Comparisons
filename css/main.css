@@ -295,7 +295,6 @@ dd.languageList {
 }
 #map_data, #map_play_directions {display: none;}
 #SoundControlView {
-  margin-top: 18px;
   background-color: #ffffff;
   height: 50px;
   width: 50px;

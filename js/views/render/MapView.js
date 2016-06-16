@@ -45,7 +45,7 @@ define(['views/render/SubView',
       this.fixMap().renderMap();
       //SoundControlView:
       this.soundControlView = new SoundControlView({
-        el: this.map, model: this});
+        el: this.map, model: this.model});
       if(!_.isUndefined(MouseTrackView)){
         this.mouseTrackView = new MouseTrackView({
           el: this.map, model: this});
@@ -158,9 +158,8 @@ define(['views/render/SubView',
         this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
         //Binding click events:
         this.bindEvents();
-        //FIXME REIMPLEMENT
         //Updating SoundControlView:
-        //this.soundControlView.update();
+        this.soundControlView.update();
         //Displaying stuff:
         this.$el.removeClass('hide');
         $('#map_canvas').removeClass('hide');
