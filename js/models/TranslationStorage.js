@@ -214,7 +214,6 @@ define(['backbone','models/Loader'], function(Backbone, Loader){
       }
       var data = i18n.t(req);
       if(_.isUndefined(data) || data === req){
-        //FIXME THIS IS A BUG, methinks:
         console.log('data is '+data+' in translateStatic!');
         return 'translateStatic(FIXME)!';
       }
