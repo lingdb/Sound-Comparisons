@@ -31,6 +31,7 @@ define(['views/render/SubView',
       //Creating marker layer:
       this.markers = L.layerGroup(); // FIXME replace with markerClusterGroup
       this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};
+      this.markers.removeLayers = function(ls){_.each(ls, this.removeLayer, this);};
 //		this.markers = L.markerClusterGroup({
 //      maxClusterRadius: 120,
 //      iconCreateFunction: WordMarker.mkCluster,
@@ -199,14 +200,24 @@ define(['views/render/SubView',
       This method also calls adjustCanvasSize.
     */
   , renderMap: function(){
-      if('mapsData' in  this.model){
-        var ts = this.model.mapsData.transcriptions, ms = [];
+      if('mapsData' in this.model){
+        var ts = this.model.mapsData.transcriptions
+          , ms = {} // Newly added markers
         _.each(ts, function(tData){
           tData = WordMarker.mkWordMarker(this.map, tData);
-          ms.push(tData.marker);
+          tData.marker.__newlyAdded = true; // Marking the ones we still need:
+          ms[tData.marker.id] = tData.marker;
         }, this);
         // Adding ms, duplicates filtered by markercluster:
-        this.markers.addLayers(ms);
+        this.markers.addLayers(_.values(ms));
+        // Removing no longer wanted markers:
+        var removeMarkers = [];
+        _.each(this.markers.getLayers(), function(m){
+          if(!(m.id in ms)){
+            removeMarkers.push(m);
+          }
+        }, this);
+        this.markers.removeLayers(removeMarkers);
       }
       this.adjustCanvasSize();
       this.centerRegion();

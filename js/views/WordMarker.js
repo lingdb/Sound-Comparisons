@@ -103,6 +103,8 @@ define(['underscore',
         // Connect audio events:
         handleAudio(div);
       });
+      //Generating a marker id:
+      marker.id = _.uniqueId('WordMarker');
       //Returning generated structures; expanding data:
       return _.extend(data, {
         content: content
