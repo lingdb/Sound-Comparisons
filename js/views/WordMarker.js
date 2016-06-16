@@ -89,22 +89,22 @@ define(['underscore',
         return data;
       };
       var marker = L.marker(data.latlng, {icon: icon});
-      //Fixing the icon size when the marker is added:
-      marker.on('add', function(){
+      //Connect audio events when marker is added:
+      marker.on('add', _.bind(handleAudio, null, div));
+      //Generating a marker id:
+      marker.id = _.uniqueId('WordMarker');
+      //Function to fix the marker size:
+      marker.fixSize = function(){
         var w = 0, h = 0;
         $div.find('.transcription').each(function(){
           var t = $(this);
           w = Math.max(w, t.width());
           h += t.height();
         });
-        //Fix size plus a tick:
-        icon.options.iconSize = [Math.max(w+2, 40), Math.max(h+2, 40)];
-        marker.setIcon(icon);
-        // Connect audio events:
-        handleAudio(div);
-      });
-      //Generating a marker id:
-      marker.id = _.uniqueId('WordMarker');
+        //Update size:
+        icon.options.iconSize = [w, h];
+        this.setIcon(icon);
+      };
       //Returning generated structures; expanding data:
       return _.extend(data, {
         content: content

@@ -218,6 +218,10 @@ define(['views/render/SubView',
           }
         }, this);
         this.markers.removeLayers(removeMarkers);
+        //Fixing size of newly added markers:
+        window.setTimeout(function(){
+          _.each(_.values(ms), function(m){m.fixSize();});
+        }, 1);
       }
       this.adjustCanvasSize();
       this.centerRegion();
