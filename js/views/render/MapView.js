@@ -5,12 +5,14 @@ define(['views/render/SubView',
         'views/render/WordView',
         'views/MouseTrackView',
         'views/WordMarker',
+        'models/Loader',
         'leaflet','leaflet-markercluster'],
        function(SubView,
                 SoundControlView,
                 WordView,
                 MouseTrackView,
                 WordMarker,
+                Loader,
                 L){
   return SubView.extend({
     /***/
@@ -25,9 +27,24 @@ define(['views/render/SubView',
       this.div = document.getElementById("map_canvas");
       this.map = L.map(this.div).setView([54.92, 1.875], 2);
       //Specifying tileLayer:
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(this.map);
+      if(Loader.isOnline){
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(this.map);
+      }else{
+        L.tileLayer('mapnik//{z}/{x}/{y}.png', {
+            minZoom: 0
+          , maxZoom: 5
+          , attribution: "<a href='https://www.mapbox.com/about/maps/' "
+                           + "target='_blank'>&copy; Mapbox</a>"
+                       + "<a href='https://openstreetmap.org/about/' "
+                           + "target='_blank'>&copy; OpenStreetMap</a>"
+                       + "<a class='mapbox-improve-map' "
+                           + "href='https://www.mapbox.com/map-feedback/' "
+                           + "target='_blank'>Improve this map</a>"
+          , opacity: 0.85
+        }).addTo(this.map);
+      }
       //Creating marker layer:
       this.markers = L.layerGroup(); // FIXME replace with markerClusterGroup
       this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};

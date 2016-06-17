@@ -165,5 +165,6 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
                  return fetch(aboutRoute, {page: page}, false);
                }
     }
+  , 'isOnline': useAjax
   };
 });
