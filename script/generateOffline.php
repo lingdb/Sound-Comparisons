@@ -44,5 +44,21 @@ foreach($tdata as $t){
 $url .= implode('+', $lnames)."&ns=translation";
 fetchJSON($url, $file);
 // Fetch map tiles for offline usage:
-// FIXME IMPLEMENT
+function getMapUrl($z, $x, $y){
+  return "http://mapnik/mapbox-studio-osm-bright/$z/$x/$y.png";
+}
+$zooms = [0,1,2,3,4,5];
+foreach ($zooms as $z){
+  $n = pow(2, $z);
+  for($x = 0; $x < $n; $x++){
+    `mkdir -p $path/mapnik/$z/$x`;
+    for($y = 0; $y < $n; $y++){
+      $url = "http://mapnik/mapbox-studio-osm-bright/$z/$x/$y.png";
+      $file = "$path/mapnik/$z/$x/$y.png";
+      echo "Loading map file: $url\n";
+      file_put_contents($file, fopen($url, 'r'));
+    }
+  }
+}
+// Correct owner of $path:
 `chown 1000.1000 -R $path`;
