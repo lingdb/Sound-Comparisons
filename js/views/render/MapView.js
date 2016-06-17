@@ -144,7 +144,7 @@ define(['views/render/SubView',
         , langName:           l.getShortName()
         , languageLink:       'href="'+App.router.linkLanguageView({language: l})+'"'
         , familyIx:           l.getFamilyIx()
-        , color:              proxyColor(l.getColor())
+        , color:              proxyColor(l.getColor()).color
         , languageIx:         l.getId()
         });
       }, this);
