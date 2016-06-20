@@ -12,7 +12,13 @@ define(['backbone'], function(Backbone){
     , spLang: null
     , phLang: null
     , pageView: 'map'
-    , pageViews: ['map','word','language','languagesXwords','wordsXlanguages','contributorView','aboutView']
+    , pageViews: ['map'
+                 ,'word'
+                 ,'language'
+                 ,'languagesXwords'
+                 ,'wordsXlanguages'
+                 ,'contributorView'
+                 ,'aboutView']
     , pageViewShortcuts: {
         'm':  'map'
       , 'w':  'word'
