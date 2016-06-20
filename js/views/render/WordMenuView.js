@@ -7,13 +7,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
   return Backbone.View.extend({
     initialize: function(){
       //Setting the initial model:
-      this.model = {
-        searchFilter: {
-          fClearAllLink: function(){
-            return 'data-href="'+App.router.linkCurrent({words: []})+'"';
-          }
-        }
-      };
+      this.model = {searchFilter: {}};
       //We need a WordlistFilter:
       this.wordlistFilter = new WordlistFilter();
     }
@@ -197,8 +191,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
                 var remaining = words.getDifference(
                   App.filteredWordCollection.getSelected(), words);
                 box.icon = 'icon-check';
-                box.link = 'data-href="'+App.router.linkCurrent({
-                  words: remaining})+'"';
+                box.link = App.router.linkCurrent({words: remaining});
                 box.ttip = App.translationStorage.translateStatic(
                   'multimenu_tooltip_minus');
               break;
@@ -208,8 +201,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
               case 'none':
                 var additional = words.getUnion(
                   App.filteredWordCollection.getSelected(), words);
-                box.link = 'data-href="'+App.router.linkCurrent({
-                  words: additional})+'"';
+                box.link = App.router.linkCurrent({words: additional});
                 box.ttip = App.translationStorage.translateStatic(
                   'multimenu_tooltip_plus');
             }
@@ -263,7 +255,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
             w.icon = {
               ttip: App.translationStorage.translateStatic(
                 'multimenu_tooltip_del')
-            , link: 'href="'+App.router.linkCurrent({words: remaining})+'"'
+            , link: App.router.linkCurrent({words: remaining})
             , icon: 'icon-check'
             };
           }else{
@@ -272,16 +264,14 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
             w.icon = {
               ttip: App.translationStorage.translateStatic(
                 'multimenu_tooltip_add')
-            , link: 'href="'+App.router.linkCurrent({words: additional})+'"'
+            , link: App.router.linkCurrent({words: additional})
             , icon: 'icon-chkbox-custom'
             };
           }
         }
         //Link for each word:
-        w.link = App.pageState.isMapView() ? 'href="'+App.router.linkMapView({
-                                              word: word})+'"'
-                                           : 'href="'+App.router.linkWordView({
-                                              word: word})+'"';
+        w.link = App.pageState.isMapView() ? App.router.linkMapView({word: word})
+                                           : App.router.linkWordView({word: word});
         //Phonetics:
         var phonetics = ['*'+word.getProtoName()]
           , phLang = App.pageState.getPhLang();
@@ -307,7 +297,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       this.wordlistFilter.reinitialize();
       //Setting up callbacks:
       //WordOrder:
-      this.$('[data-href]').click(function(){
+      this.$('#sortBy input[data-href]').click(function(){
         App.router.navigate($(this).attr('data-href'));
       });
       //Sp-/Phlang:
