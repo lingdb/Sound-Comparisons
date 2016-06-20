@@ -6,7 +6,7 @@ define(['views/render/SubView',
         'views/MouseTrackView',
         'views/WordMarker',
         'models/Loader',
-        'leaflet','leaflet-markercluster'],
+        'leaflet','leaflet-markercluster','leaflet-providers'],
        function(SubView,
                 SoundControlView,
                 WordView,
@@ -28,9 +28,13 @@ define(['views/render/SubView',
       this.map = L.map(this.div).setView([54.92, 1.875], 2);
       //Specifying tileLayer:
       if(Loader.isOnline){
-        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(this.map);
+        var baseLayers = {
+          'Open Street Map': L.tileLayer.provider('OpenStreetMap').addTo(this.map),
+          'Stamen Watercolor': L.tileLayer.provider('Stamen.Watercolor'),
+          'Stamen Terrain': L.tileLayer.provider('Stamen.Terrain'),
+          'Stamen Toner': L.tileLayer.provider('Stamen.Toner')
+        };
+        L.control.layers(baseLayers).addTo(this.map);
       }else{
         L.tileLayer('mapnik//{z}/{x}/{y}.png', {
             minZoom: 0
