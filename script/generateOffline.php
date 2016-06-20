@@ -47,7 +47,7 @@ fetchJSON($url, $file);
 function getMapUrl($z, $x, $y){
   return "http://mapnik/mapbox-studio-osm-bright/$z/$x/$y.png";
 }
-$zooms = [0,1,2,3,4,5];
+$zooms = [0,1,2,3,4,5,6,7,8];
 foreach ($zooms as $z){
   $n = pow(2, $z);
   for($x = 0; $x < $n; $x++){
