@@ -86,7 +86,8 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       }
       //Filling spList:
       var spLang = App.pageState.getSpLang();
-      data.spList.current = spLang ? spLang.getSpellingName() : App.translationStorage.getName();
+      data.spList.current = spLang ? spLang.getSpellingName()
+                                   : App.translationStorage.getName();
       //First item:
       if(spLang){
         data.spList.options.push({
@@ -135,7 +136,8 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
               , t = l.getTranscription(w);
             if(!t.hasPhonetics()) return;
             //Adding as phLang:
-            var config = l.isSpellingLanguage() ? {PhLang: l, SpLang: l} : {PhLang: l};
+            var config = l.isSpellingLanguage() ? {PhLang: l, SpLang: l}
+                                                : {PhLang: l};
             data.phList.options.push({
               link: 'data-href="'+App.router.linkConfig(config)+'"'
             , name: l.getShortName()
@@ -158,8 +160,10 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       });
       data.isLogical = App.pageState.wordOrderIsLogical();
       if(data.isLogical){
-        data.ahref = 'href="'+App.router.linkConfig({MeaningGroups: App.meaningGroupCollection})+'"';
-        data.nhref = 'href="'+App.router.linkConfig({MeaningGroups: []})+'"';
+        data.ahref = 'href="'+App.router.linkConfig({
+          MeaningGroups: App.meaningGroupCollection})+'"';
+        data.nhref = 'href="'+App.router.linkConfig({
+          MeaningGroups: []})+'"';
         data.meaningGroups = [];
         var isMulti = App.pageState.isMultiView();
         App.meaningGroupCollection.each(function(m){
@@ -171,7 +175,8 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
             , mg = {
                 name: m.getName()
               , fold: collapsed ? 'mgFold' : 'mgUnfold'
-              , triangle: collapsed ? 'icon-chevron-up rotate90' : 'icon-chevron-down'
+              , triangle: collapsed ? 'icon-chevron-up rotate90'
+                                    : 'icon-chevron-down'
               };
           //Building the link to toggle the MeaningGroup:
           var toggleGroup = [], mgCol = App.meaningGroupCollection;
@@ -182,24 +187,31 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
             toggleGroup = mgCol.unselect(m).getSelected();
             mgCol.select(m);
           }
-          mg.link = 'href="'+App.router.linkConfig({MeaningGroups: toggleGroup})+'"';
+          mg.link = 'href="'+App.router.linkConfig({
+            MeaningGroups: toggleGroup})+'"';
           //Building the checkbox:
           if(isMulti){
             var box = {icon: 'icon-chkbox-custom'};
             switch(App.wordCollection.areSelected(words)){
               case 'all':
-                var remaining = words.getDifference(App.filteredWordCollection.getSelected(), words);
+                var remaining = words.getDifference(
+                  App.filteredWordCollection.getSelected(), words);
                 box.icon = 'icon-check';
-                box.link = 'data-href="'+App.router.linkCurrent({words: remaining})+'"';
-                box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_minus');
+                box.link = 'data-href="'+App.router.linkCurrent({
+                  words: remaining})+'"';
+                box.ttip = App.translationStorage.translateStatic(
+                  'multimenu_tooltip_minus');
               break;
               case 'some':
                 box.icon = 'icon-chkbox-half-custom';
               /* falls through */
               case 'none':
-                var additional = words.getUnion(App.filteredWordCollection.getSelected(), words);
-                box.link = 'data-href="'+App.router.linkCurrent({words: additional})+'"';
-                box.ttip = App.translationStorage.translateStatic('multimenu_tooltip_plus');
+                var additional = words.getUnion(
+                  App.filteredWordCollection.getSelected(), words);
+                box.link = 'data-href="'+App.router.linkCurrent({
+                  words: additional})+'"';
+                box.ttip = App.translationStorage.translateStatic(
+                  'multimenu_tooltip_plus');
             }
             mg.checkbox = box;
           }
@@ -246,23 +258,30 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
         //The checkbox/icon:
         if(isMulti){
           if(w.selected){
-            var remaining = App.wordCollection.getDifference(App.wordCollection.getSelected(), [word]);
+            var remaining = App.wordCollection.getDifference(
+              App.wordCollection.getSelected(), [word]);
             w.icon = {
-              ttip: App.translationStorage.translateStatic('multimenu_tooltip_del')
+              ttip: App.translationStorage.translateStatic(
+                'multimenu_tooltip_del')
             , link: 'href="'+App.router.linkCurrent({words: remaining})+'"'
             , icon: 'icon-check'
             };
           }else{
-            var additional = App.wordCollection.getUnion(App.wordCollection.getSelected(), [word]);
+            var additional = App.wordCollection.getUnion(
+              App.wordCollection.getSelected(), [word]);
             w.icon = {
-              ttip: App.translationStorage.translateStatic('multimenu_tooltip_add')
+              ttip: App.translationStorage.translateStatic(
+                'multimenu_tooltip_add')
             , link: 'href="'+App.router.linkCurrent({words: additional})+'"'
             , icon: 'icon-chkbox-custom'
             };
           }
         }
         //Link for each word:
-        w.link = App.pageState.isMapView() ? 'href="'+App.router.linkMapView({word: word})+'"' : 'href="'+App.router.linkWordView({word: word})+'"';
+        w.link = App.pageState.isMapView() ? 'href="'+App.router.linkMapView({
+                                              word: word})+'"'
+                                           : 'href="'+App.router.linkWordView({
+                                              word: word})+'"';
         //Phonetics:
         var phonetics = ['*'+word.getProtoName()]
           , phLang = App.pageState.getPhLang();
@@ -280,7 +299,8 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
     /***/
   , render: function(){
       //Updating the WordMenu html representation:
-      this.$el.html(App.templateStorage.render('WordMenu', {WordMenu: this.model}));
+      this.$el.html(App.templateStorage.render('WordMenu', {
+        WordMenu: this.model}));
       //Soundfiles and related:
       this.setupMgWordEvents();
       //Reinitializing the WordlistFilter:
