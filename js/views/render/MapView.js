@@ -36,7 +36,7 @@ define(['views/render/SubView',
         };
         L.control.layers(baseLayers).addTo(this.map);
       }else{
-        L.tileLayer('mapnik//{z}/{x}/{y}.png', {
+        L.tileLayer('mapnik/{z}/{x}/{y}.png', {
             minZoom: 0
           , maxZoom: 5
           , attribution: "<a href='https://www.mapbox.com/about/maps/' "
