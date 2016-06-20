@@ -287,7 +287,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       this.wordlistFilter.reinitialize();
       //Setting up callbacks:
       //WordOrder:
-      this.$('#sortBy input[data-href]').click(function(){
+      this.$('[data-href]').click(function(){
         App.router.navigate($(this).attr('data-href'));
       });
       //Sp-/Phlang:
