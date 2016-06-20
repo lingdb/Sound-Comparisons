@@ -36,10 +36,10 @@ define(['backbone'], function(Backbone){
       Sets up callbacks to manipulate PageState when necessary.
     */
   , activate: function(){
-      //{sp,ph}Lang need resetting sometimes:
-      var reset = function(){this.set({spLang: null, phLang: null});};
-      App.study.on('change', reset, this);
-      App.translationStorage.on('change:translationId', reset, this);
+      //{Sp,Ph}Lang need resetting on study change:
+      App.study.on('change', this.resetLangs, this);
+      //{Sp,Ph}Lang need updating on translation change:
+      App.translationStorage.on('change:translationId', this.translationChanged, this);
     }
   //Managing the wordOrder:
     /**
@@ -103,6 +103,26 @@ define(['backbone'], function(Backbone){
     /***/
   , setPhLang: function(l){
       this.set({phLang: l || null});
+    }
+    /**
+      This method will be called on change:translationId from TranslationStorage.
+      It's objective is to set {Sp,Ph}Lang according to the new translationId.
+    */
+  , translationChanged: function(){
+      var l = App.translationStorage.getRfcLanguage();
+      if(l !== null){
+        this.attributes.spLang = l;
+        this.attributes.phLang = l;
+      }else{
+        this.resetLangs();
+      }
+    }
+    /**
+      This function resets the {Sp,Ph}Lang properties of the PageState.
+      It will normaly be called on study change.
+    */
+  , resetLangs: function(){
+      this.set({spLang: null, phLang: null});
     }
   //Managing pageView:
     /**
