@@ -38,7 +38,7 @@ define(['views/render/SubView',
       }else{
         L.tileLayer('mapnik/{z}/{x}/{y}.png', {
             minZoom: 0
-          , maxZoom: 8
+          , maxZoom: 17
           , attribution: "<a href='https://www.mapbox.com/about/maps/' "
                            + "target='_blank'>&copy; Mapbox</a>"
                        + "<a href='https://openstreetmap.org/about/' "
