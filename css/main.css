@@ -210,6 +210,13 @@ dd.languageList {
 .highlighted ~ .contributorImage,
 .highlighted ~ .languageLink {display: inline;}
 .languageLink > img, .zoomLanguage > i {margin-left: 0px; margin-right: 0px;}
+.contributorImage.bootbox.modal {
+  top: 0px;
+}
+.contributorImage .modal-body {
+  max-height: 800px;
+  padding: 7px 0px 0px 0px;
+}
 /*Style in rightMenu:*/
 #rightMenu {padding: 0px; margin-bottom: 0px;}
 #rightMenu h3 {text-align: center;}

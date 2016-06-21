@@ -9,7 +9,8 @@ define(['jquery','bootbox', 'underscore'], function($, bootbox, _){
       title: '',
       message: imgs,
       buttons: {},
-      show: true
+      show: true,
+      className: 'contributorImage'
     });
   };
   /**
