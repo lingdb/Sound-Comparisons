@@ -410,5 +410,13 @@ define(['views/render/SubView',
       }, this));
       this.map.fitBounds(bnds);
     }
+    /**
+      @param l Language
+      This function highlights a language on the map.
+    */
+  , highlight: function(l){
+      console.log('FIXME reimplement MapView.highlight()');
+      //FIXME reimplement
+    }
   });
 });
