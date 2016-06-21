@@ -30,8 +30,12 @@ define(['views/render/SubView',
       if(Loader.isOnline){
         var baseLayers = {
           'Open Street Map': L.tileLayer.provider('OpenStreetMap').addTo(this.map),
+          'Esri NatGeoWorldMap': L.tileLayer.provider('Esri.NatGeoWorldMap'),
+          'Esri WorldImagery': L.tileLayer.provider('Esri.WorldImagery'),
+          'Esri WorldShadedRelief': L.tileLayer.provider('Esri.WorldShadedRelief'),
+          'Esri DeLorme': L.tileLayer.provider('Esri.DeLorme'),
+          'Esri WorldTopoMap': L.tileLayer.provider('Esri.WorldTopoMap'),
           'Stamen Watercolor': L.tileLayer.provider('Stamen.Watercolor'),
-          'Stamen Terrain': L.tileLayer.provider('Stamen.Terrain'),
           'Stamen Toner': L.tileLayer.provider('Stamen.Toner')
         };
         L.control.layers(baseLayers).addTo(this.map);
