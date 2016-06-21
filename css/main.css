@@ -210,6 +210,13 @@ dd.languageList {
 .highlighted ~ .contributorImage,
 .highlighted ~ .languageLink {display: inline;}
 .languageLink > img, .zoomLanguage > i {margin-left: 0px; margin-right: 0px;}
+.contributorImage.bootbox.modal {
+  top: 0px;
+}
+.contributorImage .modal-body {
+  max-height: 800px;
+  padding: 7px 0px 0px 0px;
+}
 /*Style in rightMenu:*/
 #rightMenu {padding: 0px; margin-bottom: 0px;}
 #rightMenu h3 {text-align: center;}
@@ -295,7 +302,6 @@ dd.languageList {
 }
 #map_data, #map_play_directions {display: none;}
 #SoundControlView {
-  margin-top: 18px;
   background-color: #ffffff;
   height: 50px;
   width: 50px;
@@ -401,7 +407,9 @@ div.transcription { /*The color of phonetics that can be played with hover*/
   display:       inline-block;
   padding-left:  0.1em;
   padding-right: 0.1em;
-  font-family:   "Calibri", "Arial Unicode MS", "Cambria", "Doulos SIL", "Gentium", "TITUS Cyberbit Basic", sans-serif;}
+  font-family:   "Calibri", "Arial Unicode MS", "Cambria", "Doulos SIL", "Gentium", "TITUS Cyberbit Basic", sans-serif;
+  white-space: nowrap;
+}
 div.altSpelling { /*The color of altSpellings, usually inside some table above the phonetics*/
   font-style:   italic;
   font-family:  "Calibri", "Arial Unicode MS", "Cambria", "Doulos SIL", "Gentium", "TITUS Cyberbit Basic", sans-serif;}

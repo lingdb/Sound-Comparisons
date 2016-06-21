@@ -1,45 +1,96 @@
 /* global document: false */
 "use strict";
-define(['backbone','models/PlaySequence'], function(Backbone, PlaySequence){
+define(['backbone',
+        'jquery',
+        'models/PlaySequence',
+        'leaflet'],
+       function(Backbone, $, PlaySequence, L){
   /**
     el:    google.maps.Map
-    model: MapView
+    model: MapView.model
+    SoundControlView will be instantiated by MapView,
+    and share it's model and map.
   */
   return Backbone.View.extend({
     initialize: function(){
+      this.control = L.control({position: 'topright'});
+      this.control.onAdd = function(map){
+        return $('#map_play_directions').attr('id','SoundControlView').detach().get(0);
+      };
     }
   , update: function(){
-      if($('#map_play_directions').length === 0) return;
-      if($('#SoundControlView').length > 0) return;
-      var div     = document.createElement('div')
-        , dirs    = $('#map_play_directions')
-        , mapView = this.model;
-      $(div).attr('id','SoundControlView').html(dirs.html()).find('i').each(function(i, e){
-        //Initializing the PlayButtons…
-        var target    = $(e);
-        var direction = target.attr('data-direction');
-        var pSeq      = new PlaySequence(target);
+      //Add control to map if it's not there:
+      if(_.isUndefined(this.control._map)){
+        this.addControlToMap();
+      }
+    }
+    /**
+      This function is called by update
+      to add control to the map and bind click handlers.
+    */
+  , addControlToMap: function(){
+      var soundControlView = this;
+      //Add control to map:
+      this.control.addTo(this.el);
+      //Initializing the PlayButtons:
+      var buttons = $('#SoundControlView > i').each(function(i, e){
+        var target = $(e)
+          , direction = target.attr('data-direction')
+          , pSeq = new PlaySequence(target);
+        // Replace pSeq.showPlay:
         var _showPlay = pSeq.showPlay;
         pSeq.showPlay = function(){
           this.clear();
           _showPlay.call(this);
         };
+        // Replace pSeq.showPause:
         var _showPause = pSeq.showPause;
         pSeq.showPause = function(){
-          mapView.fillPSeq(direction, this);
+          soundControlView.fillPSeq(direction, this);
           //Stop another one running:
-          $('#SoundControlView > i').each(function(){
-            if($(this).hasClass('icon-pause'))
-              $(this).trigger('click');
+          buttons.each(function(){
+            var $t = $(this);
+            if($t.hasClass('icon-pause')){
+              $t.trigger('click');
+            }
           });
           //Show this one:
           _showPause.call(this);
         };
       });
-      //Placing the control on the Map:
-      this.el.controls[google.maps.ControlPosition.TOP_LEFT].push(div);
-      //A little cleanup:
-      dirs.remove();
+    }
+    /**
+      Fills a PlaySequence with currently displayed entries from the map in the given direction.
+      @param direction 'ns'|'sn'|'we'|'ew'
+      @param playSequence PlaySequence
+      Strategy:
+      - Filter all transcriptions that are in current bounds.
+      - Project transcriptions to points.
+      - Sort points by direction.
+      - Add audio to playSequence for given points sequence.
+    */
+  , fillPSeq: function(direction, playSequence){
+      var bnds = this.el.getBounds()
+        , ts = _.chain(this.model.mapsData.transcriptions)
+                .filter(function(t){return bnds.contains(t.latlng);})
+                .map(function(t){
+                  var p = this.el.latLngToLayerPoint(t.latlng);
+                  return {
+                    transcription: t
+                  , val: (direction === 'ns' || direction === 'sn') ? p.y : p.x
+                  };
+                }, this)
+                .sortBy(function(x){return x.val;})
+                .map(function(x){return x.transcription;})
+                .value();
+      if(direction === 'sn' || direction === 'ew'){
+        ts.reverse();
+      }
+      _.each(ts, function(t){
+        _.each(t.getAudio(), function(a){
+          playSequence.add(a);
+        }, this);
+      }, this);
     }
   });
 });

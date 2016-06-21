@@ -20,7 +20,7 @@ define(['backbone','bootstrap'], function(Backbone){
       var view = this;
       promise.always(function(){view.render();});
     }
-  , noMap: function(){
+  , noMap: function(){  // FIXME MAYBE REMOVE THIS?!
       var data = App.translationStorage.translateStatic({
         headline: 'LoadModalView_mapHeadline'
       , description: 'LoadModalView_mapText'

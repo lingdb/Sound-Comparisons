@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone','views/ContributorImageView'], function(Backbone, ContributorImageView){
+define(['underscore','backbone','views/ContributorImageView'], function(_, Backbone, ContributorImageView){
   /**
     The LanguageMenuView will be used by the Renderer.
     It will set it's own model and handle it similar to TopMenuView.
@@ -253,7 +253,7 @@ define(['backbone','views/ContributorImageView'], function(Backbone, Contributor
         //Zoom+center map:
         map.boundLanguage(l);
         //Color the marker:
-        var color = function(){App.map.highlight(l);};
+        var color = _.bind(App.views.renderer.model.mapView.highlight, null, l);
         if(add){
           window.setTimeout(color, 500);
         }else{color();}

@@ -1,43 +1,90 @@
 /* global document: false */
 "use strict";
-define(['views/render/SubView','views/SoundControlView','views/render/WordView','views/MouseTrackView'], function(SubView,SoundControlView, WordView, MouseTrackView){
+define(['views/render/SubView',
+        'views/SoundControlView',
+        'views/render/WordView',
+        'views/MouseTrackView',
+        'views/WordMarker',
+        'models/Loader',
+        'leaflet','leaflet-markercluster','leaflet-providers'],
+       function(SubView,
+                SoundControlView,
+                WordView,
+                MouseTrackView,
+                WordMarker,
+                Loader,
+                L){
   return SubView.extend({
     /***/
     initialize: function(){
       //Data representation created by update methods:
       this.model = {}; // Notice that we also make heavy use of App.map
-      this.renderMapFlag = false; // Hackish approach to solve the 'zoom on change word'-problem.
       //Connecting to the router
       App.router.on('route:mapView', this.route, this);
-      //Abort further work if no maps:
-      if(_.isUndefined(window.google)){
-        console.log('MapView.initialize() aborts, google undefined.');
-        return;
-      }
+      //Setting leaflet imagePath:
+      L.Icon.Default.imagePath = '/img/leaflet.js/';
       //Map setup:
       this.div = document.getElementById("map_canvas");
-      this.map = new google.maps.Map(this.div, App.map.get('mapOptions'));
+      this.map = L.map(this.div).setView([54.92, 1.875], 2);
+      //Specifying tileLayer:
+      if(Loader.isOnline){
+        var baseLayers = {
+          'Open Street Map': L.tileLayer.provider('OpenStreetMap').addTo(this.map),
+          'Esri NatGeoWorldMap': L.tileLayer.provider('Esri.NatGeoWorldMap'),
+          'Esri WorldImagery': L.tileLayer.provider('Esri.WorldImagery'),
+          'Esri WorldShadedRelief': L.tileLayer.provider('Esri.WorldShadedRelief'),
+          'Esri DeLorme': L.tileLayer.provider('Esri.DeLorme'),
+          'Esri WorldTopoMap': L.tileLayer.provider('Esri.WorldTopoMap'),
+          'Stamen Watercolor': L.tileLayer.provider('Stamen.Watercolor'),
+          'Stamen Toner': L.tileLayer.provider('Stamen.Toner')
+        };
+        L.control.layers(baseLayers).addTo(this.map);
+      }else{
+        L.tileLayer('mapnik/{z}/{x}/{y}.png', {
+            minZoom: 0
+          , maxZoom: 17
+          , attribution: "<a href='https://www.mapbox.com/about/maps/' "
+                           + "target='_blank'>&copy; Mapbox</a>"
+                       + "<a href='https://openstreetmap.org/about/' "
+                           + "target='_blank'>&copy; OpenStreetMap</a>"
+                       + "<a class='mapbox-improve-map' "
+                           + "href='https://www.mapbox.com/map-feedback/' "
+                           + "target='_blank'>Improve this map</a>"
+          , opacity: 0.85
+        }).addTo(this.map);
+      }
+      //Creating marker layer:
+      this.markers = L.layerGroup(); // FIXME replace with markerClusterGroup
+      this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};
+      this.markers.removeLayers = function(ls){_.each(ls, this.removeLayer, this);};
+//		this.markers = L.markerClusterGroup({
+//      maxClusterRadius: 120,
+//      iconCreateFunction: WordMarker.mkCluster,
+//      //Set flags:
+//      animate: true,
+//      showCoverageOnHover: true,
+//      spiderfyOnMaxZoom: false,
+//      zoomToBoundsOnClick: false
+//		});
+      this.map.addLayer(this.markers);
+
       this.fixMap().renderMap();
       //SoundControlView:
       this.soundControlView = new SoundControlView({
-        el: this.map, model: this});
+        el: this.map, model: this.model});
       if(!_.isUndefined(MouseTrackView)){
         this.mouseTrackView = new MouseTrackView({
-        el: this.map, model: this});
+          el: this.map, model: this});
       }
       //Window resize
       var view = this;
       $(window).resize(function(){view.adjustCanvasSize();});
-      google.maps.event.addListener(this.map, 'zoom_changed', function(){
-        App.map.placeWordOverlays();
-      });
       //Handle zooming via mouse on clicking the map:
-      google.maps.event.addListener(this.map, 'mousedown', function(){
-        view.setScrollWheel(true);
-      });
+      this.map.on('mousedown', _.bind(this.setScrollWheel, this, true));
       $('body').on('mousedown', function(e){
-        var onMap = $(e.target).parents('#map_canvas').length > 0;
-        if(!onMap){
+        var tgt = $(e.target)
+          , onMap = tgt.parents('#map_canvas').length > 0;
+        if(!onMap && tgt.attr('id') !== 'map_canvas'){
           view.setScrollWheel(false);
         }
       });
@@ -90,10 +137,12 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       , regionZoom: App.study.getMapZoomCorners()
       }, word = App.wordCollection.getChoice();
       //Iterating languages:
-      var languages = App.pageState.get('mapViewIgnoreSelection') ? App.languageCollection.models : App.languageCollection.getSelected();
+      var languages = App.pageState.get('mapViewIgnoreSelection')
+                    ? App.languageCollection.models
+                    : App.languageCollection.getSelected();
       _.each(languages, function(l){
-        var latlon = l.getLocation();
-        if(latlon === null) return;
+        var latlng = l.getLatLng();
+        if(latlng === null) return;
         var tr = App.transcriptionMap.getTranscription(l, word);
         //Creating psf entries:
         var psf = [];
@@ -114,14 +163,13 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
         data.transcriptions.push({
           altSpelling:        (tr !== null) ? tr.getAltSpelling() : ''
         , translation:        word.getNameFor(l)
-        , lat:                latlon[0]
-        , lon:                latlon[1]
+        , latlng:             latlng
         , historical:         l.isHistorical() ? 1 : 0
         , phoneticSoundfiles: psf
         , langName:           l.getShortName()
         , languageLink:       'href="'+App.router.linkLanguageView({language: l})+'"'
         , familyIx:           l.getFamilyIx()
-        , color:              proxyColor(l.getColor())
+        , color:              proxyColor(l.getColor()).color
         , languageIx:         l.getId()
         });
       }, this);
@@ -132,23 +180,17 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
   , render: function(o){
       o = _.extend({renderMap: true}, o);
       if(App.pageState.isPageView(this)){
-        if(_.isUndefined(window.google)){
-          App.views.loadModalView.noMap();
-        }else{
-          //Rendering the template:
-          this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
-          //Binding click events:
-          this.bindEvents();
-          //Updating SoundControlView:
-          this.soundControlView.update();
-          //Setting mapsData to map model:
-          App.map.setModel(this.model.mapsData);
-          //Displaying stuff:
-          this.$el.removeClass('hide');
-          $('#map_canvas').removeClass('hide');
-          if(o.renderMap){
-            this.renderMap();
-          }
+        //Rendering the template:
+        this.$el.html(App.templateStorage.render('MapView', {MapView: this.model}));
+        //Binding click events:
+        this.bindEvents();
+        //Updating SoundControlView:
+        this.soundControlView.update();
+        //Displaying stuff:
+        this.$el.removeClass('hide');
+        $('#map_canvas').removeClass('hide');
+        if(o.renderMap){
+          this.renderMap();
         }
       }else{
         this.$el.addClass('hide');
@@ -183,26 +225,31 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       This method also calls adjustCanvasSize.
     */
   , renderMap: function(){
-      this.renderMapFirst = true; // Tracking if we want the first case of renderMap.
-      this.renderMap = function(){
-        /*
-          It would be nice to depend on events rather than a Timeout,
-          but events appeared to be rather annoying while this is simple.
-        */
-        if(this.renderMapFirst){
-          var t = this;
-          window.setTimeout(function(){
-            if(!t.renderMapFirst) return;
-            t.renderMapFirst = false;
-            t.adjustCanvasSize();
-            t.centerRegion();
-          }, 10000);
-        }else{
-          this.adjustCanvasSize();
-          this.centerRegion();
-        }
-      };
-      return this.renderMap();
+      if('mapsData' in this.model){
+        var ts = this.model.mapsData.transcriptions
+          , ms = {} // Newly added markers
+        _.each(ts, function(tData){
+          tData = WordMarker.mkWordMarker(this.map, tData);
+          tData.marker.__newlyAdded = true; // Marking the ones we still need:
+          ms[tData.marker.id] = tData.marker;
+        }, this);
+        // Adding ms, duplicates filtered by markercluster:
+        this.markers.addLayers(_.values(ms));
+        // Removing no longer wanted markers:
+        var removeMarkers = [];
+        _.each(this.markers.getLayers(), function(m){
+          if(!(m.id in ms)){
+            removeMarkers.push(m);
+          }
+        }, this);
+        this.markers.removeLayers(removeMarkers);
+        //Fixing size of newly added markers:
+        window.setTimeout(function(){
+          _.each(_.values(ms), function(m){m.fixSize();});
+        }, 1);
+      }
+      this.adjustCanvasSize();
+      this.centerRegion();
     }
     /**
       @return this for chaining
@@ -235,12 +282,8 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
           }
           _.each(ls, function(l){ google.maps.event.removeListener(l); });
         };
-        //Listen to certain events to disable:
-        _.each(['zoom_changed','center_changed'], function(e){
-          ls.push(google.maps.event.addListener(t.map, e, disable));
-        });
         //Timeout to make sure disable is called:
-        j = window.setTimeout(disable, 10000);
+        j = window.setTimeout(disable, 5000);
         //Getting everything running:
         i = window.setInterval(function(){
           t.adjustCanvasSize().centerRegion();
@@ -256,7 +299,7 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
         , offset = canvas.offset();
       if(canvas.length !== 0){
         canvas.css('height', window.innerHeight - offset.top - 1 + 'px');
-        google.maps.event.trigger(this.map, "resize");
+        this.map.invalidateSize();
       }
       return this;
     }
@@ -279,7 +322,8 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       Centers the Map on the given default.
     */
   , centerDefault: function(){
-      this.map.fitBounds(App.map.get('defaultBounds'));
+      var defaultBounds = this.getDefaultBounds();
+      this.map.fitBounds(defaultBounds);
       $('#map_menu_zoomCenter').addClass('selected');
       $('#map_menu_zoomCoreRegion').removeClass('selected');
       return this;
@@ -289,68 +333,49 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       Centers the Map on the given region.
     */
   , centerRegion: function(){
-      var bnds = App.map.get('regionBounds');
-      if(bnds !== null){
-        this.map.fitBounds(App.map.get('regionBounds'));
+      var bnds = this.getRegionBounds();
+      if(!_.isEmpty(bnds)){
+        this.map.fitBounds(bnds);
         $('#map_menu_zoomCoreRegion').addClass('selected');
         $('#map_menu_zoomCenter').removeClass('selected');
       }
       return this;
     }
     /**
-      Fills a PlaySequence with currently displayed entries from the map in the given direction.
-    */
-  , fillPSeq: function(direction, playSequence){
-      var wos = App.map.sortWordOverlays(direction);
-      _.chain(wos).filter(function(wo){
-        var view = wo.get('view');
-        if(wo.get('added') && view)
-          return view.onScreen();
-        return false;
-      }).each(function(wo){
-        playSequence.add(wo.getAudio());
-      });
-    }
-    /**
-      A method to compute a BoundingBox for the div that the map_canvas belongs to, relative to the browser viewport.
-      The algorithm to do so comes from http://stackoverflow.com/questions/211703/is-it-possible-to-get-the-position-of-div-within-the-browser-viewport-not-withi
-    */
-  , getBBox: function(){
-      var e = this.div, offset = {x:0,y:0};
-      //We traverse the parents of e to accumulate it's offsets:
-      while(e){
-        offset.x += e.offsetLeft;
-        offset.y += e.offsetTop;
-        e = e.offsetParent;
-      }
-      //We factor in the current scroll positions/page offsets:
-      if(document.documentElement && (document.documentElement.scrollTop || document.documentElement.scrollLeft)){
-        offset.x -= document.documentElement.scrollLeft;
-        offset.y -= document.documentElement.scrollTop;
-      }else if (document.body && (document.body.scrollTop || document.body.scrollLeft)){
-        offset.x -= document.body.scrollLeft;
-        offset.y -= document.body.scrollTop;
-      }else if (window.pageXOffset || window.pageYOffset){
-        offset.x -= window.pageXOffset;
-        offset.y -= window.pageYOffset;
-      }
-      //We complete the representation of our BBox:
-      e = $(this.div);
-      return {
-        x1: offset.x
-      , y1: offset.y
-      , x2: offset.x + e.width()
-      , y2: offset.y + e.height()
-      , w:  e.width()
-      , h:  e.height()
-      };
-    }
-    /**
       Per default, the map doesn't care for the scroll wheel,
       but this functions allows us to change that.
     */
   , setScrollWheel: function(use){
-      return this.map.setOptions({scrollwheel: use});
+      if(use){
+        this.map.scrollWheelZoom.enable();
+      }else{
+        this.map.scrollWheelZoom.disable();
+      }
+      return this.map.scrollWheelZoom.enabled();
+    }
+    /**
+      Compute the regionBounds for the current study.
+      @return LatLngBounds | null
+    */
+  , getRegionBounds: function(){
+      var study = window.App.study;
+      if(study.isReady()){
+        var get = _.bind(study.get, study);
+        var tl = L.latLng(get('DefaultTopLeftLat'), get('DefaultTopLeftLon'))
+          , br = L.latLng(get('DefaultBottomRightLat'), get('DefaultBottomRightLon'));
+        return L.latLngBounds([tl, br]);
+      }
+      return null;
+    }
+    /**
+      Compute the defaultBounds for the current set of transcriptions.
+      @return LatLngBounds
+    */
+  , getDefaultBounds: function(){
+      return L.latLngBounds(
+        _.map(this.model.mapsData.transcriptions, function(t){
+          return t.latlng;
+        }, this));
     }
     /**
       @param l Language
@@ -360,16 +385,13 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       Otherwise nothing happens.
     */
   , boundLanguage: function(l){
-      this.renderMapFirst = false;//Making sure no timeout zooms along.
       var ll = l.getLatLng();
       if(!this.map.getBounds().contains(ll)){
-        var bounds = new google.maps.LatLngBounds()
-          , xs = window.App.languageCollection.map(function(l){return l.getLatLng();});
-        xs = _.sortBy(xs, function(x){
-          return google.maps.geometry.spherical.computeDistanceBetween(ll,x);
-        });
-        _.each(_.first(xs, 11), function(x){bounds.extend(x);});
-        this.map.fitBounds(bounds);
+        var lls = _.chain(window.App.languageCollection.models)
+                   .map(function(l){return l.getLatLng();})
+                   .sortBy(function(x){return ll.distanceTo(x);})
+                   .first(11).value();
+        this.map.fitBounds(L.latLngBounds(lls));
       }
     }
     /**
@@ -377,20 +399,28 @@ define(['views/render/SubView','views/SoundControlView','views/render/WordView',
       Method to zoom in on the location of a single language.
     */
   , zoomLanguage: function(l){
-      this.renderMapFirst = false;//Making sure no timeout zooms along.
       var ll = l.getLatLng();
-      this.map.setCenter(ll);
-      this.map.setZoom(8);
+      if(ll !== null){
+        this.map.setView(l.getLatLng(), 8);
+      }
     }
     /**
       @param ls [Language]
       Method to zoom in on the bounding box of an array of languages.
     */
   , zoomLanguages: function(ls){
-      this.renderMapFirst = false;//Making sure no timeout zooms along.
-      var bounds = new google.maps.LatLngBounds();
-      _.each(ls, function(l){bounds.extend(l.getLatLng());});
-      this.map.fitBounds(bounds);
+      var bnds = L.latLngBounds(_.map(ls, function(l){
+        return l.getLatLng();
+      }, this));
+      this.map.fitBounds(bnds);
+    }
+    /**
+      @param l Language
+      This function highlights a language on the map.
+    */
+  , highlight: function(l){
+      console.log('FIXME reimplement MapView.highlight()');
+      //FIXME reimplement
     }
   });
 });

@@ -1,5 +1,10 @@
 "use strict";
-define(['require','backbone','models/RegionLanguage','models/Contributor'], function(require, Backbone, RegionLanguage, Contributor){
+define(['require',
+        'backbone',
+        'models/RegionLanguage',
+        'models/Contributor',
+        'leaflet'],
+       function(require, Backbone, RegionLanguage, Contributor, L){
   /***/
   return Backbone.Model.extend({
     initialize: function(){
@@ -381,7 +386,7 @@ define(['require','backbone','models/RegionLanguage','models/Contributor'], func
   , getLatLng: function(){
       var pos = this.getLocation();
       if(pos !== null){
-        return new google.maps.LatLng(pos[0], pos[1]);
+        return L.latLng.apply(L, pos);
       }
       return null;
     }

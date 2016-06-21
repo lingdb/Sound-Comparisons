@@ -19,6 +19,10 @@ requirejs.config({
   , 'QueryString': 'extern/QueryString'
   , 'i18n': 'extern/i18next.amd.withJQuery-1.10.1'
   , 'markdown-it': 'extern/markdown-it.min'
+  , 'leaflet': 'extern/leaflet'
+  , 'leaflet-markercluster': 'extern/leaflet.markercluster'
+  , 'leaflet.dom-markers': 'extern/leaflet.dom-markers'
+  , 'leaflet-providers': 'extern/leaflet-providers'
   }
 , shim: {//Dependencies and magic for extern scripts
     'jquery': {exports: '$'}
@@ -38,6 +42,9 @@ requirejs.config({
   , 'Mustache': {exports: 'Mustache'}
   , 'LZString': {exports: 'LZString'}
   , 'QueryString': {exports: 'QueryString'}
+  , 'leaflet-markercluster': {deps: ['leaflet']}
+  , 'leaflet.dom-markers': {deps: ['leaflet']}
+  , 'leaflet-providers': {deps: ['leaflet']}
   }
 });
 requirejs([
@@ -58,7 +65,6 @@ requirejs([
 , 'models/Defaults'
 , 'models/LoadingBar'
 , 'models/Logger'
-, 'models/Map'
 , 'models/PageState'
 , 'models/SoundDownloader'
 , 'models/SoundPlayOption'
@@ -111,12 +117,6 @@ requirejs([
       , views: {}
       , wordCollection: new (require('collections/WordCollection'))()
       });
-      (function(){
-        var Map = require('models/Map');
-        if(_.isFunction(Map)){
-          _.extend(window.App, {map: new Map()});
-        }
-      })();
       //Adding FilteredWordCollection:
       App.filteredWordCollection = new (require('collections/FilteredWordCollection'))();
       //Making sure TranslationStorage does it's thing:
