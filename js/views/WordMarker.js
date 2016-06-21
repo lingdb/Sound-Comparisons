@@ -69,7 +69,7 @@ define(['underscore',
           sf.phonetic = "*" + sf.phonetic;
         }
         return '<div style="display: inline;">'
-             + '<div class="transcription' + fileMissing + '"'+smallCaps+'>'
+             + '<div class="transcription'+fileMissing+'"'+smallCaps+'>'
              + sf.phonetic + '</div>'
              + audio+'</div>';
       }, this);
@@ -124,16 +124,20 @@ define(['underscore',
       //div to embed into:
       var div = document.createElement('div')
         , $div = $(div)
-        , w = 0, h = 0; // Sizes to calculate:
+        , w = 0, h = 0 // Sizes to calculate:
+        , childMarkers = cluster.getAllChildMarkers()
+        , contents = [];
+      console.log('DEBUG', childMarkers);
       _.each(cluster.getAllChildMarkers(), function(marker){
         var iOps = marker.options.icon.options;
         //Append icon to $div:
-        $div.append(iOps.getData().content);
+        contents.push(iOps.getData().content);
         //Updating size calculations:
         var size = iOps.iconSize;
         w = Math.max(w, size[0]);
         h += size[1];
       }, this);
+      $div.append(contents.join('<br>'));
       var cIcon = L.DomMarkers.icon({
         element: div,
         className: 'mapAudio',

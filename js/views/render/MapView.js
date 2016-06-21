@@ -54,18 +54,15 @@ define(['views/render/SubView',
         }).addTo(this.map);
       }
       //Creating marker layer:
-      this.markers = L.layerGroup(); // FIXME replace with markerClusterGroup
-      this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};
-      this.markers.removeLayers = function(ls){_.each(ls, this.removeLayer, this);};
-//		this.markers = L.markerClusterGroup({
-//      maxClusterRadius: 120,
-//      iconCreateFunction: WordMarker.mkCluster,
-//      //Set flags:
-//      animate: true,
-//      showCoverageOnHover: true,
-//      spiderfyOnMaxZoom: false,
-//      zoomToBoundsOnClick: false
-//		});
+      this.markers = L.markerClusterGroup({
+        maxClusterRadius: 120,
+        iconCreateFunction: WordMarker.mkCluster,
+        //Set flags:
+        animate: true,
+        showCoverageOnHover: true,
+        spiderfyOnMaxZoom: false,
+        zoomToBoundsOnClick: false
+      });
       this.map.addLayer(this.markers);
 
       this.fixMap().renderMap();
