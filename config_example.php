@@ -13,10 +13,10 @@ date_default_timezone_set('UTC');
 class Config extends ConfigBase {
   /* Login data for the database to use for the main parts of the site */
   private static $mainDbLogin = array(
-    'server' => 'localhost' 
-  , 'user'   => 'root' 
-  , 'passwd' => '1234' 
-  , 'db'     => 'v4' 
+    'server' => 'localhost'
+  , 'user'   => 'root'
+  , 'passwd' => '1234'
+  , 'db'     => 'v4'
   );
   /* Login data to use for the admin area, that will overwrite values in mainDbLogin */
   private static $adminDbLogin = array();
@@ -26,6 +26,8 @@ class Config extends ConfigBase {
   public static $soundPath     = 'sound';
   public static $downloadPath  = 'export/download';
   public static $locale        = 'en-US';
+  // Used to decide on minified js:
+  public static $deployed      = false;
   /***/
   public static function getConnection(){
     if(is_null(self::$dbConnection)){

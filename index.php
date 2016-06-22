@@ -16,8 +16,7 @@
     )
   );
   //Checking for minified js/App setup:
-  require_once('Git.php');
-  if(Git::getBranch() === 'master'){
+  if(Config::$deployed){
     $app = 'js/App-minified';
     if(file_exists('./'.$app.'.js')){
       unset($index['head']['requirejs']);
