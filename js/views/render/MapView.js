@@ -35,8 +35,6 @@ define(['views/render/SubView',
           'Esri WorldShadedRelief': L.tileLayer.provider('Esri.WorldShadedRelief'),
           'Esri DeLorme': L.tileLayer.provider('Esri.DeLorme'),
           'Esri WorldTopoMap': L.tileLayer.provider('Esri.WorldTopoMap'),
-          'Stamen Watercolor': L.tileLayer.provider('Stamen.Watercolor'),
-          'Stamen Toner': L.tileLayer.provider('Stamen.Toner')
         };
         L.control.layers(baseLayers).addTo(this.map);
       }else{
