@@ -29,12 +29,12 @@ define(['views/render/SubView',
       //Specifying tileLayer:
       if(Loader.isOnline){
         var baseLayers = {
-          'Open Street Map': L.tileLayer.provider('OpenStreetMap').addTo(this.map),
-          'Esri NatGeoWorldMap': L.tileLayer.provider('Esri.NatGeoWorldMap'),
-          'Esri WorldImagery': L.tileLayer.provider('Esri.WorldImagery'),
-          'Esri WorldShadedRelief': L.tileLayer.provider('Esri.WorldShadedRelief'),
-          'Esri DeLorme': L.tileLayer.provider('Esri.DeLorme'),
-          'Esri WorldTopoMap': L.tileLayer.provider('Esri.WorldTopoMap'),
+          'Esri World Imagery': L.tileLayer.provider('Esri.WorldImagery').addTo(this.map),
+          'Esri NatGeo World Map': L.tileLayer.provider('Esri.NatGeoWorldMap'),
+          'Open Street Map': L.tileLayer.provider('OpenStreetMap'),
+          'Esri World Topo Map': L.tileLayer.provider('Esri.WorldTopoMap'),
+          'Esri De Lorme': L.tileLayer.provider('Esri.DeLorme'),
+          'Esri World Shaded Relief': L.tileLayer.provider('Esri.WorldShadedRelief')
         };
         L.control.layers(baseLayers).addTo(this.map);
       }else{
