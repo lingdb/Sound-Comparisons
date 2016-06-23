@@ -272,9 +272,14 @@ define(['views/render/SubView',
       return function(){
         if(i === null){
           var isMapView = _.bind(App.pageState.isMapView, App.pageState);
+          var c = 0; // Making sure the first few intervals call centerRegion.
           i = window.setInterval(_.bind(function(){
             if(isMapView()){
-              this.adjustCanvasSize().centerRegion();
+              this.adjustCanvasSize();
+              if(c < 5){
+                this.centerRegion();
+                c++;
+              }
             }else if(i !== null){
               window.clearInterval(i);
               i = null;
