@@ -88,10 +88,9 @@ define(['views/render/SubView'], function(SubView){
       //Maps link:
       var loc = lang.getLocation();
       if(loc){
-        var ll = loc.join();
         ls.push({
           ttip: App.translationStorage.translateStatic('tooltip_languages_link_mapview')
-        , href: "https://www.google.com/maps/place/"+ll+"/@"+ll+",7z/"
+        , href: "http://www.openstreetmap.org/?mlat="+loc[0]+"&mlon="+loc[1]
         , img:  'img/langmap.png'
         });
       }

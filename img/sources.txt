@@ -1,4 +1,4 @@
-c4b6ea1336db0a3389e479f386f80509  langmap.png                    CC-BY http://findicons.com/icon/117370/map?id=426655#
+87f6ca46ac356e81dc438589630ae107  langmap.png                    Possibly https://github.com/openstreetmap/map-icons
 7cead373f403a60c9ebb5ab466ed2193  sort-icon.png                  Research!?
 2ce7e2af0f84e89fd0fff49a6698cb27  transpose.png                  Selfmade
 c485aaec85f3f9ef1132f5b8cd6df27f  transpose.svg                  Selfmade
