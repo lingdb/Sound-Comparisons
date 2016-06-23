@@ -24,7 +24,7 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
         See https://stackoverflow.com/q/12279236/448591
         This is necessary for first rendering, and will probably come in handy when changing study…
       */
-      App.wordCollection.on('change reset add remove', this.filterWords, this);
+      App.wordCollection.on('change reset add remove sort', this.filterWords, this);
     }
     /**
       @param options Object following the schema of filterOptions.
