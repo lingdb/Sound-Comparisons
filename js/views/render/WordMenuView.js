@@ -154,10 +154,9 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
       });
       data.isLogical = App.pageState.wordOrderIsLogical();
       if(data.isLogical){
-        data.ahref = 'href="'+App.router.linkConfig({
-          MeaningGroups: App.meaningGroupCollection})+'"';
-        data.nhref = 'href="'+App.router.linkConfig({
-          MeaningGroups: []})+'"';
+        data.ahref = App.router.linkConfig({
+          MeaningGroups: App.meaningGroupCollection});
+        data.nhref = App.router.linkConfig({MeaningGroups: []});
         data.meaningGroups = [];
         var isMulti = App.pageState.isMultiView();
         App.meaningGroupCollection.each(function(m){
@@ -181,8 +180,7 @@ define(['backbone','views/WordlistFilter'], function(Backbone, WordlistFilter){
             toggleGroup = mgCol.unselect(m).getSelected();
             mgCol.select(m);
           }
-          mg.link = 'href="'+App.router.linkConfig({
-            MeaningGroups: toggleGroup})+'"';
+          mg.link = App.router.linkConfig({MeaningGroups: toggleGroup});
           //Building the checkbox:
           if(isMulti){
             var box = {icon: 'icon-chkbox-custom'};
