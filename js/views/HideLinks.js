@@ -44,8 +44,8 @@ define(['backbone'], function(Backbone){
         this.deltaSpan(this.content, -delta);
       }
       //Telling the MapView to adjust:
-      if(window.App.views.mapView){
-        window.App.views.mapView.adjustCanvasSize();
+      if(window.App.pageState.isMapView()){
+        window.App.views.renderer.model.mapView.fixMap();
       }
       //Adjusting nanoScrollers:
       window.App.views.renderer.nanoScroller();

@@ -6,6 +6,7 @@ define(['views/render/SubView',
         'views/MouseTrackView',
         'views/WordMarker',
         'models/Loader',
+        'underscore',
         'leaflet','leaflet-markercluster','leaflet-providers'],
        function(SubView,
                 SoundControlView,
@@ -13,6 +14,7 @@ define(['views/render/SubView',
                 MouseTrackView,
                 WordMarker,
                 Loader,
+                _,
                 L){
   return SubView.extend({
     /***/
@@ -265,30 +267,24 @@ define(['views/render/SubView',
       1: Events are fired that indicate we've done the right thing
       2: We've done this for 10s and nothing changed
     */
-  , fixMap: function(){
-      (function(t){
-        var i = null, j = null, ls = [];
-        //Disable the intervall:
-        var disable = function(){
-          if(i !== null){
-            window.clearInterval(i);
-            i = null;
-          }
-          if(j !== null){
-            window.clearTimeout(j);
-            j = null;
-          }
-          _.each(ls, function(l){ google.maps.event.removeListener(l); });
-        };
-        //Timeout to make sure disable is called:
-        j = window.setTimeout(disable, 5000);
-        //Getting everything running:
-        i = window.setInterval(function(){
-          t.adjustCanvasSize().centerRegion();
-        }, 1000);
-      })(this);
-      return this;
-    }
+  , fixMap: (function(){
+      var i = null; // Sharing i between different calls of fixMap()
+      return function(){
+        if(i === null){
+          var isMapView = _.bind(App.pageState.isMapView, App.pageState);
+          i = window.setInterval(_.bind(function(){
+            if(isMapView()){
+              this.adjustCanvasSize().centerRegion();
+            }else if(i !== null){
+              window.clearInterval(i);
+              i = null;
+            }
+          }, this), 1000);
+        }
+        //Direct call in addition to interval:
+        return this.adjustCanvasSize().centerRegion();
+      };
+    })()
     /**
       A method to make sure that the canvas size equals the maximum size possible in the current browser window.
     */
