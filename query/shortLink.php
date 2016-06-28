@@ -9,7 +9,6 @@ class ShortLink {
     $alphabet describes the set of characters to which we will shorten a URL.
     This alphabet is 64 symbols long.
     This means that Each of it's symbols describes 6 bits.
-    
   */
   public static $alphabet = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-+';
   /**

@@ -1,5 +1,9 @@
 "use strict";
-define(['Sanitizer','models/Language','backbone'], function(Sanitizer, Language, Backbone){
+define(['Sanitizer',
+        'models/Language',
+        'backbone',
+        'underscore'],
+       function(Sanitizer, Language, Backbone, _){
   /**
     The Configurator provides means to build configuration such as used by the Linker.
   */
