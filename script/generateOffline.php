@@ -28,9 +28,6 @@ if(preg_match('/^$|data|all/', $_ENV['EXPORT_TASK'])){
   foreach($global['studies'] as $study){
      fetchJSON("$baseUrl/data?study=$study", "$path/data/data_study_$study");
   }
-  // Providing template files:
-  fetchJSON("$baseUrl/templateInfo", "$path/data/templateInfo");
-  `cp -rv templates/* $path/data`;
   // Providing translation files:
   $tdata = fetchJSON("$baseUrl/translations?action=summary",
                      "$path/data/translations_action_summary");
