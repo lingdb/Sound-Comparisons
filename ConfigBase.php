@@ -71,7 +71,7 @@ abstract class ConfigBase {
       self::$mustache = new Mustache_Engine(array(
         'charset' => 'UTF-8'
       , 'loader'  => new Mustache_Loader_FilesystemLoader(
-          dirname(__FILE__).'/templates'
+          dirname(__FILE__).'/js/templates'
         , array('extension' => 'html')
         )
       ));

@@ -122,7 +122,6 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
   };
   /** The endpoints to use: */
   var dataRoute = 'query/data'
-    , templateRoute = 'query/templateInfo'
     , translationRoute = 'query/translations'
     , i18nRoute = (useAjax ? translationRoute+'?lng=__lng__&ns=__ns__'
                            : translationRoute+'_i18n')
@@ -135,12 +134,6 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     , 'study':   function(studyName){
                    return fetch(dataRoute, {study: studyName}, true);
                  }
-    }
-  , 'template': {
-      'info': mkFetch(templateRoute, {}, true)
-    , 'fetch': function(path){
-                 return fetch(path, {}, false);
-               }
     }
   , 'translation': {
       'summary': mkFetch(translationRoute, {action: 'summary'}, true)

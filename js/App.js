@@ -105,7 +105,7 @@ requirejs([
       , router: new (require('Router'))()
       , soundDownloader: new (require('models/SoundDownloader'))()
       , setupBar: new (require('models/LoadingBar'))({
-          segments: 6 // TranslationStorage: 1, DataStorage: 3, TemplateStorage: 1, Study: 1
+          segments: 5 // TranslationStorage: 1, DataStorage: 3, Study: 1
         })
       , studyWatcher: new (require('models/StudyWatcher'))()
       , study: new (require('models/Study'))()

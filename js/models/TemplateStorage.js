@@ -1,116 +1,75 @@
 "use strict";
-define(['backbone','Mustache','LZString','models/Loader'], function(Backbone, Mustache, LZString, Loader){
+define(['require',
+        'underscore',
+        'backbone',
+        'Mustache',
+        'models/Loader',
+        // Templates to be provided by TemplateStorage:
+        'extern/text!templates/body.html',
+        'extern/text!templates/contributor.html',
+        'extern/text!templates/contributors.html',
+        'extern/text!templates/head.html',
+        'extern/text!templates/index.html',
+        'extern/text!templates/ipaConsonants.html',
+        'extern/text!templates/ipaKeyboard.html',
+        'extern/text!templates/ipaOthers.html',
+        'extern/text!templates/ipaTone.html',
+        'extern/text!templates/ipaVowels.html',
+        'extern/text!templates/LanguageDescription.html',
+        'extern/text!templates/LanguageHeadline.html',
+        'extern/text!templates/LanguageLinks.html',
+        'extern/text!templates/LanguageMenu.html',
+        'extern/text!templates/LanguageSuperscript.html',
+        'extern/text!templates/LanguageTable.html',
+        'extern/text!templates/LoadModal.html',
+        'extern/text!templates/login.html',
+        'extern/text!templates/MapView.html',
+        'extern/text!templates/MeaningGroupList.html',
+        'extern/text!templates/MeaningGroupsHeadline.html',
+        'extern/text!templates/Multitable.html',
+        'extern/text!templates/MultitableSpace.html',
+        'extern/text!templates/MultitableTransposed.html',
+        'extern/text!templates/Phonetics.html',
+        'extern/text!templates/PhoneticsProxy.html',
+        'extern/text!templates/Projects.html',
+        'extern/text!templates/RegionList.html',
+        'extern/text!templates/SearchFilter.html',
+        'extern/text!templates/shortlinkerror.html',
+        'extern/text!templates/ShortLinkModal.html',
+        'extern/text!templates/SortBy.html',
+        'extern/text!templates/TopMenu.html',
+        'extern/text!templates/WordHeadline.html',
+        'extern/text!templates/WordList.html',
+        'extern/text!templates/WordMapsLink.html',
+        'extern/text!templates/WordMenu.html',
+        'extern/text!templates/WordTable.html'],
+       function(require, _, Backbone, Mustache, Loader){
   return Backbone.Model.extend({
     defaults: {
       ready:    false // true iff partials and render method are ready.
     , partials: null  // PartialName -> Content
     }
-    /**
-      initialize accounts for 1 segment of App.setupBar
-    */
+    /***/
   , initialize: function(){
-      var storage = this;
-      Loader.template.info().done(function(info){
-        info = _.chain(info).map(function(hash, path){
-          var parts = /^.*\/([^\/]+)\.html$/.exec(path);
-          if(parts !== null && parts.length >= 2){
-              var name = parts[1];
-              return {
-                name: name
-              , path: path
-              , hash: hash
-              };
-          }else{
-            console.log('Problem:', path);
-            return null;
-          }
-        }).filter(function(i){return i !== null;}).value();
-        storage.process(info);
-      }).fail(function(){
-        console.log('TemplateStorage failed to fetch templates from host.');
-      }).always(function(){
-        console.log('TemplateStorage done with setup.');
-        window.App.setupBar.addLoaded();
-      });
-    }
-  /**
-    Processes templateInfo data as a list of template objects,
-    given from the initialize method.
-    Only templates with unknown/different hashes are fetched.
-    Once all templates are fetched, the TemplateStorage becomes ready,
-    and the render method can be invoked.
-  */
-  , process: function(info){
-      //Fetching missing templates, loading others:
-      var preFetches = [], fetches = [], keepSet = {};
-      _.each(info, function(i){
-        keepSet['tmpl_'+i.name] = true;
-        preFetches.push(this.load(i.name).done(function(current){
-          if(current && current.hash === i.hash){
-            i.content = current.content;
-          }else{
-            fetches.push(Loader.template.fetch(i.path).done(function(c){
-              i.content = c;
-            }).fail(function(){
-              console.log('Failed to load template:', i.path, arguments)
-            }));
-          }
-        }));
+      var tNames = ['body', 'contributor', 'contributors', 'head', 'index',
+                    'ipaConsonants', 'ipaKeyboard', 'ipaOthers', 'ipaTone',
+                    'ipaVowels', 'LanguageDescription', 'LanguageHeadline',
+                    'LanguageLinks', 'LanguageMenu', 'LanguageSuperscript',
+                    'LanguageTable', 'LoadModal', 'login', 'MapView',
+                    'MeaningGroupList', 'MeaningGroupsHeadline', 'Multitable',
+                    'MultitableSpace', 'MultitableTransposed', 'Phonetics',
+                    'PhoneticsProxy', 'Projects', 'RegionList', 'SearchFilter',
+                    'shortlinkerror', 'ShortLinkModal', 'SortBy', 'TopMenu',
+                    'WordHeadline', 'WordList', 'WordMapsLink', 'WordMenu',
+                    'WordTable'];
+      var ps = {};
+      _.each(tNames, function(name){
+        var content = require("extern/text!templates/"+name+".html");
+        ps[name] = _.map(content.split("\n"), function(s){
+          return s.trim();
+        }).join('');
       }, this);
-      //Cleaning up templates that no longer exist:
-      _.each(_.keys(App.storage), function(k){
-        if(k.match(/^tmpl_/) !== null && !(k in keepSet)){
-          console.log('Template no longer required: '+k);
-          delete App.storage[k];
-        }
-      }, this);
-      //Saving templates:
-      var storage = this;
-      $.when.apply($, preFetches).done(function(){
-        $.when.apply($, fetches).done(function(){
-          _.each(info, storage.store, storage);
-          var ps = {};
-          _.each(info, function(i){
-            ps[i.name] = _.map(i.content.split("\n"), function(s){
-              return s.trim();
-            }).join('');
-          });
-          storage.set({ready: true, partials: ps});
-        });
-      });
-    }
-  //Loads a template object from App.storage
-  , load: function(name){
-      var key = 'tmpl_'+name, def = $.Deferred();
-      if(key in App.storage){
-        var msg = {label: 'load:'+key, data: App.storage[key], task: 'decompressBase64'};
-        if(App.dataStorage.compressor){
-          App.dataStorage.onCompressor(msg.label, function(m){
-            def.resolve(m.data);
-          }, this);
-          App.dataStorage.compressor.postMessage(msg);
-        }else{
-          def.resolve($.parseJSON(LZString.decompressFromBase64(msg.data)));
-        }
-      }else{
-        def.resolve(null);
-      }
-      return def.promise();
-    }
-  //Stores a template object in App.storage.
-  , store: function(tmpl){
-      if('content' in tmpl){
-        var key = 'tmpl_'+tmpl.name;
-        if(App.dataStorage.compressor){
-          var msg = {label: 'store:'+key, data: tmpl, task: 'compressBase64'};
-          App.dataStorage.onCompressor(msg.label, function(m){
-            App.storage[key] = m.data;
-          }, this);
-          App.dataStorage.compressor.postMessage(msg);
-        }else{
-          App.storage[key] = LZString.compressToBase64(JSON.stringify(tmpl));
-        }
-      }
+      this.set({ready: true, partials: ps});
     }
   /**
     @param name String name of the template
