@@ -112,7 +112,7 @@ abstract class ConfigBase {
   */
   public static function isDeployed(){
     if(array_key_exists('DEPLOYED', $_ENV))
-      return $_ENV['DEPLOYED'] === true;
+      return $_ENV['DEPLOYED'] === 'true';
     return false;
   }
 }
