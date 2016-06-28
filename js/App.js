@@ -23,6 +23,7 @@ requirejs.config({
   , 'leaflet-markercluster': 'extern/leaflet.markercluster'
   , 'leaflet.dom-markers': 'extern/leaflet.dom-markers'
   , 'leaflet-providers': 'extern/leaflet-providers'
+  , 'leaflet.zoomslider': 'extern/L.Control.Zoomslider'
   }
 , shim: {//Dependencies and magic for extern scripts
     'jquery': {exports: '$'}

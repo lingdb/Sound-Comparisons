@@ -7,7 +7,10 @@ define(['views/render/SubView',
         'views/WordMarker',
         'models/Loader',
         'underscore',
-        'leaflet','leaflet-markercluster','leaflet-providers'],
+        'leaflet',
+        'leaflet-markercluster',
+        'leaflet-providers',
+        'leaflet.zoomslider'],
        function(SubView,
                 SoundControlView,
                 WordView,
@@ -27,7 +30,9 @@ define(['views/render/SubView',
       L.Icon.Default.imagePath = '/img/leaflet.js/';
       //Map setup:
       this.div = document.getElementById("map_canvas");
-      this.map = L.map(this.div).setView([54.92, 1.875], 2);
+      var o = {zoomsliderControl: true,
+               zoomControl: false};
+      this.map = L.map(this.div, o).setView([54.92, 1.875], 2);
       //Specifying tileLayer:
       if(Loader.isOnline){
         var baseLayers = {
