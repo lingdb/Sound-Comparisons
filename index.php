@@ -16,7 +16,7 @@
     )
   );
   //Checking for minified js/App setup:
-  if(Config::$deployed){
+  if(Config::isDeployed()){
     $app = 'js/App-minified';
     if(file_exists('./'.$app.'.js')){
       unset($index['head']['requirejs']);

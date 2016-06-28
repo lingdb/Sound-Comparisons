@@ -105,4 +105,14 @@ abstract class ConfigBase {
     if(defined('JSON_NUMERIC_CHECK'))     $opts |= JSON_NUMERIC_CHECK;
     return json_encode($data, $opts);
   }
+  /**
+    Predicated to figure out wether we're running in production or not.
+    Iff $_ENV['DEPLOYED'] is 'true' returns true
+    returns false otherwise.
+  */
+  public static function isDeployed(){
+    if(array_key_exists('DEPLOYED', $_ENV))
+      return $_ENV['DEPLOYED'] === true;
+    return false;
+  }
 }

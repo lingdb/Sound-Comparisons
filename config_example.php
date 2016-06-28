@@ -26,8 +26,6 @@ class Config extends ConfigBase {
   public static $soundPath     = 'sound';
   public static $downloadPath  = 'export/download';
   public static $locale        = 'en-US';
-  // Used to decide on minified js:
-  public static $deployed      = false;
   /***/
   public static function getConnection(){
     if(is_null(self::$dbConnection)){
