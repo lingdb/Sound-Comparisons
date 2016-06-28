@@ -3,19 +3,28 @@
   {{#regions}}
   <dt style="background-color: {{{color}}};">
     {{#isMapView}}
-    <a title="{{zoomRegion}}" class="zoomRegion" data-rid="{{rid}}"><i class="icon-screenshot"></i></a>
+    <a title="{{zoomRegion}}" class="zoomRegion" data-rid="{{rid}}">
+      <i class="icon-screenshot"></i>
+    </a>&nbsp;
     {{/isMapView}}
     {{#checkbox}}
-    <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
+    <a {{{link}}} title="{{ttip}}">
+      <i class="{{icon}}"></i>
+    </a>&nbsp;
     {{/checkbox}}
-    <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
+    <a class="color-region" {{{link}}} title="{{ttip}}">
+      <i class="{{triangle}}"></i>
+      {{name}}
+    </a>
   </dt>
   {{#selected}}
   <dd class="languageList">
     {{#languages}}
       <li>
       {{#icon}}
-        <a title="{{ttip}}" {{{link}}}><i class="{{checked}}"></i></a>
+        <a title="{{ttip}}" {{{link}}}>
+          <i class="{{checked}}"></i>
+        </a>&nbsp;
       {{/icon}}
       <a class="color-language{{#selected}} selected{{/selected}}" title="{{longName}}"
         {{^isMapView}}{{{link}}}{{/isMapView}} data-languageix="{{languageIx}}">
@@ -42,12 +51,19 @@
   {{#regions}}
   <li>
     {{#isMapView}}
-    <a title="{{zoomRegion}}" class="zoomRegion" data-rid="{{rid}}"><i class="icon-screenshot"></i></a>
+    <a title="{{zoomRegion}}" class="zoomRegion" data-rid="{{rid}}">
+      <i class="icon-screenshot"></i>
+    </a>&nbsp;
     {{/isMapView}}
     {{#checkbox}}
-    <a {{{link}}} title="{{ttip}}"><i class="{{icon}}"></i></a>
+    <a {{{link}}} title="{{ttip}}">
+      <i class="{{icon}}"></i>
+    </a>&nbsp;
     {{/checkbox}}
-    <a class="color-region" {{{link}}} title="{{ttip}}"><i class="{{triangle}}"></i>{{name}}</a>
+    <a class="color-region" {{{link}}} title="{{ttip}}">
+      <i class="{{triangle}}"></i>
+      {{name}}
+    </a>&nbsp;
     {{#selected}}
     <ul class="languageList">
       {{#languages}}
