@@ -459,7 +459,9 @@ td.tableClearRow {height: 0.5em; padding: 0px; border-top: 2px solid black; bord
 td.tableClearCol {width: 0.5em; padding: 0px; border-left: 2px solid black; border-right: 2px solid black;}
 /*Google maps*/
 #map_menu_toggle {margin-left: 0.25em;}
-#map_zoom_options {margin-left: 1em;}
+#map_zoom_options, #map_menu_viewAll {margin-left: 1em;}
+#map_menu_viewAll, #map_menu_zoomCenter {margin-right: 0.5em;}
+#map_menu_viewLast, #map_menu_zoomCoreRegion {margin-left: 0.5em;}
 #map_play_directions {margin-left: 1em; padding-top: 0.5em;}
 div.mapAudio {
   border:         1px solid black;
