@@ -52,7 +52,7 @@ define(['backbone','Mustache','LZString','models/Loader'], function(Backbone, Mu
             fetches.push(Loader.template.fetch(i.path).done(function(c){
               i.content = c;
             }).fail(function(){
-                console.log('Failed to load template:', i.path, arguments);
+              console.log('Failed to load template:', i.path, arguments)
             }));
           }
         }));
@@ -70,7 +70,11 @@ define(['backbone','Mustache','LZString','models/Loader'], function(Backbone, Mu
         $.when.apply($, fetches).done(function(){
           _.each(info, storage.store, storage);
           var ps = {};
-          _.each(info, function(i){ps[i.name] = i.content;});
+          _.each(info, function(i){
+            ps[i.name] = _.map(i.content.split("\n"), function(s){
+              return s.trim();
+            }).join('');
+          });
           storage.set({ready: true, partials: ps});
         });
       });
