@@ -463,22 +463,10 @@ td.tableClearCol {width: 0.5em; padding: 0px; border-left: 2px solid black; bord
 #map_menu_viewAll, #map_menu_zoomCenter {margin-right: 0.5em;}
 #map_menu_viewLast, #map_menu_zoomCoreRegion {margin-left: 0.5em;}
 #map_play_directions {margin-left: 1em; padding-top: 0.5em;}
-div.mapAudio {
-  border:         1px solid black;
-  border-radius:  5px;
-  position:       absolute;
-  padding-bottom: 0.0675em;
-  white-space:    nowrap;
-}
-div.mapAudio .transcription {
-  font-size:     14px;
-  display:       inline;
-  padding-left:  0.25em;
-  padding-right: 0.25em;
-}
-.mapAudio .transcription.playing, .mapAudio .transcription:hover{
-  font-size: 20px;
-}
 /*Stuff for #shortLinkModal:*/
 #createShortLink {margin-top: 2.5px;}
 #shortLinkModal .urlInput {margin-bottom: 0px;}
+/*Rounded markers as requested in #382*/
+.leaflet-div-icon {
+  border-radius: 5px;
+}
