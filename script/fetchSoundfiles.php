@@ -3,7 +3,7 @@
   This script fetches all sound files from the target server,
   and stores them in the sound directory.
 */
-$server = 'http://lingweb.eva.mpg.de/sndcomp/';
+$server = 'http://soundcomparisons.com/';
 //Switching into website directory:
 chdir(__DIR__);
 chdir('..');
