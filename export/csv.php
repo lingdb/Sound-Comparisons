@@ -89,12 +89,15 @@ $headline = array("LanguageId", "LanguageName", "Latitude", "Longitude"
 $rows = array();
 foreach($languages as $lIx => $l){
   foreach($words as $wIx => $w){
-    foreach($transcriptions[$lIx.'-'.$wIx] as $t){
-      array_push($rows, array(
-        $lIx, $l['ShortName'], $l['Latitude'], $l['Longtitude']
-      , $wIx, $w['FileNameRfcModernLg01'], $w['FileNameRfcModernLg02'], $w['FileNameRfcProtoLg01'], $w['FileNameRfcProtoLg02']
-      , $t['Phonetic'], $t['SpellingAltv1'], $t['SpellingAltv2'], $t['NotCognateWithMainWordInThisFamily']
-      ));
+    $key = $lIx.'-'.$wIx;
+    if(array_key_exists($key, $transcriptions)){
+      foreach($transcriptions[$key] as $t){
+        array_push($rows, array(
+          $lIx, $l['ShortName'], $l['Latitude'], $l['Longtitude']
+        , $wIx, $w['FileNameRfcModernLg01'], $w['FileNameRfcModernLg02'], $w['FileNameRfcProtoLg01'], $w['FileNameRfcProtoLg02']
+        , $t['Phonetic'], $t['SpellingAltv1'], $t['SpellingAltv2'], $t['NotCognateWithMainWordInThisFamily']
+        ));
+      }
     }
   }
 }
