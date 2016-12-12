@@ -56,12 +56,23 @@ define(['views/render/SubView'], function(SubView){
       var ls = [];
       //Various links:
       var iso = lang.getISO();
-      if(iso){
+      var gc = lang.getGlottoCode();
+      if(gc){
+        ls.push(
+          { href: 'http://www.glottolog.org/resource/languoid/id/'+gc
+          , img:  'img/extern/glottolog.png'
+          , ttip: App.translationStorage.translateStatic('tooltip_languages_link_glottolog')}
+        );
+      }else if(iso){
         ls.push(
           { href: 'http://www.glottolog.org/resource/languoid/iso/'+iso
           , img:  'img/extern/glottolog.png'
           , ttip: App.translationStorage.translateStatic('tooltip_languages_link_glottolog')}
-        , { href: 'http://new.multitree.org/trees/code/'+iso
+        );
+      }
+      if(iso){
+        ls.push(
+          { href: 'http://new.multitree.org/trees/code/'+iso
           , img:  'http://new.multitree.org/static/images/MultiTree.ico'
           , ttip: App.translationStorage.translateStatic('tooltip_languages_link_multitree')}
         );

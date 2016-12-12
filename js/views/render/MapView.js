@@ -232,7 +232,7 @@ define(['views/render/SubView',
   , renderMap: function(){
       if('mapsData' in this.model){
         var ts = this.model.mapsData.transcriptions
-          , ms = {} // Newly added markers
+          , ms = {}; // Newly added markers
         _.each(ts, function(tData){
           tData = WordMarker.mkWordMarker(this.map, tData);
           tData.marker.__newlyAdded = true; // Marking the ones we still need:
