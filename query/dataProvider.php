@@ -325,12 +325,12 @@ class DataProvider {
         }
         $ret[$tKey] = $t;
       }
-      //Handling dummy transcriptions:
-      foreach(static::getDummyTranscriptions($studyName) as $t){
-        $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
-        if(!array_key_exists($tKey, $ret)){
-          $ret[$tKey] = $t;
-        }
+    }
+    //Handling dummy transcriptions:
+    foreach(static::getDummyTranscriptions($studyName) as $t){
+      $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
+      if(!array_key_exists($tKey, $ret)){
+        $ret[$tKey] = $t;
       }
     }
     return $ret;
