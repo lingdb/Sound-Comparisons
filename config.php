@@ -1,9 +1,4 @@
 <?php
-/**
-  Rename this file to 'config.php',
-  and remember to enter data for the private variables
-  under 'Configuration:'
-*/
 require_once('extern/underscore.php');
 require_once('query/dataProvider.php');
 //Making sure we've got a default timezone:

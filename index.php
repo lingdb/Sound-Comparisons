@@ -20,7 +20,8 @@
     $app = 'js/App-minified';
     if(file_exists('./'.$app.'.js')){
       unset($index['head']['requirejs']);
-      $index['head']['minifiedjs'] = $app.'.js';
+      $md5 = md5_file('./'.$app.'.js');
+      $index['head']['minifiedjs'] = $app.'.'.$md5.'.js';
     }
   }
   //Making sure we get our appSetup:

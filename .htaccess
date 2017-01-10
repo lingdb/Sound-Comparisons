@@ -1,7 +1,7 @@
-#AuthName "Restricted Area" 
-#AuthType Basic 
+#AuthName "Restricted Area"
+#AuthType Basic
 #AuthUserFile /var/www/shk/main/.htpasswd
-#AuthGroupFile /dev/null 
+#AuthGroupFile /dev/null
 #require valid-user
 
 # Disabling the annoying magic quotes (http://www.php.net/manual/en/security.magicquotes.disabling.php):
@@ -13,6 +13,8 @@ Options +FollowSymlinks -MultiViews
 
 RewriteBase /
 
+# Rule for minified JavaScript:
+RewriteRule ^(js/App-minified)\..+(\.js)$ $1$2 [L]
 # Rule to ignore subdirectories that are necessary:
 RewriteRule ^(admin|css|export|img|js|query|sound|templates).* - [L]
 # Rule to match usual requests:
