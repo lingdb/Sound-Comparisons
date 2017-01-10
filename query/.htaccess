@@ -5,7 +5,7 @@ php_flag magic_quotes_gpc Off
 RewriteEngine on
 Options +FollowSymlinks
 
-RewriteBase /shk/main/query/
+RewriteBase /query/
 
 # Inspired by https://stackoverflow.com/questions/18177290/rewrite-url-with-htaccess-to-hide-php-extension
 RewriteCond %{REQUEST_FILENAME} !-d 

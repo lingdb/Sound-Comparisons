@@ -1,7 +1,7 @@
 RewriteEngine on
 Options +FollowSymlinks
 
-RewriteBase /shk/main/export
+RewriteBase /export
 
 # From http://stackoverflow.com/questions/8371634/hide-php-extension-htaccess
 # to hide .php extension

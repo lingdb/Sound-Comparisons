@@ -11,7 +11,7 @@ php_flag magic_quotes_gpc Off
 RewriteEngine on
 Options +FollowSymlinks -MultiViews
 
-RewriteBase /shk/main/
+RewriteBase /
 
 # Rule to ignore subdirectories that are necessary:
 RewriteRule ^(admin|css|export|img|js|query|sound|templates).* - [L]
