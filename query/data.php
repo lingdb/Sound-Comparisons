@@ -1,6 +1,6 @@
 <?php
-//Setting memory_limit to 256M, to aid #97:
-ini_set('memory_limit', 200000000);
+//Setting memory_limit to 512M, to aid #97:
+ini_set('memory_limit', 400000000);
 //Parsing cli args, if necessary/possible:
 if(php_sapi_name() === 'cli'){
   if(!isset($_GET)){
