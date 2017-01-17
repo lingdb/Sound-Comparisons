@@ -45,7 +45,7 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
       , show: false
       });
       $('#moduleFiles').on('change', function(e){
-        var input = event.target, waits = [];
+        var input = e.target, waits = [];
         dialog.modal({show: false});
         _.each(input.files, function(file){
           var reader = new FileReader(), waitReader = $.Deferred();
