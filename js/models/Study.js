@@ -1,5 +1,7 @@
+/* global App */
+/* eslint-disable no-console */
 "use strict";
-define(['backbone'], function(Backbone){
+define(['jquery','underscore','backbone'], function($, _, Backbone){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

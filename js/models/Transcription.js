@@ -1,5 +1,7 @@
+/* global App */
+/* eslint-disable no-console */
 "use strict";
-define(['backbone'], function(Backbone){
+define(['underscore','backbone'], function(_, Backbone){
   /**
     Note that contrary to the Transcription model implemented in php,
     this Transcription may have arrays of multiple values for some fields,
@@ -117,7 +119,6 @@ define(['backbone'], function(Backbone){
       var phonetics = this.get('Phonetic') // [String]   || String
         , sources   = this.getSoundfiles() // [[String]]
         , superScr  = this.getSuperscriptInfo()
-        , aLogic    = App.views.audioLogic
         , ps        = [];
       //Sanitizing phonetics:
       if(_.isEmpty(phonetics))  phonetics = '<i class="icon-play"></i>';

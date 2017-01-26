@@ -1,4 +1,5 @@
 "use strict";
+/* global App */
 define(['collections/WordCollection','underscore'], function(WordCollection,_){
   /**
     The FilteredWordCollection spots an instance of WordCollection,
@@ -98,7 +99,7 @@ define(['collections/WordCollection','underscore'], function(WordCollection,_){
       If pvk is given, it is used as the pageView to retrieve the selection for.
       Otherwise the current pageView will be used.
     */
-  , getSelected: function(pvk){
+  , getSelected: function(){
       //FIXME IMPLEMENT!
     }
   });

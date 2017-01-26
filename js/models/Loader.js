@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-disable no-console */
 define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
   /**
     This module shall produce a simple object

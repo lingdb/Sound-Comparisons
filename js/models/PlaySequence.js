@@ -1,5 +1,6 @@
 "use strict";
-define([],function(){
+/* global App */
+define(['jquery','underscore'],function($, _){
   /**
     @param target JQuery object to listen on for clicks.
     The PlaySequence can be triggered to play a sequence of audiofiles.

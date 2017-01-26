@@ -1,5 +1,7 @@
+/* global google, App */
+/* eslint-disable no-unused-vars */
 "use strict";
-define(['backbone'],function(Backbone){
+define(['jquery','underscore','backbone'],function($, _, Backbone){
   return Backbone.Model.extend({
     defaults: {
       content:   ''        // Html String
@@ -41,7 +43,7 @@ define(['backbone'],function(Backbone){
       }, this);
       this.set(d);
     }
-  , validate: function(attrs, options){
+  , validate: function(attrs){
       if(attrs.color){
         if(!/^#[0123456789abcdef]{6}$/i.test(attrs.color))
           return 'Invalid color: ' + attrs.color;
@@ -83,6 +85,7 @@ define(['backbone'],function(Backbone){
             , h:  div.height()
             };
         if(/^nw$/i.test(edge)){
+          // NOTHING TO DO
         }else if(/^ne$/i.test(edge)){
           bbox = $.extend(bbox, {
             x1: bbox.x1 - bbox.w
@@ -217,7 +220,7 @@ define(['backbone'],function(Backbone){
       to make it easier for clients to spot 'where' sound is playing.
       Modifies this._playing for fun and profit.
     */
-  , playing: function(isPlaying, target){
+  , playing: function(isPlaying){
       this._playing = this._playing || {};
       var animation = isPlaying ? google.maps.Animation.BOUNCE : null
         , div = $(this.get('div'));

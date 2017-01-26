@@ -1,4 +1,5 @@
 "use strict";
+/* global App */
 define(['jquery','bootbox', 'underscore'], function($, bootbox, _){
   var displayImages = function(language){
     var imgs = '';

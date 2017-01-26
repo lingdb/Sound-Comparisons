@@ -1,10 +1,13 @@
 "use strict";
+/* global App */
 define(['require',
+        'jquery',
+        'underscore',
         'backbone',
         'models/RegionLanguage',
         'models/Contributor',
         'leaflet'],
-       function(require, Backbone, RegionLanguage, Contributor, L){
+       function(require, $, _, Backbone, RegionLanguage, Contributor, L){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

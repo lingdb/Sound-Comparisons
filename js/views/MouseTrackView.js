@@ -1,6 +1,6 @@
-/* global document: false */
+/* global document: false, google: false */
 "use strict";
-define(['backbone'], function(Backbone){
+define(['jquery','underscore','backbone'], function($, _, Backbone){
   /**
     el:  google.maps.Map
     model: MapView

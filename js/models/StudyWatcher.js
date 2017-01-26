@@ -1,3 +1,5 @@
+/* global App */
+/* eslint-disable no-console */
 "use strict";
 define(['backbone'], function(Backbone){
   return Backbone.Model.extend({

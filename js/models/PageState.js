@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone'], function(Backbone){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','backbone'], function(_, Backbone){
   /**
     The PageState has a variety of tasks that lie at the core of our Application.
     - It tracks state for the site, where the different parts should not do so themselfs.

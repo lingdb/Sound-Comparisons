@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone','models/Loader'], function(Backbone, Loader){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','jquery','backbone','models/Loader'], function(_, $, Backbone, Loader){
   /**
     Given that query/data allows us to fetch individual studies,
     it appears helpful, to keep the data in App.storage.
@@ -79,8 +81,7 @@ define(['backbone','models/Loader'], function(Backbone, Loader){
       //Checking name parameter:
       name = name || App.studyWatcher.get('study');
       //Setup:
-      var key = "Study_"+name
-        , def = $.Deferred(), t = this;
+      var def = $.Deferred(), t = this;
       //Study already getting loaded:
       if(name in this._loadStudyMap){
         return this._loadStudyMap[name];

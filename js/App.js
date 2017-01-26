@@ -1,4 +1,5 @@
 "use strict";
+/* global requirejs, App */
 requirejs.config({
   baseUrl: 'js'
 , paths: {//Paths for extern scripts

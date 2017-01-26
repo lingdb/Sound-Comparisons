@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'],function(Backbone){
+define(['jquery','backbone'],function($, Backbone){
   /*
     el:    body
     model: DownloadOptions

@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone','models/Study','models/Word','models/Language','QueryString'], function(Backbone, Study, Word, Language, QueryString){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','backbone','models/Study','models/Word','models/Language','QueryString'], function(_, Backbone, Study, Word, Language, QueryString){
   /**
     The Sanitizer provides means to sanitize options such as used by the Linker.
   */
@@ -35,7 +37,7 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @return o Object
       Ignores pvk parameter, because it doesn't deal with selections.
     */
-  , sanitizeLanguage: function(o, pvk){
+  , sanitizeLanguage: function(o){
       if(!('language' in o)){
         o.language = App.languageCollection.getChoice();
       }
@@ -89,7 +91,7 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @return o Object
       Ignores pvk parameter, because it doesn't deal with selections.
     */
-  , sanitizeStudy: function(o, pvk){
+  , sanitizeStudy: function(o){
       if(!('study' in o)){
         o.study = App.study;
       }
@@ -108,7 +110,7 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @return o Object
       Ignores pvk parameter, because it doesn't deal with selections.
     */
-  , sanitizeWord: function(o, pvk){
+  , sanitizeWord: function(o){
       if(!('word' in o)){
         o.word = App.wordCollection.getChoice();
       }
@@ -163,7 +165,7 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @return o Object
       Makes sure a valid o.siteLanguage is set.
     */
-  , sanitizeSiteLanguage: function(o, pvk){
+  , sanitizeSiteLanguage: function(o){
       //Function to set siteLanguage to currently choosen one:
       var setBM = function(){
         o.siteLanguage = App.translationStorage.getBrowserMatch();
@@ -182,7 +184,7 @@ define(['backbone','models/Study','models/Word','models/Language','QueryString']
       @return o Object
       Ignores pvk parameter, because it doesn't deal with selections.
     */
-  , sanitizeConfig: function(o, pvk){
+  , sanitizeConfig: function(o){
       if('config' in o){
         if(o.config !== null){
           var keys = _.keys(o.config).sort()

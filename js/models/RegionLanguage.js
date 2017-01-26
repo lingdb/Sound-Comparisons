@@ -1,5 +1,6 @@
 "use strict";
-define(['backbone','models/Region'], function(Backbone, Region){
+/* global App */
+define(['underscore','backbone','models/Region'], function(_, Backbone, Region){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone'], function(Backbone){
+define(['jquery','backbone'], function($, Backbone){
   return Backbone.View.extend({
     initialize: function(){
       this.model.on('change:playMode', this.render, this);

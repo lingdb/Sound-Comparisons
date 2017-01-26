@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone','models/WordOverlay','views/WordOverlayView'], function(Backbone,WordOverlay,WordOverlayView){
+/* global App, google: false */
+/* eslint-disable no-console */
+define(['underscore','backbone','models/WordOverlay','views/WordOverlayView'], function(_, Backbone, WordOverlay, WordOverlayView){
   if(!_.isUndefined(window.google)){
     return Backbone.Model.extend({
       defaults: {

@@ -1,5 +1,7 @@
 "use strict";
-define(['collections/Choice','models/Word','collections/Selection','backbone'], function(Choice, Word, Selection, Backbone){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','collections/Choice','models/Word','collections/Selection','backbone'], function(_, Choice, Word, Selection, Backbone){
   /***/
   return Choice.extend({
     model: Word
@@ -18,7 +20,7 @@ define(['collections/Choice','models/Word','collections/Selection','backbone'], 
     /**
       Placeholder, to mark that this is overwritten by WordCollection.sort()
     */
-  , comparator: function(a, b){
+  , comparator: function(){
       throw "Unexpected call to WordCollection.comparator()";
     }
     /**

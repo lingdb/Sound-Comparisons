@@ -1,5 +1,6 @@
 "use strict";
-define(['backbone','bootstrap'], function(Backbone){
+/* global App */
+define(['underscore','backbone','bootstrap'], function(_, Backbone){
   /**
     el: #loadModal
     model: undefined

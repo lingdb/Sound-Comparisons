@@ -1,6 +1,7 @@
-/* global navigator: false */
+/* global navigator: false, App */
+/* eslint-disable no-console */
 "use strict";
-define(['backbone','models/Loader'], function(Backbone, Loader){
+define(['jquery','underscore','backbone','models/Loader'], function($, _, Backbone, Loader){
   var i18n = Loader.translation.i18n;
   //Initializing options for i18n:
   var i18nOptions = {
@@ -51,7 +52,7 @@ define(['backbone','models/Loader'], function(Backbone, Loader){
           i18nOptions.preload.push(summary[tId].BrowserMatch);
         });
         //Step 4:
-        i18n.init(i18nOptions, function(err, t){
+        i18n.init(i18nOptions, function(err){
           if(err === null){
             storage.set({ready: true});
             App.setupBar.addLoaded();
@@ -170,7 +171,7 @@ define(['backbone','models/Loader'], function(Backbone, Loader){
       }
       //Updating translationId:
       var bm = summary[tId].BrowserMatch;
-      i18n.setLng(bm, function(err, t){
+      i18n.setLng(bm, function(err){
         if(err === null){
           prom.resolve();
         }else{

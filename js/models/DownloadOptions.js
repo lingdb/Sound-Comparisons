@@ -1,5 +1,6 @@
 "use strict";
-define(['backbone'],function(Backbone){
+/* global App */
+define(['underscore','backbone'],function(_, Backbone){
   /**
     This model handles the options associated with the download options given in the TopMenu.
     It is important to track these options, because they're purely client side settings.

@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
 "use strict";
 define(['backbone',
+        'underscore',
         'models/Transcription',
         'models/DummyTranscription'],
-       function(Backbone, Transcription, DummyTranscription){
+       function(Backbone, _, Transcription, DummyTranscription){
   /***/
   return Backbone.Model.extend({
     /**

@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone','models/TranscriptionSuperscript'], function(Backbone, TranscriptionSuperscript){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','backbone','models/TranscriptionSuperscript'], function(_, Backbone, TranscriptionSuperscript){
   /***/
   return Backbone.Collection.extend({
     model: TranscriptionSuperscript

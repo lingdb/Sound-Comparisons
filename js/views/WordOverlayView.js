@@ -1,6 +1,6 @@
-/* global document: false, Node: false */
+/* global document: false, Node: false, App, google: false */
 "use strict";
-define(['underscore'], function(_){
+define(['jquery','underscore'], function($, _){
   /**
     Our constructor expects the following options:
     el:    google.maps.Map

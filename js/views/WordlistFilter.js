@@ -1,5 +1,6 @@
 "use strict";
-define(['backbone'], function(Backbone){
+/* global App */
+define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
   /**
     Controls the filter box and mitigates it's effects.
   */
@@ -80,7 +81,7 @@ define(['backbone'], function(Backbone){
       var vMust  = 'iyɨʉɯuɪʏʊeøɘɵɤoəɛœɜɞʌɔæɐaɶɑɒɚɝ'; // All from vowels section
       var vMay   = '˥˦˧˨˩↓↑↗↘̋́̄̀̏᷈᷅᷄̂̌ˈˌːˑ̆|‖.‿̃˔̟̹̜̠̝˕˞̞̰̤̥̈̽';           // All from tone
       var cMain  = 'pbtdʈɖɟɟkɡqɢʔmɱnɳɲŋɴʙrʀⱱɾɽɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦɬɮʋɹɻjɰlɭʎʟɫ'; // All from consonants main
-      var cOther = 'ʼɓɗʄɠʛʘǀǃǂǁʍʡʬ¡wɕʭǃ¡ɥʑʪʜɺʫʢɧʩ'; // All from consonants other 
+      var cOther = 'ʼɓɗʄɠʛʘǀǃǂǁʍʡʬ¡wɕʭǃ¡ɥʑʪʜɺʫʢɧʩ'; // All from consonants other
       var cAdditional = 'ː'; // ː from vowels
       var cNasal  = 'mɱnɳɲŋɴ'; // From consonants all in nasal row.
       var vNasal  = '̃'; // ~ from vowels nasalised

@@ -1,5 +1,5 @@
 "use strict";
-define(['backbone','models/PlaySequence'], function(Backbone, PlaySequence){
+define(['jquery','backbone','models/PlaySequence'], function($, Backbone, PlaySequence){
   return Backbone.View.extend({
     update: function(pageView){
       var p; // variable for PlaySequence

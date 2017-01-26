@@ -1,5 +1,7 @@
+/* global App */
+/* eslint-disable no-console */
 "use strict";
-define(['backbone','bootstrap'], function(Backbone){
+define(['jquery','underscore','backbone','bootstrap'], function($, _, Backbone){
   /**
     el: #shortLinkModal
     model: undefined

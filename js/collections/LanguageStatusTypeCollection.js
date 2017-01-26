@@ -1,4 +1,6 @@
 "use strict";
+/* global App */
+/* eslint-disable no-console */
 define(['backbone','models/LanguageStatusType'], function(Backbone, LanguageStatusType){
   /***/
   return Backbone.Collection.extend({

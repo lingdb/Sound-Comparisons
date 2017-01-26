@@ -1,4 +1,6 @@
 "use strict";
+/* global App */
+/* eslint-disable no-console */
 define(['backbone','models/Contributor'], function(Backbone, Contributor){
   /***/
   return Backbone.Collection.extend({

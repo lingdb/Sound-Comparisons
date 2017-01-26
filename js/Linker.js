@@ -1,5 +1,6 @@
 "use strict";
-define(['Configurator'], function(Configurator){
+/* global App */
+define(['underscore', 'Configurator'], function(_, Configurator){
   /**
     The Linker extends the Configurator, which in turn extends the Sanitizer.
     Building links makes use of both, the Sanitizer and the Configurator.

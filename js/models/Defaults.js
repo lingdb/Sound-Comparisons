@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone','models/Word'], function(Backbone, Word){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','backbone','models/Word'], function(_, Backbone, Word){
   /***/
   return Backbone.Model.extend({
     /**

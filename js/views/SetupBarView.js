@@ -1,5 +1,6 @@
 "use strict";
-define(['backbone'], function(Backbone){
+/* global App */
+define(['jquery','backbone'], function($, Backbone){
   /**
     el: #appSetup
     model: LoadingBar

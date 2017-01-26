@@ -1,5 +1,6 @@
 "use strict";
-define(['collections/Selection','models/Region'], function(Selection, Region){
+/* eslint-disable no-console */
+define(['underscore','collections/Selection','models/Region'], function(_, Selection, Region){
   /***/
   return Selection.extend({
     model: Region

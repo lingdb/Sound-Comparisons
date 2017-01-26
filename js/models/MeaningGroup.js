@@ -1,4 +1,5 @@
 "use strict";
+/* global App */
 define(['backbone','collections/WordCollection'], function(Backbone, WordCollection){
   /***/
   return Backbone.Model.extend({

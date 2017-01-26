@@ -1,6 +1,6 @@
 /* global document: false */
 "use strict";
-define(['backbone'], function(Backbone){
+define(['jquery','backbone'], function($, Backbone){
   /**
     An onscreen keyboard to insert IPA phonetic symbols into the phonetic filter.
     el: #ipaKeyboard
@@ -72,7 +72,7 @@ define(['backbone'], function(Backbone){
         //Replacing a selection, FF and hopefully others:
         var startPos = myField.selectionStart;
         var endPos = myField.selectionEnd;
-        myField.value = myField.value.substring(0, startPos) + 
+        myField.value = myField.value.substring(0, startPos) +
                         symbol + myField.value.substring(endPos, myField.value.length);
       }else{ //Fallback to appending it to the field:
         myField.value += symbol;

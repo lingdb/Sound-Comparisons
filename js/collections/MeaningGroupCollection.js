@@ -1,5 +1,7 @@
 "use strict";
-define(['collections/Selection','models/MeaningGroup'], function(Selection, MeaningGroup){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','collections/Selection','models/MeaningGroup'], function(_, Selection, MeaningGroup){
   /***/
   return Selection.extend({
     model: MeaningGroup
@@ -17,7 +19,7 @@ define(['collections/Selection','models/MeaningGroup'], function(Selection, Mean
       The update method is connected by the App,
       to listen on change:global of the App.dataStorage.
     */
-  , update: function(){ 
+  , update: function(){
       var ds   = App.dataStorage
         , data = ds.get('global').global;
       if(data && 'meaningGroups' in data){

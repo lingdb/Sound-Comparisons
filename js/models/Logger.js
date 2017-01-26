@@ -1,6 +1,6 @@
 /* global ga: false */
 "use strict";
-define(['backbone'], function(Backbone){
+define(['underscore','backbone'], function(_, Backbone){
   return Backbone.Model.extend({
     defaults: {
       stack: [] // Actions to perform later on.

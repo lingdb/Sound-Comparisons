@@ -2,9 +2,10 @@
 "use strict";
 define(['backbone',
         'jquery',
+        'underscore',
         'models/PlaySequence',
         'leaflet'],
-       function(Backbone, $, PlaySequence, L){
+       function(Backbone, $, _, PlaySequence, L){
   /**
     el:    google.maps.Map
     model: MapView.model
@@ -14,7 +15,7 @@ define(['backbone',
   return Backbone.View.extend({
     initialize: function(){
       this.control = L.control({position: 'topright'});
-      this.control.onAdd = function(map){
+      this.control.onAdd = function(){
         return $('#map_play_directions').attr('id','SoundControlView').detach().get(0);
       };
     }

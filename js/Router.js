@@ -1,5 +1,7 @@
 "use strict";
-define(['Linker','backbone'], function(Linker, Backbone){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
   /**
     The router for our application.
     See http://backbonetutorials.com/what-is-a-router for basic info.

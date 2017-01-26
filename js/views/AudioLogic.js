@@ -1,5 +1,6 @@
 "use strict";
-define(['backbone'], function(Backbone){
+/* global App */
+define(['jquery','underscore','backbone'], function($, _, Backbone){
   /**
     The rewrite of AudioLogic to a Backbone.View.
     It will be used by the App, and PlaySequence will be adjusted to fit it.
@@ -33,7 +34,7 @@ define(['backbone'], function(Backbone){
     /***/
   , findAudio: function(target){
       var t = this, tgt = target || $('body');
-      tgt.find('.audio').each(function(i){
+      tgt.find('.audio').each(function(){
         var a = $('audio', this).get(0);
         $(this).on('click mouseover mouseout touchstart', function(e){
           switch(e.type){
@@ -63,7 +64,7 @@ define(['backbone'], function(Backbone){
       }, this.hoverDelay);
     }
     /***/
-  , mouseOut: function(audio){
+  , mouseOut: function(){
       if(this.timeoutId){
         window.clearTimeout(this.timeoutId);
         this.timeoutId = null;

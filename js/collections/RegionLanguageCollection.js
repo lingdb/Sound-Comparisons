@@ -1,13 +1,14 @@
 "use strict";
-define(['require','backbone','models/RegionLanguage'], function(require, Backbone, RegionLanguage){
+/* global App */
+/* eslint-disable no-console */
+define(['require','underscore','backbone','models/RegionLanguage'], function(require, _, Backbone, RegionLanguage){
   /***/
   return Backbone.Collection.extend({
     model: RegionLanguage
     /***/
   , comparator: function(a, b){
       var as = a.sortValues()
-        , bs = b.sortValues()
-        , i  = 0;
+        , bs = b.sortValues();
       while(!_.isEmpty(as) && !_.isEmpty(bs)){
         a = parseInt(as.shift(), 10);
         b = parseInt(bs.shift(), 10);

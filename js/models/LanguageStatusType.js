@@ -1,4 +1,5 @@
 "use strict";
+/* global App */
 define(['backbone'], function(Backbone){
   /***/
   return Backbone.Model.extend({

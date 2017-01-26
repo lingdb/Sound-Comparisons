@@ -1,5 +1,7 @@
 "use strict";
-define(['collections/Choice', 'models/Language', 'collections/RegionLanguageCollection', 'collections/Selection'], function(Choice, Language, RegionLanguageCollection, Selection){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','collections/Choice', 'models/Language', 'collections/RegionLanguageCollection', 'collections/Selection'], function(_, Choice, Language, RegionLanguageCollection, Selection){
   /***/
   var LanguageCollection = Choice.extend({
     model: Language

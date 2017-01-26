@@ -1,5 +1,6 @@
+/* global App */
 "use strict";
-define(['backbone'], function(Backbone){
+define(['underscore','backbone'], function(_, Backbone){
   /***/
   return Backbone.Model.extend({
     initialize: function(){

@@ -1,9 +1,12 @@
 "use strict";
+/* global App */
+/* eslint-disable no-console */
 define(['Sanitizer',
         'models/Language',
         'backbone',
-        'underscore'],
-       function(Sanitizer, Language, Backbone, _){
+        'underscore',
+        'jquery'],
+       function(Sanitizer, Language, Backbone, _, $){
   /**
     The Configurator provides means to build configuration such as used by the Linker.
   */

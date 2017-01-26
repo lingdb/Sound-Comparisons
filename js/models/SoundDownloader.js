@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone'], function(Backbone){
+/* global App */
+/* eslint-disable no-console */
+define(['jquery','underscore','backbone'], function($, _, Backbone){
   /**
     The SoundDownloader aids downloading a .zip of all soundfiles currently in the content area.
   */

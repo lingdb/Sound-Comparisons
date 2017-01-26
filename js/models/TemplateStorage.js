@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use strict";
 define(['require',
         'underscore',
@@ -43,7 +44,7 @@ define(['require',
         'extern/text!templates/WordMapsLink.html',
         'extern/text!templates/WordMenu.html',
         'extern/text!templates/WordTable.html'],
-       function(require, _, Backbone, Mustache, Loader){
+       function(require, _, Backbone, Mustache){
   return Backbone.Model.extend({
     defaults: {
       ready:    false // true iff partials and render method are ready.

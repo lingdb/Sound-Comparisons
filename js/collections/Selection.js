@@ -1,5 +1,7 @@
 "use strict";
-define(['backbone'], function(Backbone){
+/* global App */
+/* eslint-disable no-console */
+define(['underscore','backbone'], function(_, Backbone){
   /**
     Implements the aspect that several models of a collection can be marked as selected per PageView.
     If children implement 'getDefaultSelection', it will be used to find the default selection,

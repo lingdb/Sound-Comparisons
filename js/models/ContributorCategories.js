@@ -1,5 +1,6 @@
 "use strict";
-define(['backbone','collections/ContributorCollection'], function(Backbone, ContributorCollection){
+/* global App */
+define(['underscore','backbone','collections/ContributorCollection'], function(_, Backbone, ContributorCollection){
   /***/
   return Backbone.Model.extend({
     initialize: function(){
