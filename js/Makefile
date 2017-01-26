@@ -2,13 +2,13 @@
 JS_FILES = $(shell find -type f -name "*.js" | grep -v App-minified.js)
 
 App-minified.js: $(JS_FILES)
-	node extern/r.js -o build.js
+	grunt
 	git commit App-minified.js -m "WIP remember the make!"
 
 main: App-minified.js
 
 chkSyntax:
-	find -type f -regex .*js | grep -v extern | xargs jshint
+	grunt eslint
 
 fixme:
 	find -type f -regex .*js | grep -v extern | grep -v App-minified.js | xargs grep FIXME

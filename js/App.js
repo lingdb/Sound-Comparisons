@@ -3,28 +3,28 @@
 requirejs.config({
   baseUrl: 'js'
 , paths: {//Paths for extern scripts
-    'jquery': 'extern/jquery.min'
-  , 'jquery.nanoscroller': 'extern/jquery.nanoscroller.min'
-  , 'jquery.cookie': 'extern/jquery.cookie'
-  , 'jquery.scrollTo': 'extern/jquery.scrollTo-1.4.2-min'
-  , 'jquery.mousewheel': 'extern/jquery.mousewheel.min'
+    'jquery': 'bower_components/jquery/dist/jquery.min'
+  , 'jquery.nanoscroller': 'bower_components/nanoscroller/bin/javascripts/jquery.nanoscroller.min'
+  , 'jquery.cookie': 'extern/jquery.cookie' // FIXME replaced by https://github.com/js-cookie/js-cookie
+  , 'jquery.scrollTo': 'bower_components/jquery.scrollTo/jquery.scrollTo.min'
+  , 'jquery.mousewheel': 'bower_components/jquery-mousewheel/jquery.mousewheel.min'
   , 'jquery.json': 'extern/jquery.json-2.3.min'
-  , 'underscore': 'extern/underscore-min'
-  , 'backbone': 'extern/backbone-min'
+  , 'underscore': 'bower_components/underscore/underscore-min'
+  , 'backbone': 'bower_components/backbone/backbone-min'
   , 'bootstrap': 'extern/bootstrap.min'
   , 'bootbox': 'extern/bootbox.min'
-  , 'Blob': 'extern/Blob'
-  , 'FileSaver': 'extern/FileSaver.min'
-  , 'Mustache': 'extern/mustache'
+  , 'Blob': 'extern/Blob' // FIXME replace with bower Blob?
+  , 'FileSaver': 'extern/FileSaver.min' // FIXME replace with bower FileSaver?
+  , 'Mustache': 'bower_components/mustache.js/mustache.min'
   , 'LZString': 'extern/lz-string-1.3.3-min'
   , 'QueryString': 'extern/QueryString'
-  , 'i18n': 'extern/i18next.amd.withJQuery-1.10.1'
-  , 'markdown-it': 'extern/markdown-it.min'
-  , 'leaflet': 'extern/leaflet'
-  , 'leaflet-markercluster': 'extern/leaflet.markercluster'
-  , 'leaflet.dom-markers': 'extern/leaflet.dom-markers'
-  , 'leaflet-providers': 'extern/leaflet-providers'
-  , 'leaflet.zoomslider': 'extern/L.Control.Zoomslider'
+  , 'i18n': 'extern/i18next.amd.withJQuery-1.10.1' // Compressor depends on this
+  , 'markdown-it': 'bower_components/markdown-it/dist/markdown-it.min'
+  , 'leaflet': 'bower_components/leaflet/dist/leaflet'
+  , 'leaflet-markercluster': 'bower_components/leaflet.markercluster/dist/leaflet.markercluster'
+  , 'leaflet.dom-markers': 'bower_components/Leaflet.DomMarkers/src/leaflet.dom-markers'
+  , 'leaflet-providers': 'bower_components/leaflet-providers/leaflet-providers'
+  , 'leaflet.zoomslider': 'bower_components/leaflet-zoomslider/src/L.Control.Zoomslider'
   }
 , shim: {//Dependencies and magic for extern scripts
     'jquery': {exports: '$'}
