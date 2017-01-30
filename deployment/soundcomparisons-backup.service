@@ -1,0 +1,11 @@
+[Unit]
+Description=Execute Sound-Comparisons backup script.
+Requires=mariadb.service
+
+[Service]
+User=soundcomparisons
+Group=soundcomparisons
+ExecStart=/bin/bash /srv/soundcomparisons/deployment/backup.sh
+
+[Install]
+WantedBy=multi-user.target

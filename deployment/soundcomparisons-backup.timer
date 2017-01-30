@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Sound-Comparisons backup script every 4 hours
+
+[Timer]
+OnBootSec=4h
+OnUnitActiveSec=4h
+
+[Install]
+WantedBy=timers.target

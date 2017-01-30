@@ -1,0 +1,74 @@
+##
+# File written by Jakob Runge 2017-01-30
+##
+
+#Bumping upload file size:
+client_max_body_size 10m;
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name soundcomparisons.com www.soundcomparisons.com soundcomparisons.ddnss.de;
+
+  # nginx configuration
+  location /admin {
+  }
+  location /css {
+    alias /srv/soundcomparisons/site/css
+    autoindex off;
+  }
+  location /img {
+    alias /srv/soundcomparisons/site/img
+    autoindex off;
+  }
+  location /js {
+    alias /srv/soundcomparisons/site/js
+    autoindex off;
+  }
+  location /sound {
+    alias /srv/soundcomparisons/site/sound
+    autoindex off;
+  }
+  location /templates {
+    alias /srv/soundcomparisons/site/templates
+    autoindex off;
+  }
+
+  location /export/ {
+    if (!-e $request_filename){
+      rewrite ^/export/([^/]+)/$ /export/$1 redirect;
+    }
+    rewrite ^/export/(.+)\.php$ /export/$1 redirect;
+    rewrite ^/export/([^/.]+)$ /export/$1.php break;
+  }
+  location /query/ {
+    if (!-e $request_filename){
+      rewrite ^/query/(.*)$ /query/$1.php;
+    }
+  }
+  location / {
+    rewrite ^/(js/App-minified)\..+(\.js)$ /$1$2 break;
+    if ($query_string ~ "^$"){
+      rewrite ^/projects/(.*)$ /query/projects?name=$1 break;
+    }
+    if ($query_string ~ "^$"){
+      rewrite ^(.+)$ /;
+    }
+    if ($query_string ~ "(.+)"){
+      rewrite ^(.+)$ /?%1 redirect;
+    }
+  }
+  location ~ [^/]\.php(/|$) {
+    fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+    if (!-f $document_root$fastcgi_script_name) {
+        return 404;
+    }
+
+    # Mitigate https://httpoxy.org/ vulnerabilities
+    fastcgi_param HTTP_PROXY "";
+
+    fastcgi_pass unix:/var/run/php/php7.0-fpm.sock
+    fastcgi_index index.php;
+    include fastcgi_params;
+  }
+}
