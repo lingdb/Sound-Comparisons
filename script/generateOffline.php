@@ -1,6 +1,10 @@
 <?php
+/*
+To call this script from console use commands like these:
+env EXPORT_TASK=data php -f generateOffline.php
+*/
 // Settings:
-$baseUrl = "http://127.0.0.1/query";
+$baseUrl = "http://soundcomparisons.com/query";
 // Move into root directory:
 chdir(__DIR__);
 chdir('..');
@@ -11,7 +15,7 @@ $path = './sndComp_'.$date.'_export';
 // Create index.html:
 `php -f index.php > $path/index.html`;
 // Copy static directories:
-`cp -rv css/ js/ img/ LICENSE README.md $path/`;
+`cp -rv site/css/ site/js/ site/img/ LICENSE README.md $path/`;
 // Helper to fetch json files:
 function fetchJSON($url, $file){
   echo $url.' -> '.$file."\n";
@@ -19,7 +23,7 @@ function fetchJSON($url, $file){
   file_put_contents($file, $data);
   return $data;
 }
-if(preg_match('/^$|data|all/', $_ENV['EXPORT_TASK'])){
+if(preg_match('/^$|data|all/', getenv('EXPORT_TASK'))){
   // Generate .json files to load for the site:
   fetchJSON("$baseUrl/data", "$path/data/data");
   $global = fetchJSON("$baseUrl/data?global", "$path/data/data_global");
@@ -42,10 +46,10 @@ if(preg_match('/^$|data|all/', $_ENV['EXPORT_TASK'])){
   $url .= implode('+', $lnames)."&ns=translation";
   fetchJSON($url, $file);
 }
-if(preg_match('/^$|map|all/', $_ENV['EXPORT_TASK'])){
+if(preg_match('/^$|map|all/', getenv('EXPORT_TASK'))){
   // Fetch map tiles for offline usage:
   function getMapUrl($z, $x, $y){
-    return "http://mapnik/mapbox-studio-osm-bright/$z/$x/$y.png";
+    return "http://127.0.0.1:27374/mapbox-studio-osm-bright/$z/$x/$y.png";
   }
   /*
   $bounds :: [{x :: {min :: Int, max :: Int},
@@ -95,7 +99,7 @@ if(preg_match('/^$|map|all/', $_ENV['EXPORT_TASK'])){
     for($x = $bound['x']['min']; $x < $bound['x']['max']; $x++){
       `mkdir -p $path/mapnik/$z/$x`;
       for($y = $bound['y']['min']; $y < $bound['y']['max']; $y++){
-        $url = "http://mapnik/mapbox-studio-osm-bright/$z/$x/$y.png";
+        $url = "http://127.0.0.1:27374/mapbox-studio-osm-bright/$z/$x/$y.png";
         $file = "$path/mapnik/$z/$x/$y.png";
         echo "Loading map file: $url\n";
         file_put_contents($file, fopen($url, 'r'));
@@ -103,5 +107,3 @@ if(preg_match('/^$|map|all/', $_ENV['EXPORT_TASK'])){
     }
   }
 }
-// Correct owner of $path:
-`chown 1000.1000 -R $path`;
