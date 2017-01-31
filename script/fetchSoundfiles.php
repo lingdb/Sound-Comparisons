@@ -6,7 +6,7 @@
 $server = 'http://soundcomparisons.com/';
 //Switching into website directory:
 chdir(__DIR__);
-chdir('..');
+chdir('../site');
 //Global data to iterate studies:
 echo "Fetching global data form $server\n";
 $globalUrl = $server.'query/data?global';
