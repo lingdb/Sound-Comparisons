@@ -1,8 +1,13 @@
 Setup instructions:
 ===
 
-* Dependencies for `pip` are given in `requirements.txt`.
-* Sound files must be placed in [soundcomparisons/static/sound](https://github.com/lingdb/soundcomparisons/tree/master/soundcomparisons/static/sound).
-* The expected database location is `mysql://root:@localhost/sndcmp`,
-  but can be configured with environment variables or as done in [soundcomparisons/main.py](https://github.com/lingdb/soundcomparisons/blob/master/soundcomparisons/main.py) for testing.
-* A `soundcomparisons/client_secrets.json` file is necessary for oauth.
+* Sound files must be placed in [site/sound](https://github.com/lingdb/Sound-Comparisons/tree/master/static/sound).
+* Configuration is done via environment variables.
+These can be set in `/etc/php/7.0/fpm/pool.d/www.conf`:
+```shell
+env[DEPLOYED] = 'true'
+env[MYSQL_SERVER] = 'localhost'
+env[MYSQL_USER] = 'soundcomparisons'
+env[MYSQL_PASSWORD] = '…'
+env[MYSQL_DATABASE] = 'v4'
+```
