@@ -6,31 +6,42 @@ server {
   listen [::]:80;
   server_name soundcomparisons.com www.soundcomparisons.com;
   root /srv/soundcomparisons/site;
-  index index.php
+  proxy_intercept_errors on;
+  fastcgi_intercept_errors on;
+  index index.php;
 
-  # nginx configuration
   location /css {
-    alias /srv/soundcomparisons/site/css
+    alias /srv/soundcomparisons/site/css;
     autoindex off;
   }
   location /img {
-    alias /srv/soundcomparisons/site/img
+    alias /srv/soundcomparisons/site/img;
     autoindex off;
   }
   location /js {
-    alias /srv/soundcomparisons/site/js
+    rewrite ^/js/(App-minified)\..+(\.js)$ /js/$1$2;
+    alias /srv/soundcomparisons/site/js;
     autoindex off;
   }
   location /sound {
-    alias /srv/soundcomparisons/site/sound
+    alias /srv/soundcomparisons/site/sound;
     autoindex off;
   }
   location /templates {
-    alias /srv/soundcomparisons/site/templates
+    alias /srv/soundcomparisons/site/templates;
     autoindex off;
   }
-
+  location /admin/css {
+    alias /srv/soundcomparisons/site/admin/css;
+    autoindex off;
+  }
   location /admin {
+    include /etc/nginx/fastcgi_params;
+    # Mitigate https://httpoxy.org/ vulnerabilities
+    fastcgi_param HTTP_PROXY "";
+    fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
   }
   location /export/ {
     if (!-e $request_filename){
@@ -43,30 +54,25 @@ server {
     if (!-e $request_filename){
       rewrite ^/query/(.*)$ /query/$1.php;
     }
-  }
-  location / {
-    rewrite ^/(js/App-minified)\..+(\.js)$ /$1$2 break;
-    if ($query_string ~ "^$"){
-      rewrite ^/projects/(.*)$ /query/projects?name=$1 break;
-    }
-    if ($query_string ~ "^$"){
-      rewrite ^(.+)$ /;
-    }
-    if ($query_string ~ "(.+)"){
-      rewrite ^(.+)$ /?%1 redirect;
-    }
-  }
-  location ~ [^/]\.php(/|$) {
-    fastcgi_split_path_info ^(.+?\.php)(/.*)$;
-    if (!-f $document_root$fastcgi_script_name) {
-        return 404;
-    }
-
+    include /etc/nginx/fastcgi_params;
     # Mitigate https://httpoxy.org/ vulnerabilities
     fastcgi_param HTTP_PROXY "";
-
-    fastcgi_pass unix:/var/run/php/php7.0-fpm.sock
+    fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
     fastcgi_index index.php;
-    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
+  }
+  location / {
+  # if ($query_string ~ "^$"){
+  #   rewrite ^(.+)$ /;
+  # }
+  # if ($query_string ~ "(.+)"){
+  #   rewrite ^(.+)$ /?%1 redirect;
+  # }
+    include /etc/nginx/fastcgi_params;
+    # Mitigate https://httpoxy.org/ vulnerabilities
+    fastcgi_param HTTP_PROXY "";
+    fastcgi_pass unix:/var/run/php/php7.0-fpm.sock;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
   }
 }
