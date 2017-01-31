@@ -1,18 +1,14 @@
-##
-# File written by Jakob Runge 2017-01-30
-##
-
 #Bumping upload file size:
 client_max_body_size 10m;
 
 server {
   listen 80;
   listen [::]:80;
-  server_name soundcomparisons.com www.soundcomparisons.com soundcomparisons.ddnss.de;
+  server_name soundcomparisons.com www.soundcomparisons.com;
+  root /srv/soundcomparisons/site;
+  index index.php
 
   # nginx configuration
-  location /admin {
-  }
   location /css {
     alias /srv/soundcomparisons/site/css
     autoindex off;
@@ -34,6 +30,8 @@ server {
     autoindex off;
   }
 
+  location /admin {
+  }
   location /export/ {
     if (!-e $request_filename){
       rewrite ^/export/([^/]+)/$ /export/$1 redirect;
