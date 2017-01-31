@@ -30,7 +30,7 @@
   if(php_sapi_name() === 'cli'){
     $headers = array('Accept' => 'text/html');
   }else{
-    $headers = getallheaders();
+    $headers = Config::getAllHeaders();
     if(!array_key_exists('Accept', $headers)){
       $headers['Accept'] = 'text/html';
     }
