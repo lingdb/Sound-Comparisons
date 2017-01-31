@@ -12,10 +12,13 @@ chdir('..');
 $date = trim(`date -I`);
 $path = './sndComp_'.$date.'_export';
 `mkdir -p $path/data`;
-// Create index.html:
-`php -f index.php > $path/index.html`;
 // Copy static directories:
 `cp -rv site/css/ site/js/ site/img/ LICENSE README.md $path/`;
+// Create index.html:
+`curl "http://soundcomparisons.com" > $path/index.html`;
+preg_match('/js\/App.minified\..+\.js/', `grep "js/App-minified" $path/index.html`, $matches);
+$jsFile = $matches[0];
+`curl "http://soundcomparisons.com/$jsFile" > $path/$jsFile`;
 // Helper to fetch json files:
 function fetchJSON($url, $file){
   echo $url.' -> '.$file."\n";
