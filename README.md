@@ -27,6 +27,7 @@ To export an offline copy of the Sound-Comparisons website follow these steps:
 * Make sure you have a local copy of `php` installed as the export script is written in it.
 * Navigate to the `script/` directory and execute the `generateOffline.php` script.
   Call it with an `EXPORT_TASK` environment variable like one of these calls:
+  
   ```shell
   env EXPORT_TASK=data php -f generateOffline.php
   env EXPORT_TASK=map php -f generateOffline.php
