@@ -63,12 +63,8 @@ server {
     fastcgi_param SCRIPT_FILENAME $document_root/$fastcgi_script_name;
   }
   location / {
-  # if ($query_string ~ "^$"){
-  #   rewrite ^(.+)$ /;
-  # }
-  # if ($query_string ~ "(.+)"){
-  #   rewrite ^(.+)$ /?%1 redirect;
-  # }
+    rewrite ^/projects/(.*)$ /query/projects?name=$1 redirect;
+    rewrite ^/(.+)$ /#$1 redirect;
     include /etc/nginx/fastcgi_params;
     # Mitigate https://httpoxy.org/ vulnerabilities
     fastcgi_param HTTP_PROXY "";
