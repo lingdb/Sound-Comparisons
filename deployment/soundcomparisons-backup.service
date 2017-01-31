@@ -1,6 +1,6 @@
 [Unit]
 Description=Execute Sound-Comparisons backup script.
-Requires=mariadb.service
+Requires=mysql.service
 
 [Service]
 User=soundcomparisons

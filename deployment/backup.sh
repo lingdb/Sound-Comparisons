@@ -6,7 +6,8 @@ echo "Creating database dump: $name.sql"
 # Creating the dump:
 echo "SET AUTOCOMMIT=0;" > $name.sql
 echo "SET FOREIGN_KEY_CHECKS=0;" >> $name.sql
-mysqldump -hlocalhost -uroot -p$MYSQL_ROOT_PASSWORD --routines --single-transaction v4 | \
+password=$(cat ../password)
+mysqldump -hlocalhost -usoundcomparisons -p$password --routines --single-transaction v4 | \
   sed -e 's/DEFINER=[^*]*\*/\*/' | \
   sed -e 's/DEFINER=.*PROCEDURE/PROCEDURE/' >> $name.sql
 echo "SET FOREIGN_KEY_CHECKS=1;" >> $name.sql
