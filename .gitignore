@@ -48,3 +48,9 @@ coverage.xml
 
 # stuff by generateOffline.php
 sndComp*export/*
+
+# Added on deployment
+.config
+.npm
+.viminfo
+.gitconfig

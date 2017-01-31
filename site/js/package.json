@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/lingdb/Sound-Comparisons#readme",
   "dependencies": {
+    "bower": "^1.8.0",
     "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-requirejs": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-eslint": "^19.0.0"
