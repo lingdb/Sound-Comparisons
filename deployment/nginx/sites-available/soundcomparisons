@@ -35,6 +35,10 @@ server {
     alias /srv/soundcomparisons/site/admin/css;
     autoindex off;
   }
+  location /admin/js {
+    alias /srv/soundcomparisons/site/admin/js;
+    autoindex off;
+  }
   location /admin/ {
     rewrite ^/admin/$ /admin/index.php;
     include /etc/nginx/fastcgi_params;
