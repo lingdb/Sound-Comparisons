@@ -23,7 +23,7 @@
     requirejs(['jquery'], function($){
       var sendTo = $('#projectFrame').attr('src');
       console.log('Target alive at:\t'+sendTo);
-      $('#projectFrame').load(function(){
+      $('#projectFrame').on('load', function(){
         console.log('Target loaded!');
       });
     });

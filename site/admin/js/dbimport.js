@@ -40,7 +40,7 @@ $(document).ready(function(){
   $('#button_upload').click(function(e){
     e.preventDefault();
     //Trigger on iframe load:
-    $('#iframe_post_form').load(function(){
+    $('#iframe_post_form').on('load', function(){
       $('#iframe_post_form').unbind('load'); // No further listening
     });
     //Load it up
