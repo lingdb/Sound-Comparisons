@@ -13,10 +13,11 @@
          ><i class="icon-dropdown-custom"></i>{{currentStudyName}}</a>
       <ul class="dropdown-menu">
       {{#studies}}
-        <li{{#currentStudy}} class="disabled"{{/currentStudy}}>
-        {{#link}}<a {{{.}}}>{{/link}}
+        <li{{#isDivider}} class="divider disabled"{{/isDivider}}{{#currentStudy}} class="disabled"{{/currentStudy}}>
+        {{^isDivider}}{{#link}}<a {{{.}}}>{{/link}}
         {{studyName}}
         {{#link}}</a>{{/link}}
+        {{/isDivider}}
         </li>
       {{/studies}}
       </ul>

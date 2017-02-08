@@ -50,7 +50,7 @@ require_once('config.php');
 */
 if(array_key_exists('global',$_GET)){
   echo Config::toJSON(array(
-    'studies' => DataProvider::getStudies()
+    'studies' => DataProvider::getStudiesForDisplay()
   , 'global'  => DataProvider::getGlobal()
   ));
 }else if(array_key_exists('study',$_GET)){

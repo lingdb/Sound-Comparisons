@@ -118,6 +118,19 @@ class DataProvider {
     return $studies;
   }
   /**
+    @return Studies [String]
+    Returns an array with all studies currently known to the database in it
+    sorted for displaying only whereby StudyIx=1 are listed first followed by a divider (marked as "--").
+  */
+  public static function getStudiesForDisplay(){
+    $studies = array();
+    $set = Config::getConnection()->query('(SELECT Name FROM Studies WHERE StudyIx = 1 ORDER BY Name LIMIT 10000) UNION ALL (SELECT "--" AS Name) UNION ALL (SELECT Name FROM Studies WHERE StudyIx > 1 ORDER BY Name LIMIT 10000)');
+    while($r = $set->fetch_assoc()){
+      array_push($studies, $r['Name']);
+    }
+    return $studies;
+  }
+  /**
     @return $global [complex]
     Captures a representation of all data currently in the database that is not
     dependent on a specific study or translation,

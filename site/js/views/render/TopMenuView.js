@@ -46,6 +46,7 @@ define(['backbone'], function(Backbone){
     }
     /**
       Generates the study part of the TopMenu.
+      A name == "--" will be marked as 'divider'.
     */
   , updateStudy: function(){
       var data = {
@@ -56,6 +57,7 @@ define(['backbone'], function(Backbone){
           , link = App.study.getLink(n);
         return {
           currentStudy: name === data.currentStudyName
+        , isDivider: name === "--"
         , link: 'href="'+link+'"'
         , studyName: name
         };
