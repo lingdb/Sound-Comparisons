@@ -70,10 +70,10 @@ define(['underscore',
         }
         return '<div style="display: inline;">'
              + '<div class="transcription' + fileMissing + '"'+smallCaps+'>'
-             + sf.phonetic + '</div>'
+             + '&nbsp;' + sf.phonetic + '&nbsp;&nbsp;</div>'
              + audio+'</div>';
       }, this);
-      content = content.join(',<br>');
+      content = content.join('');
       //Creating the div:
       var div = document.createElement('div')
         , $div = $(div).addClass('mapAudio', 'audio')
@@ -83,7 +83,7 @@ define(['underscore',
       //Adding a marker to the map:
       var icon = L.DomMarkers.icon({
         element: div,
-        iconSize: L.point(40, 40)});
+        iconSize: L.point(40, 20)});
       //Add a way to fetch data from the icons options:
       icon.options.getData = function(){
         return data;
@@ -99,7 +99,7 @@ define(['underscore',
         $div.find('.transcription').each(function(){
           var t = $(this);
           w = Math.max(w, t.width());
-          h += t.height();
+          h += 1.085*t.height();
         });
         //Update size:
         icon.options.iconSize = [w, h];

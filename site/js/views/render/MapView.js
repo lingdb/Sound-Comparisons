@@ -251,7 +251,7 @@ define(['views/render/SubView',
         //Fixing size of newly added markers:
         window.setTimeout(function(){
           _.each(_.values(ms), function(m){m.fixSize();});
-        }, 1);
+        }, 0);
       }
       this.adjustCanvasSize();
       this.centerRegion();
