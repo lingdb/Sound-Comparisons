@@ -329,12 +329,17 @@ dd.languageList {
 /* IPA Keyboard: */
 #ipaKeyboard {
   margin-left: 0px;
+  width: auto;
+  height: auto !important;
+  left: 10px;
+  max-width: 1150px;
+  min-width: 500px;
 }
 #ipaKeyboard > .modal-header {
-  height: 20px;
+  height: 16px;
 }
 #ipaKeyboard > .modal-body {
-  max-height: none;
+  max-height: 600px !important;
 }
 /*
   Styling for nanoscroller

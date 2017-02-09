@@ -39,15 +39,24 @@ define(['jquery','backbone'], function($, Backbone){
       $('body').click(function(e){t.closeOnClick(e);});
     }
   , render: function(){
-      var current = this.$('.modal-body > div:visible > table');
-      if(current.length === 1){
-        //Updating width:
-        var ew = current.width() + 10;
-        this.$el.width(ew);
-        //Updating position to the left:
-        var ww = $(window).width();
-        var x = (ww - ew) / 2;
+      var t = this.$el;
+      t.css('width', 'auto');
+      t.css('right', '');
+      t.css('left', '10px');
+      //Updating width and position to the left:
+      var ww = $(window).width();
+      var rw = 0.17*ww;
+      var ew = this.$el.width();
+      var x = 0;
+      if((ww-ew-rw)>10) {
+        x = ww-ew-rw;
         this.$el.css('left', x + "px");
+        this.$el.css('right', rw + "px");
+      } else {
+        x = ww-rw-10;
+        this.$el.width(x);
+        this.$el.css('left', "10px");
+        this.$el.css('right', rw + "px");
       }
     }
   , footerButton: function(button, buttons){
