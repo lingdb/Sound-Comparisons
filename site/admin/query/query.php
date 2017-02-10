@@ -10,7 +10,7 @@
       @return String html - options for LanguageFamilies to choose, with their Id's as attributes.
     */
     case 'fetchLanguageFamilySelection':
-      $q = 'SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx), StudyIx, FamilyIx, SubFamilyIx, Name FROM Studies';
+      $q = 'SELECT CONCAT(StudyIx, FamilyIx, SubFamilyIx), StudyIx, FamilyIx, SubFamilyIx, Name FROM Studies ORDER BY Name';
       $set = $dbConnection->query($q);
       while($r = $set->fetch_row()){
         $id   = $r[0];

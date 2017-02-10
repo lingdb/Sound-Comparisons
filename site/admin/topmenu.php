@@ -13,10 +13,16 @@
       if(session_mayEdit($dbConnection))
         echo '<li class="nav">'
            . '<a class="dropdown-toggle topLink" data-toggle="dropdown">'
-           . 'Upload <b class="caret"></b></a>'
+           . 'Database <b class="caret"></b></a>'
            . '<ul class="dropdown-menu">'
-           . '<li><a href="dbimport.php">Data Tables (CSV format)</a></li>'
-           . '<li><a href="sqlFrontend.php">Transcription Records (SQL format)</a></li>'
+           . '<li><a href="uploadCSV.php">Upload CSV Files</a></li>'
+           . '<li><a href="uploadSQL.php">Upload and Run SQL Files (Transcriptions)</a></li>'
+           . '<li class="divider"></li>'
+           . '<li><a href="insertNewLg.php">Insert new Language Family</a></li>'
+           . '<li class="divider"></li>'
+           . '<li><a href="generateLgIndices.php">Generate Language Indices File (for Praat)</a></li>'
+           . '<li class="divider"></li>'
+           . '<li><a href="exportSQLDump.php">Export Database Data (SQL format)</a></li>'
            . '</ul></li>';
       ?>
       <li><a href="userAccount.php">User account</a></li>
@@ -26,9 +32,9 @@
            . '<a class="dropdown-toggle topLink" data-toggle="dropdown">'
            . 'Diagnostics <b class="caret"></b></a>'
            . '<ul class="dropdown-menu">'
-           . '<li><a href="missingSounds.php">Missing sounds</a></li>'
+           . '<li><a href="missingSounds.php">List Missing Sounds</a></li>'
            . '<li><a href="integrity.php">DB Integrity</a></li>'
-           . '<li><a href="clearCache.php">Clear cache</a></li>'
+           . '<li><a href="clearCache.php">Clear Cache</a></li>'
            . '</ul></li>';
       }
       ?>

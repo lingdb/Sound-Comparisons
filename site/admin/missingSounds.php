@@ -14,7 +14,7 @@ if(!session_mayEdit($dbConnection))
   ?>
   <body>
     <?php require_once('topmenu.php'); ?>
-    <h3>Choose a study to list missing files for:</h3>
+    <h3>&nbsp;&nbsp;Choose a study to list missing files for:</h3>
     <div class="btn-group">
     <?php
       $current = isset($_GET['study']) ? $_GET['study'] : '';

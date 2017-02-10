@@ -361,7 +361,7 @@ class DataProvider {
     //Add dummy transcriptions:
     $dummies = array();
     //Fetching study related data:
-    $q = "SELECT StudyIx, FamilyIx FROM Studies WHERE Name='$studyName' LIMIT 1";
+    $q = "SELECT StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx FROM Studies WHERE Name='$studyName' LIMIT 1";
     $study = current(static::fetchAll($q));
     if($study === false) return $dummies;
     //Handling languages without transcriptions:

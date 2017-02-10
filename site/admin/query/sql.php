@@ -40,7 +40,7 @@ if(php_sapi_name() === 'cli'){
       case 'import':
         $imports = $_FILES['import'];
         if(count($imports['name']) === 1 && $imports['name'][0] === ''){
-          die('import file missing.');
+          die('⁉️ Please choose at least one import file ...');
         }else{
           $files = [];
           while(count($imports['name']) > 0){
@@ -102,6 +102,40 @@ switch($action){
     }
     echo implode("\n",$qs)."\n";
   break;
+  case 'genLgIdx':
+    CacheProvider::cleanCache('../');
+    $lgsIdx = array();
+    $availableLgs = array();
+    array_push($lgsIdx, 'idx	prefix');
+    $aLSet = $dbConnection->query('SHOW TABLES LIKE "Languages_%"');
+    if($aLSet !== false){
+      while($row = $aLSet->fetch_row()){
+        array_push($availableLgs, current($row));
+      }
+      foreach($availableLgs as $lg){
+        $set = $dbConnection->query('select `LanguageIx`, `FilePathPart` from '.$lg);
+        if($set !== false){
+          while($row = $set->fetch_array(MYSQLI_NUM)){
+            array_push($lgsIdx, $row[0].'	'.$row[1]);
+          }
+        } else {
+          ?>‼️ An error occurred for <?php echo $lg ?>!<?php
+          return;
+        }
+      }
+      if(php_sapi_name() !== 'cli'){
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/octet-stream; charset=utf-8");
+        header("Content-Disposition: attachment;filename=\"lg_idx_filename.txt\"");
+        header("Content-Transfer-Encoding: binary");
+      }
+      echo implode("\n",$lgsIdx)."\n";
+    } else {
+      ?>‼️ No language tables found!<?php
+    }
+  break;
   case 'import':
     CacheProvider::cleanCache('../');
     foreach($files as $f){
@@ -111,29 +145,38 @@ switch($action){
       $worked = $dbConnection->multi_query($sql);
       if(!$worked){
         array_push($report, 'File: '.$f['name'].' Query: '.$i);
+        array_push($report, '<blockquote>'.$dbConnection->error.'</blockquote>');
       }
       while($dbConnection->more_results()){
         $worked = $dbConnection->next_result();
         $i++;
         if(!$worked){
           array_push($report, 'File: '.$f['name'].' Query: '.$i);
+          array_push($report, '<blockquote>'.$dbConnection->error.'</blockquote>');
         }
       }
     }
     ?><!DOCTYPE HTML>
-    <html><?php
-      $title = "SQL file(s) processed.";
-      require_once('head.php');
-    ?><body>
+    <html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <link rel="Stylesheet" type="text/css" href="../../css/extern/bootstrap.css" media="screen" />
+      <link rel="Stylesheet" type="text/css" href="../css/style.css" media="screen" />
+      <link rel="Stylesheet" type="text/css" href="../css/extern/jquery.dataTables.css" media="screen" />
+      <script type='application/javascript' src='../../js/bower_components/jquery/dist/jquery.min.js'></script>
+      <script type='application/javascript' src='../../js/extern/bootstrap.js'></script>
+      <script type='application/javascript' src='../../js/bower_components/underscore/underscore-min.js'></script>
+      <script type='application/javascript' src='../../js/bower_components/backbone/backbone-min.js'></script>
+    </head>
+    <body style="margin:20px">
       <h3>File(s) processed.</h3>
-      <a href="..">Go back!</a>
         <?php if(count($report) > 0){ ?>
         <div class="well">
-          There have been errors with the following query numbers:
-          <br>
-          <code><?php echo implode(' ,', $report); ?></code>
+          There have been <font color="red">errors</font> with the following query numbers:
+          <br /><br />
+          <?php echo implode(' ,', $report); ?>
         </div>
-        <?php } ?>
+        <?php } else { ?>  No errors 😀 <?php }?>
       </body>
     </html><?php
   break;
