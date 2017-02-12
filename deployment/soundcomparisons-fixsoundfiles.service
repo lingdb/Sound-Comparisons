@@ -1,0 +1,8 @@
+[Unit]
+Description=Fixes owner and permissions of sound files.
+
+[Service]
+ExecStart=/bin/bash /srv/soundcomparisons/deployment/fixsoundfiles.sh
+
+[Install]
+WantedBy=multi-user.target
