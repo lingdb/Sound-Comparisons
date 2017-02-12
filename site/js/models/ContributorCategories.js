@@ -10,7 +10,7 @@ define(['underscore','backbone','collections/ContributorCollection'], function(_
     }
   , getHeadline: function(sortGroup){
       var fallback = this.sgHMap[sortGroup];
-      return App.translationStorage.translateDynamic('ContributorCategoriesTranslationProvider', sortGroup, fallback);
+      return App.translationStorage.translateDynamic('ContributorCategoriesTranslationProvider-Headline', sortGroup, fallback);
     }
   , getContributors: function(sortGroup){
       if(!(sortGroup in this.sgCMap)){
