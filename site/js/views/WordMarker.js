@@ -88,7 +88,7 @@ define(['underscore',
       icon.options.getData = function(){
         return data;
       };
-      var marker = L.marker(data.latlng, {icon: icon});
+      var marker = L.marker(data.latlng, {icon: icon, riseOnHover: true});
       //Connect audio events when marker is added:
       marker.on('add', _.bind(handleAudio, null, div));
       //Generating a marker id:
