@@ -360,10 +360,12 @@ class DataProvider {
     $db = Config::getConnection();
     //Add dummy transcriptions:
     $dummies = array();
-    //Fetching study related data:
-    $q = "SELECT StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx FROM Studies WHERE Name='$studyName' LIMIT 1";
-    $study = current(static::fetchAll($q));
-    if($study === false) return $dummies;
+
+    //Fetching study related data: @Bibiko - unclear code -> issue #439
+    // $q = "SELECT StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx FROM Studies WHERE Name='$studyName' LIMIT 1";
+    // $study = current(static::fetchAll($q));
+    // if($study === false) return $dummies;
+
     //Handling languages without transcriptions:
     $q = "SELECT L.LanguageIx, W.IxElicitation, W.IxMorphologicalInstance, L.FilePathPart, W.SoundFileWordIdentifierText "
        . "FROM Languages_$studyName AS L CROSS JOIN Words_$studyName AS W "
@@ -374,11 +376,13 @@ class DataProvider {
     foreach($qs as $entry){
       $files = static::findSoundFiles($entry['FilePathPart'], $entry['SoundFileWordIdentifierText']);
       $missing = (count($files) === 0) ? 1 : 0;
-      //Returning saving found dummies:
-      $q = "INSERT INTO Transcriptions_$studyName "
-         . "(StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx, RecordingMissing) "
-         . "VALUES ({$study['StudyIx']},{$study['FamilyIx']},{$study['IxElicitation']},{$study['IxMorphologicalInstance']},{$study['LanguageIx']},$missing)";
-      $db->query($q);
+
+      //Returning saving found dummies: @Bibiko - unclear code -> issue #439
+      // $q = "INSERT INTO Transcriptions_$studyName "
+      //    . "(StudyIx, FamilyIx, IxElicitation, IxMorphologicalInstance, LanguageIx, RecordingMissing) "
+      //    . "VALUES ({$study['StudyIx']},{$study['FamilyIx']},{$study['IxElicitation']},{$study['IxMorphologicalInstance']},{$study['LanguageIx']},$missing)";
+      // $db->query($q);
+
       //Filtering
       if($missing === 1) continue;
       //Adding to dummy list:
