@@ -30,18 +30,30 @@ define(['underscore','backbone','models/TranscriptionSuperscript'], function(_, 
     , RootSharedInAnotherFamily:         22
     }
   , getTranscriptionSuperscript: function(field){
-      var e;
+      var e, abbr, hvt;
       if(_.isString(field)){
         if(field in (this.transcriptionFieldLookup || {})){
           return this.getTranscriptionSuperscript(this.transcriptionFieldLookup[field]);
         }else if(field.length === 3){
           e = this.findWhere({IsoCode: field});
-          if(e) return e.pick('Abbreviation', 'FullNameForHoverText');
+          if(e) {
+            abbr = e.get('Abbreviation');
+            hvt = e.get('FullNameForHoverText');
+            abbr = App.translationStorage.translateDynamic('TranscrSuperscriptLenderLgsTranslationProvider-TranscrSuperscriptLenderLgs-Trans_Abbreviation',field,abbr);
+            hvt = App.translationStorage.translateDynamic('TranscrSuperscriptLenderLgsTranslationProvider-TranscrSuperscriptLenderLgs-Trans_FullNameForHoverText',field,hvt);
+            return {Abbreviation: abbr, FullNameForHoverText: hvt};
+          }
         }
       }else if(_.isNumber(field)){
         var predicate = function(e){return parseInt(e.get('Ix')) === field;};
         e = this.find(predicate);
-        if(e) return e.pick('Abbreviation', 'HoverText');
+        if(e) {
+          abbr = e.get('Abbreviation');
+          hvt = e.get('HoverText');
+          abbr = App.translationStorage.translateDynamic('TranscrSuperscriptInfoTranslationProvider-TranscrSuperscriptInfo-Trans_Abbreviation',field,abbr);
+          hvt = App.translationStorage.translateDynamic('TranscrSuperscriptInfoTranslationProvider-TranscrSuperscriptInfo-Trans_HoverText',field,hvt);
+          return {Abbreviation: abbr, HoverText: hvt};
+        }
       }
       console.log('Trans…Super…Collection.getTranscriptionSuperscript() had undefined field: '+field);
       return null;
