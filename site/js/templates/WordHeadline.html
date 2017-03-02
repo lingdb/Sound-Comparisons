@@ -1,7 +1,7 @@
 <div class="row-fluid">
   {{#wordHeadline}}
   {{#prev}}
-  <div class="span3">
+  <div class="span3 prev-next">
     <a id="prevLink" {{{link}}} title="{{ttip}}" class="pull-left nounderline">
     <div class="color-word inline">{{trans}}{{#ttip}}…{{/ttip}} </div>← {{title}}</a>
   </div>
@@ -15,7 +15,7 @@
     </h1>
   </div>
   {{#next}}
-  <div class="span3">
+  <div class="span3 prev-next">
     <a id="nextLink" {{{link}}} title="{{ttip}}" class="pull-right nounderline">
       {{title}} →<div class="color-word inline"> {{trans}}{{#ttip}}…{{/ttip}}</div>
     </a>

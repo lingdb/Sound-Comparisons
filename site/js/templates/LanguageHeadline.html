@@ -1,19 +1,21 @@
 <div class="row-fluid">
   {{#prev}}
-  <div class="span3">
+  <div class="pull-left prev-next">
     <a id="prevLink" {{{link}}} class="pull-left nounderline">
     <div class="color-language inline">{{trans}} </div>← {{title}}</a>
   </div>
   {{/prev}}
-  <div class="span6">
-    <h3 class="color-language noborders centertext">{{#longName}}{{> LanguageSuperscript}}{{/longName}}</h3>
-  </div>
   {{#next}}
-  <div class="span3">
+  <div class="pull-right prev-next">
     <a id="nextLink" {{{link}}} class="pull-right nounderline">{{title}} →
     <div class="color-language inline"> {{trans}}</div></a>
   </div>
   {{/next}}
+</div>
+<div class="row-fluid">
+  <div class="div-centered">
+    <h3 class="color-language noborders centertext" style="line-height:28px;margin-top:-10px;margin-bottom:2px">{{#longName}}{{> LanguageSuperscript}}{{/longName}}</h3>
+  </div>
 </div>
 <div class="row-fluid">
   <div class="span3">

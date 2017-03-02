@@ -21,6 +21,14 @@ i, .icon, .favicon, input[type="radio"] {
   margin-left:  5px;
   margin-right: 5px;
 }
+.div-centered {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+.prev-next {
+  margin-top:-10px;
+}
 .icon {
   display: inline-block;
   height: 14px;
