@@ -69,12 +69,27 @@
   </span>
 </div>
 <div class="navbar-inner span2">
+  <ul id="topmenuSettings" class="nav nav-tabs" style="margin-left:5px !important">
+    <li>
+      <button type="button" data-toggle="dropdown" class="btn btn-mini dropdown-toggle" title="{{settingTitle}}" style="height:22px !important;margin-top:3px !important"><i class="icon-wrench"></i></button>
+      <ul class="dropdown-menu">
+        <li>
+          {{ipaTooltipFontSize}}
+          {{#IPATooltipFontSize}}
+          <label class="radio">
+            <input type="radio" name="IPATooltipFontSize" value="{{.}}">{{.}}
+          </label>
+          {{/IPATooltipFontSize}}
+        </li>
+      </ul>
+    </li>
+  </ul>
   <ul id="topmenuSiteLang" class="nav">
     <li>
       <a class="dropdown-toggle topLink" data-toggle="dropdown">
-         <i class="icon-dropdown-custom"></i>
          {{#currentFlag}}<img class="flag" src="{{.}}">{{/currentFlag}}
-         </a>
+         <span class="caret"></span>
+       </a>
       <ul class="dropdown-menu">
         {{#otherTranslations}}
         <li><a {{{link}}}>{{#flag}}<img class="flag" src="{{.}}">{{/flag}}{{name}}</a></li>

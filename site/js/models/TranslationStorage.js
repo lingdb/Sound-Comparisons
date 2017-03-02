@@ -71,11 +71,28 @@ define(['jquery','underscore','backbone','models/Loader'], function($, _, Backbo
       Updates the nToTMap.
     */
   , mkNToTMap: function(){
-      var map = {};
-      _.each(this.get('summary'), function(t){
-        map[t.BrowserMatch] = t;
-      }, this);
-      this.set({nToTMap: map});
+      try {
+        var map = {};
+        _.each(this.get('summary'), function(t){
+          map[t.BrowserMatch] = t;
+        }, this);
+        this.set({nToTMap: map});
+      } catch(e) {
+        // this will mostly happen if a stored translationId (as cookie) 
+        // is invalid, i.e. the Id doesn't exist anymore -> emergency exit := use default language
+        var tId = this.defaultTranslationId();
+        //Making sure tId is a number:
+        if(_.isString(tId)){
+          tId = parseInt(tId);
+        }
+        // save translationId as cookie
+        var d = new Date();
+        d.setTime(d.getTime() + (365*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = 'translationId='+ App.storage.translationId + ";" + expires + ";path=/";
+        //Setting the translationId, and returning:
+        this.set({translationId: tId});
+      }
     }
     /**
       @param bm String, BrowserMatch
@@ -100,6 +117,11 @@ define(['jquery','underscore','backbone','models/Loader'], function($, _, Backbo
     */
   , saveTranslationId: function(){
       App.storage.translationId = this.get('translationId');
+      // save translationId as cookie
+      var d = new Date();
+      d.setTime(d.getTime() + (365*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = 'translationId='+ App.storage.translationId + ";" + expires + ";path=/";
     }
     /**
       Figuring out the TranslationId of a client,
@@ -113,17 +135,33 @@ define(['jquery','underscore','backbone','models/Loader'], function($, _, Backbo
   , getTranslationId: function(){
       var tId = this.get('translationId');
       if(tId !== null) return tId;
-      //Is the translationId known from App.storage?
-      if('translationId' in App.storage){
-        tId = App.storage.translationId;
-      }else{
-        //Finding the translationId via browser language:
-        var lang = navigator.language || navigator.userLanguage
-          , summary = _.find(this.get('summary'), function(s){
-            var index = lang.indexOf(s.BrowserMatch);
-            return index >= 0;
-          }, this);
-        if(summary) tId = summary.TranslationId;
+
+      //Look for a stored ID within the browser's cookies
+      var nameTransID = "translationId=";
+      var ca = document.cookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+          }
+          if (c.indexOf(nameTransID) == 0) {
+              tId = parseInt(c.substring(nameTransID.length, c.length), 10);
+              break;
+          }
+      }
+      if(tId === null) {
+        //Is the translationId known from App.storage?
+        if('translationId' in App.storage){
+          tId = App.storage.translationId;
+        }else{
+          //Finding the translationId via browser language:
+          var lang = navigator.language || navigator.userLanguage
+            , summary = _.find(this.get('summary'), function(s){
+              var index = lang.indexOf(s.BrowserMatch);
+              return index >= 0;
+            }, this);
+          if(summary) tId = summary.TranslationId;
+        }
       }
       //Defaulting translationId:
       if(tId === null) tId = this.defaultTranslationId();
@@ -131,6 +169,11 @@ define(['jquery','underscore','backbone','models/Loader'], function($, _, Backbo
       if(_.isString(tId)){
         tId = parseInt(tId);
       }
+      // save translationId as cookie
+      var d = new Date();
+      d.setTime(d.getTime() + (365*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = 'translationId='+ App.storage.translationId + ";" + expires + ";path=/";
       //Setting the translationId, and returning:
       this.set({translationId: tId});
       return tId;

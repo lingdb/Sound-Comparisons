@@ -79,6 +79,7 @@ define(['underscore',
         , $div = $(div).addClass('mapAudio', 'audio')
                        .html(content)
                        .css('background-color', data.color)
+                       .css('font-size', window.App.storage.IPATooltipFontSize || '100%')
                        .attr('title', data.langName);
       //Adding a marker to the map:
       var icon = L.DomMarkers.icon({

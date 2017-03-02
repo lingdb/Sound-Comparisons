@@ -32,7 +32,8 @@ i, .icon, .favicon, input[type="radio"] {
 .icon-chkbox-custom {background-position: -483px -48px;}
 .icon-chkbox-half-custom {background-position: -483px -72px;}
 .flag {
-  margin-right: 0.5em;
+  margin-right: 0.2em;
+  margin-left: 0.5em;
   height: 14.7px;
   width: 21.3px;
 }
@@ -126,7 +127,11 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topmenuDownloads {float: right; margin-right: 0px; margin-top: 7px;}
 #topmenuDownloads a.topLink {padding-right: 0px;}
 #topmenuDownloads ul.dropdown-menu>li {padding-left: 1em;}
-#topmenuSoundOptions, #topmenuMisc {padding-top: 2px;}
+#topmenuSettings ul.dropdown-menu>li {padding-left: 1em;}
+#topmenuSettings .dropdown-menu {margin-left: -125px;}
+#topmenuSettings .dropdown-menu:before {left: auto; right: 5px;}
+#topmenuSettings .dropdown-menu:after {left: auto; right: 6px;}
+#topmenuSoundOptions, #topmenuMisc, #topmenuSettings {padding-top: 2px;}
 #topmenuAbout {float: right; margin-right: 0px;}
 #topmenuAbout a.topLink {height: 30px; padding: 0px;}
 #topmenuAbout a.topLink img {height: 30px; width: 30px;}
