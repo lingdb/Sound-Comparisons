@@ -10,6 +10,7 @@ a.anchor {display: none;}
 .color-region {color: #000000; font-weight: bold;}
 .color-language, #topMenu .colorWord {color: #4380C1;}
 .color-word, #topMenu .colorWord {color: #006400;}
+.fontsize200pc {font-size:200%;}
 .color-language {white-space: nowrap;}
 .container-fluid {padding: 0px 5px 0px 5px;}
 .noborders {border: none;}
