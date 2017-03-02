@@ -23,12 +23,27 @@ define(['views/render/SubView'], function(SubView){
       var spLang   = App.pageState.getSpLang()
         , headline = {name: word.getNameFor(spLang)}
         , longName = word.getLongName();
-      if(_.isString(longName) && longName !== ''){
-        headline.name = longName;
-      }
       //Sanitize name:
       if(_.isArray(headline.name))
         headline.name = headline.name.join(', ');
+      
+      // temporary solution to process longName
+      // in the docs: longName provides additional info _OR_ the complete long form
+      //    - logically this doesn't work
+      // that's why the following workaround:
+      //    - ignore if name == longForm
+      //    - if longForm begins with '(' and ends with ')'append longForm to name
+      //         otherwise set name = longForm
+      if(_.isString(longName)){
+        longName = longName.trim();
+        if(longName !== '') {
+          if(longName.charAt(0) == '(' && longName.charAt(longName.length-1) == ')') {
+            headline.name = headline.name + ' ' +longName;
+          } else {
+            headline.name = longName;
+          }
+        }
+      }
       //MapsLink:
       if(!App.pageState.isPageView('map')){
         headline.mapsLink = {
