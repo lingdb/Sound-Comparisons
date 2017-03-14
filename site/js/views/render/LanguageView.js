@@ -41,7 +41,7 @@ define(['views/render/SubView'], function(SubView){
           cdesc: c.getColumnDescription(col)
         , link: 'href="#/Contributors/'+c.getInitials()+'"'
         , name: c.getName()
-        , info: c.getYearPages()
+        , info: (col.match(/CitationAuthor([12])$/)) ? c.getYearPages() : ''
         };
       }, this);
       headline.contributorTooltip = App.translationStorage.translateStatic('tooltip_contributor_list');

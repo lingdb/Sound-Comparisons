@@ -268,30 +268,23 @@ define(['require',
       If the Contributor is a CitationAuthor, a Year and Pages field may be added.
     */
   , getContributors: function(){
-      if(this._contributors === null){
-        var idFMap = {}; // cId -> field
-        _.each(this.getContributorFields(), function(f){
-          var cId = this.get(f);
-          if(cId && cId !== '')
-            idFMap[cId] = f;
-        }, this);
-        //Finding contributors:
-        this._contributors = {}; // Field -> Contributor
-        App.contributorCollection.each(function(c){
-          var cId = c.get('ContributorIx');
-          if(cId in idFMap){
-            var field = idFMap[cId]
-              , ms = field.match(/CitationAuthor([12])$/);
+      this._contributors = {}; // Field -> Contributor
+      _.each(this.getContributorFields(), function(f){
+        var cId = this.get(f);
+        if(cId && cId !== '') {
+          var e = App.contributorCollection.getContributorById(cId);
+          if(e){
+            var ms = f.match(/CitationAuthor([12])$/);
             if(ms){
-              var n   = ms[1]
-                , add = { Year:  this.get('Citation'+n+'Year')
-                        , Pages: this.get('Citation'+n+'Pages')};
-              c = new Contributor($.extend(c.attributes, add));
+              var n = ms[1]
+                , add = { Year: this.get('Citation'+n+'Year')
+                       , Pages: this.get('Citation'+n+'Pages')};
+              e = new Contributor($.extend(e.attributes, add));
             }
-            this._contributors[field] = c;
+            this._contributors[f] = e;
           }
-        }, this);
-      }
+        }
+      }, this);
       return this._contributors;
     }
     /**

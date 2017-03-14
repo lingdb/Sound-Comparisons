@@ -1,7 +1,7 @@
 "use strict";
 /* global App */
 /* eslint-disable no-console */
-define(['backbone','models/Contributor'], function(Backbone, Contributor){
+define(['underscore','backbone','models/Contributor'], function(_, Backbone, Contributor){
   /***/
   return Backbone.Collection.extend({
     model: Contributor
@@ -36,6 +36,16 @@ define(['backbone','models/Contributor'], function(Backbone, Contributor){
       return this.filter(function(c){
         return parseInt(c.get('SortIxForAboutPage')) !== 0;
       }, this);
+    }
+    /**
+      returns the data set for a specific contributor via ContributorIx
+    */
+  , getContributorById: function(id){
+      if(_.isString(id)){id = parseInt(id)}
+      var e = this.find(function(e){return parseInt(e.get('ContributorIx')) === id;});
+      if(e){return e;}
+      console.log('Nothing found for ContributorCollection.getContributorById : '+id);
+      return null;
     }
     /***/
   , citeContributors: function(){

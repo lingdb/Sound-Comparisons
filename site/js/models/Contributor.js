@@ -25,7 +25,7 @@ define(['underscore','backbone'], function(_, Backbone){
   , getColumnDescription: function(col){
       if(_.isEmpty(col)) return null;
       if(col === 'ContributorCitationAuthor2'){
-        return this.getColumnDescription()+' (2)';
+        return App.translationStorage.translateStatic('description_contributor_'+col) +' (2)';
       }
       return App.translationStorage.translateStatic('description_contributor_'+col);
     }
