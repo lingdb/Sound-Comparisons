@@ -379,7 +379,7 @@ class DataProvider {
     }
 
     // get all sound file directory names
-    $dir = dirname(__FILE__).'/../'.Config::$soundPath;
+    $dir = Config::$soundPath;
     $allSoundPathsOnDisk = scandir($dir);
     $soundPathsOnDisk = array();
     // filter if possible for a specific study
@@ -410,7 +410,11 @@ class DataProvider {
           $data['SoundPath'] = 'OK';
           $soundPathsOnDisk = array_diff($soundPathsOnDisk, array($t['F']));
         }else{
-          $data['SoundPath'] = "missing";
+          if(count($soundPathsOnDisk) > 0){
+            $data['SoundPath'] = "missing";
+          }else{
+            $data['SoundPath'] = "?";
+          }
         }
         array_push(static::$checkFilePaths, $data);
       }
