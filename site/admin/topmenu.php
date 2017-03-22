@@ -21,6 +21,8 @@
            . '<li><a href="insertNewLg.php">Insert new Language Family</a></li>'
            . '<li class="divider"></li>'
            . '<li><a href="generateLgIndices.php">Generate Language Indices File (for Praat)</a></li>'
+           // . '<li class="divider"></li>'
+           // . '<li><a href="uploadSoundDir.php">Upload Sound Files for a Language</a></li>'
            . '<li class="divider"></li>'
            . '<li><a href="exportSQLDump.php">Export Database Data (SQL format)</a></li>'
            . '</ul></li>';
@@ -33,6 +35,7 @@
            . 'Diagnostics <b class="caret"></b></a>'
            . '<ul class="dropdown-menu">'
            . '<li><a href="missingSounds.php">List Missing Sounds</a></li>'
+           . '<li><a href="checkFilePaths.php">General Study Check</a></li>'
            . '<li><a href="integrity.php">DB Integrity</a></li>'
            . '<li><a href="clearCache.php">Clear Cache</a></li>'
            . '</ul></li>';

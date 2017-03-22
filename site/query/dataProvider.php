@@ -13,6 +13,10 @@ class DataProvider {
   public static $soundExtensions = array('.mp3','.ogg');
   /***/
   public static $missingSounds = array();
+  /***/
+  public static $checkFilePaths = array();
+  public static $checkFilePathsFurtherCheckOfDisk = "";
+  public static $checkFilePathsNumberOfWords = 0;
   /**
     @param $q SQL String
     @return [[Field => Value]]
@@ -347,6 +351,84 @@ class DataProvider {
       }
     }
     return $ret;
+  }
+  /**
+    @param $studyName String
+    @return array of dicts
+    Fetches general info about all sound file paths and FilePaths from DB that belong to a given study.
+  */
+  public static function checkFilePaths($studyName){
+
+    $db  = Config::getConnection();
+    $n   = $db->escape_string($studyName);
+
+    // try to get a common study prefix for searching already uploaded sound files
+    // - it only works if there's only one prefix
+    $q   = "SELECT DISTINCT SUBSTRING_INDEX(FilePathPart,'_',2) FROM Languages_$n;";
+    $set = static::fetchAll($q);
+    $studyPrefix = "";
+    if(count($set) == 1){
+      $studyPrefix = array_pop($set[0]);
+    }
+
+    // get the number of words specified by study
+    $q   = "SELECT count(*) FROM Words_$n;";
+    $set = static::fetchAll($q);
+    if(count($set) == 1){
+      static::$checkFilePathsNumberOfWords = array_pop($set[0]);
+    }
+
+    // get all sound file directory names
+    $dir = dirname(__FILE__).'/../'.Config::$soundPath;
+    $allSoundPathsOnDisk = scandir($dir);
+    $soundPathsOnDisk = array();
+    // filter if possible for a specific study
+    if(strlen($studyPrefix) > 0) {
+      foreach($allSoundPathsOnDisk as $s) {
+        if(0 === strpos($s, $studyPrefix)) {
+          array_push($soundPathsOnDisk, $s);
+        }
+      }
+    }
+
+    // fetch general info and construct return array
+    $q   = "SELECT L.FilePathPart AS F, L.LanguageIx AS I, L.ShortName AS N, count(*) AS C "
+          ."FROM Transcriptions_$n AS T, Languages_$n AS L "
+          ."WHERE L.LanguageIx = T.LanguageIx AND LENGTH(TRIM(T.Phonetic)) AND T.LanguageIx IN "
+          ."(SELECT DISTINCT LanguageIx FROM Languages_$n) "
+          ."GROUP BY T.LanguageIx "
+          ."ORDER BY L.FilePathPart;";
+    $set = static::fetchAll($q);
+    if(count($set) > 0){
+      foreach($set as $t){
+        $data = array();
+        $data['FilePathPart'] = $t['F'];
+        $data['ShortName'] = $t['N'];
+        $data['LanguageIx'] = $t['I'];
+        $data['NumOfTrans'] = $t['C'];
+        if (in_array($t['F'], $soundPathsOnDisk)) {
+          $data['SoundPath'] = 'OK';
+          $soundPathsOnDisk = array_diff($soundPathsOnDisk, array($t['F']));
+        }else{
+          $data['SoundPath'] = "missing";
+        }
+        array_push(static::$checkFilePaths, $data);
+      }
+    }
+    if(strlen($studyPrefix) > 0) {
+      foreach($soundPathsOnDisk as $s){
+        $data = array();
+        $data['FilePathPart'] = "";
+        $data['ShortName'] = "";
+        $data['LanguageIx'] = "";
+        $data['NumOfTrans'] = "";
+        $data['SoundPath'] = $s;
+        array_push(static::$checkFilePaths, $data);
+      }
+    }else{
+      static::$checkFilePathsFurtherCheckOfDisk = "&nbsp;&nbsp;No common prefix for study “{$studyName}” found, thus a check for already uploaded sound paths is <b>not</b> possible.";
+    }
+    return static::$checkFilePaths;
   }
   /**
     @param $studyName String
