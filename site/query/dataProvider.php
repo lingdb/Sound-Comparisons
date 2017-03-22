@@ -364,7 +364,7 @@ class DataProvider {
 
     // try to get a common study prefix for searching already uploaded sound files
     // - it only works if there's only one prefix
-    $q   = "SELECT DISTINCT SUBSTRING_INDEX(FilePathPart,'_',2) FROM Languages_$n;";
+    $q   = "SELECT DISTINCT SUBSTRING_INDEX(FilePathPart,'_',1) FROM Languages_$n;";
     $set = static::fetchAll($q);
     $studyPrefix = "";
     if(count($set) == 1){
