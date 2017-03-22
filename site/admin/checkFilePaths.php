@@ -46,7 +46,7 @@ if(!session_mayEdit($dbConnection))
           echo "<tr>";
           echo "<td>".$t['SoundPath']."</td>";
           echo "<td>".$t['FilePathPart']."</td>";
-          if(0 === strpos(strval($t['LanguageIx']), "9999")){
+          if((0 === strpos(strval($t['LanguageIx']), "9999")) || (strval($t['LanguageIx']) === "")){
             echo "<td><span style='margin-right:16px'></span><span style='margin-left:2px;margin-right:16px'></span>&nbsp;".$t['ShortName']."</td>";
           }else{
             if(0 === strpos(strval($t['ShortName']), "✕")){
