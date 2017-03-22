@@ -14,7 +14,7 @@ if(!session_mayEdit($dbConnection))
   ?>
   <body>
     <?php require_once('topmenu.php'); ?>
-    <h3>&nbsp;&nbsp;Choose a study to check file paths and number of transcriptions for:</h3>
+    <h3>&nbsp;&nbsp;Choose a study to check file paths, LanguageIx,<br />&nbsp;&nbsp;and number of transcriptions for study:</h3>
     <div class="btn-group">
     <?php
       $current = isset($_GET['study']) ? $_GET['study'] : '';
@@ -24,9 +24,9 @@ if(!session_mayEdit($dbConnection))
       }
     ?>
     </div>
-    <?php if(isset($_GET['study'])){
+    <?php if(isset($_GET['study']) and !isset($_GET['lgix'])){
       DataProvider::checkFilePaths($_GET['study']);
-      echo "<br /><i><small>".DataProvider::$checkFilePathsFurtherCheckOfDisk."</small></i>";
+      echo "<br /><i><small>&nbsp;&nbsp;".DataProvider::$checkFilePathsFurtherCheckOfDisk."</small></i>";
     ?>
     <table class="display table table-bordered">
       <?php
@@ -35,16 +35,21 @@ if(!session_mayEdit($dbConnection))
                   .'<th>Sound Path (database)</th>'
                   .'<th>Short Name</th>'
                   .'<th>LanguageIx</th>'
-                  .'<th>#Transcriptions ('.DataProvider::$checkFilePathsNumberOfWords.' words)</th>'
+                  .'<th title="Number of non empty Phonetic fields per language">#Transcriptions ('.DataProvider::$checkFilePathsNumberOfWords.' words)</th>'
                .'</tr>';
         echo "<thead>$head</thead>";
         //Making sure we're at the right location:
-        chdir('..');
+        chdir('../');
+        $studyName = $_GET['study'];
         foreach(DataProvider::$checkFilePaths as $t){
           echo "<tr>";
           echo "<td>".$t['SoundPath']."</td>";
           echo "<td>".$t['FilePathPart']."</td>";
-          echo "<td>".$t['ShortName']."</td>";
+          if(0 === strpos(strval($t['LanguageIx']), "9999")){
+            echo "<td><span style='margin-right:16px'></span>&nbsp;".$t['ShortName']."</td>";
+          }else{
+            echo "<td><a href='?study=$studyName&lgix={$t['LanguageIx']}'><img width=16px src='../img/info.png'></a>&nbsp;".$t['ShortName']."</td>";
+          }
           echo "<td>{$t['LanguageIx']}</td>";
           echo "<td>{$t['NumOfTrans']}</td>";
           echo "</tr>";
@@ -53,7 +58,41 @@ if(!session_mayEdit($dbConnection))
     </table>
     <script type="application/javascript">
       $(document).ready(function(){
-        $('table.display').DataTable({paging: false, ordering: true});
+        $('table.display').DataTable({paging: false, ordering: true, order: [[ 1, "asc" ]]});
+      });
+    </script>
+    <?php }
+    if(isset($_GET['study']) and isset($_GET['lgix'])){
+      DataProvider::checkFilePathsForLanguageIx($_GET['study'], $_GET['lgix']);
+    ?>
+    ̇<h4 style="margin-left:20px">Short Name: <?php echo DataProvider::$checkFilePathsForLanguageIx['ShortName']?></h4>
+    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;more is comming soon...</h5>
+    <table class="display table table-bordered">
+      <?php
+        $head = '<tr>'
+                  .'<th>Sound Path (disk)</th>'
+                  .'<th>Sound Path (database)</th>'
+                  .'<th>Short Name</th>'
+                  .'<th>LanguageIx</th>'
+                  .'<th title="Number of non empty Phonetic fields per language">#Transcriptions ('.DataProvider::$checkFilePathsNumberOfWords.' words)</th>'
+               .'</tr>';
+        echo "<thead>$head</thead>";
+        //Making sure we're at the right location:
+        chdir('..');
+        foreach(DataProvider::$checkFilePaths as $t){
+          echo "<tr>";
+          echo "<td>".$t['SoundPath']."</td>";
+          echo "<td>".$t['FilePathPart']."</td>";
+          echo "<td><a href='?lgix={$t['LanguageIx']}'><img width=16px src='../img/info.png'></a>&nbsp;".$t['ShortName']."</td>";
+          echo "<td>{$t['LanguageIx']}</td>";
+          echo "<td>{$t['NumOfTrans']}</td>";
+          echo "</tr>";
+        }
+      ?>
+    </table>
+    <script type="application/javascript">
+      $(document).ready(function(){
+        $('table.display').DataTable({paging: false, ordering: true, order: [[ 1, "asc" ]]});
       });
     </script>
     <?php }?>

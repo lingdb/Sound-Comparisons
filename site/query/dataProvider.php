@@ -17,6 +17,7 @@ class DataProvider {
   public static $checkFilePaths = array();
   public static $checkFilePathsFurtherCheckOfDisk = "";
   public static $checkFilePathsNumberOfWords = 0;
+  public static $checkFilePathsForLanguageIx = array();
   /**
     @param $q SQL String
     @return [[Field => Value]]
@@ -378,6 +379,16 @@ class DataProvider {
       static::$checkFilePathsNumberOfWords = array_pop($set[0]);
     }
 
+    // get all LanguageIx from Transcriptions Language table
+    $allLgIxFromTranscriptions = array();
+    $q   = "SELECT DISTINCT LanguageIx FROM Transcriptions_$n UNION SELECT DISTINCT LanguageIx FROM Languages_$n;";
+    $set = static::fetchAll($q);
+    if(count($set) > 0){
+      foreach($set as $t){
+        array_push($allLgIxFromTranscriptions, $t['LanguageIx']);
+      }
+    }
+
     // get all sound file directory names
     $dir = $_SERVER['DOCUMENT_ROOT'].'/'.Config::$soundPath;
     $allSoundPathsOnDisk = scandir($dir);
@@ -408,6 +419,7 @@ class DataProvider {
         $data['ShortName'] = $t['N'];
         $data['LanguageIx'] = $t['I'];
         $data['NumOfTrans'] = $t['C'];
+        $allLgIxFromTranscriptions = array_diff($allLgIxFromTranscriptions, array($t['I']));
         if (in_array($t['F'], $soundPathsOnDisk)) {
           $data['SoundPath'] = 'OK';
           if(strlen($studyPrefix) > 0){
@@ -419,20 +431,93 @@ class DataProvider {
         array_push(static::$checkFilePaths, $data);
       }
     }
+    // if common studyPrefix list all sound directory names which are not found in database
     if(strlen($studyPrefix) > 0) {
+      // get all FilePathPart from all studies
+      $allFilePathParts = array();
+      foreach(DataProvider::getStudies() as $s){
+        $q = "SELECT FilePathPart FROM Languages_$s WHERE FilePathPart LIKE '".$studyPrefix."%'";
+        $set = static::fetchAll($q);
+        foreach($set as $t){
+          array_push($allFilePathParts, $t['FilePathPart']);
+        }
+      }
       foreach($soundPathsOnDisk as $s){
-        $data = array();
-        $data['FilePathPart'] = "";
-        $data['ShortName'] = "";
-        $data['LanguageIx'] = "";
-        $data['NumOfTrans'] = "";
-        $data['SoundPath'] = $s;
-        array_push(static::$checkFilePaths, $data);
+        if(!in_array($s, $allFilePathParts)){
+          $data = array();
+          $data['FilePathPart'] = "✕ – Sound Path on disk unknown for database";
+          $data['ShortName'] = "";
+          $data['LanguageIx'] = "";
+          $data['NumOfTrans'] = "";
+          $data['SoundPath'] = $s;
+          array_push(static::$checkFilePaths, $data);
+        }
       }
     }else{
-      static::$checkFilePathsFurtherCheckOfDisk = "&nbsp;&nbsp;No common prefix for study “{$studyName}” found, thus a check for already uploaded sound paths is <b>not</b> possible.";
+      static::$checkFilePathsFurtherCheckOfDisk = "No common prefix for study “{$studyName}” found, thus a check for already uploaded sound paths is <b>not</b> possible.";
+    }
+    // check for unknown LanguageIx
+    if(count($allLgIxFromTranscriptions) > 0){
+      foreach($allLgIxFromTranscriptions as $i){
+        $q = "SELECT COUNT(*) FROM Transcriptions_$n WHERE LanguageIx = {$i};";
+        $numOfTransc = -1;
+        $set = static::fetchAll($q);
+        if(count($set) == 1){
+          $numOfTransc = array_pop($set[0]);
+        }
+        $q = "SELECT FilePathPart, ShortName FROM Languages_$n WHERE LanguageIx = {$i};";
+        $d = array();
+        $set = static::fetchAll($q);
+        if(count($set) == 1){
+          $d['FilePathPart'] = $set[0]['FilePathPart'];
+          $d['ShortName'] = $set[0]['ShortName'];
+          $d['SoundPath'] = "missing";
+        }else{
+          if(0 === strpos(strval($i), "9999")){
+            $d['FilePathPart'] = "✕ – LanguageIx unknown";
+            $d['ShortName'] = "✕ – Dummy LanguageIx (SQL Upload)";
+            $d['SoundPath'] = "✕ – LanguageIx unknown";
+          }else{
+            $d['FilePathPart'] = "✕ – LanguageIx unknown";
+            $d['ShortName'] = "✕ – LanguageIx unknown";
+            $d['SoundPath'] = "✕ – LanguageIx unknown";
+          }
+        }
+        $data = array();
+        $data['FilePathPart'] = $d['FilePathPart'];
+        $data['ShortName'] = $d['ShortName'];
+        $data['LanguageIx'] = $i;
+        $data['NumOfTrans'] = $numOfTransc;
+        $data['SoundPath'] = $d['SoundPath'];
+        array_push(static::$checkFilePaths, $data);
+      }
     }
     return static::$checkFilePaths;
+  }
+  /**
+    @param $studyName, $lgix String
+    @return array of dicts
+    Fetches general info about a specific language.
+  */
+  public static function checkFilePathsForLanguageIx($studyName, $lgix){
+
+    $db  = Config::getConnection();
+    $n   = $db->escape_string($studyName);
+    $q   = "SELECT * FROM Languages_$n WHERE LanguageIx = {$lgix}";
+    $set = static::fetchAll($q);
+    if(count($set) == 1){
+      static::$checkFilePathsForLanguageIx['ShortName'] = $set[0]['ShortName'];
+      static::$checkFilePathsForLanguageIx['LanguageIx'] = $lgix;
+      static::$checkFilePathsForLanguageIx['ErrInfo'] = "";
+    }else if(count($set) > 1) {
+      static::$checkFilePathsForLanguageIx['LanguageIx'] = $lgix;
+      static::$checkFilePathsForLanguageIx['ErrInfo'] = "There are more than one languages found for LanguageIx {$lgix}!";
+      static::$checkFilePaths = array();
+    }else{
+      static::$checkFilePathsForLanguageIx['ErrInfo'] = "Nothing found for LanguageIx {$lgix}!";
+      static::$checkFilePaths = array();
+    }
+
   }
   /**
     @param $studyName String
