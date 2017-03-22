@@ -389,6 +389,8 @@ class DataProvider {
           array_push($soundPathsOnDisk, $s);
         }
       }
+    }else{
+      $soundPathsOnDisk = $allSoundPathsOnDisk;
     }
 
     // fetch general info and construct return array
@@ -408,13 +410,11 @@ class DataProvider {
         $data['NumOfTrans'] = $t['C'];
         if (in_array($t['F'], $soundPathsOnDisk)) {
           $data['SoundPath'] = 'OK';
-          $soundPathsOnDisk = array_diff($soundPathsOnDisk, array($t['F']));
-        }else{
-          if(count($soundPathsOnDisk) > 0){
-            $data['SoundPath'] = "missing";
-          }else{
-            $data['SoundPath'] = "?";
+          if(strlen($studyPrefix) > 0){
+            $soundPathsOnDisk = array_diff($soundPathsOnDisk, array($t['F']));
           }
+        }else{
+          $data['SoundPath'] = "missing";
         }
         array_push(static::$checkFilePaths, $data);
       }
