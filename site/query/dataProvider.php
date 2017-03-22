@@ -420,7 +420,7 @@ class DataProvider {
         $data['LanguageIx'] = $t['I'];
         $data['NumOfTrans'] = $t['C'];
         $allLgIxFromTranscriptions = array_diff($allLgIxFromTranscriptions, array($t['I']));
-        if (in_array($t['F'], $soundPathsOnDisk)) {
+        if(in_array($t['F'], $soundPathsOnDisk)){
           $data['SoundPath'] = 'OK';
           if(strlen($studyPrefix) > 0){
             $soundPathsOnDisk = array_diff($soundPathsOnDisk, array($t['F']));
@@ -471,7 +471,11 @@ class DataProvider {
         if(count($set) == 1){
           $d['FilePathPart'] = $set[0]['FilePathPart'];
           $d['ShortName'] = $set[0]['ShortName'];
-          $d['SoundPath'] = "missing";
+          if(in_array($d['FilePathPart'], $soundPathsOnDisk)){
+            $d['SoundPath'] = "OK";
+          }else{
+            $d['SoundPath'] = "missing";
+          }
         }else{
           if(0 === strpos(strval($i), "9999")){
             $d['FilePathPart'] = "✕ – LanguageIx unknown";

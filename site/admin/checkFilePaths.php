@@ -24,6 +24,7 @@ if(!session_mayEdit($dbConnection))
       }
     ?>
     </div>
+
     <?php if(isset($_GET['study']) and !isset($_GET['lgix'])){
       DataProvider::checkFilePaths($_GET['study']);
       echo "<br /><i><small>&nbsp;&nbsp;".DataProvider::$checkFilePathsFurtherCheckOfDisk."</small></i>";
@@ -35,7 +36,7 @@ if(!session_mayEdit($dbConnection))
                   .'<th>Sound Path (database)</th>'
                   .'<th>Short Name</th>'
                   .'<th>LanguageIx</th>'
-                  .'<th title="Number of non empty Phonetic fields per language">#Transcriptions ('.DataProvider::$checkFilePathsNumberOfWords.' words)</th>'
+                  .'<th title="Number of non-empty Phonetic fields per language">#Transcriptions ('.DataProvider::$checkFilePathsNumberOfWords.' words)</th>'
                .'</tr>';
         echo "<thead>$head</thead>";
         //Making sure we're at the right location:
@@ -46,9 +47,15 @@ if(!session_mayEdit($dbConnection))
           echo "<td>".$t['SoundPath']."</td>";
           echo "<td>".$t['FilePathPart']."</td>";
           if(0 === strpos(strval($t['LanguageIx']), "9999")){
-            echo "<td><span style='margin-right:16px'></span>&nbsp;".$t['ShortName']."</td>";
+            echo "<td><span style='margin-right:16px'></span><span style='margin-left:2px;margin-right:16px'></span>&nbsp;".$t['ShortName']."</td>";
           }else{
-            echo "<td><a href='?study=$studyName&lgix={$t['LanguageIx']}'><img width=16px src='../img/info.png'></a>&nbsp;".$t['ShortName']."</td>";
+            if(0 === strpos(strval($t['ShortName']), "✕")){
+              echo "<td><a href='?study=$studyName&lgix={$t['LanguageIx']}'><img width=16px src='../img/info.png'></a>"
+                  ."<span style='margin-left:2px;margin-right:16px'></span>&nbsp;".$t['ShortName']."</td>";
+            }else{
+              echo "<td><a href='?study=$studyName&lgix={$t['LanguageIx']}'><img width=16px src='../img/info.png'></a>"
+                  ."<a target='_blank' href='../#/en/$studyName/language/{$t['ShortName']}'><img style='margin-left:2px;' width=16px src='../img/1l.png'></a>&nbsp;".$t['ShortName']."</td>";
+            }
           }
           echo "<td>{$t['LanguageIx']}</td>";
           echo "<td>{$t['NumOfTrans']}</td>";
@@ -62,6 +69,7 @@ if(!session_mayEdit($dbConnection))
       });
     </script>
     <?php }
+
     if(isset($_GET['study']) and isset($_GET['lgix'])){
       DataProvider::checkFilePathsForLanguageIx($_GET['study'], $_GET['lgix']);
     ?>
