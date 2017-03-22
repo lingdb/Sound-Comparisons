@@ -379,7 +379,7 @@ class DataProvider {
     }
 
     // get all sound file directory names
-    $dir = Config::$soundPath;
+    $dir = $_SERVER['DOCUMENT_ROOT'].'/'.Config::$soundPath;
     $allSoundPathsOnDisk = scandir($dir);
     $soundPathsOnDisk = array();
     // filter if possible for a specific study
