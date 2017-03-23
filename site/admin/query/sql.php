@@ -1,6 +1,7 @@
 <?php
 chdir('..');
 require_once('common.php');
+require_once('../config.php');
 require_once('../query/cacheProvider.php');
 if(php_sapi_name() === 'cli'){
   //Translating $argv to $_GET,$_POST:
@@ -179,6 +180,24 @@ switch($action){
         <?php } else { ?>  No errors 😀 <?php }?>
       </body>
     </html><?php
+  break;
+  case 'soundupload':
+  CacheProvider::cleanCache('../');
+  $count = 0;
+  $report = array();
+  if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+      foreach ($_FILES['files']['name'] as $i => $name) {
+        echo $_FILES['files']['name'][$i]."<br>";
+          // if (strlen($_FILES['files']['name'][$i]) > 1) {
+          //     if (move_uploaded_file($_FILES['files']['tmp_name'][$i], $_SERVER['DOCUMENT_ROOT'].'/'.Config::$soundPath.'/test/'.$name)) {
+          //         $count++;
+          //     } else {
+          //       array_push($report, 'File '.$name.' could not be uploaded');
+          //     }
+          // }
+      }
+      echo $count;
+  }
   break;
   default:
     echo "Unsupported action: $action\n";

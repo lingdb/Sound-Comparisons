@@ -2,7 +2,7 @@
   chdir('..');
   require_once('common.php');
   /* Checking for edit rights: */
-  if(!session_mayEdit())
+  if(!session_isSuperuser())
     Config::error('You are not allowed to access this feature.');
   /* Ensuring an action is given: */
   if(!isset($_GET['action']))
@@ -15,20 +15,26 @@
       $password     = password_hash($_POST['password'], PASSWORD_BCRYPT);
       $mayTranslate = ($_POST['mayTranslate'] === '1') ? '1' : '0';
       $mayEdit      = ($_POST['mayEdit']      === '1') ? '1' : '0';
+      $mayUpload    = ($_POST['mayUpload']    === '1') ? '1' : '0';
+      $isSuperuser  = ($_POST['isSuperuser']  === '1') ? '1' : '0';
       if(!$password){//Fallback for md5:
         $password = md5($_POST['password']);
       }
       /* Checking that username is not taken: */
       $q = "SELECT COUNT(*) FROM Edit_Users WHERE Login = '$username'";
       $r = $dbConnection->query($q)->fetch_row();
-      if($r[0] > 0) Config::error("Login '$username' already taken.");
-      /* Inserting new user: */
-      $q = "INSERT INTO Edit_Users(Login, Hash, AccessEdit, AccessTranslate) "
-         . "VALUES ('$username','$password',$mayEdit,$mayTranslate)";
-      $dbConnection->query($q);
-      echo 'OK';
+      if($r[0] > 0){
+        Config::error("Login '$username' already taken.");
+        echo "Login '$username' already taken.";
+      } else {
+        /* Inserting new user: */
+        $q = "INSERT INTO Edit_Users(Login, Hash, AccessEdit, AccessTranslate, AccessUpload, AccessSuperuser) "
+           . "VALUES ('$username','$password',$mayEdit,$mayTranslate,$mayUpload,$isSuperuser)";
+        $dbConnection->query($q);
+        echo 'OK';
+      }
     break;
-    /* Parameters: userid, login, password, mayTranslate, mayEdit */
+    /* Parameters: userid, login, password, mayTranslate, mayEdit, mayUpload, isSuperuser */
     case 'update':
       if(!isset($_POST['userid'])) Config::error('userid missing!');
       $userid = $dbConnection->escape_string($_POST['userid']);
@@ -42,6 +48,8 @@
           $q = "UPDATE Edit_Users SET Login = '$login' WHERE UserId = $userid";
           $dbConnection->query($q);
           echo "Updated login name.\n";
+        }else{
+          echo "Sorry, update failed! Please ask the administrator for user '".$login."'.";
         }
       }
       if(isset($_POST['password']))
@@ -68,16 +76,34 @@
         $dbConnection->query($q);
         echo "Updated edit access.\n";
       }
+      if(isset($_POST['mayUpload'])){
+        $mayU = $dbConnection->escape_string($_POST['mayUpload']);
+        if($mayU != '1') $mayU = '0';
+        $q = "UPDATE Edit_Users SET AccessUpload= $mayU WHERE UserId = $userid";
+        $dbConnection->query($q);
+        echo "Updated upload access.\n";
+      }
+      if(isset($_POST['isSuperuser'])){
+        $mayS = $dbConnection->escape_string($_POST['isSuperuser']);
+        if($mayS != '1') $mayS = '0';
+        $q = "UPDATE Edit_Users SET AccessSuperuser= $mayS WHERE UserId = $userid";
+        $dbConnection->query($q);
+        echo "Updated superuser access.\n";
+      }
     break;
     /* Parameters: userid */
     case 'delete':
       $userid = $dbConnection->escape_string($_POST['userid']);
       /* Checking that the user won't delete itself: */
-      if($userid == session_getUid()) Config::error("You cannot delete yourself, sorry.");
-      /* Deleting the user: */
-      $q = "DELETE FROM Edit_Users WHERE UserId = $userid";
-      $dbConnection->query($q);
-      echo "Deleted user: $userid";
+      if($userid == session_getUid()){
+        Config::error("You cannot delete yourself, sorry.");
+        echo "You cannot delete yourself, sorry.";
+      }else{
+        /* Deleting the user: */
+        $q = "DELETE FROM Edit_Users WHERE UserId = $userid";
+        $dbConnection->query($q);
+        echo "Deleted user: $userid";
+      }
     break;
     case 'export':
       $export = array();

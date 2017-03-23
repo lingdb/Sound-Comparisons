@@ -26,7 +26,7 @@
         <button type="submit" class="btn">Update</button>
       </fieldset>
     </form>
-    <?php if(session_mayEdit()){ ?>
+    <?php if(session_isSuperuser()){ ?>
       <form id="addUser" class="form-horizontal">
         <legend>Add user:</legend>
         <div class="control-group">
@@ -42,15 +42,27 @@
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="mayTranslate">Can translate:</label>
+          <label class="control-label" for="mayTranslate">May Translate:</label>
           <div class="controls">
             <input name="mayTranslate" type="checkbox" checked="checked"/>
           </div>
         </div>
         <div class="control-group">
-          <label class="control-label" for="mayEdit">Is admin:</label>
+          <label class="control-label" for="mayEdit">Is Admin:</label>
           <div class="controls">
             <input name="mayEdit" type="checkbox"/>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="mayUpload">May Upload Sound Files:</label>
+          <div class="controls">
+            <input name="mayUpload" type="checkbox"/>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="isSuperuser">Is Superuser:</label>
+          <div class="controls">
+            <input name="isSuperuser" type="checkbox"/>
           </div>
         </div>
         <div class="control-group">
@@ -68,6 +80,8 @@
             <th>Password</th>
             <th>Translate</th>
             <th>Admin</th>
+            <th>Upload (Sound)</th>
+            <th>Superuser</th>
             <th>Action</th>
           </tr>
         </thead>

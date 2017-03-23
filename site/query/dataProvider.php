@@ -354,6 +354,29 @@ class DataProvider {
     return $ret;
   }
   /**
+    @param none
+    @return info array for a given FilePartPath
+  */
+  public static function getInfoForFilePartPath($path){
+
+    $db  = Config::getConnection();
+    $ret = array();
+    foreach(static::getStudies() as $n){
+      $q = "SELECT ShortName, FilePathPart FROM Languages_$n WHERE FilePathPart = '{$path}'";
+      $set = static::fetchAll($q);
+      if(count($set) > 0){
+        $ret = $set[0];
+        $ret['Study'] = $n;
+        // get all sound file directory names
+        $dir = $_SERVER['DOCUMENT_ROOT'].'/'.Config::$soundPath;
+        $allSoundPathsOnDisk = scandir($dir);
+        $ret['SoundDirExists'] = in_array($path, $allSoundPathsOnDisk);
+        return $ret;
+      }
+    }
+    return $ret;
+  }
+  /**
     @param $studyName String
     @return array of dicts
     Fetches general info about all sound file paths and FilePaths from DB that belong to a given study.

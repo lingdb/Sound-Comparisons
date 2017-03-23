@@ -68,6 +68,36 @@
     return false;
   }
   /**
+    Checks if the current login may upload to db
+    @param $dbConnection mysql-resource
+    @returns may Bool
+  */
+  function session_mayUpload(){
+    $dbConnection = Config::getConnection();
+    if(!isset($_SESSION['UserId']))
+      return false;
+    $query = 'SELECT AccessUpload FROM Edit_Users WHERE UserId = '
+      .$dbConnection->escape_string($_SESSION['UserId']);
+    if($r = $dbConnection->query($query)->fetch_assoc())
+      return ($r['AccessUpload'] == '1');
+    return false;
+  }
+  /**
+    Checks if the current login may upload to db
+    @param $dbConnection mysql-resource
+    @returns may Bool
+  */
+  function session_isSuperuser(){
+    $dbConnection = Config::getConnection();
+    if(!isset($_SESSION['UserId']))
+      return false;
+    $query = 'SELECT AccessSuperuser FROM Edit_Users WHERE UserId = '
+      .$dbConnection->escape_string($_SESSION['UserId']);
+    if($r = $dbConnection->query($query)->fetch_assoc())
+      return ($r['AccessSuperuser'] == '1');
+    return false;
+  }
+  /**
     Returns the UserId for the current session or dies.
     It is strongly advised to check if the session is valid first.
   */

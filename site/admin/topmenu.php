@@ -10,23 +10,30 @@
       <?php
       if(session_mayTranslate($dbConnection))
         echo '<li><a href="translate.php">Translate</a></li>';
-      if(session_mayEdit($dbConnection))
-        echo '<li class="nav">'
+      if(session_mayEdit($dbConnection)){
+        $m = '<li class="nav">'
            . '<a class="dropdown-toggle topLink" data-toggle="dropdown">'
            . 'Database <b class="caret"></b></a>'
-           . '<ul class="dropdown-menu">'
-           . '<li><a href="uploadCSV.php">Upload CSV Files</a></li>'
+           . '<ul class="dropdown-menu">';
+        if(session_isSuperuser($dbConnection)){
+           $m = $m . '<li><a href="uploadCSV.php">Upload CSV Files</a></li>'
            . '<li><a href="uploadSQL.php">Upload and Run SQL Files (Transcriptions)</a></li>'
            . '<li class="divider"></li>'
            . '<li><a href="insertNewLg.php">Insert new Language Family</a></li>'
-           . '<li class="divider"></li>'
-           . '<li><a href="generateLgIndices.php">Generate Language Indices File (for Praat)</a></li>'
-           // . '<li class="divider"></li>'
-           // . '<li><a href="uploadSoundDir.php">Upload Sound Files for a Language</a></li>'
-           . '<li class="divider"></li>'
-           . '<li><a href="exportSQLDump.php">Export Database Data (SQL format)</a></li>'
-           . '</ul></li>';
-      ?>
+           . '<li class="divider"></li>';
+        }
+        $m = $m . '<li><a href="generateLgIndices.php">Generate Language Indices File (for Praat)</a></li>';
+        if(session_mayUpload($dbConnection)){
+           $m = $m . '<li class="divider"></li>'
+           . '<li><a href="uploadSoundDir.php">Upload Sound Files for a Language</a></li>';
+        }
+        if(session_isSuperuser($dbConnection)){
+           $m = $m . '<li class="divider"></li>'
+           . '<li><a href="exportSQLDump.php">Export Database Data (SQL format)</a></li>';
+        }
+        $m = $m . '</ul></li>';
+        echo $m;
+      }?>
       <li><a href="userAccount.php">User account</a></li>
       <?php
       if(session_mayEdit($dbConnection)){
