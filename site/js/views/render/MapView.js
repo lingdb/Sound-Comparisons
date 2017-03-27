@@ -118,10 +118,16 @@ define(['views/render/SubView',
           var latResult, lngResult, dmsResult;
           lat = parseFloat(e.latlng.lat);
           lng = parseFloat(e.latlng.lng);
-          latResult = (lat >= 0)? 'N ' : 'S ';
-          latResult += getDms(lat);
-          lngResult = (lng >= 0)? 'E ' : 'W ';
-          lngResult += getDms(lng);
+          if(true){// @TODO add setting
+            var prec = 1000000;
+            latResult = Math.round(lat*prec)/prec;
+            lngResult = Math.round(lng*prec)/prec;
+          }else{
+            latResult = (lat >= 0)? 'N ' : 'S ';
+            latResult += getDms(lat);
+            lngResult = (lng >= 0)? 'E ' : 'W ';
+            lngResult += getDms(lng);
+          }
           dmsResult = latResult + '&nbsp;&nbsp;' + lngResult;
         $('#map_menu_geocoordsDisplay').html(dmsResult);
       });
