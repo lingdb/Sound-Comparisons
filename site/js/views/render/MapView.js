@@ -60,19 +60,27 @@ define(['views/render/SubView',
       }
       //Creating marker layer:
       this.markers = L.layerGroup(); // FIXME replace with markerClusterGroup
+      // this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};
+      // this.markers.removeLayers = function(ls){_.each(ls, this.removeLayer, this);};
+      // this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};
+      // this.markers.removeLayers = function(ls){_.each(ls, this.removeLayer, this);};
+      // this.map.addLayer(this.markers);
+      // this.fixMap().renderMap();
+
+      // this.markers = L.markerClusterGroup({
+      //  maxClusterRadius: 50,
+      //  animate: true,
+      //  animateAddingMarkers: false,
+      //  disableClusteringAtZoom: 8,
+      //  showCoverageOnHover: true,
+      //  spiderfyOnMaxZoom: true,
+      //  zoomToBoundsOnClick: true
+      // });
+      // this.markers.removeLayers = function(ls){_.each(ls, this.removeLayer, this);};
       this.markers.addLayers = function(ls){_.each(ls, this.addLayer, this);};
       this.markers.removeLayers = function(ls){_.each(ls, this.removeLayer, this);};
-//		this.markers = L.markerClusterGroup({
-//      maxClusterRadius: 120,
-//      iconCreateFunction: WordMarker.mkCluster,
-//      //Set flags:
-//      animate: true,
-//      showCoverageOnHover: true,
-//      spiderfyOnMaxZoom: false,
-//      zoomToBoundsOnClick: false
-//		});
-      this.map.addLayer(this.markers);
 
+      this.map.addLayer(this.markers);
       this.fixMap().renderMap();
       //SoundControlView:
       this.soundControlView = new SoundControlView({
@@ -93,6 +101,31 @@ define(['views/render/SubView',
           view.setScrollWheel(false);
         }
       });
+      // Display onMouseMove current geo coordinates
+      this.map.on('mousemove', function(e){
+          function getDms(val) {
+            var valDeg, valMin, valSec, result;
+            val = Math.abs(val);
+            valDeg = Math.floor(val);
+            result = valDeg + "°";
+            valMin = Math.floor((val - valDeg) * 60);
+            result += valMin + "'";
+            valSec = Math.round((val - valDeg - valMin / 60) * 3600000) / 1000;
+            result += valSec + '"';
+            return result;
+          }
+          var lat, lng;
+          var latResult, lngResult, dmsResult;
+          lat = parseFloat(e.latlng.lat);
+          lng = parseFloat(e.latlng.lng);
+          latResult = (lat >= 0)? 'N ' : 'S ';
+          latResult += getDms(lat);
+          lngResult = (lng >= 0)? 'E ' : 'W ';
+          lngResult += getDms(lng);
+          dmsResult = latResult + '&nbsp;&nbsp;' + lngResult;
+        $('#map_menu_geocoordsDisplay').html(dmsResult);
+      });
+
     }
     /**
       Method to make it possible to check what kind of PageView this Backbone.View is.

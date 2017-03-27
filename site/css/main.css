@@ -482,6 +482,7 @@ td.tableClearCol {width: 0.5em; padding: 0px; border-left: 2px solid black; bord
 #map_zoom_options, #map_menu_viewAll {margin-left: 1em;}
 #map_menu_viewAll, #map_menu_zoomCenter {margin-right: 0.5em;}
 #map_menu_viewLast, #map_menu_zoomCoreRegion {margin-left: 0.5em;}
+#map_menu_geocoordsDisplay {margin-right: 0.3em;float: right;}
 #map_play_directions {margin-left: 1em; padding-top: 0.5em;}
 /*Stuff for #shortLinkModal:*/
 #createShortLink {margin-top: 2.5px;}
