@@ -33,7 +33,9 @@ if(preg_match('/^$|data|all/', getenv('EXPORT_TASK'))){
   // Parsing global data to iterate studies:
   $global = json_decode($global, true);
   foreach($global['studies'] as $study){
-     fetchJSON("$baseUrl/data?study=$study", "$path/data/data_study_$study");
+    if($study !== '--'){ //skip delimiters
+      fetchJSON("$baseUrl/data?study=$study", "$path/data/data_study_$study");
+    }
   }
   // Providing translation files:
   $tdata = fetchJSON("$baseUrl/translations?action=summary",
