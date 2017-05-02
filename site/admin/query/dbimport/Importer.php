@@ -126,6 +126,7 @@ class Importer{
   */
   public static function execQueries($qs, $uId){
     array_push(self::$log, "Importer::execQueries for User $uId");
+    $queryFailed = false;
     $db = Config::getConnection();
     //Starting transaction:
     foreach(array(
@@ -133,16 +134,25 @@ class Importer{
     , 'SET FOREIGN_KEY_CHECKS=0'
     , "INSERT INTO Edit_Imports (Who) VALUES ($uId)"
     ) as $q) $db->query($q);
+    $db->query('START TRANSACTION');
     //Executing queries:
     foreach($qs as $q){
       if(!$db->query($q)){
         array_push(self::$log, "Error with query '$q': ".$db->error);
+        $queryFailed = true;
       }
+    }
+    // Roll back for any error
+    if($queryFailed) {
+      array_push(self::$log, "ALL CHANGES WERE ROLLED BACK");
+      $db->query('ROLLBACK');
+    } else {
+      array_push(self::$log, "SUCCESS");
+      $db->query('COMMIT');
     }
     //Ending transaction:
     foreach(array(
       'SET FOREIGN_KEY_CHECKS=1'
-    , 'COMMIT'
     , 'SET AUTOCOMMIT=1'
     ) as $q) $db->query($q);
   }
