@@ -1,3 +1,9 @@
+Requirements:
+===
+
+`php-fpm` installed via `apt`, see https://www.digitalocean.com/community/tutorials/how-to-install-linux-nginx-mysql-php-lemp-stack-in-ubuntu-16-04#step-3-install-php-for-processing
+
+
 Setup instructions:
 ===
 
