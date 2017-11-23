@@ -36,8 +36,8 @@ define(['views/render/SubView',
       //Specifying tileLayer:
       if(Loader.isOnline){
         var baseLayers = {
-          'Esri World Imagery': L.tileLayer.provider('Esri.WorldImagery').addTo(this.map),
-          'Esri NatGeo World Map': L.tileLayer.provider('Esri.NatGeoWorldMap'),
+          'Esri World Imagery': L.tileLayer.provider('Esri.WorldImagery'),
+          'Esri NatGeo World Map': L.tileLayer.provider('Esri.NatGeoWorldMap').addTo(this.map),
           'Open Street Map': L.tileLayer.provider('OpenStreetMap'),
           'Esri World Topo Map': L.tileLayer.provider('Esri.WorldTopoMap'),
           'Esri De Lorme': L.tileLayer.provider('Esri.DeLorme'),
