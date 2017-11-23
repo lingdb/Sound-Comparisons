@@ -214,5 +214,19 @@ define(['underscore','backbone'], function(_, Backbone){
       if(_.contains(this.get('pageViews'), key)) return key;
       return null;
     }
+    /**
+      @param b Boolean
+      Stores whether the map should be centered or not.
+    */
+  , setCenterMap: function(b){
+      this.set({centerMap: b});
+    }
+    /**
+      @return is Boolean
+      Returns whether the map should be centered or not.
+    */
+  , getCenterMap: function(){
+      return this.get('centerMap');
+    }
   });
 });

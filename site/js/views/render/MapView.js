@@ -293,7 +293,9 @@ define(['views/render/SubView',
         }, 0);
       }
       this.adjustCanvasSize();
-      this.centerRegion();
+      if(App.pageState.getCenterMap()){
+        this.centerRegion();
+      }
     }
     /**
       @return this for chaining
