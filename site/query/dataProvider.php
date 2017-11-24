@@ -304,51 +304,56 @@ class DataProvider {
     and fill them in where the expected key doesn't exist.
   */
   public static function getTranscriptions($studyName){
+    $ret = array();
     $db  = Config::getConnection();
     $n   = $db->escape_string($studyName);
-    $q   = "SELECT * FROM Transcriptions_$n";
-    $ret = array();
-    $set = static::fetchAll($q);
-    if(count($set) > 0){
-      foreach($set as $t){
-        $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
-        $t['soundPaths'] = static::soundPaths($n, $t);
-        //Updating RecordingMissing, iff necessary:
-        if(($t['RecordingMissing'] === 0 && count($t['soundPaths']) > 0)
-          || ($t['RecordingMissing'] === 1 && count($t['soundPaths']) === 0)){
-          //Flip RecordingMissing:
-          $flip = ($t['RecordingMissing'] === 0) ? 1 : 0;
-          $q = "UPDATE Transcriptions_$n "
-             . "SET RecordingMissing = $flip "
-             . "WHERE StudyIx = ".$t['StudyIx']
-             . " AND FamilyIx = ".$t['FamilyIx']
-             . " AND IxElicitation = ".$t['IxElicitation']
-             . " AND IxMorphologicalInstance = ".$t['IxMorphologicalInstance']
-             . " AND LanguageIx = ".$t['LanguageIx'];
-          $db->query($q);
-        }
-        //Merging transcriptions:
-        if(array_key_exists($tKey, $ret)){
-          $old = $ret[$tKey];
-          foreach($t as $k => $v){
-            if(array_key_exists($k, $old)){
-              $o = $old[$k];
-              if(isset($o) && $o !== '' && $o !== $v){
-                $t[$k] = array($o, $v);
-              }else if(is_array($v) && is_array($o)){
-                $t[$k] = array_merge($o, $v);
+    // Fetch all studies involved - e.g. as for Andean where Mapudungun is a subset of Andean
+    $allStudyNames = static::fetchAll("SELECT Name FROM Studies WHERE StudyIx = (SELECT StudyIx FROM Studies WHERE Name = '$n')");
+    foreach($allStudyNames as $sn) {
+      $n = $sn['Name'];
+      $q   = "SELECT * FROM Transcriptions_$n";
+      $set = static::fetchAll($q);
+      if(count($set) > 0){
+        foreach($set as $t){
+          $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
+          $t['soundPaths'] = static::soundPaths($n, $t);
+          //Updating RecordingMissing, iff necessary:
+          // if(($t['RecordingMissing'] === 0 && count($t['soundPaths']) > 0)
+          //   || ($t['RecordingMissing'] === 1 && count($t['soundPaths']) === 0)){
+          //   //Flip RecordingMissing:
+          //   $flip = ($t['RecordingMissing'] === 0) ? 1 : 0;
+          //   $q = "UPDATE Transcriptions_$n "
+          //      . "SET RecordingMissing = $flip "
+          //      . "WHERE StudyIx = ".$t['StudyIx']
+          //      . " AND FamilyIx = ".$t['FamilyIx']
+          //      . " AND IxElicitation = ".$t['IxElicitation']
+          //      . " AND IxMorphologicalInstance = ".$t['IxMorphologicalInstance']
+          //      . " AND LanguageIx = ".$t['LanguageIx'];
+          //   $db->query($q);
+          // }
+          //Merging transcriptions:
+          if(array_key_exists($tKey, $ret)){
+            $old = $ret[$tKey];
+            foreach($t as $k => $v){
+              if(array_key_exists($k, $old)){
+                $o = $old[$k];
+                if(isset($o) && $o !== '' && $o !== $v){
+                  $t[$k] = array($o, $v);
+                }else if(is_array($v) && is_array($o)){
+                  $t[$k] = array_merge($o, $v);
+                }
               }
             }
           }
+          $ret[$tKey] = $t;
         }
-        $ret[$tKey] = $t;
       }
-    }
-    //Handling dummy transcriptions:
-    foreach(static::getDummyTranscriptions($studyName) as $t){
-      $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
-      if(!array_key_exists($tKey, $ret)){
-        $ret[$tKey] = $t;
+      //Handling dummy transcriptions:
+      foreach(static::getDummyTranscriptions($n) as $t){
+        $tKey = $t['LanguageIx'].$t['IxElicitation'].$t['IxMorphologicalInstance'];
+        if(!array_key_exists($tKey, $ret)){
+          $ret[$tKey] = $t;
+        }
       }
     }
     return $ret;
