@@ -78,11 +78,17 @@ define(['underscore',
       var div = document.createElement('div');
       var $div;
       if(window.App.storage.ShowDataAs === 'dots'){
-        var t = data.phoneticSoundfiles[0].phonetic;
-        if(t === undefined || t === 'undefined') {
-          t = '';
-        } else {
-          t = ' – ' + t;
+        var t = '';
+        try{
+          t = data.phoneticSoundfiles[0].phonetic;
+          if(t === undefined || t === 'undefined') {
+            t = '';
+          } else {
+            t = ' – ' + t;
+          }
+        }
+        catch(err) {
+            t = '';
         }
         $div = $(div).addClass('mapAudio', 'audio')
                        .html(content)
