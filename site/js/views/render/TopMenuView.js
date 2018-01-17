@@ -9,7 +9,8 @@ define(['backbone'], function(Backbone){
     initialize: function(){
       this.model = {
         formats: ['mp3','ogg'],
-        IPATooltipFontSize: ['100%', '125%', '150%']
+        IPATooltipFontSize: ['100%', '125%', '150%'],
+        ShowDataAs: ['dots', 'labels'],
       };
       // init IPATooltipFontSize from stored cookies if given
       var nameFontSize = "IPATooltipFontSize=";
@@ -26,6 +27,21 @@ define(['backbone'], function(Backbone){
           }
       }
       App.storage.IPATooltipFontSize = fontSize;
+      // init ShowDataAs from stored cookies if given
+      var nameShowDataAs = "ShowDataAs=";
+      var ca = document.cookie.split(';');
+      var showDataAs = 'labels';
+      for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+          }
+          if (c.indexOf(nameShowDataAs) == 0) {
+              showDataAs = c.substring(nameShowDataAs.length, c.length);
+              break;
+          }
+      }
+      App.storage.ShowDataAs = showDataAs;
     }
     /**
       Function to call non /^update.+/ methods that are necessary for the model, and to setup their callbacks.
@@ -55,6 +71,7 @@ define(['backbone'], function(Backbone){
       , wordByWord:         'topmenu_download_wordByWord'
       , format:             'topmenu_download_format'
       , ipaTooltipFontSize: 'topmenu_settings_ipaFontSizeMap'
+      , showDataAs:         'topmenu_settings_showDataAs'
       , soundClickTitle:    'topmenu_soundoptions_tooltip'
       , soundHoverTitle:    'topmenu_soundoptions_hover'
       , createShortLink:    'topmenu_createShortLink'
@@ -235,6 +252,24 @@ define(['backbone'], function(Backbone){
       }).each(function(){
         var t = $(this), val = t.val();
         if(val === App.storage.IPATooltipFontSize){
+          t.prop('checked', true);
+        }
+      });
+      //The ShowDataAs selection:
+      var radios = this.$('input[name="ShowDataAs"]').click(function(){
+        var val = $(this).val();
+        if(val !== App.storage.ShowDataAs){
+          App.storage.ShowDataAs = val;
+          // save font size as cookie
+          var d = new Date();
+          d.setTime(d.getTime() + (365*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = 'ShowDataAs='+ val + ";" + expires + ";path=/";
+          App.views.renderer.render();
+        }
+      }).each(function(){
+        var t = $(this), val = t.val();
+        if(val === App.storage.ShowDataAs){
           t.prop('checked', true);
         }
       });

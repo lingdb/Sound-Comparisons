@@ -75,12 +75,27 @@ define(['underscore',
       }, this);
       content = content.join('');
       //Creating the div:
-      var div = document.createElement('div')
-        , $div = $(div).addClass('mapAudio', 'audio')
+      var div = document.createElement('div');
+      var $div;
+      if(window.App.storage.ShowDataAs === 'dots'){
+        var t = data.phoneticSoundfiles[0].phonetic;
+        if(t === undefined || t === 'undefined') {
+          t = '';
+        } else {
+          t = ' – ' + t;
+        }
+        $div = $(div).addClass('mapAudio', 'audio')
+                       .html(content)
+                       .css('background-color', data.color)
+                       .css('font-size', window.App.storage.IPATooltipFontSize || '100%')
+                       .attr('title', data.langName + t);
+      } else {
+        $div = $(div).addClass('mapAudio', 'audio')
                        .html(content)
                        .css('background-color', data.color)
                        .css('font-size', window.App.storage.IPATooltipFontSize || '100%')
                        .attr('title', data.langName);
+      }
       //Adding a marker to the map:
       var icon = L.DomMarkers.icon({
         element: div,
@@ -99,8 +114,17 @@ define(['underscore',
         var w = 0, h = 0;
         $div.find('.transcription').each(function(){
           var t = $(this);
-          w = Math.max(w, t.width());
-          h += 1.085*t.height();
+          if(window.App.storage.ShowDataAs === 'dots') {
+            w = 1.085*t.height();
+            h = 1.085*t.height();
+            t.css('color', '#00000000');
+            t.css('font-size', '30%');
+          } else {
+            t.css('font-size', window.App.storage.IPATooltipFontSize || '100%')
+            w = Math.max(w, t.width());
+            h += 1.085*t.height();
+            t.css('color', '#000000');
+          }
         });
         //Update size:
         icon.options.iconSize = [w, h];
@@ -125,15 +149,15 @@ define(['underscore',
       //div to embed into:
       var div = document.createElement('div')
         , $div = $(div)
-        , w = 0, h = 0; // Sizes to calculate:
+        , w = 20, h = 20; // Sizes to calculate:
       _.each(cluster.getAllChildMarkers(), function(marker){
         var iOps = marker.options.icon.options;
         //Append icon to $div:
         $div.append(iOps.getData().content);
         //Updating size calculations:
-        var size = iOps.iconSize;
-        w = Math.max(w, size[0]);
-        h += size[1];
+        // var size = iOps.iconSize;
+        // w = Math.max(w, size[0]);
+        // h += size[1];
       }, this);
       var cIcon = L.DomMarkers.icon({
         element: div,

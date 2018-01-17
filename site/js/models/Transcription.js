@@ -121,7 +121,9 @@ define(['underscore','backbone'], function(_, Backbone){
         , superScr  = this.getSuperscriptInfo()
         , ps        = [];
       //Sanitizing phonetics:
-      if(_.isEmpty(phonetics))  phonetics = '<i class="icon-play"></i>';
+      if(window.App.storage.ShowDataAs === 'labels') {
+        if(_.isEmpty(phonetics))  phonetics = '<i class="icon-play"></i>';
+      }
       if(!_.isArray(phonetics)) phonetics = [phonetics];
       //WordByWord logic:
       var wordByWord = App.pageState.get('wordByWord');
@@ -227,6 +229,15 @@ define(['underscore','backbone'], function(_, Backbone){
         return t.getAltSpelling();
       }
       return null;
+    }
+    /**
+     returns cognate state
+     1 := is not cognate; 0 := is cognate; -1 := undefined
+    */
+  , getCognateState: function(){
+      if(this.isDummy()) return -1;
+      var p = this.get('NotCognateWithMainWordInThisFamily');
+      return parseInt(p);
     }
     /***/
   , isDummy: function(){
