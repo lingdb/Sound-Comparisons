@@ -150,21 +150,21 @@ define(['jquery','underscore','backbone'], function($, _, Backbone){
       var t = $(audio).parent().find('.transcription');
       t.removeClass('playing');
       t.parent().parent().css('z-index', '');
-      if(window.App.storage.ShowDataAs === 'dots' && App.pageState.isMapView()) {
+      if(window.App.storage.ShowDataAs === 'dots' && App.pageState.isMapView() && !t.parent().parent().hasClass('p50')) {
         var tp = t.parent().parent();
         var h = 0;
         switch(window.App.storage.IPATooltipFontSize) {
         case '100%':
-          h = 18;
+          h = 16;
           break;
         case '125%':
-          h = 22;
+          h = 20;
           break;
         case '150%':
-          h = 27;
+          h = 25;
           break;
         default:
-          h = 18;
+          h = 16;
         }
         tp.css('width', h);
         tp.css('height', h);

@@ -121,8 +121,8 @@ define(['underscore',
         $div.find('.transcription').each(function(){
           var t = $(this);
           if(window.App.storage.ShowDataAs === 'dots') {
-            w = t.height();
-            h = t.height();
+            w = 16;
+            h = 16;
             t.css('opacity', 0);
             t.css('font-size', '50%');
           } else {
