@@ -126,14 +126,52 @@ define(['jquery','underscore','backbone'], function($, _, Backbone){
       so that it is marked as playing.
     */
   , markPlaying: function(audio){
-      $(audio).parent().find('.transcription').addClass('playing');
+      var t = $(audio).parent().find('.transcription');
+      t.addClass('playing');
+      if(window.App.storage.ShowDataAs === 'dots' && App.pageState.isMapView()) {
+        var tp = t.parent().parent();
+        var w = 0, h = 0;
+        t.css('font-size', window.App.storage.IPATooltipFontSize || '100%');
+        t.css('opacity', 1);
+        w = Math.max(w, t.width());
+        h = 1.085*t.height();
+        tp.css('width', w);
+        tp.css('height', h);
+        tp.css('z-index', 9999);
+      }else{
+        t.parent().parent().css('z-index', 9999);
+      }
     }
     /**
       @param audio HTML5 audio tag
       Removes the class that marks the transcription belonging to an audio tag as playing.
     */
   , markNotPlaying: function(audio){
-      $(audio).parent().find('.transcription').removeClass('playing');
+      var t = $(audio).parent().find('.transcription');
+      t.removeClass('playing');
+      t.parent().parent().css('z-index', '');
+      if(window.App.storage.ShowDataAs === 'dots' && App.pageState.isMapView()) {
+        var tp = t.parent().parent();
+        var h = 0;
+        switch(window.App.storage.IPATooltipFontSize) {
+        case '100%':
+          h = 18;
+          break;
+        case '125%':
+          h = 22;
+          break;
+        case '150%':
+          h = 27;
+          break;
+        default:
+          h = 18;
+        }
+        tp.css('width', h);
+        tp.css('height', h);
+        tp.css('z-index', '');
+        t.css('opacity', 0);
+        t.css('font-size', '30%');
+      }
     }
     /**
       @param audio HTML5 audio tag

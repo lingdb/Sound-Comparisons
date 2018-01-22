@@ -121,9 +121,7 @@ define(['underscore','backbone'], function(_, Backbone){
         , superScr  = this.getSuperscriptInfo()
         , ps        = [];
       //Sanitizing phonetics:
-      if(window.App.storage.ShowDataAs === 'labels') {
-        if(_.isEmpty(phonetics))  phonetics = '<i class="icon-play"></i>';
-      }
+      if(_.isEmpty(phonetics))  phonetics = '▶';
       if(!_.isArray(phonetics)) phonetics = [phonetics];
       //WordByWord logic:
       var wordByWord = App.pageState.get('wordByWord');

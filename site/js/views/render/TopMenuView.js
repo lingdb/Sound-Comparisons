@@ -11,6 +11,7 @@ define(['backbone'], function(Backbone){
         formats: ['mp3','ogg'],
         IPATooltipFontSize: ['100%', '125%', '150%'],
         ShowDataAs: ['dots', 'labels'],
+        ColoriseDataAs: ['region', 'cognate'],
       };
       // init IPATooltipFontSize from stored cookies if given
       var nameFontSize = "IPATooltipFontSize=";
@@ -42,6 +43,21 @@ define(['backbone'], function(Backbone){
           }
       }
       App.storage.ShowDataAs = showDataAs;
+      // init ColoriseDataAs from stored cookies if given
+      var nameColoriseDataAs = "ColoriseDataAs=";
+      var ca = document.cookie.split(';');
+      var coloriseDataAs = 'region';
+      for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+          }
+          if (c.indexOf(nameColoriseDataAs) == 0) {
+              coloriseDataAs = c.substring(nameColoriseDataAs.length, c.length);
+              break;
+          }
+      }
+      App.storage.ColoriseDataAs = coloriseDataAs;
     }
     /**
       Function to call non /^update.+/ methods that are necessary for the model, and to setup their callbacks.
@@ -72,6 +88,7 @@ define(['backbone'], function(Backbone){
       , format:             'topmenu_download_format'
       , ipaTooltipFontSize: 'topmenu_settings_ipaFontSizeMap'
       , showDataAs:         'topmenu_settings_showDataAs'
+      , coloriseDataAs:     'topmenu_settings_coloriseDataAs'
       , soundClickTitle:    'topmenu_soundoptions_tooltip'
       , soundHoverTitle:    'topmenu_soundoptions_hover'
       , createShortLink:    'topmenu_createShortLink'
@@ -270,6 +287,24 @@ define(['backbone'], function(Backbone){
       }).each(function(){
         var t = $(this), val = t.val();
         if(val === App.storage.ShowDataAs){
+          t.prop('checked', true);
+        }
+      });
+      //The ColoriseDataAs selection:
+      var radios = this.$('input[name="ColoriseDataAs"]').click(function(){
+        var val = $(this).val();
+        if(val !== App.storage.ColoriseDataAs){
+          App.storage.ColoriseDataAs = val;
+          // save font size as cookie
+          var d = new Date();
+          d.setTime(d.getTime() + (365*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = 'ColoriseDataAs='+ val + ";" + expires + ";path=/";
+          App.views.renderer.render();
+        }
+      }).each(function(){
+        var t = $(this), val = t.val();
+        if(val === App.storage.ColoriseDataAs){
           t.prop('checked', true);
         }
       });

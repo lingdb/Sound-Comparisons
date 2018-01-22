@@ -121,15 +121,15 @@ define(['underscore',
         $div.find('.transcription').each(function(){
           var t = $(this);
           if(window.App.storage.ShowDataAs === 'dots') {
-            w = 1.085*t.height();
-            h = 1.085*t.height();
-            t.css('color', '#00000000');
-            t.css('font-size', '30%');
+            w = t.height();
+            h = t.height();
+            t.css('opacity', 0);
+            t.css('font-size', '50%');
           } else {
-            t.css('font-size', window.App.storage.IPATooltipFontSize || '100%')
+            t.css('font-size', window.App.storage.IPATooltipFontSize || '100%');
             w = Math.max(w, t.width());
             h += 1.085*t.height();
-            t.css('color', '#000000');
+            t.css('opacity', 1);
           }
         });
         //Update size:
