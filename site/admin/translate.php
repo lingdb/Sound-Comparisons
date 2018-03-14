@@ -15,7 +15,9 @@
     require_once('head.php');
   ?>
   <body>
-    <?php require_once('topmenu.php');
+    <?php require_once('topmenu.php');?>
+    <div style="margin-left:10px;margin-right:10px;">
+    <?php
       $action = array_key_exists('action', $_GET) ? $_GET['action'] : '';
       switch($action){
         case 'translation':
@@ -37,5 +39,6 @@
           require_once('translation/overview.php');
       }
     ?>
+    </div>
   </body>
 </html>

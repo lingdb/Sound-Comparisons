@@ -1,3 +1,13 @@
+<script type="application/javascript">
+  function toggleStudy(btn, study) {
+    $("#"+study).toggle();
+    if(btn.firstChild.nodeValue==="+"){
+      btn.firstChild.nodeValue = "-";
+    }else{
+      btn.firstChild.nodeValue = "+";
+    }
+  }
+</script>
 <?php
   require_once('categorySelection.php');
   if($providerGroup !== ''){
@@ -14,11 +24,13 @@
     require_once('showTable.php');
     //Below output only if $data contains something:
     if(count($data) !== 0){
-      echo '<legend>Data to translate:</legend>';
+      echo '<legend style="border-bottom:0px solid #ddd;">Data to translate:</legend>';
       if($dependsOnStudy){
         foreach($data as $study => $tdata){
-          echo "<h4>$study:</h4>";
+          echo "<h4 style='border-top:1px solid #ddd;padding-top:5px'><button onclick='toggleStudy(this, \"$study\")' style='width:24px'>+</button> Study: $study</h4>";
+          echo "<div id='$study' class='hide'>";
           showTable($tdata);
+          echo "</div>";
         }
       }else{
         showTable($data);
