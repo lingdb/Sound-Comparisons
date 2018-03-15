@@ -482,6 +482,16 @@ class Importer{
       , 'Bn:  Project Active?' => 'ProjectActive'
       )
     )
+  , '/^Page_DynamicTranslation\.txt$/' => array(
+      'study' => false
+    , 'table' => 'Page_DynamicTranslation'
+    , 'colMapping' => array(
+        'TranslationId' => 'TranslationId'
+      , 'Category' => 'Category'
+      , 'Field' => 'Field'
+      , 'Trans' => 'Trans'
+      )
+    )
   , '/^Transcription Superscript Info.txt/' => array(
       'study' => false
     , 'table' => 'TranscrSuperscriptInfo'

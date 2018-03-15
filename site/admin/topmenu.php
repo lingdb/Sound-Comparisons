@@ -16,8 +16,8 @@
            . 'Database <b class="caret"></b></a>'
            . '<ul class="dropdown-menu">';
         if(session_isSuperuser($dbConnection)){
-           $m = $m . '<li><a href="uploadCSV.php">Upload CSV Files</a></li>'
-           . '<li><a href="uploadSQL.php">Upload and Run SQL Files (Transcriptions)</a></li>'
+           $m = $m . '<li><a href="uploadCSV.php">Upload Data Tables [CSV]</a></li>'
+           . '<li><a href="uploadSQL.php">Upload Transcriptions [SQL]</a></li>'
            . '<li class="divider"></li>'
            . '<li><a href="insertNewLg.php">Insert new Language Family</a></li>'
            . '<li class="divider"></li>';
