@@ -16,6 +16,7 @@
   <?php
     $thead = '<tr>'
            . '<th>Translation name</th>'
+           . '<th style="text-align:right;width:20px">ID</th>'
            . '<th><a href="http://www.w3schools.com/tags/ref_language_codes.asp" target="_blank">Browsermatch</a></th>'
            . '<th>Flag</th>'
            . '<th>Equivalent language in database</th>'
@@ -57,6 +58,7 @@
       //Row output:
       echo "<tr data-tId='$tId'>"
          . "<td class='name'>$name</td>"
+         . "<td style='text-align:right;vertical-align:middle;'>$tId</td>"
          . "<td class='match'>$bm</td>"
          . "<td><img src='../$img' class='btn flag'></td>"
          . "<td>$rfcL</td>"
