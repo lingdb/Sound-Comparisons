@@ -67,7 +67,8 @@ class TranslationTableProjection {
     }
     //Checking again:
     if(count($descriptions) === 0){
-      return new Exception('$tables didn\'t match any of the $sNameRegex from TranslationTableDescription.');
+      return;
+      // return new Exception('$tables didn\'t match any of the $sNameRegex from TranslationTableDescription.');
     }
     //Produce Projection:
     $ret = new TranslationTableProjection();
