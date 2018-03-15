@@ -116,7 +116,15 @@ class Importer{
     }
     //Queries for the given $file and $csv:
     $queries = $merge ? array() : array('DELETE FROM '.$desc['table']);
-    $q = ($merge ? 'REPLACE' : 'INSERT'). ' INTO '.$desc['table'].' ('.implode(__::compact($cols),',').') VALUES '.implode($tuples,',');
+    if($merge){
+      $ondupvalues = array();
+      foreach($cols as $c){
+        array_push($ondupvalues, $c.'=VALUES('.$c.')');
+      }
+      $q = 'INSERT INTO '.$desc['table'].' ('.implode(__::compact($cols),',').') VALUES '.implode($tuples,',').' ON DUPLICATE KEY UPDATE '.implode($ondupvalues,',');
+    }else{
+      $q = 'INSERT INTO '.$desc['table'].' ('.implode(__::compact($cols),',').') VALUES '.implode($tuples,',');
+    }
     array_push($queries, $q);
     return $queries;
   }
@@ -166,6 +174,7 @@ class Importer{
     array_push(self::$log, "Importer::processFiles for uId $uId; merge=$merge");
     $qqs = array();
     foreach($fs as $f){
+      $merge = ($f['name'] === 'Page_DynamicTranslation.txt');
       array_push($qqs, self::mkQueries($f['name'], file_get_contents($f['path']), $merge));
     }
     self::execQueries(__::flatten($qqs), $uId);
