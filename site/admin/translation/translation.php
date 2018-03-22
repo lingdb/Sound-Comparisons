@@ -35,11 +35,12 @@
       if($dependsOnStudy){
         foreach($data as $study => $tdata){
           $theKeys = array_keys($tdata);
-          $totalNumber = count($tdata[$theKeys[0]]) + count($tdata[$theKeys[1]]);
+          $totalNumber = 0;
           $missing = 0;
           foreach($theKeys as $k){
             foreach($tdata[$k] as $r){
               if(strlen(trim($r["Original"])) > 0){
+                $totalNumber += 1;
                 if(strlen(trim($r["Translation"]["Translation"])) === 0){
                   $missing += 1;
                 }
