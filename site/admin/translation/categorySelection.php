@@ -12,10 +12,14 @@
 <form class="form-inline">
 <h4 class="categoryHeadline">General:</h4>
 <?php foreach(array_keys(Translation::generalProviders()) as $p){ $btn($p); } ?>
+</form>
+<table>
+<tr><td style="vertical-align:top;">
+<form class="form-inline">
 <h4 class="categoryHeadline" style="color: #666;">Study dependant:</h4>
 <?php foreach(array_keys(Translation::studyProviders()) as $p){ $btn($p); } ?>
 </form>
-<div style="float:right">
+</td><td style="padding-left:1cm;vertical-align:top;">
 <form class="form-inline">
 <h4 class="categoryHeadline">Special cases:</h4>
 <?php
@@ -30,8 +34,8 @@
 <a href="<?php echo $cLnk; ?>" class="btn<?php echo $changed; ?>">Changed translations</a>
 <a href="<?php echo $oLnk; ?>" class="btn<?php echo $compareOriginal; ?>">Compare Originals</a>
 </form>
-</div>
-<div style="float:left">
+</td></tr></table>
+<div>
 <form class="form-inline" action="translate.php" method="get">
 <h4 class="categoryHeadline">Search:</h4>
 <div class="input-append">
