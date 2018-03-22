@@ -29,7 +29,7 @@ function showTable($tdata, $showKeep = false){
       //Encoding tooltip contents:
       $desc = preg_replace("/'/",'"',$desc);
       $desc = htmlspecialchars($desc);
-      echo "<td class='description'$isAdmin' data-req='$req' data-html='true' data-container='body' data-title='$desc'>$short</td>";
+      echo "<td class='description'$isAdmin' data-req='$req' data-html='true' data-container='body' data-title='$desc'  style='max-width:10% !important'>$short</td>";
       //Title in case of search:
       $title = '';
       if(array_key_exists('Match', $value)){
@@ -43,7 +43,7 @@ function showTable($tdata, $showKeep = false){
         $stud = $value['Study'];
         $orig = "$stud:<code>$orig</code>";
       }else{$orig = "<code>$orig</code>";}
-      echo '<td class="original"'.$title.'>'.$orig
+      echo '<td class="original"'.$title.' style="width:30% !important">'.$orig
          . '<a class="btn pull-right copy-over">'
          . '<i class="icon-arrow-right"></i></a></td>';
       //Translation:
@@ -52,8 +52,8 @@ function showTable($tdata, $showKeep = false){
       $tId   = $trans['TranslationId'];
       $pay   = $trans['Payload'];
       $trans = $trans['Translation'];
-      echo "<td data-tId='$tId' data-provider='$prov' data-payload='$pay'>"
-         . "<input type='text' value='$trans' class='translation'>"
+      echo "<td data-tId='$tId' data-provider='$prov' data-payload='$pay' style='width:80% !important'>"
+         . "<input type='text' value='$trans'  style='width:80% !important' class='translation'>"
          . '<a class="btn save"><i class="icon-hdd"></i>Save</a>'
          . $showKeep . '</td>';
       //Handling the exit condition:
