@@ -15,9 +15,11 @@ function showTable($tdata, $showKeep = false){
     $newTZ = array();
     foreach($tdata as $key => $field){
       if(count($field) === 0) continue;
-      echo "<tr>";
       //Value to echo as row:
       $value = array_shift($field);
+      $orig = $value['Original'];
+      if(strlen($orig) === 0) continue;
+      echo "<tr>";
       //Description:
       $desc = $value['Description'];
       $req  = array_key_exists('Req', $desc) ? $desc['Req'] : '';
@@ -38,7 +40,6 @@ function showTable($tdata, $showKeep = false){
         }
       }
       //Original:
-      $orig = $value['Original'];
       if(array_key_exists('Study', $value)){//Study in case of search
         $stud = $value['Study'];
         $orig = "$stud:<code>$orig</code>";
