@@ -16,7 +16,7 @@
 <table>
 <tr><td style="vertical-align:top;">
 <form class="form-inline">
-<h4 class="categoryHeadline" style="color: #666;">Study dependant:</h4>
+<h4 class="categoryHeadline">Study dependent:</h4>
 <?php foreach(array_keys(Translation::studyProviders()) as $p){ $btn($p); } ?>
 </form>
 </td><td style="padding-left:1cm;vertical-align:top;">
@@ -39,14 +39,14 @@
 <form class="form-inline" action="translate.php" method="get">
 <h4 class="categoryHeadline">Search:</h4>
 <div class="input-append">
-  <label class="checkbox">
-    all translations
-    <input type="checkbox" name="SearchAll"<?php echo $sAll; ?>>
-  </label>
+  <table><tr><td valign="middle">
+  <input type="checkbox" name="SearchAll"<?php echo $sAll; ?>>
+  </td><td valign="middle">
+  <label class="checkbox">&nbsp;all translations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+  </td><td valign="middle">
   <input type="text" placeholder="search term" name="SearchText" required<?php echo $sText; ?>>
-  <button type="submit" class="btn btn-info">
-    <i class="icon-search"></i>Search!
-  </button>
+  <button type="submit" class="btn btn-info"><i class="icon-search"></i> Search!</button>
+  </td></tr></table>
 </div>
 <input type="hidden" name="action" value="search">
 <input type="hidden" name="tId" value="<?php echo $translationId; ?>">
