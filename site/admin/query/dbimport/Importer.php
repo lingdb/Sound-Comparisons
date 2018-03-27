@@ -174,6 +174,7 @@ class Importer{
     array_push(self::$log, "Importer::processFiles for uId $uId; merge=$merge");
     $qqs = array();
     foreach($fs as $f){
+      $f['name'] = preg_replace('/^Page_DynamicTranslation.*?\.txt$/', 'Page_DynamicTranslation.txt', $f['name']);
       $merge = ($f['name'] === 'Page_DynamicTranslation.txt');
       array_push($qqs, self::mkQueries($f['name'], file_get_contents($f['path']), $merge));
     }
