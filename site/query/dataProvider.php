@@ -251,6 +251,14 @@ class DataProvider {
     return array_map('DataProvider::getLanguageContributorImages', $lData);
   }
   /**
+    @return TranslationId, TranslationName []
+    Fetches all translation Ids and languages.
+  */
+  public static function getAllTranslationLanguages(){
+    $q = "SELECT TranslationId,TranslationName FROM Page_Translations ORDER BY TranslationId;";
+    return static::fetchAll($q);
+  }
+  /**
     @param $languageData {} as fetch_assoc from Languages_* table
     @return $languageData with additional 'contributors' field
   */

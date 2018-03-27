@@ -23,6 +23,7 @@
            . '<li class="divider"></li>';
         }
         $m = $m . '<li><a href="generateLgIndices.php">Generate Language Indices File (for Praat)</a></li>';
+        $m = $m . '<li><a href="generatePageDynTrans.php">Generate Page_DynamicTranslation template</a></li>';
         if(session_mayUpload($dbConnection)){
            $m = $m . '<li class="divider"></li>'
            . '<li><a href="uploadSoundDir.php">Upload Sound Files for a Language</a></li>';

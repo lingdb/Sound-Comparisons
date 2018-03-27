@@ -107,7 +107,7 @@ switch($action){
     CacheProvider::cleanCache('../');
     $lgsIdx = array();
     $availableLgs = array();
-    array_push($lgsIdx, 'idx	prefix');
+    array_push($lgsIdx, "idx\tprefix");
     $aLSet = $dbConnection->query('SHOW TABLES LIKE "Languages_%"');
     if($aLSet !== false){
       while($row = $aLSet->fetch_row()){
@@ -117,7 +117,7 @@ switch($action){
         $set = $dbConnection->query('select `LanguageIx`, `FilePathPart` from '.$lg);
         if($set !== false){
           while($row = $set->fetch_array(MYSQLI_NUM)){
-            array_push($lgsIdx, $row[0].'	'.$row[1]);
+            array_push($lgsIdx, $row[0]."\t".$row[1]);
           }
         } else {
           ?>‼️ An error occurred for <?php echo $lg ?>!<?php
@@ -135,6 +135,31 @@ switch($action){
       echo implode("\n",$lgsIdx)."\n";
     } else {
       ?>‼️ No language tables found!<?php
+    }
+  break;
+  case 'genPageDynTrans':
+    CacheProvider::cleanCache('../');
+    $template = array();
+    $study = $_REQUEST['study'];
+    $lgid = $_REQUEST['transLg'];
+    array_push($template, '"TranslationId","Category","Field","Trans"');
+    $aLSet = $dbConnection->query("SELECT 'WordsTranslationProvider-Words_-Trans_FullRfcModernLg01', concat('$study-',IxElicitation,IxMorphologicalInstance) AS c, REPLACE(FullRfcModernLg01,'\"','\"\"') AS t FROM Words_$study ORDER BY IxElicitation,IxMorphologicalInstance;");
+    if($aLSet !== false){
+      while($row = $aLSet->fetch_assoc()){
+        array_push($template, "$lgid,\"".implode('","',$row).'"'); 
+      }
+      if(php_sapi_name() !== 'cli'){
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/octet-stream; charset=utf-8");
+        header("Content-Disposition: attachment;filename=\"Page_DynamicTranslation$study.txt\"");
+        header("Content-Transfer-Encoding: binary");
+      }
+      echo implode("\n",$template)."\n";
+    } else {
+      ?>‼️ No word tables found for <?php
+      echo "'$study'!";
     }
   break;
   case 'import':
