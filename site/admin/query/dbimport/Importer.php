@@ -117,11 +117,15 @@ class Importer{
     //Queries for the given $file and $csv:
     $queries = $merge ? array() : array('DELETE FROM '.$desc['table']);
     if($merge){
-      $ondupvalues = array();
-      foreach($cols as $c){
-        array_push($ondupvalues, $c.'=VALUES('.$c.')');
+      if($desc['table'] === 'Page_DynamicTranslation'){
+        $q = 'INSERT INTO Page_DynamicTranslation ('.implode(__::compact($cols),',').') VALUES '.implode($tuples,',').' ON DUPLICATE KEY UPDATE `Trans` = IF(LENGTH(`Trans`)=0, VALUES(`trans`), `Trans`)';
+      }else{
+        $ondupvalues = array();
+        foreach($cols as $c){
+          array_push($ondupvalues, $c.'=VALUES('.$c.')');
+        }
+        $q = 'INSERT INTO '.$desc['table'].' ('.implode(__::compact($cols),',').') VALUES '.implode($tuples,',').' ON DUPLICATE KEY UPDATE '.implode($ondupvalues,',');
       }
-      $q = 'INSERT INTO '.$desc['table'].' ('.implode(__::compact($cols),',').') VALUES '.implode($tuples,',').' ON DUPLICATE KEY UPDATE '.implode($ondupvalues,',');
     }else{
       $q = 'INSERT INTO '.$desc['table'].' ('.implode(__::compact($cols),',').') VALUES '.implode($tuples,',');
     }
