@@ -31,8 +31,9 @@
         $lgName = $r["TranslationName"];
         break;
       }
-      echo "<legend style='border-bottom:0px solid #ddd;'>Data to translate for $lgName:</legend>";
+      echo "<legend style='border-bottom:0px solid #ddd;'>Data to translate for $lgName - choose a study:</legend>";
       if($dependsOnStudy){
+        echo "<div id='accordion'>";
         foreach($data as $study => $tdata){
           $theKeys = array_keys($tdata);
           $totalNumber = 0;
@@ -51,11 +52,20 @@
           if($totalNumber>0){
             $perDone = round(($totalNumber-$missing)/$totalNumber*100,1);
           }
-          echo "<h4 style='border-top:1px solid #ddd;padding-top:5px'><button onclick='toggleStudy(this, \"$study\")' style='width:24px'>+</button> Study: $study <small>- {$perDone}% done</small><br><small> missing translations: {$missing} out of {$totalNumber}</small></h4>";
-          echo "<div id='$study' class='hide'>";
+          echo "<div class='card' style='margin-top:5px'>";
+          echo " <div class='card-header' id='headingOne$study'>";
+          echo "  <button class='btn btn-large' style='width:100%;text-align:left' data-toggle='collapse' data-target='#collapseOne$study' aria-expanded='true' aria-controls='collapseOne$study'>";
+          echo "   <b>$study</b><small> - {$perDone}% done</small> - <small> missing translations: {$missing} out of {$totalNumber}</small>";
+          echo "  </button>";
+          echo " </div>";
+          echo " <div id='collapseOne$study' class='collapse show' aria-labelledby='headingOne$study' data-parent='#accordion'>";
+          echo "  <div class='card-body' style='margin-top:5px'>";
           showTable($tdata);
+          echo "  </div>";
+          echo " </div>";
           echo "</div>";
         }
+        echo "<div>";
       }else{
         showTable($data);
       }

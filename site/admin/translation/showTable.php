@@ -5,10 +5,10 @@ function showTable($tdata, $showKeep = false){
   $showKeep = $showKeep
             ? '<a class="btn btn-info keep"><i class="icon-ok"></i>Keep</a>' : '';
   //Building the table:
-  $head = '<tr><th>Description:</th><th>Original:</th><th>Translation:'
+  $head = '<tr><th style="width:80px;">Description</th><th style="width:20%;">Original</th><th>Translation'
         . '<input type="button" value="Save all" '
         . 'class="btn btn-primary pull-right saveAll"></th></tr>';
-  echo "<table class='display table table-bordered'>"
+  echo "<table class='display table table-bordered' style='table-layout:fixed;'>"
      . "<thead>$head</thead><tbody>";
   $isAdmin = session_mayEdit() ? ' data-isadmin="1"' : '';
   while(count($tdata) > 0){
@@ -25,13 +25,13 @@ function showTable($tdata, $showKeep = false){
       $req  = array_key_exists('Req', $desc) ? $desc['Req'] : '';
       $desc = array_key_exists('Description', $desc) ? $desc['Description'] : '';
       //Shortening:
-      $maxLen = 42;
+      $maxLen = 12;
       $short = preg_replace('/<[^<>]+>/','',$desc);
       if(strlen($short) > $maxLen){$short = substr($short, 0, $maxLen).'…';}
       //Encoding tooltip contents:
       $desc = preg_replace("/'/",'"',$desc);
       $desc = htmlspecialchars($desc);
-      echo "<td class='description'$isAdmin' data-req='$req' data-html='true' data-container='body' data-title='$desc'  style='max-width:10% !important'>$short</td>";
+      echo "<td class='description'$isAdmin' data-req='$req' data-html='true' data-container='body' data-title='$desc' style='white-space: nowrap;'>$short</td>";
       //Title in case of search:
       $title = '';
       if(array_key_exists('Match', $value)){
@@ -42,10 +42,10 @@ function showTable($tdata, $showKeep = false){
       //Original:
       if(array_key_exists('Study', $value)){//Study in case of search
         $stud = $value['Study'];
-        $orig = "$stud:<code>$orig</code>";
-      }else{$orig = "<code>$orig</code>";}
-      echo '<td class="original"'.$title.' style="width:30% !important">'.$orig
-         . '<a class="btn pull-right copy-over">'
+        $orig = "$stud:<span style='color:red'>$orig</span>";
+      }else{$orig = "<span style='color:red'>$orig</span>";}
+      echo '<td class="original"'.$title.'>'.$orig
+         . '<a class="btn btn-small pull-right copy-over">'
          . '<i class="icon-arrow-right"></i></a></td>';
       //Translation:
       $trans = $value['Translation'];
@@ -53,9 +53,9 @@ function showTable($tdata, $showKeep = false){
       $tId   = $trans['TranslationId'];
       $pay   = $trans['Payload'];
       $trans = $trans['Translation'];
-      echo "<td data-tId='$tId' data-provider='$prov' data-payload='$pay' style='width:80% !important'>"
-         . "<input type='text' value='$trans'  style='width:80% !important' class='translation'>"
-         . '<a class="btn save"><i class="icon-hdd"></i>Save</a>'
+      echo "<td data-tId='$tId' data-provider='$prov' data-payload='$pay'>"
+         . "<input type='text' value='$trans' class='translation' style='width:90%'>"
+         . '<a class="btn btn-small save"><i class="icon-hdd"></i>Save</a>'
          . $showKeep . '</td>';
       //Handling the exit condition:
       if(count($field) > 0){
