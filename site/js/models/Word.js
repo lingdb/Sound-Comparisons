@@ -28,8 +28,19 @@ define(['underscore','backbone'], function(_, Backbone){
       Returns the Key for a Word.
       In contrast to the Id, the key is human readable, and may have duplicates.
       I will potentially add the getKey method to many models that already have a getId.
+      It takes 'SoundFileWordIdentifierText' to calculate an asciified version for a clean URL
+      by deleting the elicitation number and the proto word form. #339
     */
   , getKey: function(){
+      var re = new RegExp('_' + this.get('FileNameRfcProtoLg01') + '$','');
+      return this.get('SoundFileWordIdentifierText').replace(re, '').replace(/^_\d+_/,'');
+    }
+    /**
+      Returns the Key for a Word via FullRfcModernLg01 as fallback to support old URL scheme.
+      In contrast to the Id, the key is human readable, and may have duplicates.
+      I will potentially add the getKey method to many models that already have a getId.
+    */
+  , getKeyFallback: function(){
       return this.get('FullRfcModernLg01');
     }
     /**
