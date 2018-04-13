@@ -32,10 +32,26 @@ define(['require',
     /***/
   , getId: function(){return this.get('LanguageIx');}
     /**
+      Get key via FilePathPart.
       For fear of duplicates, the getKey method has to look at App.languageCollection.shortNameCount,
       and use the superscript with the ShortName if a duplicate exists, instead of the ShortName alone.
     */
   , getKey: function(){
+      var sn = this.get('FilePathPart');
+      if(App.languageCollection.shortNameCount(sn) > 1){
+        var lst = this.getLanguageStatusType();
+        if(lst){
+          return sn+' '+lst.getStatus();
+        }
+      }
+      return sn;
+    }
+    /**
+      Get key via ShortName as fallback to support old URL scheme.
+      For fear of duplicates, the getKey method has to look at App.languageCollection.shortNameCount,
+      and use the superscript with the ShortName if a duplicate exists, instead of the ShortName alone.
+    */
+  , getKeyFallback: function(){
       var sn = this.get('ShortName');
       if(App.languageCollection.shortNameCount(sn) > 1){
         var lst = this.getLanguageStatusType();

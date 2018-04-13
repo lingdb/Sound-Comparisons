@@ -57,6 +57,10 @@ define(['underscore','backbone','collections/Selection'], function(_, Backbone, 
       if(_.isString(k)){
         m = this.find(function(x){return x.getKey() === k;}, this) || null;
       }
+      // Try to get key as fallback for old URL scheme
+      if(m === null){
+        m = this.find(function(x){return x.getKeyFallback() === k;}, this) || null;
+      }
       if(m === null){
         if('getDefaultChoice' in this){
           m = this.getDefaultChoice();
