@@ -81,7 +81,7 @@ define(['underscore','backbone'], function(_, Backbone){
         , special = null;// null || {All,Sln,None}
       //Adds k to keys if it's not a special case.
       _.each(ks, function(k){
-        var matches = k.match(/[^_]+_(.+)/);
+        var matches = k.match(/_(All|Sln|None)/);
         if(matches){
           special = matches[1];
         }else{
