@@ -19,7 +19,7 @@ function showTable($tdata, $showKeep = false){
       $value = array_shift($field);
       $orig = $value['Original'];
       // show only entries whose 'Original' fields are set
-      if(strlen(trim($orig)) > 0){
+      // if(strlen(trim($orig)) > 0){
         echo "<tr>";
         //Description:
         $desc = $value['Description'];
@@ -59,7 +59,7 @@ function showTable($tdata, $showKeep = false){
            . '<a class="btn btn-small save"><i class="icon-hdd"></i>Save</a>'
            . $showKeep . '</td>';
         echo "</tr>";
-      }
+      // }
       //Handling the exit condition:
       if(count($field) > 0){
         $newTZ[$key] = $field;
