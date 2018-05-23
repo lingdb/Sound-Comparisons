@@ -144,7 +144,7 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topmenuAbout {float: right; margin-right: 0px;}
 #topmenuAbout a.topLink {height: 30px; padding: 0px;}
 #topmenuAbout a.topLink img {height: 30px; width: 30px;}
-#topmenuAbout .dropdown-menu {margin-left: -145px; width: 170px;}
+#topmenuAbout .dropdown-menu {margin-left: -175px; width: 200px;}
 #topmenuAbout .dropdown-menu:before {left: auto; right: 5px;}
 #topmenuAbout .dropdown-menu:after {left: auto; right: 6px;}
 #logo {
