@@ -149,13 +149,22 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topmenuAbout .dropdown-menu:after {left: auto; right: 6px;}
 #logo {
   float: left;
-  height: 30px;
-  width: 30px;
-  margin-top: 2.5px;
+  height: 20px;
+  width: 20px;
+  margin-top: 5px;
   margin-left: 5px;
+}
+#home {
+  float: left;
+  height: 20px;
+  width: 20px;
+  margin-top: 5px;
+  margin-left: 0px;
 }
 #topMenuInfo {
   margin-top: -2px;
+  width:16px;
+  height:16px;
 }
 /*Common style for left and right sides:*/
 .hidelink {padding: 0px; position: absolute; z-index: 10;}
