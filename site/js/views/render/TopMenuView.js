@@ -191,6 +191,8 @@ define(['backbone'], function(Backbone){
         , about: 'topmenu_about_contact'}
       , { link:  'topmenu_about_imprint_href'
         , about: 'topmenu_about_imprint'}
+      , { link:  'topmenu_about_privacypolicy_href'
+        , about: 'topmenu_about_privacypolicy'}
       ]);
       _.each(entries, function(e){e.link = 'href="'+e.link+'"';});
       this.setModel({aboutEntries: entries});
