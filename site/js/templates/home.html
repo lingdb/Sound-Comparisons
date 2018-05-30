@@ -27,7 +27,7 @@
 		<button class="dropbtn">{{#currentFlag}}<img class="flag" src="{{.}}">{{/currentFlag}}</button>
 		<div class="dropdown-content">
 			{{#otherTranslations}}
-			<a onclick='App.translationStorage.setTranslationId({{link}});App.router.myHomeView();'>{{#flag}}<img class="flag" src="{{.}}">{{/flag}}&nbsp;&nbsp;{{name}}</a>
+			<a onclick="location.href='#/{{link}}/home';location.reload()">{{#flag}}<img class="flag" src="{{.}}">{{/flag}}&nbsp;&nbsp;{{name}}</a>
 			{{/otherTranslations}}
 		</div>
 	</div>

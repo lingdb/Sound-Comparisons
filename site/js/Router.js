@@ -11,8 +11,11 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
   */
   return Linker.extend({
     routes: {
+      //homeView:
+      'home': 'myHomeView'
+    , ':siteLanguage/home': 'myHomeView'
       //shortLink:
-      'sl/:siteLanguage/:study/:shortLink': 'shortLink'//Shall use provided siteLanguage
+    , 'sl/:siteLanguage/:study/:shortLink': 'shortLink'//Shall use provided siteLanguage
     , 'sl/:study/:shortLink':               'shortLink'//Shall detect siteLanguage
     , 'sl/:shortLink':                      'shortLink'//Shall not change siteLanguage
       //mapView:
@@ -46,7 +49,6 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
     , 'Contributors/:initials': 'contributorView'
     , 'Contributors/':          'contributorView'
     , 'Contributors':           'contributorView'
-    , 'home': 'myHomeView'
       //aboutView:
     , 'about/:page': 'aboutView'
       //Routes for configuration directives:
@@ -175,11 +177,15 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
       this.navigate(fragment, {trigger: false, replace: true});
       App.study.trackLinks(fragment);
     }
-  , myHomeView: function(){
+  , myHomeView: function(tId){
     console.log('show home page');
+    if(tId){
+      console.log('new translation id ' + tId);
+      App.translationStorage.setTranslationId(parseInt(Number(tId)));
+      this.updateFragment('#home');
+    }
     var data = {
-        siteLanguage: App.translationStorage.getBrowserMatch()
-      , title: App.translationStorage.translateStatic('website_title_prefix') 
+        title: App.translationStorage.translateStatic('website_title_prefix') 
       , subtitle: App.translationStorage.translateStatic('website_title_suffix') 
       , funding: App.translationStorage.translateStatic('website_logo_hover') 
       , imprint: App.translationStorage.translateStatic('topmenu_about_imprint') 
@@ -212,7 +218,6 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
       };
     }, this);
     var homePageContent = App.templateStorage.render('home', data);
-    App.study.setStudy('home');
     try{
       document.open("text/html");
       document.write(homePageContent);
