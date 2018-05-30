@@ -46,6 +46,7 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
     , 'Contributors/:initials': 'contributorView'
     , 'Contributors/':          'contributorView'
     , 'Contributors':           'contributorView'
+    , 'home': 'myHomeView'
       //aboutView:
     , 'about/:page': 'aboutView'
       //Routes for configuration directives:
@@ -100,6 +101,10 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
           }
           //Detection for study:
           if(toChange.study === null){
+            if(part === 'home'){
+              toChange.study = part;
+              return;//Stop detection for current part
+            }
             if(_.contains(App.study.getAllIds(), part)){
               toChange.study = part;
               return;//Stop detection for current part
@@ -150,8 +155,9 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
           App.views.renderer.render();
         });
       }else{
-        //Making sure something is rendered:
-        App.views.renderer.render();
+        // view home page
+        console.log('Router.defaultRoute(home)');
+        this.navigate('home', true);
       }
     }
     /**
@@ -169,6 +175,53 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
       this.navigate(fragment, {trigger: false, replace: true});
       App.study.trackLinks(fragment);
     }
+  , myHomeView: function(){
+    console.log('show home page');
+    var data = {
+        siteLanguage: App.translationStorage.getBrowserMatch()
+      , title: App.translationStorage.translateStatic('website_title_prefix') 
+      , subtitle: App.translationStorage.translateStatic('website_title_suffix') 
+      , funding: App.translationStorage.translateStatic('website_logo_hover') 
+      , imprint: App.translationStorage.translateStatic('topmenu_about_imprint') 
+      , imprintHref: App.translationStorage.translateStatic('topmenu_about_imprint_href') 
+      , privacypolicy: App.translationStorage.translateStatic('topmenu_about_privacypolicy') 
+      , privacypolicyHref: App.translationStorage.translateStatic('topmenu_about_privacypolicy_href') 
+      , currentFlag: App.translationStorage.getFlag()
+      , otherTranslations: _.chain(App.translationStorage.getOthers()).map(function(tId){
+          return {
+            link: tId
+          , flag: this.getFlag(tId)
+          , name: this.getName(tId)
+          };
+        }, App.translationStorage).sortBy('name').value()
+    }
+    var allStudies = App.study.getAllIds();
+    allStudies = allStudies.filter(function(item) { 
+        return item !== '--'
+    })
+    data.studies = _.map(allStudies, function(n){
+      var name = App.study.getName(n)
+        , link = App.study.getLink(n)
+        , title = App.study.getTitle(n);
+      return {
+        link: link
+      , linkRaw: link.replace('#/','')
+      , studyName: name
+      , imgName: n
+      , studyTitle: title
+      };
+    }, this);
+    var homePageContent = App.templateStorage.render('home', data);
+    App.study.setStudy('home');
+    try{
+      document.open("text/html");
+      document.write(homePageContent);
+      document.close();
+    }catch(e){
+      console.log(e);
+    }
+    return;
+  }
     /**
       routeShortLink handles its argument in a way fitting the shortLink route definition.
     */

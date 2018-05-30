@@ -71,9 +71,9 @@ define(['jquery','underscore','backbone'], function($, _, Backbone){
       The title is typically composed with website_title_{prefix,suffix} into the page title.
       This composition, however should be done in the according view rather than the study.
     */
-  , getTitle: function(){
+  , getTitle: function(s){
       var category = 'StudyTitleTranslationProvider'
-        , field    = this.get('Name')
+        , field    = s || this.get('Name')
         , fallback = this.getName();
       return window.App.translationStorage.translateDynamic(category, field, fallback);
     }

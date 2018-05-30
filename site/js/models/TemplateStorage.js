@@ -10,6 +10,7 @@ define(['require',
         'extern/text!templates/contributor.html',
         'extern/text!templates/contributors.html',
         'extern/text!templates/head.html',
+        'extern/text!templates/home.html',
         'extern/text!templates/index.html',
         'extern/text!templates/ipaConsonants.html',
         'extern/text!templates/ipaKeyboard.html',
@@ -52,7 +53,7 @@ define(['require',
     }
     /***/
   , initialize: function(){
-      var tNames = ['body', 'contributor', 'contributors', 'head', 'index',
+      var tNames = ['body', 'contributor', 'contributors', 'head', 'home', 'index',
                     'ipaConsonants', 'ipaKeyboard', 'ipaOthers', 'ipaTone',
                     'ipaVowels', 'LanguageDescription', 'LanguageHeadline',
                     'LanguageLinks', 'LanguageMenu', 'LanguageSuperscript',
