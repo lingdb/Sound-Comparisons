@@ -129,7 +129,7 @@ class DataProvider {
   */
   public static function getStudiesForDisplay(){
     $studies = array();
-    $set = Config::getConnection()->query('(SELECT Name FROM Studies WHERE StudyIx = 1 ORDER BY Name LIMIT 10000) UNION ALL (SELECT "--" AS Name) UNION ALL (SELECT Name FROM Studies WHERE StudyIx > 1 ORDER BY Name LIMIT 10000)');
+    $set = Config::getConnection()->query('(SELECT Name FROM Studies WHERE StudyIx = 1 LIMIT 10000) UNION ALL (SELECT "--" AS Name) UNION ALL (SELECT Name FROM Studies WHERE StudyIx > 1 LIMIT 10000)');
     while($r = $set->fetch_assoc()){
       array_push($studies, $r['Name']);
     }

@@ -6,7 +6,7 @@ define(['backbone'], function(Backbone){
     defaults: {study: null, lastStudy: null}
   , initialize: function(){
       var l  = App.storage.lastStudy
-        , s  = (l) ? l : 'Romance'
+        , s  = (l) ? l : 'Europe'
         , ls = s;
       //The current study will become the last study:
       App.storage.lastStudy = s;
@@ -28,7 +28,7 @@ define(['backbone'], function(Backbone){
     */
   , update: function(){
       console.log('StudyWatcher.update()');
-      var s  = App.study.getId() || 'Romance'
+      var s  = App.study.getId() || 'Europe'
         , ls = App.storage.lastStudy || s;
       //If study changed map centering is desired
       App.pageState.setCenterMap(s !== ls);
