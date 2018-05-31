@@ -11,7 +11,7 @@
     'hidelinkLeft'  => TranslationProvider::staticTranslate('hidelink_left')
   , 'hidelinkRight' => TranslationProvider::staticTranslate('hidelink_right')
   , 'head' => array(
-      'title' => 'Site loading, please wait'
+      'title' => 'Sound Comparisons...'
     , 'requirejs' => 'js/App'
     )
   );
