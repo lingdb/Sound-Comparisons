@@ -31,8 +31,12 @@ define(['underscore', 'Configurator'], function(_, Configurator){
       //We cannot generate links with options for these views:
       , contributorView: 'linkMapView'
       , aboutView: 'linkMapView'
+      , homeView: 'linkHomeView'
       };
       return this[callMap[App.pageState.getPageViewKey()]](options);
+    }
+  , linkHomeView: function(options){
+      return options;
     }
     /**
       Creates the link structure for map view that can be placed in a href attribute.

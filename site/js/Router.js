@@ -12,8 +12,7 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
   return Linker.extend({
     routes: {
       //homeView:
-      'home': 'myHomeView'
-    , ':siteLanguage/home': 'myHomeView'
+      'home': 'homeView'
       //shortLink:
     , 'sl/:siteLanguage/:study/:shortLink': 'shortLink'//Shall use provided siteLanguage
     , 'sl/:study/:shortLink':               'shortLink'//Shall detect siteLanguage
@@ -177,56 +176,6 @@ define(['underscore','Linker','backbone'], function(_, Linker, Backbone){
       this.navigate(fragment, {trigger: false, replace: true});
       App.study.trackLinks(fragment);
     }
-  , myHomeView: function(tId){
-    console.log('show home page');
-    if(tId){
-      console.log('new translation id ' + tId);
-      App.translationStorage.setTranslationId(parseInt(Number(tId)));
-      this.updateFragment('#home');
-    }
-    var data = {
-        title: App.translationStorage.translateStatic('website_title_prefix') 
-      , subtitle: App.translationStorage.translateStatic('website_title_suffix') 
-      , funding: App.translationStorage.translateStatic('website_logo_hover') 
-      , imprint: App.translationStorage.translateStatic('topmenu_about_imprint') 
-      , imprintHref: App.translationStorage.translateStatic('topmenu_about_imprint_href') 
-      , privacypolicy: App.translationStorage.translateStatic('topmenu_about_privacypolicy') 
-      , privacypolicyHref: App.translationStorage.translateStatic('topmenu_about_privacypolicy_href') 
-      , currentFlag: App.translationStorage.getFlag()
-      , otherTranslations: _.chain(App.translationStorage.getOthers()).map(function(tId){
-          return {
-            link: tId
-          , flag: this.getFlag(tId)
-          , name: this.getName(tId)
-          };
-        }, App.translationStorage).sortBy('name').value()
-    }
-    var allStudies = App.study.getAllIds();
-    allStudies = allStudies.filter(function(item) { 
-        return item !== '--'
-    })
-    data.studies = _.map(allStudies, function(n){
-      var name = App.study.getName(n)
-        , link = App.study.getLink(n)
-        , title = App.study.getTitle(n);
-      return {
-        link: link
-      , linkRaw: link.replace('#/','')
-      , studyName: name
-      , imgName: n
-      , studyTitle: title
-      };
-    }, this);
-    var homePageContent = App.templateStorage.render('home', data);
-    try{
-      document.open("text/html");
-      document.write(homePageContent);
-      document.close();
-    }catch(e){
-      console.log(e);
-    }
-    return;
-  }
     /**
       routeShortLink handles its argument in a way fitting the shortLink route definition.
     */

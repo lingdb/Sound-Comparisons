@@ -1,20 +1,3 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Sound Comparisons - Exploring Diversity in Phonetics across Language Families">
-<meta name="author" content="Paul Heggarty et al.">
-<!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
-<!--[if IE]><link rel="shortcut icon" href="img/favicon.ico"><![endif]-->
-<link rel="icon" href="img/favicon.jpg" type="image/png" sizes="16x16">
-<link rel="icon" href="img/favicon.gif" type="image/gif" sizes="16x16">
-<title>{{title}}</title>
-<link href="css/home.css" rel="stylesheet">
-</head>
-
-<body style="margin-bottom:80px;background-image: url('img/bg_map03.png');background-size: cover;background-repeat: no-repeat;background-position: center;">
 
 <div class="logo">
 	<a target="_blank" title="{{funding}}" 
@@ -27,41 +10,44 @@
 		<button class="dropbtn">{{#currentFlag}}<img class="flag" src="{{.}}">{{/currentFlag}}</button>
 		<div class="dropdown-content">
 			{{#otherTranslations}}
-			<a onclick="location.href='#/{{link}}/home';location.reload()">{{#flag}}<img class="flag" src="{{.}}">{{/flag}}&nbsp;&nbsp;{{name}}</a>
+			<a onclick="App.translationStorage.setTranslationId({{tId}});App.views.renderer.render();">{{#flag}}<img class="flag" src="{{.}}">{{/flag}}&nbsp;&nbsp;{{name}}</a>
 			{{/otherTranslations}}
 		</div>
 	</div>
 </div>
 
 <center>
-	<h1 style="margin-top:40px;"><span style="font-size:170%;">{{title}}</span></h1>
+	<h1 style="margin-top:40px;"><span style="font-size:140%;">{{title}}</span></h1>
 	<h2>{{subtitle}}</h2>
 	<br /><br />
-	<div class="bg">
-		<div class="container">
+	<div class="tile_container">
 			{{#studies}}
-			<div style="cursor:pointer;" class="tile" onclick="location.href='{{link}}';location.reload();">
-				<img class="tile_img europe" src="img/ico-{{imgName}}.jpg"/>
-				<div class="europe_info" >{{studyTitle}}</div>
+			<div style="cursor:pointer;" class="tile" onclick="location.href='#/{{siteLanguage}}/{{imgName}}/map';">
+				<img class="tile_img tile_img_hover_info" src="img/ico-{{imgName}}.jpg"/>
+				<div class="tile_subinfo" >{{studyTitle}}</div>
 				<div class="tile_title">
 					<b>{{studyName}}</b>
 				</div>
 			</div>
 			{{/studies}}
 	</div>
-	</div>
-
 	<div style="clear: both;"></div>
-	<div class="footer" style="border-top:solid lightgray 1px">
-		<table style="font-size:80%"><tr>
-			<td><a target="_blank" href="{{imprintHref}}">§&nbsp;{{imprint}}</a></td>
-			<td><a target="_blank" href="{{privacypolicyHref}}">§&nbsp;{{privacypolicy}}</a></td>
-			<td><a rel="license" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/4.0"><img src="img/cc-by-nc-nd.png" height="28px" /></a></td>
-			<td><center><span style=font-size:90%;>Except where otherwise noted, content on this site is licensed under a<br /><a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0">Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.</a></span></center></td>
+	<div class="homeview_footer">
+		<table><tr>
+			<td><center><a target="_blank" href="{{imprintHref}}">§&nbsp;{{imprint}}</a></center></td>
+			<td><center><a target="_blank" href="{{privacypolicyHref}}">§&nbsp;{{privacypolicy}}</a></center></td>
+			<td>
+				<a rel="license" target="_blank" href="{{licenceTextHref}}">
+					<img src="img/cc-by-nc-nd.png" />
+				</a>
+			</td>
+			<td>
+				<center>
+					<a rel="license"  target="_blank" href="{{licenceTextHref}}">
+						<span style=font-size:90%;>{{{licenceText}}}.</span>
+					</a>
+				</center>
+			</td>
 		</tr></table>
 	</div>
-
 </center>
-
-</body>
-</html>

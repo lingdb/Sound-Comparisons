@@ -13,13 +13,14 @@ define(['underscore','backbone'], function(_, Backbone){
       wordOrder: 'logical'
     , spLang: null
     , phLang: null
-    , pageView: 'map'
+    , pageView: 'homeView'
     , pageViews: ['map'
                  ,'word'
                  ,'language'
                  ,'languagesXwords'
                  ,'wordsXlanguages'
                  ,'contributorView'
+                 ,'homeView'
                  ,'aboutView']
     , pageViewShortcuts: {
         'm':  'map'
@@ -29,6 +30,7 @@ define(['underscore','backbone'], function(_, Backbone){
       , 'wl': 'wordsXlanguages'
       , 'c':  'contributorView'
       , 'a':  'aboutView'
+      , 'h':  'homeView'
       }
     , mapViewIgnoreSelection: false // On true all languages shall be displayed
     , wordByWord: false // Should wordByWord downloads be displayed?
