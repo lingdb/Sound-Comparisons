@@ -10,7 +10,7 @@
 		<button class="dropbtn">{{#currentFlag}}<img class="flag" src="{{.}}">{{/currentFlag}}</button>
 		<div class="dropdown-content">
 			{{#otherTranslations}}
-			<a onclick="App.translationStorage.setTranslationId({{tId}});App.views.renderer.render();">{{#flag}}<img class="flag" src="{{.}}">{{/flag}}&nbsp;&nbsp;{{name}}</a>
+			<a onclick="App.translationStorage.setTranslationId({{tId}});setTimeout(function(){App.views.renderer.render();},100);">{{#flag}}<img class="flag" src="{{.}}">{{/flag}}&nbsp;&nbsp;{{name}}</a>
 			{{/otherTranslations}}
 		</div>
 	</div>

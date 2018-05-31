@@ -105,7 +105,7 @@
        </a>
       <ul class="dropdown-menu">
         {{#otherTranslations}}
-        <li><a {{{link}}}>{{#flag}}<img class="flag" src="{{.}}">{{/flag}}{{name}}</a></li>
+        <li><a onclick="App.translationStorage.setTranslationId({{tId}});setTimeout(function(){App.views.renderer.render();},100);">{{#flag}}<img class="flag" src="{{.}}">{{/flag}}{{name}}</a></li>
         {{/otherTranslations}}
       </ul>
     </li>
