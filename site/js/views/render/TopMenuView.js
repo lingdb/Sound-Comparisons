@@ -171,7 +171,7 @@ define(['backbone'], function(Backbone){
         currentFlag: App.translationStorage.getFlag()
       , otherTranslations: _.chain(App.translationStorage.getOthers()).map(function(tId){
           return {
-            link: 'href="'+App.router.linkConfig({Translation: tId})+'"'
+            tId: tId
           , flag: this.getFlag(tId)
           , name: this.getName(tId)
           };
