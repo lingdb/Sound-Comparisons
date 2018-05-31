@@ -143,14 +143,14 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
 #topmenuSoundOptions, #topmenuMisc, #topmenuSettings {padding-top: 2px;}
 #topmenuAbout {float: right; margin-right: 0px;}
 #topmenuAbout a.topLink {height: 30px; padding: 0px;}
-#topmenuAbout a.topLink img {height: 30px; width: 30px;}
+#topmenuAbout a.topLink img {height: 23px; width: 23px;}
 #topmenuAbout .dropdown-menu {margin-left: -175px; width: 200px;}
 #topmenuAbout .dropdown-menu:before {left: auto; right: 5px;}
 #topmenuAbout .dropdown-menu:after {left: auto; right: 6px;}
 #logo {
   float: left;
-  height: 20px;
-  width: 20px;
+  height: 22px;
+  width: 22px;
   margin-top: 5px;
   margin-left: 5px;
 }
@@ -160,11 +160,6 @@ background: -moz-linear-gradient(top, #EFEFEF, #C8C8C8);
   width: 20px;
   margin-top: 5px;
   margin-left: 0px;
-}
-#topMenuInfo {
-  margin-top: -2px;
-  width:16px;
-  height:16px;
 }
 /*Common style for left and right sides:*/
 .hidelink {padding: 0px; position: absolute; z-index: 10;}
