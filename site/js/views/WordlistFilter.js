@@ -15,6 +15,8 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
       //If noFilter is set, reinitialize won't filter.
       this.noFilter = false;
       App.pageState.on('change:pageView', this.clearStorage, this);
+      App.pageState.on('change:spLang', this.clearStorage, this);
+      App.translationStorage.on('change:translationId', this.clearStorage, this);
     }
   /*
     This fullfills the works of initialize, but may also be called later on.
