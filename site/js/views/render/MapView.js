@@ -468,7 +468,11 @@ define(['views/render/SubView',
   , zoomLanguage: function(l){
       var ll = l.getLatLng();
       if(ll !== null){
-        this.map.setView(l.getLatLng(), 8);
+        if(this.map.getZoom() > 8){
+          this.map.setView(l.getLatLng(), this.map.getZoom());
+        }else{
+          this.map.setView(l.getLatLng(), 8);
+        }
       }
     }
     /**
