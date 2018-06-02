@@ -152,25 +152,13 @@ define(['jquery','underscore','backbone'], function($, _, Backbone){
       t.parent().parent().css('z-index', '');
       if(window.App.storage.ShowDataAs === 'dots' && App.pageState.isMapView() && !t.parent().parent().hasClass('p50')) {
         var tp = t.parent().parent();
-        var h = 0;
-        switch(window.App.storage.IPATooltipFontSize) {
-        case '100%':
-          h = 16;
-          break;
-        case '125%':
-          h = 20;
-          break;
-        case '150%':
-          h = 25;
-          break;
-        default:
-          h = 16;
-        }
+        t.css('font-size', window.App.storage.IPATooltipFontSize || '100%');
+        var h = t.height()*0.7;
+        t.css('opacity', 0);
         tp.css('width', h);
         tp.css('height', h);
         tp.css('z-index', '');
-        t.css('opacity', 0);
-        t.css('font-size', '30%');
+        t.css('font-size', '50%');
       }
     }
     /**

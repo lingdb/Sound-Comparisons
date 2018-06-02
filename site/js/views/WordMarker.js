@@ -120,13 +120,13 @@ define(['underscore',
         var w = 0, h = 0;
         $div.find('.transcription').each(function(){
           var t = $(this);
+          t.css('font-size', window.App.storage.IPATooltipFontSize || '100%');
           if(window.App.storage.ShowDataAs === 'dots') {
-            w = 16;
-            h = 16;
+            h = t.height()*0.7;
+            w = h;
             t.css('opacity', 0);
             t.css('font-size', '50%');
           } else {
-            t.css('font-size', window.App.storage.IPATooltipFontSize || '100%');
             w = Math.max(w, t.width());
             h += 1.085*t.height();
             t.css('opacity', 1);
