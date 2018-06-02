@@ -162,6 +162,34 @@ switch($action){
       echo "'$study'!";
     }
   break;
+  case 'export01':
+    CacheProvider::cleanCache('../');
+    $template = array();
+    $study = $_REQUEST['study'];
+    array_push($template, 'ID	LG_ID	LG_NAME	LG_FILEPATHPART	GLOTTOCODE	LONGTITUDE	LATITUDE	STUDYIX	FAMILYIX	IXELICITATION	FULLRFCMODERNLG01	PHONETIC	SPELLINGALTV1');
+    $aLSet = $dbConnection->query("SELECT * FROM Export01_$study;");
+    $cnt = 0;
+    if($aLSet !== false){
+      while($row = $aLSet->fetch_assoc()){
+        $cnt = $cnt + 1;
+        $row_r = preg_replace('/^\d/', $cnt, $row);
+        array_push($template, "".implode("\t",$row_r)); 
+      }
+      if(php_sapi_name() !== 'cli'){
+        $filename = "Export_".$study."_".date('Y-m-d h:i', time()).'.tsv';
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Content-Type: application/octet-stream; charset=utf-8");
+        header("Content-Disposition: attachment;filename=\"$filename\"");
+        header("Content-Transfer-Encoding: binary");
+      }
+      echo implode("\n",$template)."\n";
+    } else {
+      ?>‼️ No word tables found for <?php
+      echo "'$study'!";
+    }
+  break;
   case 'import':
     CacheProvider::cleanCache('../');
     foreach($files as $f){

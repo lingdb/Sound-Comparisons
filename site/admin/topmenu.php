@@ -30,6 +30,7 @@
         }
         if(session_isSuperuser($dbConnection)){
            $m = $m . '<li class="divider"></li>'
+           . '<li><a href="export01.php">Export Study Data (TSV)</a></li>'
            . '<li><a href="exportSQLDump.php">Export Database Data (SQL format)</a></li>';
         }
         $m = $m . '</ul></li>';
