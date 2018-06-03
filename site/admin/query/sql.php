@@ -166,7 +166,7 @@ switch($action){
     CacheProvider::cleanCache('../');
     $template = array();
     $study = $_REQUEST['study'];
-    array_push($template, 'ID	LG_ID	LG_NAME	LG_FILEPATHPART	GLOTTOCODE	LONGTITUDE	LATITUDE	STUDYIX	FAMILYIX	IXELICITATION	FULLRFCMODERNLG01	PHONETIC	SPELLINGALTV1');
+    array_push($template, 'ID	LG_ID	LG_NAME	LG_FILEPATHPART	GLOTTOCODE	LONGTITUDE	LATITUDE	STUDYIX	FAMILYIX	IXELICITATION	IXMORPHINSTANCE	FULLRFCMODERNLG01	PHONETIC	SPELLINGALTV1');
     $aLSet = $dbConnection->query("SELECT * FROM Export01_$study;");
     $cnt = 0;
     if($aLSet !== false){
