@@ -172,8 +172,7 @@ switch($action){
     if($aLSet !== false){
       while($row = $aLSet->fetch_assoc()){
         $cnt = $cnt + 1;
-        $row_r = preg_replace('/^\d/', $cnt, $row);
-        array_push($template, "".implode("\t",$row_r)); 
+        array_push($template, preg_replace('/^\d/', $cnt, implode("\t",$row))); 
       }
       if(php_sapi_name() !== 'cli'){
         $filename = "Export_".$study."_".date('Y-m-d h:i', time()).'.tsv';
