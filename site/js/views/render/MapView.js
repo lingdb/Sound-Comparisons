@@ -453,11 +453,13 @@ define(['views/render/SubView',
     */
   , boundLanguage: function(l){
       var ll = l.getLatLng();
+      if(ll === null){return;}
       if(!this.map.getBounds().contains(ll)){
         var lls = _.chain(window.App.languageCollection.models)
                    .map(function(l){return l.getLatLng();})
-                   .sortBy(function(x){return ll.distanceTo(x);})
-                   .first(11).value();
+                   .sortBy(function(x){
+                     return ((x !== null) ? ll.distanceTo(x) : 0);
+                   }).first(11).value();
         this.map.fitBounds(L.latLngBounds(lls));
       }
     }

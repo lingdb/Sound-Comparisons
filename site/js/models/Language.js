@@ -388,7 +388,7 @@ define(['require',
     */
   , getLocation: function(){
       var data = _.values(this.pick('Latitude', 'Longtitude'));
-      if(data.length === 2)
+      if(data.length === 2 && data[0] !== null && data[1] !== null)
         return data;
       return null;
     }
