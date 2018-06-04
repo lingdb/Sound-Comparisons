@@ -73,6 +73,12 @@ class DataProvider {
   */
   public static function soundPathParts($sId, $t){
     $lIx = $t['LanguageIx'];
+
+    // check if LanguageIx still exists
+    $lq  = "SELECT LanguageIx FROM Languages_$sId WHERE LanguageIx = $lIx";
+    $set = DataProvider::fetchAll($lq);
+    if(count($set) === 0){return null;}
+
     $wId = $t['IxElicitation'].$t['IxMorphologicalInstance'];
     if(!isset($lIx) || !isset($wId))
       return array();
