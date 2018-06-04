@@ -5,12 +5,13 @@ $(document).ready(function(){
   $('table.display').each(function(){
     var table = $(this).DataTable({
       ordering: false
+    , bPaginate: false
     , columns: [
         {searchable: false}
       , {searchable: true}
       , {searchable: true}
       ]
-    , iDisplayLength: 100
+    , iDisplayLength: 1000000
     });
     tables.push(table);
     //The copy-over buttons:
