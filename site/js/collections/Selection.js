@@ -106,7 +106,7 @@ define(['underscore','backbone'], function(_, Backbone){
         var ms = this.filter(function(m){
           return m.getKey() in keys;
         }, this);
-        if(ms.length === 0){
+        if(ms.length === 0 && App.studyWatcher.studyChanged()){
           if('getDefaultSelection' in this){
             ms = this.getDefaultSelection(pvk);
           }else{
