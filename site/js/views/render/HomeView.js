@@ -56,7 +56,6 @@ define(['views/render/SubView', 'models/Loader', 'jquery'],
       })
       var studiesData = _.map(allStudies, function(n){
         var name = App.study.getName(n)
-          , tileLink = App.study.getLink(n)
           , title = App.study.getTitle(n);
         return {
           studyName: name
