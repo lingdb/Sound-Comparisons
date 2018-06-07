@@ -69,6 +69,7 @@
   }
   //Delivering $info:
   Config::setResponseJSON();
-  $filename = 'translations_'.date('Y-m-d-h:i', time()).'.json';
+  date_default_timezone_set('Europe/Berlin');
+  $filename = 'translations_'.date('Y-m-d-H:i', time()).'.json';
   header('Content-Disposition: attachment;filename="'.$filename.'"');
   echo Config::toJSON($info, $opts);

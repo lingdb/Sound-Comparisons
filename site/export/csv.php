@@ -14,7 +14,8 @@ function buildCSV($filename, $headline, $rows){
   //Sanitizing the filename:
   $filename = preg_replace('/[\\?!\\(\\)\\[\\]\\{\\}\\<\\>\\\\\\/]/','',$filename);
   //The final filename will carry the date.
-  $filename .= '_'.date('Y-m-d h:i', time()).'.csv';
+  date_default_timezone_set('Europe/Berlin');
+  $filename .= '_'.date('Y-m-d H:i', time()).'.csv';
   ob_start();
   $df = fopen('php://output', 'w');
   //UTF-8 BOM https://en.wikipedia.org/wiki/Byte_order_mark - should help excel a bit.

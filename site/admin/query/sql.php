@@ -175,7 +175,8 @@ switch($action){
         array_push($template, preg_replace('/^\d/', $cnt, implode("\t",$row))); 
       }
       if(php_sapi_name() !== 'cli'){
-        $filename = "Export_".$study."_".date('Y-m-d h:i', time()).'.tsv';
+        date_default_timezone_set('Europe/Berlin');
+        $filename = "Export_".$study."_".date('Y-m-d H:i', time()).'.tsv';
         header("Pragma: public");
         header("Expires: 0");
         header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
