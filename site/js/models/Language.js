@@ -216,6 +216,16 @@ define(['require',
       return App.translationStorage.translateDynamic(category,field, fb);
     }
     /**
+      Returns the WebsiteSubgroupName of the current language in the current translation.
+    */
+  , getWebsiteSubgroupName: function(){
+      var suffix = 'WebsiteSubgroupName'
+        , field = this.getField()
+        , category = this.getCategory('WebsiteSubgroupName')
+        , fb = this.get(suffix);
+      return App.translationStorage.translateDynamic(category,field, fb);
+    }
+    /**
       Returns the long name of the current language in the current translation.
       If no long name is found, this function falls back to getShortName.
     */

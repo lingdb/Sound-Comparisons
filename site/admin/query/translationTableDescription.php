@@ -124,6 +124,12 @@ class TranslationTableDescription {
         , 'description' => 'dt_languages_spellingRfcLangName'
         , 'category' => 'LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName'
         )
+      , array(
+          'columnName' => 'WebsiteSubgroupName'
+        , 'fieldSelect' => 'LanguageIx'
+        , 'description' => 'dt_languages_websiteSubgroupName'
+        , 'category' => 'LanguagesTranslationProvider-Languages_-Trans_WebsiteSubgroupName'
+        )
       )
     , 'dependsOnStudy' => true
     )

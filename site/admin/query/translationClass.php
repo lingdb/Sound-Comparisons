@@ -64,7 +64,7 @@
     , 'Region languages'      => '/^RegionLanguagesTranslationProvider-/'//Has projection!
     , 'Superscripts'          => '/^TranscrSuperscriptInfoTranslationProvider-/'//Has projection!
     , 'Lender languages'      => '/^TranscrSuperscriptLenderLgsTranslationProvider-/'//Has projection!
-    , 'Spelling languages'    => '/^LanguagesTranslationProvider-Languages_-Trans_SpellingRfcLangName$/'//Has projection, overly specific!
+    , 'Languages information'    => '/^LanguagesTranslationProvider-Languages_-Trans_/'//Has projection, overly specific!
     , 'Contributors'          => '/^ContributorCategoriesTranslationProvider-/'//Has projection!
     );
     /**
@@ -210,7 +210,7 @@
         $ret['_dependsOnStudy'] = array(
           'Region languages'   => true
         , 'Regions'            => true
-        , 'Spelling languages' => true
+        , 'Languages information' => true
         , 'Words'              => true
         );
       }

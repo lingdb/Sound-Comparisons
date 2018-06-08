@@ -175,7 +175,7 @@ define(['views/render/SubView'], function(SubView){
           desc: App.translationStorage.translateStatic('language_description_subgroup')+': '
         , link: ('WebsiteSubgroupWikipediaString' in desc) ? 'http://en.wikipedia.org/wiki/' + desc.WebsiteSubgroupWikipediaString : null
         , img:  'http://en.wikipedia.org/favicon.ico'
-        , afterLink: desc.WebsiteSubgroupName
+        , afterLink: lang.getWebsiteSubgroupName()
         });
       }
       //Done:
