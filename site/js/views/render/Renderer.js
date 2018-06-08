@@ -38,6 +38,7 @@ define([
       //Views managed by the Renderer:
       this.model = {
         titleView:        new TitleView({model: App.translationStorage, el: $('head>title')})
+      , homeView:         new HomeView({el: this.$('#homeViewContainer')})
       , topMenuView:      new TopMenuView({el: this.$('#topMenu')})
       , languageMenuView: new LanguageMenuView({el: this.$('#leftMenu')})
       , wordMenuView:     new WordMenuView({el: this.$('#rightMenu')})
@@ -47,8 +48,7 @@ define([
       , languageWordView: new LanguageWordView({el: this.$('#multitableContainer')})
       , wordLanguageView: new WordLanguageView({el: this.$('#multitableTransposedContainer')})
       , contributorView:  new ContributorView({el: this.$('#contributors')})
-      , aboutView: new AboutView({el: this.$('#aboutViewContainer')})
-      , homeView: new HomeView({el: this.$('#homeViewContainer')})
+      , aboutView:        new AboutView({el: this.$('#aboutViewContainer')})
       };
       //Flag if models have been activated:
       this._activated = false;

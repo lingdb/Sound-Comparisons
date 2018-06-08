@@ -82,6 +82,8 @@ define(['views/render/SubView', 'models/Loader', 'jquery'],
     /***/
     , render: function(){
       if(App.pageState.isPageView(this)){
+        // since homeView is no study the title has to be set manually
+        document.title = this.model.title;
         this.$el.html(App.templateStorage.render('home', this.model));
         this.$el.removeClass('hide');
       }else{
