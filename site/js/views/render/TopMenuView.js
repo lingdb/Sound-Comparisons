@@ -10,8 +10,14 @@ define(['backbone'], function(Backbone){
       this.model = {
         formats: ['mp3','ogg'],
         IPATooltipFontSize: ['100%', '125%', '150%'],
-        ShowDataAs: ['dots', 'labels'],
-        ColoriseDataAs: ['region', 'cognate'],
+        ShowDataAs: [
+          { val:'dots',   display:'dots' },
+          { val:'labels', display:'labels' }
+        ],
+        ColoriseDataAs: [
+          { val:'region',  display:'region' },
+          { val:'cognate', display:'cognate'}
+        ],
       };
       // init IPATooltipFontSize from stored cookies if given
       var nameFontSize = "IPATooltipFontSize=";
@@ -88,13 +94,21 @@ define(['backbone'], function(Backbone){
       , format:             'topmenu_download_format'
       , ipaTooltipFontSize: 'topmenu_settings_ipaFontSizeMap'
       , showDataAs:         'topmenu_settings_showDataAs'
+      , showDataAsDots:     'topmenu_settings_showDataAsDots'
+      , showDataAsLabels:   'topmenu_settings_showDataAsLabels'
       , coloriseDataAs:     'topmenu_settings_coloriseDataAs'
+      , coloriseDataAsRegion:     'topmenu_settings_coloriseDataAsRegion'
+      , coloriseDataAsCognate:    'topmenu_settings_coloriseDataAsCognate'
       , soundClickTitle:    'topmenu_soundoptions_tooltip'
       , soundHoverTitle:    'topmenu_soundoptions_hover'
       , createShortLink:    'topmenu_createShortLink'
       , viewContributors:   'topmenu_about_whoarewe'
       });
       this.setModel(staticT);
+      this.model.ShowDataAs[0].display = this.model.showDataAsDots;
+      this.model.ShowDataAs[1].display = this.model.showDataAsLabels;
+      this.model.ColoriseDataAs[0].display = this.model.coloriseDataAsRegion;
+      this.model.ColoriseDataAs[1].display = this.model.coloriseDataAsCognate;
     }
     /**
       Generates the study part of the TopMenu.
