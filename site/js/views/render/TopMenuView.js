@@ -194,7 +194,10 @@ define(['backbone'], function(Backbone){
       , { link:  'topmenu_about_privacypolicy_href'
         , about: 'topmenu_about_privacypolicy'}
       ]);
-      _.each(entries, function(e){e.link = 'href="'+e.link+'"';});
+      _.each(entries, function(e){
+        e.target = (e.link.match(/#/)) ? '' : 'target="_blank"';
+        e.link = 'href="'+e.link+'"';
+      });
       this.setModel({aboutEntries: entries});
     }
     /**
