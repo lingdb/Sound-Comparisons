@@ -1,28 +1,47 @@
 <html>
-  <title>Sound Comparisons – Offline Version</title>
-  <meta charset="UTF-8">
-  <meta name="description" content="Sound Comparisons – Exploring Diversity in Phonetics across Language Families – Max Planck Institute for the Science of Human History (MPI-SHH), Jena/Germany">
-  <meta name="keywords" content="Sound Comparisons, Phonetics, Heggarty, Languages, Sound, offline">
-  <meta name="author" content="Paul Heggarty et al.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="publisher" content="shh.mpg.de" />
-  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-  <!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
-  <!--[if IE]><link rel="shortcut icon" href="../img/favicon.ico"><![endif]-->
-  <link rel="icon" href="../img/favicon.png" type="image/png" sizes="16x16">
-  <link rel="icon" href="../img/favicon.gif" type="image/gif" sizes="16x16">
-  <script>
-    (function(i,s,o,g,r,a,m){
-      if(window.location.protocol!=='file:'){
-      i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    }})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    if(window.location.protocol!=='file:'){
-    ga('create', 'UA-28740209-1', 'auto');
-    ga('send', 'pageview');}
-  </script>
-  <link href="../css/main.css" rel="stylesheet">
+<head>
+	<title>Sound Comparisons – Offline Version</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Sound Comparisons – Exploring Diversity in Phonetics across Language Families – Max Planck Institute for the Science of Human History (MPI-SHH), Jena/Germany">
+	<meta name="keywords" content="Sound Comparisons, Phonetics, Heggarty, Languages, Sound, offline">
+	<meta name="author" content="Paul Heggarty et al.">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="publisher" content="shh.mpg.de" />
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+	<!-- For IE 9 and below. ICO should be 32x32 pixels in size -->
+	<!--[if IE]><link rel="shortcut icon" href="../img/favicon.ico"><![endif]-->
+	<link rel="icon" href="../img/favicon.png" type="image/png" sizes="16x16">
+	<link rel="icon" href="../img/favicon.gif" type="image/gif" sizes="16x16">
+	<script>
+		(function(i,s,o,g,r,a,m){
+			if(window.location.protocol!=='file:'){
+				i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+					(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				}})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				if(window.location.protocol!=='file:'){
+				ga('create', 'UA-28740209-1', 'auto');
+				ga('send', 'pageview');}
+	</script>
+	<link href="../css/main.css" rel="stylesheet">
+	<style>
+		code {
+			background-color: lightgray;
+			font-family: "Arial Narrow", "Lucida Sans", "Lucida Sans Unicode", "Lucida Grande", "Arial", sans-serif;
+			padding:1px;
+			padding-left:4px;
+			padding-right:4px;
+		  border-radius: 3px;
+		  border-radius: 3px;
+		  -webkit-border-radius: 3px;
+		  -webkit-border-radius: 3px;
+		  -moz-border-radius: 3px;
+		  -moz-border-radius: 3px;
+		}
+		li {
+			margin-bottom:7px;
+		}
+		</style>
 </head>
 <body>
 	<h3><i>under constructions</i></h3>
@@ -32,7 +51,7 @@
 	</p>
 	<ul>
 		<li>download this <a href="sndComp_offline.zip">ZIP-archive (81MB)</a> and decompress it at any destination and you get a new folder called <code>sndComp_offline</code></li>
-		<li><b>if you do not have the folder <code>mapnik</code> somewhere on your computer</b> download this <a href="mapnik.zip">ZIP-archive (3.3GB)</a> to the folder <code>sndComp_offline</code> and decompress it [<i>It will take a long time!</i>] into the folder <code>sndComp_offline</code></li>
+		<li><b>if you do not already have the folder </b><code>mapnik</code><b> somewhere on your computer</b> download this <a href="mapnik.zip">ZIP-archive (3.3GB)</a> to the folder <code>sndComp_offline</code> and decompress it [<i>It will take a long time!</i>] into the folder <code>sndComp_offline</code> and you get a new folder called <code>mapnik</code></li>
 		<li>download the sound files per study (coming soon)
 			<ul>
 				<li>Europe</li>
@@ -46,6 +65,7 @@
 				<li>Brazil</li>
 				<li>Malakula</li>
 			</ul>
+			and you get a new folder called <code>sound</code>
 		</li>
 		<li>
 			after downloading all files the folder <code>sndComp_offline</code> should now have the following structure: <small>[bold indicates a folder]</small>
@@ -61,7 +81,7 @@ README.md
 <b>sound</b>
 			</pre>
 		</li>
-		<li>open the file <code>index.html</code> inside the folder <code>sndComp_offline</code> with any browser except Internet Explorer or Microsoft Edge since these browsers do not support the underlying technology</li>
+		<li>open the file <code>index.html</code> inside the folder <code>sndComp_offline</code> with any browser<br /><i>except with Internet Explorer or Microsoft Edge since these browsers do not support the underlying technology</i></li>
 	</ul>
 </body>
 </html>
