@@ -4,7 +4,8 @@ To call this script from console use commands like these:
 env EXPORT_TASK=data php -f generateOffline.php
 */
 // Settings:
-$baseUrl = "http://soundcomparisons.com/query";
+$homeUrl = "http://soundcomparisons.com";
+$baseUrl = $homeUrl."/query";
 // Move into root directory:
 chdir(__DIR__);
 chdir('..');
@@ -12,34 +13,40 @@ chdir('..');
 $date = trim(`date -I`);
 $path = './sndComp_'.$date.'_export';
 `mkdir -p $path/data`;
+`mkdir -p $path/js`;
+`mkdir -p $path/js/extern`;
 // Copy static directories:
-`cp -rv site/css/ site/js/ site/img/ LICENSE README.md $path/`;
+`cp -rv site/css/ site/img/ LICENSE README.md $path/`;
+// Copy js staff
+`cp -v site/js/extern/FileSaver.js $path/js/extern/`;
+// Copy js app file
+`find js/ -maxdepth 1 -type f -name "App\-minified*" -exec cp {} $path/js/`;
 // Create index.html:
-`curl "http://soundcomparisons.com" > $path/index.html`;
+`curl $homeUrl > $path/index.html`;
 preg_match('/js\/App.minified\..+\.js/', `grep "js/App-minified" $path/index.html`, $matches);
 $jsFile = $matches[0];
-`curl "http://soundcomparisons.com/$jsFile" > $path/$jsFile`;
+`curl "$homeUrl/$jsFile" > $path/$jsFile`;
 // Helper to fetch json files:
-function fetchJSON($url, $file){
-  echo $url.' -> '.$file."\n";
+function fetchJSON($url, $file, $prefix){
+  echo $url.' -> '.$file.".js\n";
   $data = file_get_contents($url);
-  file_put_contents($file, $data);
+  file_put_contents($file.".js", $prefix.$data);
   return $data;
 }
 if(preg_match('/^$|data|all/', getenv('EXPORT_TASK'))){
   // Generate .json files to load for the site:
-  fetchJSON("$baseUrl/data", "$path/data/data");
-  $global = fetchJSON("$baseUrl/data?global", "$path/data/data_global");
+  fetchJSON("$baseUrl/data", "$path/data/data", "var localData=");
+  $global = fetchJSON("$baseUrl/data?global", "$path/data/data_global", "var localDataGlobal=");
   // Parsing global data to iterate studies:
   $global = json_decode($global, true);
   foreach($global['studies'] as $study){
     if($study !== '--'){ //skip delimiters
-      fetchJSON("$baseUrl/data?study=$study", "$path/data/data_study_$study");
+      fetchJSON("$baseUrl/data?study=$study", "$path/data/data_study_$study", "var localDataStudy$study=");
     }
   }
   // Providing translation files:
   $tdata = fetchJSON("$baseUrl/translations?action=summary",
-                     "$path/data/translations_action_summary");
+                     "$path/data/translations_action_summary", "var localTranslationsActionSummary=");
   // Combined translations map:
   $tdata = json_decode($tdata, true);
   $url = "$baseUrl/translations?lng=";
@@ -49,7 +56,7 @@ if(preg_match('/^$|data|all/', getenv('EXPORT_TASK'))){
     array_push($lnames, $t['BrowserMatch']);
   }
   $url .= implode('+', $lnames)."&ns=translation";
-  fetchJSON($url, $file);
+  fetchJSON($url, $file, "var localTranslationsI18n=");
 }
 if(preg_match('/^$|map|all/', getenv('EXPORT_TASK'))){
   // Fetch map tiles for offline usage:

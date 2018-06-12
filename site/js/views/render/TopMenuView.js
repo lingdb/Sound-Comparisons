@@ -18,6 +18,8 @@ define(['backbone'], function(Backbone){
           { val:'region',  display:'region' },
           { val:'cognate', display:'cognate'}
         ],
+        isOnline: (window.location.protocol !== 'file:'),
+        isOffline: (window.location.protocol === 'file:')
       };
       // init IPATooltipFontSize from stored cookies if given
       var nameFontSize = "IPATooltipFontSize=";

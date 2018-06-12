@@ -32,6 +32,7 @@
     </li>
     {{/pageViews}}
   </ul>
+  {{#isOnline}}
   <span id="topmenuDownloads" class="nav input-append btn-group">
     <img id="createShortLink" title="{{createShortLink}}" class="btn btn-mini icon" src="img/link.png">
     <div class="btn btn-mini disabled">
@@ -64,6 +65,7 @@
       </li>
     </ul>
   </span>
+  {{/isOnline}}
 </div>
 <div class="navbar-inner span2">
   <ul id="topmenuSettings" class="nav nav-tabs" style="margin-left:5px !important">
@@ -123,6 +125,7 @@
       <img id="openContributors" title="{{viewContributors}}" class="btn btn-mini icon" src="img/people.png">
     </li>
   </ul>
+  {{#isOnline}}
   <ul id="topmenuAbout" class="nav">
     <li>
       <a class="dropdown-toggle topLink"
@@ -136,6 +139,7 @@
       </ul>
     </li>
   </ul>
+  {{/isOnline}}
   <ul id="logo">
   <a target="_blank"
      title="{{logoTitle}}"

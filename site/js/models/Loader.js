@@ -1,6 +1,7 @@
 "use strict";
-/* eslint-disable no-console */
-define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
+/* global App */
+/* eslint-disable no-eval, no-console */
+define(['jquery','underscore','i18n'], function($, _, i18n){
   /**
     This module shall produce a simple object
     that provides functionality to fetch special AJAX resources.
@@ -20,42 +21,65 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
     The fetchFile function uses the AMD loader to load the given file,
     and returns a promise that will be resolved with the data from it.
   */
-  var fetchFile = function(path, expectJSON){
+  var fetchFile = function(path){
     path = _.last(path.split('/'));
+    // the vn's have to set while generating the offline version
+    var inputFiles = [
+      {f: 'data', vn: 'localData'},
+      {f: 'translations_i18n', vn: 'localTranslationsI18n'},
+      {f: 'translations_action_summary', vn: 'localTranslationsActionSummary'}
+    ]
     var def = $.Deferred()
       , deliver = function(){
-                    if(expectJSON === true){
-                      try{
-                        def.resolve(JSON.parse(fileMemo[path]));
-                      }catch(err){
-                        console.log('Problems parsing file:',
-                                    {path: path, expectJSON: expectJSON},
-                                    fileMemo[path], _.keys(fileMemo));
-                      }
-                    }else{
-                      def.resolve(fileMemo[path]);
-                    }
-                  };
+                    def.resolve(fileMemo[path]);
+                };
     if(fileMemo === null){
+      // load all data by appending data files as <script> elements
       fileMemo = {};
       interaction = $.Deferred();
-      var dialog = bootbox.dialog({
-        title: 'Please select module files…'
-      , message: '<input id="moduleFiles" type="file" multiple="">'
-      , buttons: {}
-      , show: false
-      });
-      $('#moduleFiles').on('change', function(e){
-        var input = e.target, waits = [];
-        dialog.modal({show: false});
-        _.each(input.files, function(file){
-          var reader = new FileReader(), waitReader = $.Deferred();
-          waits.push(waitReader);
-          reader.onload = function(){
-            fileMemo[file.name] = reader.result;
-            waitReader.resolve();
-          };
-          reader.readAsText(file, 'utf-8');
+      var waits = [];
+
+      // first load data_global to get all defined studies and append them to 'inputFiles'
+      var f = 'data_global';
+      var vn = 'localDataGlobal';
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = "data/" + f + ".js";
+      script.language = "javascript";
+      script.charset = "utf-8";
+      script.async = true;
+      script.onload = function () {
+        fileMemo[f] = eval(vn);
+        eval(vn + " = null;");
+        // append all studies
+        _.each(fileMemo[f].studies, function(study){
+          if(study !== '--'){
+            inputFiles.push(
+              {f: "data_study_"+study, vn: "localDataStudy"+study}
+            );
+          }
+        }, this);
+        // load all studies and additional data
+        _.each(inputFiles, function(file){
+            try{
+              var script = document.createElement('script');
+              var waitReader = $.Deferred();
+              waits.push(waitReader);
+              script.type = 'text/javascript';
+              script.src = "data/" + file.f + ".js";
+              script.language = "javascript";
+              script.charset = "utf-8";
+              script.async = true;
+              script.onload = function () {
+                fileMemo[file.f] = eval(file.vn);
+                eval(file.vn + " = null;");
+                waitReader.resolve();
+                if(App.views.setupBar){App.views.setupBar.render();}
+              }
+              document.head.appendChild(script);
+            }catch(e){
+              console.log("Could not load local data for " + file.f + " variable " + file.vn);
+            }
         }, this);
         $.when.apply($, waits).always(function(){
           if(interaction !== null){
@@ -63,11 +87,11 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
             interaction = null;
           }
         });
-      });
-      dialog.modal({show: true});
-      interaction.done(deliver).fail(function(){
-        def.reject(arguments);
-      });
+        interaction.done(deliver).fail(function(){
+          def.reject(arguments);
+        });
+      }
+      document.head.appendChild(script);
     }else if(interaction !== null){
       interaction.always(function(){
         if(path in fileMemo){
@@ -110,7 +134,7 @@ define(['jquery','underscore','i18n','bootbox'], function($, _, i18n, bootbox){
           target += '_'+k+'_'+v;
         }
     });
-    return fetchFile(target, expectJSON);
+    return fetchFile(target);
   };
   /**
     @return fetch' function

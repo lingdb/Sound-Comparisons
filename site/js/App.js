@@ -87,6 +87,13 @@ requirejs([
 , 'views/SoundPlayOptionView'
 ], function(require, $, Backbone, _){
     $(function(){
+      // Offline app does not run in any Internet Explorers and Edge resp.
+      var ua = window.navigator.userAgent;
+      if(window.location.protocol === 'file:' && (ua.indexOf('MSIE') > 0 || ua.indexOf('Edge') > 0 || ua.indexOf('Trident') > 0)){
+        alert("Unfortunately this browser does not support the underlying technology. Please use Firefox, Chrome, Opera, or similar browsers to be able to use this application.");
+        window.location.href="img/bg_map03.png";
+        return null;
+      }
       //Building the App singleton:
       window.App = {storage: window.sessionStorage};
       _.extend(window.App, {pageState: new (require('models/PageState'))()});
