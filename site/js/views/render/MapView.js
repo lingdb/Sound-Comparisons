@@ -317,6 +317,10 @@ define(['views/render/SubView',
       this.adjustCanvasSize();
       if(App.pageState.getCenterMap()){
         this.centerRegion();
+        // if after centeriRegion zoom level is zero, something went wrongly, thus try to fix it
+        if(this.map.getZoom() === 0){
+          this.fixMap();
+        }
       }
     }
     /**
