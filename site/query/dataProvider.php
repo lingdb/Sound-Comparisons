@@ -448,10 +448,11 @@ class DataProvider {
 
     // fetch general info and construct return array
     $q   = "SELECT L.FilePathPart AS F, L.LanguageIx AS I, L.ShortName AS N, count(*) AS C "
-          ."FROM Transcriptions_$n AS T, Languages_$n AS L "
+          ."FROM Transcriptions AS T, Languages_$n AS L "
           ."WHERE L.LanguageIx = T.LanguageIx AND LENGTH(TRIM(T.Phonetic)) AND T.LanguageIx IN "
-          ."(SELECT DISTINCT LanguageIx FROM Languages_$n) "
-          ."GROUP BY T.LanguageIx "
+          ."(SELECT DISTINCT LanguageIx FROM Languages_$n) AND T.IxElicitation IN "
+          ."(SELECT DISTINCT IxElicitation FROM Words_$n)"
+          ."GROUP BY T.study,T.LanguageIx "
           ."ORDER BY L.FilePathPart;";
     $set = static::fetchAll($q);
     if(count($set) > 0){
@@ -551,19 +552,133 @@ class DataProvider {
     $n   = $db->escape_string($studyName);
     $q   = "SELECT * FROM Languages_$n WHERE LanguageIx = {$lgix}";
     $set = static::fetchAll($q);
+    $isMalakula = ($studyName == 'Malakula');
+    $specIxElicArray = array();
+    static::$checkFilePaths = array();
     if(count($set) == 1){
       static::$checkFilePathsForLanguageIx['ShortName'] = $set[0]['ShortName'];
       static::$checkFilePathsForLanguageIx['LanguageIx'] = $lgix;
+      static::$checkFilePathsForLanguageIx['FilePathPart'] = $set[0]['FilePathPart'];
+      static::$checkFilePathsForLanguageIx['specIxElic'] = 'hide';
+      if($isMalakula){
+        static::$checkFilePathsForLanguageIx['specIxElic'] = '';
+        $specIxElicArray = array(231 => 1,82 => 2,81 => 3,252 => 4,803 => 5,681 => 6,802 => 7,815 => 8,821 => 9,777 => 10,553 => 11,263 => 12,242 => 13,271 => 14,262 => 15,272 => 16,284 => 17,274 => 18,233 => 19,855 => 20,856 => 21,895 => 22,261 => 23,201 => 24,241 => 25,205 => 26,212 => 27,897 => 28,854 => 29,221 => 30,224 => 31,223 => 32,858 => 33,859 => 34,900 => 35,837 => 36,831 => 37,829 => 38,922 => 39,832 => 40,833 => 41,834 => 42,213 => 43,852 => 44,211 => 45,851 => 46,836 => 47,841 => 48,814 => 49,840 => 50,812 => 51,811 => 52,401 => 53,402 => 54,403 => 55,405 => 56,435 => 57,436 => 58,431 => 59,432 => 60,651 => 61,633 => 62,410 => 63,904 => 64,662 => 65,901 => 66,874 => 67,663 => 68,892 => 69,940 => 70,906 => 71,881 => 72,913 => 73,844 => 74,843 => 75,842 => 76,905 => 77,887 => 78,628 => 79,888 => 80,741 => 81,742 => 82,950 => 83,918 => 84,915 => 85,809 => 86,903 => 87,902 => 88,893 => 89,889 => 90,912 => 91,962 => 92,880 => 93,826 => 94,813 => 95,312 => 96,321 => 97,381 => 98,385 => 99,384 => 100,822 => 101,345 => 102,603 => 103,606 => 104,383 => 105,341 => 106,342 => 107,343 => 108,352 => 109,349 => 110,324 => 111,780 => 112,625 => 113,626 => 114,624 => 115,632 => 116,609 => 117,631 => 118,552 => 119,551 => 120,554 => 121,521 => 122,869 => 123,524 => 124,604 => 125,523 => 126,622 => 127,515 => 128,512 => 129,513 => 130,584 => 131,586 => 132,581 => 133,592 => 134,593 => 135,585 => 136,867 => 137,791 => 138,792 => 139,793 => 140,794 => 141,786 => 142,541 => 143,868 => 144,542 => 145,543 => 146,701 => 147,702 => 148,703 => 149,705 => 150,704 => 151,717 => 152,711 => 153,722 => 154,721 => 155,736 => 156,735 => 157,737 => 158,738 => 159,763 => 160,749 => 161,752 => 162,798 => 163,771 => 164,772 => 165,773 => 166,502 => 167,501 => 168,51 => 169,124 => 170,827 => 171,818 => 172,148 => 173,141 => 174,138 => 175,139 => 176,131 => 177,132 => 178,789 => 179,788 => 180,123 => 181,101 => 182,104 => 183,106 => 184,102 => 185,102 => 186,102 => 187,102 => 188,105 => 189,105 => 190,107 => 191,107 => 192,121 => 193,122 => 194,799 => 195,782 => 196,134 => 197,171 => 198,125 => 199,112 => 200,896 => 201,1 => 202,2 => 203,3 => 204,4 => 205,5 => 206,6 => 207,7 => 208,8 => 209,9 => 210,10 => 211,11 => 212,15 => 213,20 => 214,21 => 215);
+      }
       static::$checkFilePathsForLanguageIx['ErrInfo'] = "";
     }else if(count($set) > 1) {
       static::$checkFilePathsForLanguageIx['LanguageIx'] = $lgix;
       static::$checkFilePathsForLanguageIx['ErrInfo'] = "There are more than one languages found for LanguageIx {$lgix}!";
-      static::$checkFilePaths = array();
+      return;
     }else{
       static::$checkFilePathsForLanguageIx['ErrInfo'] = "Nothing found for LanguageIx {$lgix}!";
-      static::$checkFilePaths = array();
+      return;
     }
 
+    $filePathPart = $set[0]['FilePathPart'];
+    static::$checkFilePathsForLanguageIx['FilePathPart'] = $filePathPart;
+    // get all sound file directory names
+    $dir = $_SERVER['DOCUMENT_ROOT'].'/'.Config::$soundPath.'/'.$filePathPart;
+    $soundPathsOnDisk = array();
+    foreach(scandir($dir) as $f){
+      if(preg_match('/\.mp3$/', $f)){
+        array_push($soundPathsOnDisk, $f);
+      }
+    }
+
+    $q   = "SELECT IxElicitation as I, SoundFileWordIdentifierText as S, FullRfcModernLg01 as F FROM Words_$n ORDER BY IxElicitation";
+    $wordset = static::fetchAll($q);
+    if(count($wordset) > 0){
+      $q = "SELECT * FROM Transcriptions WHERE LanguageIx = {$lgix}";
+      $transset = static::fetchAll($q);
+      if(count($transset) > 0){
+        foreach($wordset as $word){
+          $alltransforword = array();
+          foreach($transset as $t){
+            if($t['IxElicitation'] == $word['I']){
+              array_push($alltransforword, $t);
+            }
+          }
+          foreach($alltransforword as $trans){
+            $data = array();
+            $lex_prefix = '';
+            $pron_prefix = '';
+            if($trans['AlternativeLexemIx'] > 0){
+              $lex_prefix = '_lex'.$trans['AlternativeLexemIx'];
+            }
+            if($trans['AlternativePhoneticRealisationIx'] > 1){
+              $pron_prefix = '_pron'.$trans['AlternativePhoneticRealisationIx'];
+            }
+            $sndFileIdText = $word['S'];
+            if($trans['study'] != $studyName){
+              $qq = "SELECT SoundFileWordIdentifierText as S FROM Words_{$trans['study']} WHERE IxElicitation = {$word['I']}";
+              $sftset = static::fetchAll($qq);
+              if(count($sftset) == 1){
+                $sndFileIdText = $sftset[0]['S'];
+              }
+            }
+            $data['SoundPath'] = $sndFileIdText.$lex_prefix.$pron_prefix;
+            $data['pathok'] = 'X';
+            $data['hasSound'] = '';
+            $fileName = $filePathPart.$sndFileIdText.$lex_prefix.$pron_prefix.".mp3";
+            if(in_array($fileName, $soundPathsOnDisk)){
+              $data['pathok'] = 'OK';
+              $data['hasSound'] = '▶︎';
+              $soundPathsOnDisk = array_diff($soundPathsOnDisk, array($fileName));
+            }
+            $data['SoundPathHref'] = "http://www.soundcomparisons.com/".Config::$soundPath."/".$filePathPart."/".$fileName;
+            $data['Meaning'] = $word['F'];
+            $data['IxElicitation'] = $word['I'];
+            $data['IxEliciSpec'] = '';
+            if($isMalakula && array_key_exists($word['I'], $specIxElicArray)){
+              $data['IxEliciSpec'] = $specIxElicArray[$word['I']];
+            }
+            $data['Phonetic'] = $trans['Phonetic'];
+            $data['IxMorph'] = $trans['IxMorphologicalInstance'];
+            $data['AltPhonReal'] = $trans['AlternativePhoneticRealisationIx'];
+            $data['AltLexem'] = $trans['AlternativeLexemIx'];
+            $data['AltSpell1'] = $trans['SpellingAltv1'];
+            $data['AltSpell2'] = $trans['SpellingAltv2'];
+            $data['Study'] = $trans['study'];
+            array_push(static::$checkFilePaths, $data);
+          }
+        }
+      } else {
+        foreach($wordset as $word){
+          $data = array();
+          $lex_prefix = '';
+          $pron_prefix = '';
+          $sndFileIdText = $word['S'];
+          $data['SoundPath'] = $sndFileIdText.$lex_prefix.$pron_prefix;
+          $data['pathok'] = 'X';
+          $data['hasSound'] = '';
+          $fileName = $filePathPart.$sndFileIdText.$lex_prefix.$pron_prefix.".mp3";
+          if(in_array($fileName, $soundPathsOnDisk)){
+            $data['pathok'] = 'OK';
+            $data['hasSound'] = '▶︎';
+            $soundPathsOnDisk = array_diff($soundPathsOnDisk, array($fileName));
+          }
+          $data['SoundPathHref'] = "http://www.soundcomparisons.com/".Config::$soundPath."/".$filePathPart."/".$fileName;
+          $data['Meaning'] = $word['F'];
+          $data['IxElicitation'] = $word['I'];
+          $data['IxEliciSpec'] = '';
+          if($isMalakula && array_key_exists($word['I'], $specIxElicArray)){
+            $data['IxEliciSpec'] = $specIxElicArray[$word['I']];
+          }
+          $data['Phonetic'] = '';
+          $data['IxMorph'] = '';
+          $data['AltPhonReal'] = '';
+          $data['AltLexem'] = '';
+          $data['AltSpell1'] = '';
+          $data['AltSpell2'] = '';
+          $data['Study'] = $studyName;
+          array_push(static::$checkFilePaths, $data);
+        }
+      }
+    }
+    static::$checkFilePathsForLanguageIx['remainingSndFiles'] = '';
+    if(count($soundPathsOnDisk)>0){
+      static::$checkFilePathsForLanguageIx['remainingSndFiles'] = $soundPathsOnDisk;
+    }
   }
   /**
     @param $studyName String
