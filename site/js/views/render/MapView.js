@@ -26,8 +26,6 @@ define(['views/render/SubView',
       this.model = {}; // Notice that we also make heavy use of App.map
       //Connecting to the router
       App.router.on('route:mapView', this.route, this);
-      //Setting leaflet imagePath:
-      L.Icon.Default.imagePath = '/img/leaflet.js/';
       //Map setup:
       this.div = document.getElementById("map_canvas");
       var o = {zoomsliderControl: true,
@@ -35,6 +33,8 @@ define(['views/render/SubView',
       this.map = L.map(this.div, o).setView([54.92, 1.875], 2);
       //Specifying tileLayer:
       if(Loader.isOnline){
+        //Setting leaflet imagePath:
+        L.Icon.Default.imagePath = '/img/leaflet.js/';
         var baseLayers = {
           'Esri World Imagery': L.tileLayer.provider('Esri.WorldImagery'),
           'Esri NatGeo World Map': L.tileLayer.provider('Esri.NatGeoWorldMap').addTo(this.map),
@@ -45,18 +45,31 @@ define(['views/render/SubView',
         };
         L.control.layers(baseLayers).addTo(this.map);
       }else{
-        L.tileLayer('mapnik/{z}/{x}/{y}.png', {
-            minZoom: 0
-          , maxZoom: 17
-          , attribution: "<a href='https://www.mapbox.com/about/maps/' "
-                           + "target='_blank'>&copy; Mapbox</a>"
-                       + "<a href='https://openstreetmap.org/about/' "
-                           + "target='_blank'>&copy; OpenStreetMap</a>"
-                       + "<a class='mapbox-improve-map' "
-                           + "href='https://www.mapbox.com/map-feedback/' "
-                           + "target='_blank'>Improve this map</a>"
-          , opacity: 0.85
-        }).addTo(this.map);
+        var baseLayers = {
+          '<img style="padding-top:5px" src="img/topo.png" width=20px height=20px />': L.tileLayer('mapnik/{z}/{x}/{y}.png', {
+              minZoom: 0
+            , maxZoom: 17
+            , attribution: "<a href='https://www.mapbox.com/about/maps/' "
+                             + "target='_blank'>&copy; Mapbox</a>"
+                         + "<a href='https://openstreetmap.org/about/' "
+                             + "target='_blank'>&copy; OpenStreetMap</a>"
+                         + "<a class='mapbox-improve-map' "
+                             + "href='https://www.mapbox.com/map-feedback/' "
+                             + "target='_blank'>Improve this map</a>"
+             , opacity: 0.85}).addTo(this.map),
+           '<img style="padding-top:5px" src="img/osm.png" width=20px height=20px />': L.tileLayer('mapnik1/{z}/{x}/{y}.png', {
+               minZoom: 0
+             , maxZoom: 17
+             , attribution: "<a href='https://www.mapbox.com/about/maps/' "
+                              + "target='_blank'>&copy; Mapbox</a>"
+                          + "<a href='https://openstreetmap.org/about/' "
+                              + "target='_blank'>&copy; OpenStreetMap</a>"
+                          + "<a class='mapbox-improve-map' "
+                              + "href='https://www.mapbox.com/map-feedback/' "
+                              + "target='_blank'>Improve this map</a>"
+              , opacity: 0.85}),
+          };
+        L.control.layers(baseLayers).addTo(this.map);
       }
       //Creating marker layer:
       this.markers = L.layerGroup(); // FIXME replace with markerClusterGroup
