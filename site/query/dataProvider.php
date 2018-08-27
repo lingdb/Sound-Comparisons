@@ -18,6 +18,7 @@ class DataProvider {
   public static $checkFilePathsFurtherCheckOfDisk = "";
   public static $checkFilePathsNumberOfWords = 0;
   public static $checkFilePathsForLanguageIx = array();
+  public static $transcriptionTable = array();
   /**
     @param $q SQL String
     @return [[Field => Value]]
@@ -394,6 +395,29 @@ class DataProvider {
       }
     }
     return $ret;
+  }
+
+  /**
+    @param $studyName String
+    @return array of dicts
+  */
+  public static function transcriptionTable($studyName){
+
+    $db  = Config::getConnection();
+    $n   = $db->escape_string($studyName);
+    $q   = "SELECT t.LanguageIx, l.FilePathPart, l.ShortName, t.Phonetic, w.FullRfcModernLg01 AS Word FROM Languages_$n AS l, Transcriptions_$n AS t, Words_$n AS w WHERE t.LanguageIx = l.LanguageIx AND t.IxElicitation = w.IxElicitation ORDER BY t.IxElicitation, l.LanguageIx";
+    $set = static::fetchAll($q);
+    if(count($set) > 0){
+      foreach($set as $t){
+        $data = array();
+        $data['ShortName'] = $t['ShortName'];
+        $data['LgIxFPP'] = $t['LanguageIx'].'/'.$t['FilePathPart'];
+        $data['Phonetic'] = $t['Phonetic'];
+        $data['Word'] = $t['Word'];
+        array_push(static::$transcriptionTable, $data);
+      }
+    }
+    return static::$transcriptionTable;
   }
   /**
     @param $studyName String
