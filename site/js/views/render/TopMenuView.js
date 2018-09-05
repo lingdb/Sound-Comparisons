@@ -89,6 +89,7 @@ define(['backbone'], function(Backbone){
       var staticT = App.translationStorage.translateStatic({
         logoTitle:          'website_logo_hover'
       , csvTitle:           'topmenu_download_csv'
+      , tsvTitle:           'topmenu_download_tsv'
       , sndTitle:           'topmenu_download_zip'
       , cogTitle:           'topmenu_download_cogTitle'
       , settingTitle:       'topmenu_settings_title'
@@ -238,6 +239,7 @@ define(['backbone'], function(Backbone){
       var go = function(xs){return _.map(xs, function(x){return x.getId();}).join(',');};
       var w = go(ws), l = go(ls);
       this.setModel({csvLink: 'export/csv?study='+s+'&languages='+l+'&words='+w});
+      this.setModel({tsvLink: 'export/csv?study='+s+'&languages='+l+'&words='+w+'&tsv'});
     }
     /***/
   , render: function(){
